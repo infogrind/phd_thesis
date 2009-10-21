@@ -1,0 +1,150 @@
+%        File: outline2.tex
+%      Author: Marius Kleiner <marius.kleiner@epfl.ch>
+%     Created: Wed Oct 21 01:00 PM 2009 C
+% Last Change: Wed Oct 21 01:00 PM 2009 C
+%
+% $Id$
+%
+\documentclass[a4paper]{article}
+\bibliographystyle{IEEEtran}
+\usepackage[font={small,sf},labelfont={bf,sf}]{caption}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{tikz}
+
+
+% Theorem definitions etc
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}{Example}
+
+% Useful macros
+\newcommand{\ud}{\mathrm{d}}
+\newcommand{\vect}[1]{\mathbf{#1}}
+\newcommand{\mat}[1]{\mathbf{#1}}
+\newcommand{\ie}{i.e.}
+\newcommand{\eg}{e.g.}
+\newcommand{\abbrev}[1]{\textsc{\MakeLowercase{#1}}}
+\newcommand{\snr}{\abbrev{snr}}
+\newcommand{\sdr}{\abbrev{sdr}}
+\let\e\epsilon
+\newcommand\cdf{\abbrev{CDF}}
+\newcommand\N{\mathcal{N}}
+\newcommand{\cE}{\mathcal{E}}
+\newcommand{\y}{\vect{y}}
+\newcommand{\Y}{\vect{Y}}
+\newcommand{\x}{\vect{x}}
+\newcommand{\X}{\vect{X}}
+\newcommand{\sh}{\hat{s}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\deq}{\stackrel{\Delta}{=}}
+\DeclareMathOperator{\Erf}{Erf}
+\newcommand{\Sh}{\hat{S}}
+\newcommand{\Shh}{\hat{\hat{S}}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\frenchspacing
+
+
+\title{Weekly Notes}
+\author{Marius Kleiner}
+\date{October 21, 2009\\\small(last updated: \today)}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+\section{On Low-Delay Joint Source/Channel Coding}
+\subsection{Background}
+\begin{itemize}
+  \item Fundamental limits of source-channel communication: separation theorem
+    (general case $n \ne k$), in particular the converse
+  \item Achievability: using long block codes
+  \item Necessary and sufficient conditions for achievability (these hold
+    irrespective of whether separation is used or a joint code) 
+  \item How in separation these conditions can be achieved using long codes
+  \item If delay is constrained, these conditions cannot be all simultaneously
+    satisfied (cf.~Ingber et al.\ result)
+  \item Relaxed conditions if all we need is asymptotic order equality (i.e., $D
+    \in O(\textsc{snr}^{-n})$). For example, it is enough for the input
+    distribution to be non-degenerate at high SNR.
+  \item Robust vs.\ non-robust. (in general, the encoder can also be a function
+    of the SNR; in the robust case it isn't. Same for the decoder.)
+  \item Ziv's result about robust codes, and how geometrical constraints
+    influence the performance. Counter-example: fractal codes that perform
+    better (Taherzadeh\slash Khandani)
+  \item Intuition why (piecewise) continuous constellations limit the
+    performance of robust codes. (If you look at a small enough region of the
+    constellation, only one dimension is used.) -- Can we extend this to Ziv's
+    general constraint?
+\end{itemize}
+
+\subsection{Definitions and Problem Setting}
+
+\subsection{A Quantize-and-Scale Scheme}
+\subsubsection{Definition}
+\begin{itemize}
+  \item encoder
+  \item decoder
+  \item comment about suboptimality
+\end{itemize}
+\subsubsection{Achievable Distortion}
+\begin{itemize}
+  \item Upper bound on distortion resp.\ lower bound on SDR
+  \item Distinction between scaling \emph{exponent} and \emph{order} of scaling
+    ($-n$ vs.\ $O(\snr^{-n}(\log\snr)^{n-1})$)
+  \item Best choice of~$\e$
+\end{itemize}
+\subsubsection{Distortion Lower Bound for Quantize/Scale Schemes}
+\begin{itemize}
+  \item Ziv-based proof how the stretch implies a distortion lower bound, no
+    matter how good the decoder is
+  \item Intuition behind this?
+\end{itemize}
+
+\subsection{General Points on Minimum Delay Joint S-C Codes}
+\begin{itemize}
+  \item How to best use the additional available dimensions
+  \item One way: Scale up by $\snr^n$, then cut and distribute in other $n-1$
+    dimensions. However, we have to scale a bit less; some of the available SNR
+    needs to ``go into'' increasing the space between constellation segments.
+  \item There is a gap term in all the robust schemes by T\&K. Their last
+    scheme, which varies with SNR, is claimed to scale as $\snr^{-n}$, but there
+    are problems in the proof. It would be nice to sort these things out to
+    definitely answer the question whether $\snr^{-n}$ scaling is possible with
+    minimal delay. 
+\end{itemize}
+
+
+\section{On Fidelity per Unit Cost}
+\begin{itemize}
+  \item ISIT paper + more examples
+  \item More thoughts about practical applications, especially of fidelity per
+    unit rate. (In the capacity case, both cost and rate are additive
+    quantities, and we can e.g.\ find the bandwidth at which to obtain the
+    largest rate, as shown in the example in the paper. However, we haven't yet
+    found any such example in the fidelity per unit rate case.)
+\end{itemize}
+
+
+\section{MATLAB Simulator}
+\subsection{Introduction and First Examples}
+\subsection{Functional Specification/Reference}
+\subsection{Architecture and Implementation}
+
+\section{Conclusion and Future Work}
+
+% Uncomment once you have added citations
+%\bibliography{mkbiblio}
+
+
+\end{document}
+
+
