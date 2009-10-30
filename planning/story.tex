@@ -1,0 +1,165 @@
+%        File: outline2.tex
+%      Author: Marius Kleiner <marius.kleiner@epfl.ch>
+%     Created: Wed Oct 21 01:00 PM 2009 C
+% Last Change: Wed Oct 21 01:00 PM 2009 C
+%
+% $Id$
+%
+\documentclass[a4paper]{article}
+\bibliographystyle{IEEEtran}
+\usepackage[font={small,sf},labelfont={bf,sf}]{caption}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{tikz}
+
+
+% Theorem definitions etc
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}{Example}
+
+% Useful macros
+\newcommand{\ud}{\mathrm{d}}
+\newcommand{\vect}[1]{\mathbf{#1}}
+\newcommand{\mat}[1]{\mathbf{#1}}
+\newcommand{\ie}{i.e.}
+\newcommand{\eg}{e.g.}
+\newcommand{\abbrev}[1]{\textsc{\MakeLowercase{#1}}}
+\newcommand{\snr}{\abbrev{snr}}
+\newcommand{\sdr}{\abbrev{sdr}}
+\let\e\epsilon
+\newcommand\cdf{\abbrev{CDF}}
+\newcommand\N{\mathcal{N}}
+\newcommand{\cE}{\mathcal{E}}
+\newcommand{\y}{\vect{y}}
+\newcommand{\Y}{\vect{Y}}
+\newcommand{\x}{\vect{x}}
+\newcommand{\X}{\vect{X}}
+\newcommand{\sh}{\hat{s}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\deq}{\stackrel{\Delta}{=}}
+\DeclareMathOperator{\Erf}{Erf}
+\newcommand{\Sh}{\hat{S}}
+\newcommand{\Shh}{\hat{\hat{S}}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\ssq}{{\sigma_S^2}}
+
+\frenchspacing
+
+
+\title{``The Story''}
+\author{Marius Kleiner}
+\date{October 30, 2009\\\small(last updated: \today)}
+
+\begin{document}
+\maketitle
+
+\noindent
+For the fundamental communication problem of transmitting a single information
+source across a noisy channel and reconstructing it at a single destination,
+Shannon showed that the separation into source compression and channel coding
+entails no loss in performance, as long as the delay and complexity of the
+coding system are unbounded. Using such a separation strategy, we can first
+compress the source into at most $R(D)$ bits per source symbol, incurring an
+average distortion of no more than~$D$, and use the channel error-free at a rate
+of $C(P)$ bits per channel use. If the channel can be used $n$ times for every
+$k$ source symbols, then this strategy can achieve any distortion/cost pair
+satisfying
+\begin{equation}
+  \label{eq:DPlimit}
+k R(D) < nC(P).
+\end{equation}
+
+Conversely, Shannon also showed that \emph{any} achievable distortion/cost pair
+must satisfy the relationship~\eqref{eq:DPlimit}, regardless of the
+implementation; in particular, this holds whether separation or a joint
+source\slash channel coding system is used. 
+
+The proof of this converse result gives the properties that a communication
+system must satisfy in order to fulfill~\eqref{eq:DPlimit} with equality. For
+example, the channel input symbols must be independent, and their marginal
+distribution must be the capacity achieving distribution. 
+
+In the special case where $n=k$, Michael Gastpar showed in his thesis that there
+always exist \emph{single-letter} codes, \ie, codes that encode and decode a
+single source letter at a time, that satisfy~\eqref{eq:DPlimit} with equality,
+as long as the cost and distortion measures are suitably matched to the source
+and channel statistics. If $n \ne k$, however, the situation is more
+complicated. Of course Gastpar's results can be applied if the source letters
+and the channel input symbols are considered as vectors of length~$k$ and~$n$,
+respectively. But this imposes a structure on the cost and distortion measures
+that is in general too restrictive.\footnote{For example, the cost of
+transmitting a particular vector of channel input symbols can in general not be
+written as the sum of the costs of the individual symbols, even if the channel
+is memoryless.}
+
+Consider the example of a Gaussian source with squared error distortion and an
+AWGN channel whose cost is the power of a transmitted symbol, and suppose that
+the channel can be used $n$ times for every source symbol. If $n = 1$, simple
+scalings at the encoder and the decoder are enough to
+achieve~\eqref{eq:DPlimit}. If $n > 1$, however, Ingber et
+al.\ showed that if a single-letter code is used, then the
+achievable distortion is strictly bounded away from the optimal value given
+by~\eqref{eq:DPlimit}. 
+
+In view of this negative result we relax the problem somewhat and focus on the
+\emph{order} at which the distortion decreases as a function of the
+signal-to-noise ratio (SNR). If~\eqref{eq:DPlimit} is evaluated for a Gaussian
+source and channel, then the distortion~$D$ must satisfy
+\begin{equation*}
+  D \ge \frac{\ssq}{(1 + \snr)^n},
+\end{equation*}
+where $\ssq$ is the variance of the source. Asymptotically, the distortion
+decreases thus at best as $\snr^{-n}$. Furthermore, Shannon showed that an
+arbitrary continuous valued source $S$ with entropy $h(S)$ and squared error
+distortion satisfies
+\begin{equation*}
+  R(D) \ge h(S) - \frac12 \log D.
+\end{equation*}
+Consequently, the achievable distortion across an AWGN channel satisfies
+\begin{equation*}
+  D \ge \frac{2^{2 h(S)}}{(1 + \snr)^n},
+\end{equation*}
+\ie, $\snr^{-n}$ is the best scaling that \emph{any} source can do
+asymptotically. 
+
+The problem we want to study, therefore, is whether, for analog sources with
+squared error criterion, there exist single-letter codes that can achieve a
+distortion scaling~$\snr^{-n}$ on the AWGN channel,  and to find properties of
+such codes (if they exist).
+
+First we present some fundamental results and properties of single letter codes
+for the $1$:$n$ case (interpretation of encoder and decoder as functions $\R
+\rightarrow \R^n$ and $\R^n \rightarrow \R$, respectively; Wozencraft and
+Jacob's result tying the stretch to the achievable distortion; Ziv's result).
+
+Next we present and analyse a simple scheme that quantizes the source and sends
+the quantized points and the quantization error across different channel uses.
+We show that the best achievable distortion that can be achieved using any such
+quantize/scale scheme is $\snr^{-n}(\log\snr)^{n-1}$. We then intend to use the
+insights gained from this simple scheme to exhibit limitation of more general
+such schemes. 
+
+In one chapter we go back to the case $n=k$ and the problem of matching. The
+original question asked by Gastpar was, under what conditions does a
+distortion/cost pair constitute an optimal tradeoff. If the problem is
+reformulated equivalently in terms of fidelity rather than distortion, we ask
+the question, when is the \emph{ratio} of fidelity per cost optimal, and we show
+that the answer can be obtained by refining Gastpar's matching conditions. 
+
+In the last chapter we present a simulator, written in MATLAB, that greatly
+facilitates the implementation, simulation, and performance analysis of
+low-delay joint source-channel codes such as the ones studied in this thesis. 
+
+%\bibliography{mkbiblio}
+
+\end{document}
+
+
