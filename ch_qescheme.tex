@@ -1,3 +1,634 @@
-\chapter[Bandwidth Expansion for Gaussian Channels]%
-{A Minimal Delay Scheme for Bandwidth Expansion Across Gaussian
-Channels}
+\chapter{Minimal-Delay Bandwidth Expansion Codes}
+
+Introductory paragraphs go here.
+
+\section{Transmission Strategy}
+\label{sec:commscheme}
+
+To encode a single source letter $S$ into $n$~channel input symbols $X_1$,
+\dots, $X_n$, we proceed as follows. Define $E_0 = S$ and recursively compute
+the pairs $(Q_i, E_i)$ as
+\begin{align}
+  Q_i &= \frac{1}{\beta} \Int(\beta E_{i-1}) \nonumber \\
+  E_i &= \beta (E_{i-1} - Q_i) \label{eq:QEdef}
+\end{align}
+for $i = 1$, \dots, $n-1$ where $\Int(x)$ is the unique integer~$i$ such that
+\begin{equation*}
+%  \label{eq:intdef}
+  x \in \left[ i - \frac12 , i + \frac12 \right)
+\end{equation*}
+and $\beta$ is a scaling factor that \emph{grows with the power $P$}
+in a way to be determined later.  The following result will be useful in the
+sequel.
+\begin{lemma}
+  \label{lem:qvarconvergence}
+  As $\beta$ goes to infinity, the variance of $Q_i$ converges to that of
+  $E_{i-1}$ for all $i = 1$, \dots, $n-1$. 
+\end{lemma}
+
+\begin{proof}
+  Intuitively this is so since $Q_i$ is $E_{i-1}$ quantized, and the
+  quantization step becomes smaller as $\beta$ goes to infinity.  A rigorous
+  proof is given in Appendix~\ref{app:lemma1proof}.
+\end{proof}
+
+\begin{proposition}
+  \label{prop:qeproperties}
+  The $Q_i$ and $E_i$ satisfy the following properties:
+\begin{enumerate}
+  \item The map $S \mapsto (Q_1, \dots, Q_{n-1}, E_{n-1})$ is one-to-one and
+    \begin{equation}
+      \label{eq:unwraprec}
+      S = \sum_{i=1}^{n-1} \frac{1}{\beta^{i-1}} Q_i + \frac{1}{\beta^{n-1}}
+      E_{n-1}.
+    \end{equation}
+
+  \item The variance of $E_0$ is $\ssq$ and for all $i = 1$, \dots, $n-1$, $E_i
+    \in [-1/2, 1/2)$ and $\var(E_i) \le 1/4$.
+  \item For any $\delta > 0$ there exists $\beta_0$ such that for $\beta
+    > \beta_0$,
+    \begin{equation}
+      \label{eq:qvarbound}
+      \var(Q_i) \le
+      \begin{cases}
+        \ssq + \delta & \text{for $i = 1$} \\
+        1/4 + \delta & \text{for $i = 2$, \dots, $n-1$.}
+      \end{cases}
+    \end{equation}
+\end{enumerate}
+\end{proposition}
+
+\goodbreak
+\begin{proof}
+  \begin{enumerate}
+    \item From the definition~\eqref{eq:QEdef} we have
+    \begin{equation}
+      \label{eq:reverserec}
+      E_{i-1} = \frac{1}{\beta} E_i + Q_i.
+    \end{equation}
+    Repeated use of this relationship leads to the given expression for~$S$. 
+  \item First, $\var(E_0) = \var(S) = \ssq$. Next, $E_i \in [-1/2, 1/2)$ follows
+    trivially from the definition of~$E_i$.  Furthermore, the variance of any
+    random variable with support in an interval of length~$1$ is bounded from
+    above by~$1/4$. 
+  \item The result follows directly from Lemma~\ref{lem:qvarconvergence} and
+    from the bound on the variance of the $E_i$ in point~2 above.
+  \end{enumerate}
+\end{proof}
+
+Without loss of generality we assume hereafter that $\ssq > 1/4$ so that the
+first bound of~\eqref{eq:qvarbound} applies to all~$Q_i$.
+
+
+We determine the channel input symbols $X_i$ from the $Q_i$ and from $E_{n-1}$
+according to 
+\begin{align}
+  X_i &= \sqrt{\frac{P}{\ssq + \delta}} Q_i \quad
+  \text{for $i = 1$, \dots, $n-1$ and} \nonumber\\
+  X_n &= \sqrt{\frac{P}{\seq}} E_{n-1},
+  \label{eq:Xdef}
+\end{align}
+where $\seq = \var(E_{n-1})$.  Following Proposition~\ref{prop:qeproperties},
+this ensures that $\E[X_i^2] \le P$ for all~$i$ and for $\beta >
+\beta_0(\delta)$.  Since we are interested in the large SNR regime and since we
+have defined $\beta$ to grow with~$P$, we can thus assume for the remainder that
+the power constraint is satisfied. 
+
+
+\section{Geometrical Aspects}
+
+\section{Lower Bound on the Squared Error}
+
+The goal of this section is to lower bound the scaling of the mean squared error
+of the transmission strategy described in Section~\ref{sec:commscheme}.
+
+Throughout this section we assume $\beta^2 = \snr^{1-\e}$, where $\e = \e(\snr)$
+is a positive function of~$\snr$. This results in no loss of generality, since
+for an arbitrary positive function~$f$ we can set $\e(\snr) =
+1-\log(f(\snr))/\log\snr$ to get $\beta^2(\snr) = f(\snr)$.
+
+Note that by~\eqref{eq:QEdef}, the $Q_i$ are completely determined by~$S$.
+In this section, with a slight abuse of notation, we therefore write $Q_i(s)$ to
+denote the value of~$Q_i$ when $S = s$. We use $E_i(s)$ and $X_i(s)$ in a
+similar manner. Furthermore, we define $\X(s) = (X_1(s), \dots, X_n(s))$.
+
+The following result, adapted from Ziv~\cite{Ziv1970}, is a key ingredient in
+the proofs of the lemmas that follow.
+
+\begin{lemma}
+  \label{lem:zivbound}
+  Consider a communication system where a con\-tin\-u\-ous-valued source~$S$ is
+  encoded into an $n$-dimensional vector $\X(S)$, sent across $n$~independent
+  parallel AWGN channels with noise variance~$\szq$, and decoded at the receiver
+  to produce an estimate~$\Sh$.  If the density $p_S$ of the source is such that
+  there exists an interval $[A,B]$ and a number $p_{\min} > 0$ such that $p_S(s)
+  \ge p_{\min}$ whenever $s \in [A,B]$, then for any $\Delta \in [0,B-A)$ the
+  mean squared error incurred by the communication system satisfies
+  \begin{equation}
+    \label{eq:zivbound}
+    \E[(\Sh - S)^2] \ge p_{\min} \left(\frac{\Delta}{2} \right)^2 
+    \int_A^{B-\Delta} Q(d(s, \Delta) / 2 \sz) ds,
+  \end{equation}
+  where $d(s, \Delta) \deq \|\vect{X}(s) - \vect{X}(s+\Delta)\|$ and 
+  \[Q(x) = \int_x^{\infty} (1/\sqrt{2\pi}) \exp\{-\xi^2/2\} d\xi.\]
+\end{lemma}
+
+\begin{proof}
+  See Appendix~\ref{app:zivboundproof}.
+\end{proof}
+
+The next two lemmata provide two different asymptotic lower bounds on the
+mean squared error of our transmission strategy, each of which is tighter for a
+different class of~$\e$. They hold regardless of the decoder used.  (The
+$\Omega$-notation is defined in Appendix~\ref{app:Onotation}.)
+
+\begin{lemma}
+  \label{lem:lowerbound1}
+  For an arbitrary function $\e(\snr) \ge 0$, the mean squared error satisfies
+  \begin{equation*}
+    \mse \in \Omega(\snr^{-n + (n-1)\e}).
+  \end{equation*}
+\end{lemma}
+
+\begin{lemma}
+  \label{lem:lowerbound2}
+  For an arbitrary function $\e(\snr) \ge 0$, the mean squared error satisfies
+  \begin{equation*}
+    \mse \in \Omega(\snr^{-1+\e/2} \exp\{-\snr^\e/k\})
+  \end{equation*}
+  where $k > 0$ does not depend on~$\snr$.
+\end{lemma}
+
+\emph{Discussion:} An immediate consequence of the lemmata is that the
+theoretically optimal scaling $\snr^{-n}$ is not achievable with the given
+encoding strategy: by Lemma~\ref{lem:lowerbound1} this would require $\e = 0$,
+but following Lemma~\ref{lem:lowerbound2} the scaling is at best $\snr^{-1}$ if
+$\e = 0 $.  More generally, which one of the two lower bounds decays more slowly
+and is therefore tighter depends on the scaling of~$\e(\snr)$. How to
+choose~$\e(\snr)$ optimally will be the subject of Theorem~\ref{thm:scalinglb}.
+
+\begin{proof}[Proof of Lemma~\ref{lem:lowerbound1}]
+  Assume $\Delta \in [0, \beta^{-(n-1)})$ and define for $j \in \Z$
+  \[ \I_j^\Delta = \left[ (j - \frac12 )\beta^{-(n-1)}, 
+    (j + \frac12 ) \beta^{-(n-1)} - \Delta \right).\]
+  It can be verified from~\eqref{eq:QEdef} that if $s \in \I_j^\Delta$ for
+  some~$j$, the following properties hold: 1) $Q_i(s) = Q_i(s+\Delta)$ for
+  $i=1$, \dots, $n-1$, and 2) $E_{n-1}(s+\Delta) - E_{n-1}(s) =
+  \beta^{n-1}\Delta$.  From~\eqref{eq:Xdef} it follows that
+  $s \in \I_j^\Delta$ implies $d(s, \Delta) = \sqrt{P/\seq} \beta^{n-1}\Delta$.
+
+  We now apply Lemma~\ref{lem:zivbound} and restrict the integral to the
+  set~$\psi(\Delta) \deq [A,B-\Delta) \cap \bigcup_{j\in\Z} \I_j^\Delta$. The
+  lower bound is then relaxed to give
+  \begin{equation*}
+    \mse \ge \frac{\pmin}{4} \Delta^2 Q(\sqrt{\snr/\seq} \beta^{n-1} \Delta/2)
+    \int_{\psi(\Delta)} ds.
+  \end{equation*}
+  Letting $\Delta = 1/(\sqrt{\snr}\beta^{n-1})$ and $\beta^2 = \snr^{1-\e}$
+  yields
+  \begin{equation*}
+    \mse \ge \frac{\pmin}{4} \snr^{-n+(n-1)\e} Q\left(\frac{1}{2\se}\right)
+    \int_{\psi(\Delta)} ds.
+  \end{equation*}
+
+  The proof is almost complete, but we still have to show that
+  $\int_{\psi(\Delta)}ds$ can be bounded below by a constant for large SNR. The
+  length of a single interval~$\I_j^\Delta$ is $\beta^{-(n-1)} - \Delta$. Within
+  $[A,B-\Delta)$ there are $(B-A-\Delta)\beta^{n-1}$ such
+  intervals. The total length of all intervals~$\I_j^\Delta$ in $[A, B-\Delta)$
+  is therefore
+  \[ \int_{\psi(\Delta)} ds = (B-A-\Delta)
+  (1 - \beta^{n-1}\Delta), \]
+  which, for the given values of~$\beta$ and~$\Delta$, 
+  converges to $B-A$ for $\snr \ra \infty$ and thus can be lower bounded by a
+  constant for $\snr$ greater than some $\snr_0$. With this, the proof is
+  complete.
+\end{proof}
+
+\begin{proof}[Proof of Lemma~\ref{lem:lowerbound2}]
+  Observe first that~\eqref{eq:QEdef} implies $Q_1(s + \beta^{-1}) = Q_1(s) +
+  \beta^{-1}$ and $E_1(s + \beta^{-1}) = E_1(s)$. Since all $Q_i$ and $E_i$ for
+  $i \ge 2$ are by recursion a function of $E_1$ only, $Q_i(s) = Q_i(s +
+  \beta^{-1})$ for $i = 2$, \dots, $n-1$, and $E_{n-1}(s) = E_{n-1}(s +
+  \beta^{-1})$. Consequently,  $X_i(s) = X_i(s + \beta^{-1})$ for all $i =
+  2$, \dots, $n$. By~\eqref{eq:Xdef} and the above, the Euclidean distance
+  between $\X(s)$ and~$\X(s+\beta^{-1})$ is therefore
+  \begin{equation}
+    \label{eq:xbetadist}
+    \sqrt{\frac{P}{\ssq + \delta}} |Q_1(s) - Q_1(s+\beta^{-1})| 
+    = \sqrt{\frac{P}{\ssq + \delta}} \beta^{-1}.
+  \end{equation}
+
+  We now apply Lemma~\ref{lem:zivbound} with $\Delta = \beta^{-1}$. The
+  parameter $\beta$ will be chosen to increase with~$\snr$, therefore $\Delta
+  \in [0, B-A)$ holds for sufficiently large~$\snr$.
+
+  Using~\eqref{eq:xbetadist}, the resulting bound on the mean squared error is
+  \begin{equation*}
+    \mse \ge \frac{\pmin}{4} \beta^{-2}
+    Q\left (\sqrt{\frac{\snr}{\ssq + \delta}} \frac{\beta^{-1}}{2} \right)
+    (B-A-\beta^{-1}
+    ).
+  \end{equation*}
+  Replacing $\beta^2 = \snr^{1-\e}$ and using the fact that $Q(x)$ converges to
+  $\exp\{-x^2/2\}/\sqrt{2\pi}x$ for $x \goesto \infty$
+  (cf.~\cite{AbramowitzS1964}) we obtain
+  \begin{equation*}
+    \mse \ge c \snr^{-1 + \e/2} \exp\{-\snr^\e/k\}
+  \end{equation*}
+  for sufficiently large~$\snr$, with $c$ and $k$ positive constants that do
+  not depend on~$\snr$, thus proving the lemma.
+\end{proof}
+
+The following lemma will be used to prove Theorem~\ref{thm:scalinglb}, the main
+result of this section.
+
+\begin{lemma}
+  \label{lem:epssolution}
+  Define $W(x)$ to be the function that satisfies $W(x)e^{W(x)} = x$ for $x >
+  0$.  This function is well defined and is sometimes called the \emph{Lambert
+  $W$-function}~\cite{CorlessGHJK1996}. Then for $\snr > 1$ and arbitrary real
+  constants $a$, $b>0$, and $k > 0$, 
+  \begin{equation}
+    \label{eq:epsequation}
+    \snr^{a+b\e} = \exp\{-\snr^\e/k\},
+  \end{equation}
+  if and only if
+  \begin{equation}
+    \label{eq:epssolution}
+    \snr^\e = bk W(\snr^{-a/b} / bk).
+  \end{equation}
+\end{lemma}
+
+\begin{proof}
+  Let $\snr>1$. Since $\snr^{a+b\e}$ is strictly increasing and
+  $\exp\{-\snr^\e/k\}$ is strictly decreasing in~$\e$, there is at most one
+  solution to~\eqref{eq:epsequation}.  Assume now $\snr^\e$ is as
+  in~\eqref{eq:epssolution}. Then
+  \begin{equation*}
+    \exp\{-\snr^\e/k\} = \exp\{-b W(\snr^{-a/b}/bk)\}.
+  \end{equation*}
+  On the other hand,
+  \begin{align*}
+    \snr^{a+b\e} &= \snr^a \left( bk W(\snr^{-a/b}/bk) \right)^b \\
+    &= \left( W(\snr^{-a/b}/bk) / (\snr^{-a/b}/bk) \right)^b.
+  \end{align*}
+  By definition, $W(x)/x = e^{-W(x)}$, so the above is equal to
+  \begin{equation*}
+    \snr^{a+b\e} = \exp\{-bW(\snr^{-a/b}/bk)\},
+  \end{equation*}
+  which proves the claim.
+\end{proof}
+
+The following is the main result of this section.
+\begin{theorem}
+  \label{thm:scalinglb}
+  For any parameter~$\beta$ and for any decoder, the mean squared error of the
+  transmission strategy described in Section~\ref{sec:commscheme} satisfies
+  \begin{equation*}
+    \mse \in \Omega(\snr^{-n}(\log\snr)^{n-1}).
+  \end{equation*}
+\end{theorem}
+
+\emph{Discussion:} The asymptotic lower bound on the mean squared error given by
+the theorem coincides with the asymptotic performance achieved by the suboptimal
+decoder in Section~\ref{sec:achievable}; the bound is therefore asymptotically
+tight. 
+
+%
+\begin{proof}[Proof of Theorem~\ref{thm:scalinglb}]
+  Define $l_1(\snr, \e) = \snr^{-n+(n-1)\e}$ and $l_2(\snr,\e) = \snr^{-1+\e/2}
+  \exp\{-\snr^\e/k\}$. By Lemmata~\ref{lem:lowerbound1}
+  and~\ref{lem:lowerbound2},
+  \begin{equation*}
+    \mse \in \Omega\big(\max \left( l_1(\snr,\e), l_2(\snr,\e) \right) \big).
+  \end{equation*}
+  The optimal parameter $\e(\snr)$ is therefore such that for
+  any~$\snr$
+  \begin{equation}
+    \label{eq:epsmax}
+    \max\left( l_1(\snr,\e), l_2(\snr,\e) \right)
+  \end{equation}
+  is minimized. Now for any fixed~$\snr$, $l_1(\snr,\e)$ is increasing in~$\e$,
+  and $l_2(\snr,\e)$ is increasing in~$\e$ for $0 \le \e < \xi =
+  \log(k/2)/\log\snr$ and decreasing in~$\e$ for $\e \ge \xi$.
+  The maximum
+  in~\eqref{eq:epsmax} is therefore minimized either for $\e = 0$ or for $\e \ge
+  \xi$
+  such that $l_1(\e) = l_2(\e)$. As we have remarked earlier, $\e = 0$ leads to
+  a worse performance than that achieved in Section~\ref{sec:achievable}, and so
+  this cannot be the optimal parameter. We therefore have to choose
+  $\e(\snr)$ such that $l_1(\snr,\e) = l_2(\snr, \e)$.  Inserting the
+  definitions of $l_1$ and $l_2$ and rearranging the terms yields
+  \begin{equation*}
+    \snr^{-(n-1) + (n-3/2)\e} = \exp\{-\snr^\e/k\},
+  \end{equation*}
+  which is of the form~\eqref{eq:epsequation} with $a = -(n-1)$ and $b = n-3/2$.
+  By Lemma~\ref{lem:epssolution}, for $\snr > 1$,
+  \begin{equation*}
+    \snr^\e = (n-3/2)k W(\snr^{\frac{2(n-1)}{2n-3}} / ((n-3/2)k)).
+  \end{equation*}
+  We now use the fact that $W(x)/\log x$ converges to~$1$ for $x \ra \infty$;
+  this can be shown using L'H\^opital's rule and because the derivative of
+  $W(x)$ is $W(x)/[x(1 + W(x))]$ (cf.~\cite{CorlessGHJK1996}).
+
+  For sufficiently large $\snr$, therefore, there exists a constant $c > 0$ such
+  that
+  \begin{equation*}
+    \snr^\e \ge c(n-3/2)k \left[ \frac{2(n-1)}{2n-3}\log\snr - \log((n-3/2)k)
+    \right],
+  \end{equation*}
+  and so $\snr^\e \in \Omega(\log\snr)$. Plugging this into the bound of
+  Lemma~\ref{lem:lowerbound1} we finally obtain\footnote{If $a(x) \in
+  \Omega(f(x))$ and $b(x) \in \Omega(g(x))$, then $a(x)b(x)^m \in
+  \Omega(f(x)g(x)^m)$.}
+  \begin{equation*}
+    \mse \in \Omega(\snr^{-n}(\log\snr)^{n-1}),
+  \end{equation*}
+  and no choice of $\e(\snr)$ can improve this bound.
+\end{proof}
+
+
+\section{Asymptotical Achievability of Lower Bound}
+\label{sec:achievable}
+
+\subsection{A Suboptimal Decoder}
+
+The $X_i$ are transmitted across the channel, producing at the channel output
+the symbols
+\begin{equation*}
+  Y_i = X_i + Z_i, \quad i = 1, \dots, n,
+\end{equation*}
+where the $Z_i$ are iid Gaussian random variables of variance~$\szq$. 
+To estimate $S$ from  $Y_1$, \dots, $Y_n$, the decoder first
+computes separate estimates $\Qh_1$, \dots, $\Qh_{n-1}$ and $\Eh_{n-1}$, and
+then combines them to obtain the final estimate~$\Sh$.  While this strategy is
+suboptimal in terms of achieving a small MSE, we will see that it is good enough
+to achieve optimal scaling.
+
+To estimate the $Q_i$ we use a maximum likelihood (ML) decoder, which yields the
+minimum distance estimate
+\begin{equation}
+  \label{eq:mldecoder}
+  \Qh_i = \frac{1}{\beta} \arg \min_{j\in \Z} \left| \sqrt{\frac{P}{\ssq
+  + \delta} } \frac{j}{\beta} - Y_i \right|.
+\end{equation}
+To estimate $E_{n-1}$, we use a linear minimum mean-square error (LMMSE)
+estimator (see \eg~\cite[Section~8.3]{Scharf1990}), which computes
+\begin{equation}
+  \label{eq:lmmse}
+  \Eh_{n-1} = \frac{\E[E_{n-1} Y_n]}{\E[Y_n^2]} Y_n.
+\end{equation}
+Finally we use the relationship~\eqref{eq:unwraprec} to obtain
+\begin{equation}
+  \label{eq:unwrapestim}
+  \Sh = \sum_{i=1}^{n-1} \frac{1}{\beta^{i-1}} \Qh_i + \frac{1}{\beta^{n-1}}
+  \Eh_{n-1}.
+\end{equation}
+
+
+\subsection{Error Analysis}
+
+The overall MSE $\E[(S-\Sh)^2]$ can be broken up into contributions due to the
+errors in decoding $Q_i$ and $E_{n-1}$ as follows. From~\eqref{eq:unwraprec}
+and~\eqref{eq:unwrapestim}, the difference between $S$ and $\Sh$ is
+\begin{equation*}
+  S - \Sh = \sum_{i=1}^{n-1} \frac1{\beta^{i-1}} (Q_i - \Qh_i) + \frac1{\beta^{n-1}}
+  (E_{n-1} - \Eh_{n-1}).
+\end{equation*}
+The error terms $Q_i - \Qh_i$ depend only on the noise of the respective channel
+uses and are therefore independent of each other and of $E_{n-1} - \Eh_{n-1}$,
+so we can write the error variance componentwise as
+\begin{equation}
+  \label{eq:totalerror}
+  \E[(S-\Sh)^2] = \sum_{i=1}^{n-1} \frac{1}{\beta^{2(i-1)}} \Eqi +
+  \frac{1}{\beta^{2(n-1)}} \Ee, 
+\end{equation}
+where $\Eqi \deq \E[(Q_i - \Qh_i)^2]$ and $\Ee \deq \E[(E_{n-1} -
+\Eh_{n-1})^2]$.
+
+\begin{lemma}
+  \label{lem:eqbound}
+  For each $i = 1$, \dots, $n-1$, 
+  \begin{equation}
+    \label{eq:eqidecay}
+    \Eqi \in O\left(\exp\{-k \snr/\beta^2\}\right),
+  \end{equation}
+  where $\snr = P/\szq$ and $k > 0$~is a constant.
+\end{lemma}
+(The $O$-notation is defined in Appendix~\ref{app:Onotation}.)
+
+\begin{proof}
+  Define the interval
+  \begin{equation*}
+    \I_j = \left[ \frac{(j - \frac12) \sqrt{P}}{\beta \sqrt{\ssq + \delta}},
+    \frac{(j + \frac12) \sqrt{P}}{\beta \sqrt{\ssq + \delta}} \right).
+  \end{equation*}
+  According to the minimum distance decoder~\eqref{eq:mldecoder}, $\Qh_i - Q_i
+  = j/\beta$ whenever $Z_i \in \I_j$.  The error $\Eqi$ satisfies thus
+  \begin{align}
+    \E[(Q_i - \Qh_i)^2] &= \frac{1}{\beta^2} \sum_{j \in \Z} j^2 \Pr[Z_i \in
+    \I_j]  \nonumber \\
+    &= \frac{2}{\beta^2} \sum_{j = 1}^\infty j^2 \Pr[Z_i \in \I_j],
+    \label{eq:eqexact}
+  \end{align}
+  where the second equality follows from the symmetry of the distribution
+  of~$Z_i$. Now,
+  \begin{equation*}
+    \Pr[Z_i \in \I_j] = Q\left( \frac{(j - \frac12) \sqrt \snr}{\beta \sqrt{\ssq
+    + \delta }} \right) - Q\left( \frac{(j + \frac12) \sqrt{\snr}}{\beta
+    \sqrt{\ssq + \delta}} \right),
+  \end{equation*}
+  where
+  \begin{equation*}
+    Q(x) = \frac{1}{\sqrt{2\pi}} \int_x^\infty e^{-\xi^2/2} d\xi,
+  \end{equation*}
+  which can be bounded from above for $x \ge 0$ as
+  \begin{equation*}
+    Q(x) \le \frac12 e^{-x^2/2}.
+  \end{equation*}
+  For $\beta \ge 1$ we can now bound~\eqref{eq:eqexact} as
+  \begin{equation*}
+    \Eqi \le \sum_{j=1}^\infty j^2 \exp\left\{ - \frac{(j - 1/2)^2
+    \snr}{2\beta^2(\ssq + \delta)} \right\}.
+  \end{equation*}
+  Note that for $j \ge 2$, $(j - 1/2)^2 > j$.  Thus
+  \begin{eqnarray}
+    \Eqi &\le & \exp \left \{ - \frac{\snr}{8 \beta^2 (\ssq +\delta)} \right\}
+    \nonumber \\
+    & & \mbox{} + 
+    \sum_{j = 2}^\infty j^2 \exp \left \{ - \frac{j \snr}{2\beta^2(\ssq
+    +\delta)}
+    \right\}. \label{eq:eqibound}
+  \end{eqnarray}
+  To bound the infinite sum we use 
+  \begin{equation}
+    \label{eq:geomsum}
+    \sum_{j=2}^\infty j^2 p^j \le \sum_{j=1}^\infty j^2 p^j = 
+    \frac{p^2+p}{(1-p)^3}
+  \end{equation}
+  with $p = \exp\{-\snr/2 \beta^2 (\ssq+\delta)\}$. The first term
+  of~\eqref{eq:eqibound} thus dominates for large values of
+  $\snr/\beta^2$ and
+  \begin{equation*}
+    \Eqi \le c\exp\left\{ - \frac{\snr}{8 \beta^2 (\ssq + \delta)} \right\}
+  \end{equation*}
+  for some~$c > 0$, which completes the proof. 
+\end{proof}
+
+\begin{lemma}
+  \label{lem:eedecay}
+  $\Ee \in O(\snr^{-1})$. 
+\end{lemma}
+\begin{proof}
+  The mean-squared error that results from the LMMSE estimation~\eqref{eq:lmmse}
+  is
+  \begin{equation}
+    \label{eq:lmmse-error}
+    \Ee = \seq - \frac{(\E[E_{n-1}
+    Y_n])^2}{\E[Y_n^2]}. 
+  \end{equation}
+  Since
+  \begin{equation*}
+    Y_n = X_n + Z_n = \sqrt{\frac{P}{\seq}} E_{n-1} + Z_n,
+  \end{equation*}
+  we have $\E[E_{n-1}Y_n] = \sqrt{P\seq}$. Moreover, $\E[Y_n^2] = \E[X^2] +
+  \E[Z^2] = P+\szq$.  Inserting this into~\eqref{eq:lmmse-error} we obtain
+  \begin{align*}
+    \Ee &= \seq - \frac{P \seq}{P + \szq} \\
+    &= \seq \left( 1 - \frac{P}{P + \szq} \right) \\
+    &= \frac{\seq}{1 + \snr} \\
+    & < \frac{\seq}{\snr}.
+  \end{align*}
+  Since $\seq$ is bounded (cf.\ Proposition~\ref{prop:qeproperties}), 
+  $\Ee \in O(\snr^{-1})$ as claimed.
+
+\end{proof}
+
+
+\section{Towards Lower Bounds for General Schemes}
+
+\section{Summary}
+
+This section will summarize the chapter's results.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% APPENDICES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{subappendices}
+  \section{Proof of Lemma~\ref{lem:qvarconvergence}}
+  \label{app:lemma1proof}
+
+  Since all involved distributions are symmetric, $\E[Q_i] = 0$.  Writing $Q_i$
+  as a function of $E_{i-1}$, we have
+  \begin{equation}
+    \var(Q_i) = \E[Q_i^2] = \int_{-\infty}^\infty Q_i(\xi)^2 f(\xi) d\xi,
+    \label{eq:varqintegral}
+  \end{equation}
+  %\begin{align}
+  %  \var(Q_i) &= \E[Q_i^2] \nonumber\\
+  %  &= \int_{-\infty}^\infty Q_i(\xi)^2 f(\xi) d\xi,
+  %  \label{eq:varqintegral}
+  %\end{align}
+  where $f(\xi)$ is the pdf\footnote{probability density function} of $E_{i-1}$.
+  Now, $Q_i(\xi) = j/\beta$ whenever
+  \begin{equation*}
+    \xi \in \left[ \frac{j - 1/2}{\beta}, \frac{j + 1/2}{\beta} \right).
+  \end{equation*}
+  With this, the integral~\eqref{eq:varqintegral} becomes
+  \begin{align*}
+    \var(Q_i) &= \frac{1}{\beta^2} \sum_{j \in \Z} j^2 
+    \int_{\frac{j - 1/2}{\beta}}^{\frac{j + 1/2}{\beta}} f(\xi) d\xi \\
+    &= \sum_{j\in \Z} \left( \frac{j}{\beta} \right)^2 \left[ F\left( 
+    { \textstyle
+    \frac{j + 1/2}{\beta} }\right) - F \left( { \textstyle \frac{j - 1/2}{\beta}
+    } \right) \right],
+  \end{align*}
+  where $F(\xi)$ is the cdf\footnote{cumulative distribution function} of
+  $E_{i-1}$. As $\beta$ goes to infinity, this sum converges to a
+  Riemann-Stieltjes integral:
+  \begin{equation*}
+    \var(Q_i) \longrightarrow \int \xi^2 dF(\xi) = \var(E_{i-1}) \quad
+    \text{as $\beta \goesto \infty$.}
+  \end{equation*}
+  \qed
+
+
+  \section{Proof of Ziv's Lower Bound (Lemma~\ref{lem:zivbound})}
+  \label{app:zivboundproof}
+
+  If we condition the mean squared error on~$S$ and use the assumption on~$p_S$
+  we obtain
+  \begin{equation*}
+    \mse \ge \pmin \int_A^B \msecond ds.
+  \end{equation*}
+  For $\Delta \in [0, B-A]$ we can further bound this in two ways:
+  \begin{align*}
+    \mse &\ge \pmin \intabd \msecond ds \\
+    \mse &\ge \pmin \int_{A+\Delta}^B \msecond ds \\
+    &= \pmin \intabd \msecondd ds.
+  \end{align*}
+  Averaging the two lower bounds yields
+  \begin{multline}
+    \label{eq:avglbd}
+    \mse \ge \frac{\pmin}{2} \intabd \bigg( \msecond + \\
+    \msecondd \bigg) ds,
+  \end{multline}
+  and applying Markov's inequality to the expectation terms leads to
+  \begin{equation}
+    \label{eq:markov1}
+    \msecond \ge \dhsq \Pr[|\Sh - S| \ge \Delta/2 \mid s]
+  \end{equation}
+  and
+  \begin{multline}
+    \label{eq:markov2}
+    \msecondd \\
+    \ge \dhsq \Pr[|\Sh - S - \Delta| \ge \Delta/2 \mid s+\Delta].
+  \end{multline}
+
+  Now suppose that we use the communication system in question for binary
+  signaling. We want to send either $s$ or $s+\Delta$; at the decoder we use the
+  estimate~$\Sh$ to decide for~$s$ or $s + \Delta$ depending on which one $\Sh$
+  is closer to. When $s$ is sent, the decoder makes an error only if $|\Sh - s|
+  \ge \Delta/2$; when $s + \Delta$ is sent, it makes an error only if $|\Sh - s
+  - \Delta| \ge \Delta/2$. The conditional error probabilities therefore satisfy
+  $\Pr[\text{error} | s] \le \Pr[|\Sh - S| \ge \Delta/2 \mid s]$ and
+  $\Pr[\text{error} | s + \Delta] \le \Pr[|\Sh - S - \Delta| \ge \Delta/2 \mid s +
+  \Delta]$. Applying this to~\eqref{eq:markov1} and~\eqref{eq:markov2} and
+  inserting the result in~\eqref{eq:avglbd} yields
+  \begin{equation}
+    \label{eq:zivalmostproved}
+    \mse \ge \pmin \dhsq \intabd \pe(s, \Delta) ds,
+  \end{equation}
+  where $\pe(s, \Delta) = \left(\Pr[\text{error}|s] + \Pr[\text{error}|s +
+  \Delta] \right)/2$ is the average error probability.
+
+  If $s$ and $s+\Delta$ are picked with equal probability and transmitted across
+  $n$~parallel Gaussian channels as $\X(s)$ and $\X(s+\Delta)$, and if $d(s,
+  \Delta) = \| \X(s) - \X(s + \Delta)\|$, then the error probability of the MAP
+  decoder is $Q(d(s,\Delta) / 2 \sz)$, a standard result of communication theory
+  (see \eg~\cite[Section~4.5]{WozencraftJ1965}). Because the MAP decoder minimizes
+  the error probability, $Q(d(s,\Delta)/2\sz) \le \pe(s,\Delta)$, which, when
+  inserted into~\eqref{eq:zivalmostproved}, completes the proof. \hfill\qed
+
+
+  \section{Asymptotic Notation}
+  \label{app:Onotation}
+  The ``$O$-'' and ``$\Omega$-'' asymptotic notation used at various points in
+  the paper is defined as follows.  Let $f(x)$ and $g(x)$ be two functions
+  defined on~$\R$.  We write
+  \begin{equation*}
+    f(x) \in O(g(x))
+  \end{equation*}
+  if and only if there exists an $x_0$ and a constant~$c$ such that
+  \begin{equation*}
+    f(x) \le c g(x)
+  \end{equation*}
+  for all $x > x_0$. 
+
+  Similarly, we write $f(x) \in \Omega(x)$ $\le$ is replaced by $\ge$ in the
+  above definition.
+
+\end{subappendices}
+

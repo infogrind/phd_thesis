@@ -3,8 +3,29 @@
 % Last Change: Tue Jan 12 11:00 AM 2010 C
 %
 \documentclass[a4paper]{book}
+
+% Font related packages
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+
+% To enable links in PDF
+\usepackage[colorlinks=true]{hyperref}
+
+% Structure related packages
+\usepackage{appendix}                   % Permits per-chapter appendices
+
+% Math-related packages
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+
+\bibliographystyle{IEEEtran}
+
+% Theorem-like definitions
+\input{theoremdefs}
+
+% All macros and definitions
+\input{thesismac}
 
 \title{On Low-Delay Joint Source-Channel Communication}
 \author{Marius Kleiner}
@@ -16,6 +37,7 @@
 
 \input{abstract}
 \input{resume}
+\input{zusfsg}
 \input{ack}
 
 
@@ -27,6 +49,10 @@
 \input{ch_fidelity}
 \input{ch_simulator}
 \input{ch_conclusions}
+
+\backmatter
+\chapter{Bibliography}
+\bibliography{mkbiblio}
 
 \end{document}
 

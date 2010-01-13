@@ -1,0 +1,74 @@
+% Useful macros
+
+% Single letter abbreviations: matrices and vectors
+\newcommand{\vect}[1]{\mathbf{#1}}
+\newcommand{\mat}[1]{\mathbf{#1}}
+\newcommand{\y}{\vect{y}}
+\newcommand{\Y}{\vect{Y}}
+\newcommand{\x}{\vect{x}}
+\newcommand{\X}{\vect{X}}
+
+% Single letter abbreviations: sets and the like
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\Ss}{\mathcal{S}}
+\newcommand{\cE}{\mathcal{E}}
+\newcommand{\Err}{{\cE}}
+
+% Single letter abbreviations: accented symbols
+\newcommand{\Sh}{\hat{S}}
+\newcommand{\sh}{\hat{s}}
+\newcommand{\Qh}{\hat{Q}}
+\newcommand{\Eh}{\hat{E}}
+
+% Mathematical functions
+\DeclareMathOperator{\Erf}{Erf}
+\DeclareMathOperator{\Int}{int}
+\DeclareMathOperator{\Var}{Var}
+\newcommand{\var}{\Var}
+\newcommand{\deq}{\stackrel{\Delta}{=}}
+
+% Typographical shortcuts
+\newcommand{\ie}{i.e.}
+\newcommand{\eg}{e.g.}
+\newcommand{\abbrev}[1]{\textsc{\MakeLowercase{#1}}}
+\newcommand\cdf{\abbrev{CDF}}
+\newcommand\snr{\abbrev{SNR}}
+
+% Used in distortion lower bound
+\newcommand{\pS}{{p_S}}
+\newcommand{\pmin}{{p_{\min}}}
+\newcommand{\mse}{{\E[(\Sh - S)^2]}}
+\newcommand{\msecond}{{\E[(\Sh - S)^2 | s]}}
+\newcommand{\msecondd}{{\E[(\Sh - S - \Delta)^2 | s + \Delta]}}
+\newcommand{\dhsq}{{\left(\frac{\Delta}{2}\right)^2}}
+\newcommand{\intabd}{{\int_A^{B-\Delta}}}
+\newcommand{\prdiffcond}{\Pr[|\Sh - S| \ge \Delta/2 \mid s]}
+\newcommand{\prdiffcondd}{\Pr[|\Sh - S - \Delta| \ge \Delta/2 \mid s + \Delta]}
+\newcommand{\pb}{\overline{P}}
+\newcommand{\pe}{P_e}
+\newcommand{\pbe}{\pb_e}
+\newcommand{\psib}{\overline{\psi}}
+
+% Shortcuts for symbols with sub/superscripts
+\newcommand{\sq}{{\sigma^2}}
+\newcommand{\sqq}{{\sigma_Q^2}}
+\newcommand{\ssq}{{\sigma_S^2}}
+\newcommand{\sz}{{\sigma_Z}}
+\newcommand{\szq}{{\sz^2}}
+\newcommand{\se}{{\sigma_E}}
+\newcommand{\seq}{{\se^2}}
+\newcommand{\Eq}{{\Err_Q}}
+\newcommand{\Eqi}{{\Err_{Q,i}}}
+\newcommand{\Ee}{{\Err_E}}
+
+
+% Shorter names for existing macros
+\newcommand{\ra}{\rightarrow}
+\newcommand{\goesto}{\ra}
+\let\e\epsilon
+\let\l\ell
