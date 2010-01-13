@@ -247,8 +247,8 @@ result of this section.
   \label{lem:epssolution}
   Define $W(x)$ to be the function that satisfies $W(x)e^{W(x)} = x$ for $x >
   0$.  This function is well defined and is sometimes called the \emph{Lambert
-  $W$-function}~\cite{CorlessGHJK1996}. Then for $\snr > 1$ and arbitrary real
-  constants $a$, $b>0$, and $k > 0$, 
+  $W$-function}~\textnormal{\cite{CorlessGHJK1996}}. Then for $\snr > 1$ and
+  arbitrary real constants $a$, $b>0$, and $k > 0$, 
   \begin{equation}
     \label{eq:epsequation}
     \snr^{a+b\e} = \exp\{-\snr^\e/k\},
@@ -508,6 +508,56 @@ where $\Eqi \deq \E[(Q_i - \Qh_i)^2]$ and $\Ee \deq \E[(E_{n-1} -
 
 \section{Towards Lower Bounds for General Schemes}
 
+\subsection{Extension of Ziv's Bound to Average Distance}
+
+Recall the bound from Lemma~\ref{lem:zivbound}:
+\begin{equation}
+  \label{eq:zivagain}
+  \mse \ge \pmin \dhsq \intabd Q(d(s,\Delta) / 2 \sz) ds.
+\end{equation}
+Now define the average distance between $f(s)$ and $f(s+\Delta)$ when $s$ is
+uniformly distributed over $[A, B-\Delta]$ as
+\begin{equation*}
+  \dbar(\Delta) \deq \frac{1}{B-A-\Delta} \intabd d(s, \Delta) ds.
+\end{equation*}
+Let $\phi(\Delta)$ be the set of $s \in [A, B-\Delta]$ for which $d(s, \Delta)
+\le 2 \dbar(\Delta)$. By Markov's inequality, this set is such that
+\begin{equation*}
+  \frac{1}{B-A-\Delta} \int_{\phi(\Delta)} ds \ge \frac{1}{2}.
+\end{equation*}
+Thus, restricting the integral in~\eqref{eq:zivagain} to the set~$\phi(\Delta)$,
+we obtain
+\begin{equation}
+  \label{eq:zivdbar}
+  \mse \ge \frac{\pmin}{2} \dhsq Q(\dbar(\Delta)/\sz) (B-A-\Delta).
+\end{equation}
+Lastly define
+\begin{equation*}
+  d(\Delta) \deq \frac{1}{B-A} \int_A^B d(s,\Delta) ds
+\end{equation*}
+and note that
+\begin{align*}
+  d(\Delta) &\ge \frac{B-A-\Delta}{B-A} \frac{1}{B-A-\Delta} \intabd d(s,
+  \Delta) ds \\
+  &= \left(1 - \frac{\Delta}{B-A}\right) \dbar(\Delta).
+\end{align*}
+Inserting in~\eqref{eq:zivdbar} yields
+\begin{equation*}
+  \mse \ge \frac{\pmin}{2} \dhsq Q\left(\frac{d(\Delta)}{\left(1 -
+  \frac{\Delta}{B-A}\right) \sz} \right) (B-A-\Delta).
+\end{equation*}
+If $\Delta \goesto 0$ as $\snr \goesto \infty$, this
+is asymptotically equivalent to
+\begin{equation*}
+  \mse \ge c \Delta^2 Q(d(\Delta)/\sz)
+\end{equation*}
+with $c$ appropriately defined.
+
+The advantage of defining $d(\Delta)$ as the average distance $d(s,\Delta)$ over
+an \emph{uniform} distribution of~$s$ is that it allows to compute $d(\Delta)$
+as a function of the encoding strategy alone, without regard to the actual
+source distribution.
+
 \section{Summary}
 
 This section will summarize the chapter's results.
@@ -570,22 +620,22 @@ This section will summarize the chapter's results.
     &= \pmin \intabd \msecondd ds.
   \end{align*}
   Averaging the two lower bounds yields
-  \begin{multline}
+  \begin{equation}
     \label{eq:avglbd}
     \mse \ge \frac{\pmin}{2} \intabd \bigg( \msecond + \\
     \msecondd \bigg) ds,
-  \end{multline}
+  \end{equation}
   and applying Markov's inequality to the expectation terms leads to
   \begin{equation}
     \label{eq:markov1}
     \msecond \ge \dhsq \Pr[|\Sh - S| \ge \Delta/2 \mid s]
   \end{equation}
   and
-  \begin{multline}
+  \begin{equation}
     \label{eq:markov2}
     \msecondd \\
     \ge \dhsq \Pr[|\Sh - S - \Delta| \ge \Delta/2 \mid s+\Delta].
-  \end{multline}
+  \end{equation}
 
   Now suppose that we use the communication system in question for binary
   signaling. We want to send either $s$ or $s+\Delta$; at the decoder we use the
