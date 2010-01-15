@@ -117,6 +117,7 @@ the proofs of the lemmas that follow.
 
 \begin{lemma}
   \label{lem:zivbound}
+  \label{LEM:ZIVBOUND}
   Consider a communication system where a con\-tin\-u\-ous-valued source~$S$ is
   encoded into an $n$-dimensional vector $\X(S)$, sent across $n$~independent
   parallel AWGN channels with noise variance~$\szq$, and decoded at the receiver
@@ -507,6 +508,36 @@ where $\Eqi \deq \E[(Q_i - \Qh_i)^2]$ and $\Ee \deq \E[(E_{n-1} -
 
 
 \section{Towards Lower Bounds for General Schemes}
+
+\subsection{Apparent Limitations of Ziv's Bound}
+
+Lemma~\ref{lem:zivbound} allows to lower bound the mean squared error by
+exploiting particular geometric properties of the constellation. More precisely,
+if there exists a $\Delta$ such that $d(s, \Delta)/2\sz$ can be upper bounded
+(at least for a set of~$s$ with minimum positive probability), we can lower
+bound the error probability of binary signaling and through the lemma obtain a
+bound on the mean squared error.
+
+We could use this lemma to lower bound the error of the scheme presented in
+Section~\ref{sec:achievable} because the regular structure of the constellation
+gave a lower bound on $d(s,\Delta)$ for $\Delta = \beta^{-1}$. 
+
+For a more general class of encodings we not have a bound on $d(s,\Delta)$ for
+some fixed~$\Delta$. Rather, there might be a~$\Delta$ for each~$s$, but
+these~$\Delta$ might not be the same for all~$s$.
+
+Consider the following example. Divide the unit interval into $m^2$ intervals.
+Map each interval to a point to the unit square~${-\frac12, \frac12}^2$.
+Transmit the point through a $2$-dimensional AWGN channel. At the channel
+output, the decoder estimates the transmitted point and outputs the midpoint of
+the corresponding quantization interval. If the correct point is estimated then
+the squared error is of the order $1/m^2$. 
+
+Let now $m = \sqrt{\snr}$. The assumption is that the following is true: There
+is a positive (lower bounded) probability that the transmitted point, say $x_i$,
+has within distance $1/m = k/\sqrt{\snr}$, with $k$ a constant independent
+of~$\snr$, another point $x_j$ such that the midpoints of the source intervals
+corresponding to $x_i$ and $x_j$ are more than $m/\sqrt{\snr}$ apart.
 
 \subsection{Extension of Ziv's Bound to Average Distance}
 

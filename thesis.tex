@@ -9,7 +9,7 @@
 \usepackage[utf8]{inputenc}
 
 % To enable links in PDF
-\usepackage[colorlinks=true]{hyperref}
+%\usepackage[colorlinks=true]{hyperref}
 
 % Structure related packages
 \usepackage{appendix}                   % Permits per-chapter appendices
@@ -19,13 +19,19 @@
 \usepackage{amsfonts}
 \usepackage{amsthm}
 
-\bibliographystyle{IEEEtran}
-
 % Theorem-like definitions
 \input{theoremdefs}
 
 % All macros and definitions
 \input{thesismac}
+
+% Illustration-related packages
+\usepackage{tikz}
+\input{tikzstyles}
+
+% Various commands affecting the whole document
+\bibliographystyle{IEEEtran}
+\frenchspacing
 
 \title{On Low-Delay Joint Source-Channel Communication}
 \author{Marius Kleiner}
