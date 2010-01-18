@@ -1,4 +1,9 @@
 \chapter{Source-Channel Coding without Feedback}
+\label{ch:nofeedback}
+
+While Chapter~\ref{ch:qescheme} is about a very particular encoding scheme, this
+chapter takes a more general look at possible strategies for bandwidth
+expansion. It focuses on the AWGN channel and on the squared-error distortion. 
 
 \section{Limitations of Linear Codes}
 
@@ -6,6 +11,9 @@ This section contains the proof why linear codes don't work for bandwidth
 expansion. It also shows that to achieve the optimal distortion scaling
 $\snr^{-n}$, the channel input distribution must be non-degenerate, which is not
 possible with a linear code. 
+
+This can also again be seen from a geometric angle, as done in
+Chapter~\ref{ch:feedback} for the feedback case.
 
 Conclusion: to take advantage of the additional channel uses, a code must split
 the source into independent parts. 
