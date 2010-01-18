@@ -1,0 +1,28 @@
+\chapter{Source-Channel Coding without Feedback}
+
+\section{Limitations of Linear Codes}
+
+This section contains the proof why linear codes don't work for bandwidth
+expansion. It also shows that to achieve the optimal distortion scaling
+$\snr^{-n}$, the channel input distribution must be non-degenerate, which is not
+possible with a linear code. 
+
+Conclusion: to take advantage of the additional channel uses, a code must split
+the source into independent parts. 
+
+
+\section{Coded and Uncoded}
+
+In this section I show that the optimum distortion can be achieved if we first
+encode the source and transmit it approximately error-free in the first $n-k$
+channel uses and then send the error uncoded in the last $k$ channel uses.
+
+However, if the error from the first (coding) phase is taken into account, the
+achievable mean-squared error decays at best as $\snr^{k/n-1}$. 
+
+
+\section{Taking Into Account Coding Errors}
+
+Here we look at using lattices to transmit the source across the first $n-k$
+channel uses. We study how the lattice properties influence the distortion
+scaling, in particular how close the Voronoi regions are to spheres. 

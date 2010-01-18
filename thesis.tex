@@ -10,6 +10,7 @@
 
 % To enable links in PDF
 %\usepackage[colorlinks=true]{hyperref}
+\usepackage{hyperref}
 
 % Structure related packages
 \usepackage{appendix}                   % Permits per-chapter appendices
@@ -41,23 +42,24 @@
 \frontmatter
 \maketitle
 
-\input{abstract}
-\input{resume}
-\input{zusfsg}
-\input{ack}
+%\input{abstract}
+%\input{resume}
+%\input{zusfsg}
+%\input{ack}
 
 
 \tableofcontents
 
 \mainmatter
 \input{ch_intro}
+\input{ch_feedback}
+\input{ch_nofeedback}
 \input{ch_qescheme}
 \input{ch_fidelity}
 \input{ch_simulator}
 \input{ch_conclusions}
 
 \backmatter
-\chapter{Bibliography}
 \bibliography{mkbiblio}
 
 \end{document}

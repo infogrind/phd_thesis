@@ -1,0 +1,75 @@
+\chapter{Source-Channel Coding with Feedback}
+
+Introductory paragraphs go here.
+
+
+\section{A First Example}
+\label{sec:gaussex}
+
+Here comes the example with Gaussian source and channel and $1$:$n$ bandwidth
+expansion (Gastpar \& Rimoldi, ITW~'03).
+
+
+\section{Conditions for Optimality}
+\label{sec:fboptimality}
+
+This section contains mainly the proof of the inequality $kR(D) \le nC(P)$ for
+the feedback case, and the analysis of the equality conditions. 
+
+The contents of this section will mainly be taken from my report
+\emph{Low-Complexity Source/Channel Block Coding}.
+
+
+\section{Geometric Interpretation}
+
+This section is about the interpretation of random variables as a vector space,
+and how this connects to the feedback problem. For this section we should also
+look again at the book by Cramer and Leadbetter, ``Stationary and related
+stochastic processes'', Ch.~5, Sections~5.6 and~5.7 as recommended by Burnashev.
+
+Depending on what this section will contain exactly, it may be moved after the
+next section.
+
+
+\section{The Gaussian Example Revisited}
+\label{sec:gaussexrev}
+
+This section shows how the Gaussian example from Section~\ref{sec:gaussex}
+achieves the optimality conditions given in Section~\ref{sec:fboptimality}.
+
+The question is asked whether feedback can be exploited in a similar way for
+other sources and/or channels.
+
+
+\section{Distribution Matching}
+
+This section looks at how, by knowing the last channel output exactly, one can
+make a deterministic encoder that produces an arbitrary iid output distribution.
+A connection to Shayevitz/Feder will be made. 
+
+It is also explained that distribution matching cannot be used (in general) to
+achieve the right joint distribution of~$S$ and~$\Sh$, and why in the Gaussian
+case this works anyway. An example is given (exponential channel) where it
+doesn't work. 
+
+
+\section{The Case $k$:$n$}
+
+Some thoughts about the $k$:$n$ case as treated in my technical report.
+
+
+\section{Noisy Feedback}
+
+Possibly a section about the case with noisy feedback for the Gaussian case. We
+could give the example that if the feedback noise vs.\ channel noise ratio is
+constant then the distortion scales only as $\snr^{-1}$.
+
+\section{Towards the Feedbackless Case}
+
+This section is about the intuition why feedback allows us to use uncoded
+transmission for every channel use. The conjecture is that uncoded transmission
+helps only if we know exactly what the state at the receiver is. 
+
+We can show that for the $k$:$n$ case, if we can transmit at capacity without
+error in the first $n-k$ channel uses, then we can send uncoded in the remaining
+channel uses (always assuming the cost and distortion functions are matched).
