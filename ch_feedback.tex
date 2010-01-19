@@ -1,24 +1,413 @@
 \chapter{Source-Channel Coding with Feedback}
 \label{ch:feedback}
 
-Introductory paragraphs go here.
+In this chapter we will revise the case where noiseless feedback is available
+from the receiver to the transmitter. It is well know that feedback does not
+increase capacity, but it often leads to a great reduction in complexity
+compared with the feedbackfree case. 
+
+We study in particular the case where one source symbol is to be transmitted
+over several channel uses. The converse to the source/channel coding theorem
+says that, whether feedback is used or not, the average cost and
+the average distortion are related by
+\begin{equation*}
+  kR(D) \le nC(P).
+\end{equation*}
+Moreover, using separate source and channel codes one can get arbitrarily close
+to equality. To do this, however, long block codes are generally needed. If
+noiseless feedback is present, on the other hand, equality can in certain cases
+be achieved with a joint source/channel code of minimal blocklength, \ie, when a
+single source symbol is encoded at a time. 
+
+We first study such a case by means of a Gaussian example in
+Section~\ref{sec:gaussex}. In Section~\ref{sec:fboptimality} we look at the
+converse to the joint source/channel coding theorem in detail and list the
+conditions for equality. 
+
+Then, in Section~\ref{sec:gaussexrev}, we go back to our initial example and see
+how the Gaussian case fulfills all these optimality conditions. 
+
+In the following section we see whether the Gaussian case was only a particular
+example, or whether similarly simple codes can lead to optimality in other cases
+as well. 
+
+In the last section of this chapter we make the connection to the feedbackfree
+case. What is so particular about feedback that lets us use uncoded transmission
+in every channel use?
+
 
 
 \section{A First Example}
 \label{sec:gaussex}
 
-Here comes the example with Gaussian source and channel and $1$:$n$ bandwidth
-expansion (Gastpar \& Rimoldi, ITW~'03).
+Let $S$ be a memoryless Gaussian source of variance~$\ssq$ that is to be
+transmitted in $2$ uses of an AWGN channel with noise variance~$\szq$. The power
+constraint on the channel inputs $X_1$, $X_2$ is given by
+\begin{equation*}
+  \frac12 ( \E X_1^2 + \E X_2^2) \le P
+\end{equation*}
+and the distortion between $S$ and its estimate $\Sh$ is the mean-squared error,
+\begin{equation*}
+  D = \E[(\Sh - S)^2].
+\end{equation*}
+Inserting in $R(D_{\min}) = 2C(P)$ the definitions of $R(D)$ and $C(P)$ for the
+Gaussian source and channel, we find that
+\begin{equation}
+  \label{eq:dmin}
+  D_{\min} = \frac{\ssq}{(1 + P/\szq)^2}.
+\end{equation}
+A squared error distortion arbitrarily close to $D_{\min}$ is achievable whether
+or not feedback is available. If feedback is present, however, the following
+simple scheme achieves equality exactly.
 
+The transmission strategy is as follows.  In the first channel use the
+transmitter sends $X_1 = \sqrt{P/\ssq} S$. The decoder computes an initial
+estimate
+\begin{equation*}
+  \Sh_1 = \frac{\sqrt{P \ssq}}{P + \szq} Y_1.
+\end{equation*}
+The encoder, having access to $Y_1$ and thus $\Sh_1$, computes the error of the
+first round, $E_1 = \Sh_1 - S$. This error has zero mean; its variance is
+\begin{equation*}
+  \E[E_1^2] = \E[(\Sh_1 - S)^2] = \frac{\ssq}{1 + P/\szq}.
+\end{equation*}
+In the second channel use, the encoder sends the first round's error, scaled to
+satisfy the power constraint with equality:
+\begin{equation*}
+  X_2 = \sqrt{\frac{P}{\Var E_1}} E_1.
+\end{equation*}
+The decoder computes the MMSE estimate $\Eh_1 = \E[E_1|Y_2]$ and sets the final
+estimate to be $\Sh = \Sh_1 - \Eh_1$. 
 
-\section{Conditions for Optimality}
+Overall, the average squared error distortion is therefore
+\begin{align*}
+  \mse &= \E[(\Sh_1 - \Eh_1 - S)^2] \\
+  &= \E[(E_1 - \Eh_1)^2].
+\end{align*}
+The last expectation is equal to 
+\begin{equation*}
+  \E[(E_1 - \Eh_1)^2] = \frac{\Var{E_1}}{1 + P/\szq} = \frac{\ssq}{(1 +
+  P/\szq)^2},
+\end{equation*}
+which coincides with $D_{\min}$ in~\eqref{eq:dmin}.
+
+\section{Optimal Cost/Distortion Tradeoff}
 \label{sec:fboptimality}
 
-This section contains mainly the proof of the inequality $kR(D) \le nC(P)$ for
-the feedback case, and the analysis of the equality conditions. 
+The following result characterizes the fundamental tradeoff between average cost
+and average distortion in any memoryless point-to-point communication system.
 
-The contents of this section will mainly be taken from my report
-\emph{Low-Complexity Source/Channel Block Coding}.
+\begin{theorem}
+  \label{thm:feedbackconv}
+  In a memoryless point-to-point source-channel communication system that
+  transmits $k$ source symbols per $n$ channel uses, the average incurred
+  cost~$P$ and distortion~$D$ satisfy
+  \begin{equation}
+    \label{eq:feedbackconv}
+    k R(D) \le n C(P).
+  \end{equation}
+\end{theorem}
+
+\begin{proof}
+  We have the following series of inequalities.
+  {\allowdisplaybreaks
+  \begin{align*}
+    kR(D) &= k R(\frac1k \sk \E d(S_i, \Sh_i)) \\
+    &\stackrel{(a)}{\le} \sk R(\E d(S_i, \Sh_i)) \\
+    &\stackrel{(b)}{\le} \sk I(S_i; \Sh_i) \\
+    &= \sk H(S_i) - H(S_i|\Sh_i) \\
+    &= H(S^k) - \sk H(S_i|\Sh_i) \\
+    &\stackrel{(c)}{\le} H(S^k) - \sk H(S_i|S^{i-1} \Sh^k) \\
+    &=H(S^k) - H(S^k|\Sh^k) \\
+    &=I(S^k;\Sh^k) \\
+    &\stackrel{(d)}{\le} I(S^k; Y^n) \\
+    &= H(Y^n) - H(Y^n|S^k) \\
+    &= \sn H(Y_i|Y^{i-1}) - H(Y_i|Y^{i-1} S^k)  \\
+    &\stackrel{(e)}{\le} \sn H(Y_i) - H(Y_i|Y^{i-1} S^k) \\
+    &\stackrel{(f)}{\le} \sn H(Y_i) - H(Y_i|Y^{i-1} S^k X_i) \\
+    &= \sn H(Y_i) - H(Y_i|X_i) \\
+    &= \sn I(X_i; Y_i) \\
+    &\stackrel{(g)}{\le} \sn C(\E \rho(X_i)) \\
+    &\stackrel{(h)}{\le} n C(\frac1n \E \rho(X_i)) \\
+    &= n C(P).
+  \end{align*}}
+  Inequality~(a) is because of the convexity$_\cup$ of the rate-distortion
+  function, (b) is by definition of $R(D)$, and (c)~is because conditioning does
+  not increase the entropy. Inequality~(d) is the data processing inequality,
+  (e) and (f) are again because conditioning does not increase entropy. Finally,
+  (g)~is by definition of~$C(P)$ and (h)~follows from the convexity$_\cap$ of
+  the capacity.
+\end{proof}
+
+Equality in~\eqref{eq:feedbackconv} is achieved if and only if the inequalities
+(a)--(h) in the above proof are all satisfied with equality. The following are
+necessary and sufficient conditions for each of these inequalities to become an
+equality.
+\begin{enumerate}[(a)]
+  \item $\E[d(S_i, \Sh_i)]$ does not depend on~$i$. % (a)
+  \item For each $i = 1$, \ldots, $k$, the conditional distribution $p(s_i,
+    \sh_i)$ achieves the rate-distortion function of the source at expected
+    distortion $\E[d(S_i, \Sh_i)]$. 
+  \item The backward test channel $p(s_i, \sh_i)$ is memoryless and used without
+    feedback.
+  \item The estimate $\Sh^k$ is a sufficient statistic to detect $S^k$ from
+    $Y^n$, \ie, $S^k - \Sh^k - Y^n$ forms a Markov chain. 
+  \item The channel output symbols $Y_i$ are mutually independent. 
+  \item Each encoder $f_i$ is such that $X_i - (S^k, Y^{i-1}) - Y_i$ forms a
+    Markov chain. 
+  \item The marginal distribution $p(x_i)$ of each $X_i$ achieves the capacity
+    of the channel at expected cost $\E[\rho(X_i)]$. 
+  \item $\E[\rho(X_i)]$ does not depend on~$i$.
+\end{enumerate}
+
+%The following lemma establishes a connection of conditions~(c) and~(d) with the
+%sufficiency of each individual estimate~$\Sh_i$.
+%
+%\begin{lemma}
+%  \label{lem:ssil}
+%  Conditions~(c) and~(d) are jointly satisfied if and only if $\Sh_i$ is a
+%  sufficient statistic for $S_i$ given $Y^n$. 
+%\end{lemma}
+%
+%\begin{proof}
+%  ($\Rightarrow$) Assume $\Sh_i$ is a sufficient statistic for $S_i$.
+%  This implies a Markov chain $Y^n - \Sh_i - S_i$. Since $\Sh^k$ is a
+%  function only of $Y^n$, we also have a Markov chain $S^{i-1} - Y^n - \Sh^k$.
+%  Combining the two Markov chains, we obtain $p(s_i | s^{i-1}, \sh^k) = p(s_i |
+%  \sh_i)$, which is condition~(c).
+%  
+%  To see that condition~(d) holds, write
+%  \begin{align*}
+%    p(s^k | y^n \sh^k) &= \prod_i p(s_i|s^{i-1} y^n \sh^k) \\
+%    &= \prod_i p(s_i | \sh_i) \\
+%    &= p(s^k | \sh^k),
+%  \end{align*}
+%  where we have first used the Markov chain $S^{i-1} - (Y^n, \Sh^k) - \Sh_i -
+%  S_i$ and then condition~(c). 
+%
+%  ($\Leftarrow$) Assume conditions~(c) and~(d) hold. We have
+%  \begin{align*}
+%    p(s^k | y^n \sh^k) &= p(s^k | \sh^k) \\
+%    &= \prod_i p(s_i | \sh_i),
+%  \end{align*}
+%  where the first equality follows from condition~(d) and the
+%  second equality follows from condition~(c). Marginalizing with respect to an
+%  arbitrary $s_j$ proves the sufficiency of $\sh_j$.
+%\end{proof}
+
+\begin{remark}
+  While condition~(f) is clearly fulfilled if $X_i$ is a
+  deterministic function of $S^k$ and $Y^{i-1}$. This is not necessary, however:
+  under the condition that the Markov chain $X_i - (S^k,Y^{i-1}) - Y_i$ holds,
+  $X_i$ may be random.
+
+  It turns out, though, that any performance achievable using a stochastic
+  encoder is also achievable if the encoder is deterministic. Indeed, suppose
+  $X_i$ is distributed according to $p(x_i | s^k y^{i-1})$ and that the above
+  Markov chain holds. The marginal distribution of the output $Y_i$ is then
+  \begin{align*}
+    p(y_i) &= \sum_{x_i, s^k, y^{i-1}} p(y_i | x_i s^k y^{i-1}) p(x_i | s^k
+    y^{i-1}) p(s^k y^{i-1}) \\
+    &= \sum_{s^k y^{i-1}} p(y_i | s^k y^{i-1}) p(s^k y^{i-1}) \sum_{x_i} p(x_i |
+    s^k y^{i_1}) \\
+    &= \sum_{s^k y^{i-1}} p(y_i | s^k y^{i-1}) p(s^k y^{i-1}).
+  \end{align*}
+  Since the distribution of $Y_i$ does not depend on the distribution of $X_i$,
+  the mutual information $I(X_i; Y_i)$ doesn't depend on it either:
+  \begin{align*}
+    I(X_i; Y_i) &= I(X_i S^k Y^{i-1}; Y_i) - I(S^k Y^{i-1}; Y_i \mid X_i) \\
+    &= I(S^k Y^{i-1}; Y_i) + I(X_i; Y_i \mid S^k Y^{i-1}) \\
+    &= I(S^k Y^{i-1}; Y_i).
+  \end{align*}
+  This means that for any random encoding function one can find a deterministic
+  function that leads to the same channel output distribution and mutual
+  information between $X_i$ and $Y_i$.
+\end{remark}
+
+
+\section{The Gaussian Example Revisited}
+\label{sec:gaussexrev}
+
+Section~\ref{sec:gaussex} gave an example of how feedback can be used to achieve
+the smallest distortion for a given power~$P$; Section~\ref{sec:fboptimality}
+listed a number of conditions that together are necessary and sufficient for a
+given system to operate at the smallest distortion. Why the Gaussian case in
+Section~\ref{sec:gaussex} works out optimally becomes clear when each of the
+conditions (a) to (h) are verified for the example.
+
+First, conditions (a) and (c) are satisfied trivially because~$k=1$. Because the
+source and the noise components are jointly Gaussian and all transformations are
+linear, all involved random variables are jointly Gaussian. The scaling of each
+input to have variance~$P$ therefore satisfies conditions~(g) and~(h).
+Condition~(f) is satisfied because the encoder is deterministic. To verify
+condition (e), note that the estimate $\Sh_1$ is the MMSE estimator of $S$ given
+$Y_1$. The MMSE estimation error $E_1$ is uncorrelated with the observation, and
+uncorrelated implies independent for jointly Gaussian random variables. As a
+function of $E_1$, $X_2$ is therefore independent of $Y_1$, and by the Markov
+chain $Y_1 - X_2 - Y_2$, so is $Y_2$.
+
+That $\Sh$ is the MMSE estimate of $S$ given $(Y_1, Y_2)$ implies that $S = \Sh
++ W$, with $\Sh = a Y_1 + b Y_2$ and where $W \sim \N(0, \sigma_W^2)$ is
+independent of $Y_1$ and $Y_2$. Given $\Sh$, $S$ is therefore independent of
+$(Y_1, Y_2)$ and so $\Sh$ is a sufficient statistic for $S$, which fulfills
+condition~(d). Finally, the relationship $S = \Sh + W$ makes the joint
+distribution of $S$ and $\Sh$ achieve the rate-distortion function, thus
+satisfying~(b).
+
+It appears as though this example works only because it uses all the properties
+particular to the Gaussian distribution: preservation of distribution under
+linear transformation, linear MMSE decoder, equivalence of uncorrelatedness and
+independence, and so on. One would assume, therefore, that this example does not
+give any indication about how to use the feedback for general sources and
+channels. As the next section shows, though, conditions~(e), (g), and~(h) (and
+of course condition~(f)) can be achieved with minimal complexity for any channel
+if perfect feedback is available.
+
+
+\section{Distribution Matching}
+
+\subsection{Achieving Channel Capacity}
+
+Consider a channel $p(y|x)$ and let $\pi(x)$ be the capacity achieving
+distribution at average cost~$P$, \ie, 
+\begin{equation*}
+  \pi(x) = \arg\max_{p(x): \E[\rho(X)] \le P} I(X;Y).
+\end{equation*}
+As before, we assume perfect feedback. The problem is to encode $1$ source
+symbol of an \emph{analog} source into~$n$ channel inputs. 
+
+Let $\Fpi$ be the cumulative distribution function (\cdf) of the distribution
+$\pi(x)$, and let $F_S(\x)$ be the \cdf\ of the source. In the first channel
+use, the encoder produces
+\begin{equation*}
+  X_1 = \Fpi^{-1}(F_S(S)),
+\end{equation*}
+where $\Fpi^{-1}$ is the inverse function of $\Fpi$. The random variable
+$F_S(S)$ has uniform distribution on $[0,1]$, and the application of $\Fpi^{-1}$
+to a uniform random variable produces a random variable with \cdf\ $\Fpi$. Thus,
+$X_1$ has the capacity achieving distribution~$\pi(x)$. 
+
+After $i-1$ rounds of transmission, the encoder knows $y_1$, \ldots, $y_{i-1}$,
+the values of the $i-1$ past received symbols, and can compute the conditional
+\cdf\ $F_{S|y_1, \ldots, y_{i-1}}$. It then sends in the $i^{\text{th}}$ channel
+use
+\begin{equation}
+  \label{eq:posteriorxi}
+  X_i = \Fpi^{-1}(F_{S|y_1,\dots,y_{i-1}}(S)).
+\end{equation}
+For any particular received values $y_1$, \ldots, $y_{i-1}$, therefore,
+\begin{equation*}
+  p(x_i|y_1, \dots, y_{i-1}) = \pi(x)
+\end{equation*}
+and so $X_i$ is independent of $Y_1$, \ldots, $Y_{i-1}$. 
+
+Using this strategy, therefore, the encoder produces a sequence of inputs $X_i$
+that form an \iid\ sequence with the capacity achieving distribution~$\pi(x)$.
+This satisfies conditions~(e)--(h). 
+
+The four conditions that can be satisfied using these strategy are exactly those
+that deal with the channel coding problem. It is no surprise, hence, that this
+strategy has been used for channel coding in the papers by Schalkwijk and
+Kailath~\textbf{[cite]} and Horstein~\textbf{[cite]} and later generalized by
+Shayevitz and Feder~\cite{ShayevitzF2007,ShayevitzF2008}.
+
+
+\subsection{Achieving the Rate Distortion Function?}
+
+The previous section showed how, having knowledge of the past channel outputs,
+the decoder could deterministically produce a new channel input that was
+independent of the previous outputs and had the capacity achieving distribution.
+As was explained in Section~\ref{sec:fboptimality}, a further necessary
+condition for a system to be optimal in the sense of~\eqref{eq:feedbackconv} is
+that the joint distribution of $S$ and $\Sh$ achieves the rate distortion
+function. Is this possible using a similar distribution matching strategy?
+Unfortunately it turns out that the answer is no in general; the Gaussian
+distribution is a notable exception.
+
+The rate distortion function is achieved if $p(\sh|s)$ minimizes the mutual
+information $I(S;\Sh)$ under the average distortion constraint. It is therefore
+appealing to apply a similar transformation at the channel output as done at the
+channel input for the capacity case, in order to make the conditional
+distribution of $\Sh$ given $S=s$ equal to the minimizing distribution
+$\Phi_s(\sh)$. The resulting decoder would produce
+\begin{equation}
+  \label{eq:distmatchdec}
+  \sh = g(y) = F_{\Phi_s}^{-1}(F_{Y|S=s}(y)).
+\end{equation}
+First, $y$ is transformed to be uniformly distributed given $S=s$, and then the
+inverse \cdf\ of the desired conditional distribution is applied. It is
+immediately clear, however, that such an approach cannot work -- both \cdf s
+needed to implement this decoder depend on the actual value of~$s$, which
+naturally is not known at the decoder. The notable fact about the Gaussian
+case is that while both $F_{\Phi_s}$ and $F_{Y|S=s}$ individually depend on~$s$,
+their concatenation $F_{\Phi_s} \circ F_{Y|S=s}$ does not, as the following
+example shows. 
+
+\begin{example}
+  Let the source $S$ be distributed as $\N(0,1)$ and let the channel be AWGN
+  with noise variance~$\szq$ and input constraint $\sum_i \E[X_i^2]/n \le P$.
+  The distortion is the squared error. If a single channel use is allowed,  the
+  smallest achievable distortion is
+  \begin{equation}
+    \label{eq:exmindist}
+    D_{\min} = \frac{1}{1 + P/\szq}.
+  \end{equation}
+\end{example}
+The capacity-achieving input distribution is $\N(0,P)$ and the conditional
+distribution of $\Sh$ given $S=s$ that achieves the rate distortion function at
+distortion~$D$ is $\N((1-D)s, D(1-D))$.
+
+The encoder that makes $X$ capacity achieving is therefore~$X = \sqrt{P}S$. The
+decoder from~\eqref{eq:distmatchdec} becomes
+\begin{align*}
+  g(y) &= F_{\Phi_s}^{-1} \circ F_{Y|S=s}(y) \\
+  &= \sqrt{D(1-D)} F_{\N}^{-1} \circ F_{\N}\left( \frac{y-\sqrt{P}s}{\sz}
+  \right) + (1-D)s \\
+  &= \sqrt{D(1-D)} \left( \frac{y-\sqrt{P}s}{\sz} \right) + (1-D)s,
+\end{align*}
+where we used $F_{\N}$ to denote the \cdf\ of a $\N(0,1)$ distribution. Now this
+expression still depends on~$s$; if we plug in the optimal distortion $D_{\min}$
+from~\eqref{eq:exmindist}, however, the decoder becomes
+\begin{align*}
+  g(y) &= \frac{\sz \sqrt{P}}{P+\szq} \frac{y - \sqrt{P}s}{\sz} + \frac{P}{P +
+  \szq}s \\ 
+  &= \frac{\sqrt{P}y}{P + \szq},
+\end{align*}
+which no longer depends on~$s$. Furthermore, this decoder is the MMSE decoder.
+
+
+\section{AWGN Source-Channel Scheme with Feedback}
+
+Consider the following scheme for the transmission of a random variable~$S$ with
+variance $\ssq < \infty$ over $n$ uses of an AWGN channel with noise
+variance~$\szq$. Without loss of generality assume $\E[S] = 0$. 
+
+Let $E_0 \deq S$. The $i^{\text{th}}$ channel input is given by
+\begin{equation*}
+  X_i = \sqrt{\frac{P}{\Var E_{i-1}}}.
+\end{equation*}
+The decoder computes the LMMSE estimate $\Eh_{i-1}$, as does the encoder, using
+the feedback information. The variance of the resulting estimation error $E_i =
+\Eh_{i-1} - E_{i-1}$ is then
+\begin{equation}
+  \label{eq:elmmsei}
+  \E[(\Eh_{i-1} - E_{i-1})^2] = \frac{\Var E_{i-1}}{1 + P/\szq}.
+\end{equation}
+This is repeated until the channel has been used $n$~times. Then the decoder
+computes the estimate
+\begin{equation*}
+  \Sh = \Eh_0 - \Eh_1 + \Eh_2 - \dots
+\end{equation*}
+The last term is $+\Eh_n$ if $n$ is even and $-\Eh_n$ if $n$ is odd. The
+resulting mean squared error is $\E[(\Sh - S)^2]$.  Applying the relation $E_i =
+\Eh_{i-1} - E_{i-1}$ repeatedly yields
+\begin{equation*}
+  \E[(\Sh - S)^2] = \E[(\Eh_n - E_n)^2].
+\end{equation*}
+Finally, from the recursion~\eqref{eq:elmmsei}, 
+\begin{equation*}
+  \E[(\Eh_n - E_n)^2] = \frac{\Var E_0}{(1 + P/\szq)^n}.
+\end{equation*}
 
 
 \section{Geometric Interpretation}
@@ -30,28 +419,6 @@ stochastic processes'', Ch.~5, Sections~5.6 and~5.7 as recommended by Burnashev.
 
 Depending on what this section will contain exactly, it may be moved after the
 next section.
-
-
-\section{The Gaussian Example Revisited}
-\label{sec:gaussexrev}
-
-This section shows how the Gaussian example from Section~\ref{sec:gaussex}
-achieves the optimality conditions given in Section~\ref{sec:fboptimality}.
-
-The question is asked whether feedback can be exploited in a similar way for
-other sources and/or channels.
-
-
-\section{Distribution Matching}
-
-This section looks at how, by knowing the last channel output exactly, one can
-make a deterministic encoder that produces an arbitrary iid output distribution.
-A connection to Shayevitz/Feder will be made. 
-
-It is also explained that distribution matching cannot be used (in general) to
-achieve the right joint distribution of~$S$ and~$\Sh$, and why in the Gaussian
-case this works anyway. An example is given (exponential channel) where it
-doesn't work. 
 
 
 \section{The Case $k$:$n$}

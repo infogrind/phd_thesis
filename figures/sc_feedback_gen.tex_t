@@ -1,0 +1,23 @@
+% vim:ft=tex
+    \begin{tikzpicture}[node distance=2.5cm]
+      \node[sc] (source) at (0,0)  {source};
+      \node[c] (enc) [right of=source] {encoder};
+      \node[sc] (channel) [right of=enc] {channel};
+      \node[c] (dec) [right of=channel] {decoder};
+      \node[sc] (rec) [right of=dec] {receiver};
+
+      \begin{scope}[node distance=1cm]
+        \node[coordinate] (p1) [right of=channel] {};
+        \node[coordinate] (p2) [below of=p1] {};
+        \node[coordinate] (p3) [below of=enc] {};
+        \draw (p1) -- (p2);
+        \draw (p2) -- node[below] {feedback} (p3);
+        \draw[l] (p3) -- (enc);
+      \end{scope}
+
+      \draw[l] (source) -- node[above] {$S^k$} (enc);
+      \draw[l] (enc) -- node[above] {$X^n$} (channel);
+      \draw[l] (channel) -- node [above] {$Y^n$} (dec);
+      \draw[l] (dec) -- node[above] {$\hat S^k$} (rec);
+
+    \end{tikzpicture}
