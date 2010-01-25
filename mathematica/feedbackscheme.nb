@@ -1,0 +1,457 @@
+(* Content-type: application/mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 6.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       145,          7]
+NotebookDataLength[     13434,        447]
+NotebookOptionsPosition[     11420,        377]
+NotebookOutlinePosition[     11777,        393]
+CellTagsIndexPosition[     11734,        390]
+WindowFrame->Normal
+ContainsDynamic->False*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell["A function to compute the expectation.", "Text",
+ CellChangeTimes->{{3.473056742043889*^9, 3.473056748813375*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Ex", "[", "x_", "]"}], " ", ":=", " ", 
+  RowBox[{"Simplify", "[", 
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"Expand", "[", "x", "]"}], " ", "/.", " ", 
+          RowBox[{
+           RowBox[{"S", "^", "2"}], " ", "\[Rule]", " ", "1"}]}], " ", "/.", 
+         " ", 
+         RowBox[{
+          RowBox[{"Z1", "^", "2"}], " ", "\[Rule]", "1"}]}], "/.", " ", 
+        RowBox[{
+         RowBox[{"Z2", "^", "2"}], " ", "\[Rule]", "1"}]}], " ", "/.", " ", 
+       RowBox[{"S", "\[Rule]", "0"}]}], " ", "/.", " ", 
+      RowBox[{"Z1", "\[Rule]", " ", "0"}]}], " ", "/.", " ", 
+     RowBox[{"Z2", "\[Rule]", "0"}]}], ")"}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.473056660343388*^9, 3.4730567362635727`*^9}, {
+  3.47305684905405*^9, 3.473056851613515*^9}, {3.4730570523912973`*^9, 
+  3.4730570571194057`*^9}}],
+
+Cell["A function to compute the expectation given s.", "Text",
+ CellChangeTimes->{{3.473056758275608*^9, 3.4730567636221323`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Exgs", "[", "x_", "]"}], " ", ":=", " ", 
+  RowBox[{"Simplify", "[", 
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{"Expand", "[", "x", "]"}], " ", "/.", " ", 
+         RowBox[{"S", "\[Rule]", "s"}]}], " ", "/.", " ", 
+        RowBox[{
+         RowBox[{"Z1", "^", "2"}], " ", "\[Rule]", "1"}]}], "/.", " ", 
+       RowBox[{
+        RowBox[{"Z2", "^", "2"}], " ", "\[Rule]", "1"}]}], "  ", "/.", " ", 
+      RowBox[{"Z1", "\[Rule]", " ", "0"}]}], " ", "/.", " ", 
+     RowBox[{"Z2", "\[Rule]", "0"}]}], ")"}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.473056739123114*^9, 3.473056740317927*^9}, {
+  3.473056778047535*^9, 3.473056797202437*^9}, {3.473056854181967*^9, 
+  3.473056855973665*^9}, {3.473057059725717*^9, 3.473057063464679*^9}}],
+
+Cell["A function to compute the variance.", "Text",
+ CellChangeTimes->{{3.473057180050397*^9, 3.4730571835079937`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Var", "[", "x_", "]"}], " ", ":=", " ", 
+  RowBox[{
+   RowBox[{"Ex", "[", 
+    RowBox[{"x", "^", "2"}], "]"}], " ", "-", " ", 
+   RowBox[{
+    RowBox[{"Ex", "[", "x", "]"}], "^", "2"}]}]}]], "Input",
+ CellChangeTimes->{{3.473057193937895*^9, 3.4730572057907753`*^9}}],
+
+Cell["A function to compute the variance given s.", "Text",
+ CellChangeTimes->{{3.473057252598494*^9, 3.473057257591715*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Vargs", "[", "x_", "]"}], " ", ":=", " ", 
+  RowBox[{
+   RowBox[{"Exgs", "[", 
+    RowBox[{"x", "^", "2"}], "]"}], " ", "-", " ", 
+   RowBox[{
+    RowBox[{"Exgs", "[", "x", "]"}], "^", "2"}]}]}]], "Input",
+ CellChangeTimes->{{3.473057258825283*^9, 3.4730572677601833`*^9}}],
+
+Cell["The covariance between x and y.", "Text",
+ CellChangeTimes->{{3.4730572775004587`*^9, 3.4730572814889307`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Cov", "[", 
+   RowBox[{"x_", ",", "y_"}], "]"}], " ", ":=", " ", 
+  RowBox[{
+   RowBox[{"Ex", "[", 
+    RowBox[{"x", " ", "y"}], "]"}], " ", "-", " ", 
+   RowBox[{
+    RowBox[{"Ex", "[", "x", "]"}], 
+    RowBox[{"Ex", "[", "y", "]"}]}]}]}]], "Input",
+ CellChangeTimes->{{3.473057282426785*^9, 3.473057306324335*^9}}],
+
+Cell["The covariance between x and y given s.", "Text",
+ CellChangeTimes->{{3.473057326330593*^9, 3.473057331971529*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Covgs", "[", 
+   RowBox[{"x_", ",", "y_"}], "]"}], " ", ":=", " ", 
+  RowBox[{
+   RowBox[{"Exgs", "[", 
+    RowBox[{"x", " ", "y"}], "]"}], " ", "-", " ", 
+   RowBox[{
+    RowBox[{"Exgs", "[", "x", "]"}], " ", 
+    RowBox[{"Exgs", "[", "y", "]"}]}]}]}]], "Input",
+ CellChangeTimes->{{3.4730573336427917`*^9, 3.473057343930607*^9}}],
+
+Cell["The convariance matrix of x and y.", "Text",
+ CellChangeTimes->{{3.4730574075753202`*^9, 3.473057411831609*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Covmat", "[", 
+   RowBox[{"x_", ",", " ", "y_"}], "]"}], " ", ":=", " ", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"Var", "[", "x", "]"}], ",", " ", 
+      RowBox[{"Cov", "[", 
+       RowBox[{"x", ",", "y"}], "]"}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"Cov", "[", 
+       RowBox[{"y", ",", "x"}], "]"}], ",", " ", 
+      RowBox[{"Var", "[", "y", "]"}]}], "}"}]}], "}"}]}]], "Input",
+ CellChangeTimes->{{3.473057413307437*^9, 3.473057441147752*^9}, {
+  3.4730574821418657`*^9, 3.473057482766055*^9}}],
+
+Cell["The covariance matrix of x and y given s.", "Text",
+ CellChangeTimes->{{3.473057450703981*^9, 3.47305745605016*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Covmatgs", "[", 
+   RowBox[{"x_", ",", " ", "y_"}], "]"}], " ", ":=", " ", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"Vargs", "[", "x", "]"}], ",", " ", 
+      RowBox[{"Covgs", "[", 
+       RowBox[{"x", ",", "y"}], "]"}]}], "}"}], ",", " ", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"Covgs", "[", 
+       RowBox[{"y", ",", "x"}], "]"}], ",", " ", 
+      RowBox[{"Vargs", "[", "y", "]"}]}], "}"}]}], "}"}]}]], "Input",
+ CellChangeTimes->{{3.473057457093287*^9, 3.473057477077824*^9}}],
+
+Cell["The MMSE estimator of S given Y.", "Text",
+ CellChangeTimes->{{3.4730568975388403`*^9, 3.4730569033092747`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"MMSE", "[", 
+   RowBox[{"s_", ",", "y_"}], "]"}], " ", ":=", " ", 
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{"Ex", "[", 
+      RowBox[{"s", " ", "y"}], "]"}], " ", "/", " ", 
+     RowBox[{"Ex", "[", 
+      RowBox[{"y", "^", "2"}], "]"}]}], ")"}], " ", "y"}]}]], "Input",
+ CellChangeTimes->{{3.4730569041742477`*^9, 3.473056928048978*^9}, {
+  3.473057222464738*^9, 3.4730572309442*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"X1", " ", "=", " ", 
+  RowBox[{
+   RowBox[{"Sqrt", "[", "P", "]"}], "S"}]}]], "Input",
+ CellChangeTimes->{{3.473055443564987*^9, 3.473055456099944*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  SqrtBox["P"], " ", "S"}]], "Output",
+ CellChangeTimes->{3.473056813565727*^9, 3.473057067325959*^9, 
+  3.473057232142097*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Y1", " ", "=", " ", 
+  RowBox[{"X1", " ", "+", " ", "Z1"}]}]], "Input",
+ CellChangeTimes->{{3.473055460912937*^9, 3.473055463573399*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   SqrtBox["P"], " ", "S"}], "+", "Z1"}]], "Output",
+ CellChangeTimes->{3.473055463909322*^9, 3.473056818578614*^9, 
+  3.4730568607336206`*^9, 3.4730570682463217`*^9, 3.4730572331648893`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"E0h", " ", "=", " ", 
+  RowBox[{"MMSE", "[", 
+   RowBox[{"S", ",", " ", "Y1"}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.473056931258061*^9, 3.4730569435769444`*^9}, {
+  3.4730569979994907`*^9, 3.4730570192797813`*^9}}],
+
+Cell[BoxData[
+ FractionBox[
+  RowBox[{
+   SqrtBox["P"], " ", 
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{
+      SqrtBox["P"], " ", "S"}], "+", "Z1"}], ")"}]}], 
+  RowBox[{"1", "+", "P"}]]], "Output",
+ CellChangeTimes->{{3.473057003026061*^9, 3.473057019588546*^9}, 
+   3.473057069132367*^9, 3.4730572338935337`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"E1", " ", "=", " ", 
+  RowBox[{"E0h", " ", "-", " ", "S"}]}]], "Input",
+ CellChangeTimes->{{3.473057022409343*^9, 3.473057026933299*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"-", "S"}], "+", 
+  FractionBox[
+   RowBox[{
+    SqrtBox["P"], " ", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{
+       SqrtBox["P"], " ", "S"}], "+", "Z1"}], ")"}]}], 
+   RowBox[{"1", "+", "P"}]]}]], "Output",
+ CellChangeTimes->{3.4730570272537193`*^9, 3.4730570702885427`*^9, 
+  3.473057236251442*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"X2", " ", "=", " ", 
+  RowBox[{"Simplify", "[", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"Sqrt", "[", "P", "]"}], " ", "/", " ", 
+      RowBox[{"Sqrt", "[", 
+       RowBox[{"Ex", "[", 
+        RowBox[{"E1", "^", "2"}], "]"}], "]"}]}], ")"}], " ", "E1"}], 
+   "]"}]}]], "Input",
+ CellChangeTimes->{{3.473057030176093*^9, 3.4730571002735453`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  SqrtBox["P"], " ", 
+  SqrtBox[
+   FractionBox["1", 
+    RowBox[{"1", "+", "P"}]]], " ", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"-", "S"}], "+", 
+    RowBox[{
+     SqrtBox["P"], " ", "Z1"}]}], ")"}]}]], "Output",
+ CellChangeTimes->{{3.4730570365061293`*^9, 3.4730571011267033`*^9}, {
+  3.473057237015093*^9, 3.473057239806266*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Y2", " ", "=", " ", 
+  RowBox[{"X2", " ", "+", " ", "Z2"}]}]], "Input",
+ CellChangeTimes->{{3.4730570768260508`*^9, 3.473057077623398*^9}, {
+  3.473057109576139*^9, 3.473057112321332*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   SqrtBox["P"], " ", 
+   SqrtBox[
+    FractionBox["1", 
+     RowBox[{"1", "+", "P"}]]], " ", 
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{"-", "S"}], "+", 
+     RowBox[{
+      SqrtBox["P"], " ", "Z1"}]}], ")"}]}], "+", "Z2"}]], "Output",
+ CellChangeTimes->{3.473057112936059*^9, 3.473057241133922*^9}]
+}, Open  ]],
+
+Cell["Sanity check: The covariance of Y1 and Y2 should be 0.", "Text",
+ CellChangeTimes->{{3.473057124365118*^9, 3.4730571338655376`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Cov", "[", 
+  RowBox[{"Y1", ",", "Y2"}], "]"}]], "Input",
+ CellChangeTimes->{{3.473057115242835*^9, 3.473057140534306*^9}, {
+  3.4730573121674013`*^9, 3.47305731455569*^9}}],
+
+Cell[BoxData["0"], "Output",
+ CellChangeTimes->{3.473057140963332*^9, 3.473057242669183*^9, 
+  3.473057314926931*^9}]
+}, Open  ]],
+
+Cell["What about their covariance given s?", "Text",
+ CellChangeTimes->{{3.4730571491354427`*^9, 3.473057154900523*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Simplify", "[", 
+  RowBox[{"Covgs", "[", 
+   RowBox[{"Y1", ",", " ", "Y2"}], "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.4730571561944437`*^9, 3.4730571700206623`*^9}, {
+  3.473057355566842*^9, 3.47305737031959*^9}}],
+
+Cell[BoxData[
+ RowBox[{"P", " ", 
+  SqrtBox[
+   FractionBox["1", 
+    RowBox[{"1", "+", "P"}]]]}]], "Output",
+ CellChangeTimes->{{3.473057163172167*^9, 3.473057170430044*^9}, {
+  3.473057358706346*^9, 3.4730573712651663`*^9}}]
+}, Open  ]],
+
+Cell["The covariance matrix of Y1 and Y2 should be diagonal.", "Text",
+ CellChangeTimes->{{3.4730574884216137`*^9, 3.4730574973003483`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Covmat", "[", 
+  RowBox[{"Y1", ",", " ", "Y2"}], "]"}]], "Input",
+ CellChangeTimes->{{3.4730574980724773`*^9, 3.4730575001014633`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"1", "+", "P"}], ",", "0"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", 
+     RowBox[{"1", "+", "P"}]}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{3.4730575005073767`*^9}]
+}, Open  ]]
+},
+WindowSize->{640, 750},
+WindowMargins->{{147, Automatic}, {Automatic, 96}},
+ShowSelection->True,
+FrontEndVersion->"6.0 for Mac OS X x86 (32-bit) (May 21, 2008)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[568, 21, 120, 1, 26, "Text"],
+Cell[691, 24, 924, 24, 73, "Input"],
+Cell[1618, 50, 130, 1, 26, "Text"],
+Cell[1751, 53, 835, 20, 43, "Input"],
+Cell[2589, 75, 119, 1, 26, "Text"],
+Cell[2711, 78, 302, 8, 27, "Input"],
+Cell[3016, 88, 125, 1, 26, "Text"],
+Cell[3144, 91, 308, 8, 27, "Input"],
+Cell[3455, 101, 117, 1, 26, "Text"],
+Cell[3575, 104, 351, 10, 27, "Input"],
+Cell[3929, 116, 121, 1, 26, "Text"],
+Cell[4053, 119, 366, 10, 27, "Input"],
+Cell[4422, 131, 118, 1, 26, "Text"],
+Cell[4543, 134, 592, 17, 27, "Input"],
+Cell[5138, 153, 122, 1, 26, "Text"],
+Cell[5263, 156, 556, 16, 27, "Input"],
+Cell[5822, 174, 118, 1, 26, "Text"],
+Cell[5943, 177, 432, 12, 27, "Input"],
+Cell[CellGroupData[{
+Cell[6400, 193, 176, 4, 27, "Input"],
+Cell[6579, 199, 151, 4, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[6767, 208, 161, 3, 27, "Input"],
+Cell[6931, 213, 226, 5, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7194, 223, 243, 5, 27, "Input"],
+Cell[7440, 230, 315, 10, 51, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7792, 245, 161, 3, 27, "Input"],
+Cell[7956, 250, 340, 12, 51, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[8333, 267, 387, 11, 27, "Input"],
+Cell[8723, 280, 358, 12, 54, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[9118, 297, 212, 4, 27, "Input"],
+Cell[9333, 303, 336, 12, 54, "Output"]
+}, Open  ]],
+Cell[9684, 318, 138, 1, 26, "Text"],
+Cell[CellGroupData[{
+Cell[9847, 323, 197, 4, 27, "Input"],
+Cell[10047, 329, 117, 2, 27, "Output"]
+}, Open  ]],
+Cell[10179, 334, 120, 1, 26, "Text"],
+Cell[CellGroupData[{
+Cell[10324, 339, 242, 5, 27, "Input"],
+Cell[10569, 346, 226, 6, 54, "Output"]
+}, Open  ]],
+Cell[10810, 355, 140, 1, 26, "Text"],
+Cell[CellGroupData[{
+Cell[10975, 360, 159, 3, 27, "Input"],
+Cell[11137, 365, 267, 9, 27, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+

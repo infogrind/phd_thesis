@@ -1,0 +1,90 @@
+%        File: 2010-01-22.tex
+%      Author: Marius Kleiner <marius.kleiner@epfl.ch>
+%     Created: Fri Jan 22 10:00 AM 2010 C
+% Last Change: Fri Jan 22 10:00 AM 2010 C
+%
+% $Id$
+%
+\documentclass[a4paper]{article}
+\bibliographystyle{IEEEtran}
+\usepackage[font={small,sf},labelfont={bf,sf}]{caption}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+
+
+% Theorem definitions etc
+
+% Theorem definitions etc
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{example}{Example}
+\newtheorem{definition}{Definition}
+
+\theoremstyle{definition}
+\newtheorem{remark}{Remark}
+
+% Useful macros
+\input{../thesismac}
+
+\frenchspacing
+
+
+\title{Weekly Notes}
+\author{Marius Kleiner}
+\date{January 22, 2010\\\small(last updated: \today)}
+
+\begin{document}
+\maketitle
+
+\section{Connection of Quantization and Decrease in Mutual Information}
+
+With the quantization based scheme we analyzed, the mean squared error decreases
+approximately as $D = c \snr^{-n}(\log\snr)^{n-1}$. For a general source with
+squared error distortion, we have
+\begin{equation*}
+  R(D) \le \frac12 \log\frac{1}{D} \le \dots \le \sum_{i=1}^n I(X_i;Y_i) \le
+  nC(P).
+\end{equation*}
+If we plug in the achievable distortion of the quanitzation based scheme, we
+find that
+\begin{align*}
+  \frac12 \log\frac1D &\approx c' + \frac n2 \log\snr - \frac{n-1}2 \log\log\snr
+  \\
+  &= c' + \frac{n-1}2 (\log\snr - \log\log\snr) + \frac12 \log\snr.
+\end{align*}
+A possible explanation for this is that by using quantized inputs in the first
+$n-1$~channel uses instead of Gaussian ones, the mutual information is decreased
+by $\log\log\snr$ each time.
+
+
+\section{Sufficiency and Posterior Matching}
+
+Consider a feedback scheme where one source symbol is transmitted over
+$n$~channel uses. Suppose the decoder computes intermediate estimates $\Sh_i$
+after having received $Y_1^i$. If $\Sh_i$ given $Y_1^i$ is a sufficient
+statistic for~$S$ then $p(s|y^i) = p(s|y^i,\sh_i) = p(s|\sh_i)$, and so it is
+enough if the encoder has feedback about $\sh_i$ to compute the posterior
+distribution $p(s|y^i)$, which is needed to do posterior matching.
+
+
+\section{Existence of Sufficient Statistics}
+
+If one source symbol is transmitted across $n$~channel uses and feedback is
+available, does there exist an optimal system for any given source/channel?
+
+Conditions 3--5 can always be achieved using posterior matching.  Furthermore,
+condition one can be achieved if the distortion measure is suitably matched.
+What about condition~2? If a sufficient statistic of dimension~$1$ exists to
+estimate $S$ from~$Y^n$, then we're fine. Such a statistic might not exist,
+however, according to some results (Hipp, Buturovic). 
+
+% Uncomment this if there are citations.
+%\bibliography{meetings}
+
+\end{document}
+
+

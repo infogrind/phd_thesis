@@ -12,7 +12,7 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\E}{\mathbb{E}}
-\newcommand{\N}{\mathcal{N}}
+\newcommand{\N}{{\mathcal{N}}}
 \newcommand{\C}{\mathcal{C}}
 \newcommand{\I}{\mathcal{I}}
 \newcommand{\Ss}{\mathcal{S}}
@@ -74,6 +74,8 @@
 \newcommand{\szq}{{\sz^2}}
 \newcommand{\se}{{\sigma_E}}
 \newcommand{\seq}{{\se^2}}
+\newcommand{\sw}{{\sigma_W}}
+\newcommand{\swq}{{\sw^2}}
 \newcommand{\Eq}{{\Err_Q}}
 \newcommand{\Eqi}{{\Err_{Q,i}}}
 \newcommand{\Ee}{{\Err_E}}
@@ -82,6 +84,9 @@
 % Shorter names for existing macros
 \newcommand{\ra}{\rightarrow}
 \newcommand{\goesto}{\ra}
+\let\bra\langle
+\let\ket\rangle
+\def\sp#1#2{\bra #1, #2 \ket}
 \let\e\epsilon
 \let\l\ell
 

@@ -2,26 +2,10 @@
 %     Created: Tue Jan 12 11:00 AM 2010 C
 % Last Change: Tue Jan 12 11:00 AM 2010 C
 %
-\documentclass[a4paper]{book}
+\documentclass[review]{ipgthesis}
 
-% Font related packages
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-
-% To enable links in PDF
-%\usepackage[colorlinks=true]{hyperref}
-\usepackage{hyperref}
-
-% Permits per-chapter appendices
-\usepackage{appendix}
-
-% Allows more general enumerations
-\usepackage{enumerate}
-
-% Math-related packages
-\usepackage{amsmath}
-\usepackage{amsfonts}
-\usepackage{amsthm}
+% All external packages
+\input{packages}
 
 % Theorem-like definitions
 \input{theoremdefs}
@@ -29,12 +13,11 @@
 % All macros and definitions
 \input{thesismac}
 
-% Illustration-related packages
-\usepackage{tikz}
-\input{tikzstyles}
+% Style definitions for TikZ
+%\input{tikzstyles}
 
 % Various commands affecting the whole document
-\bibliographystyle{IEEEtran}
+\bibliographystyle{IEEEtranS}
 \frenchspacing
 
 \title{On Low-Delay Joint Source-Channel Communication}
@@ -43,24 +26,24 @@
 
 \begin{document}
 \frontmatter
-\maketitle
+\input{title}
 
 %\input{abstract}
 %\input{resume}
 %\input{zusfsg}
 %\input{ack}
 
-
+\cleardoublepage
 \tableofcontents
 
 \mainmatter
-\input{ch_intro}
+%\input{ch_intro}
 \input{ch_feedback}
-\input{ch_nofeedback}
-\input{ch_qescheme}
-\input{ch_fidelity}
-\input{ch_simulator}
-\input{ch_conclusions}
+%\input{ch_nofeedback}
+%\input{ch_qescheme}
+%\input{ch_fidelity}
+%\input{ch_simulator}
+%\input{ch_conclusions}
 
 \backmatter
 \bibliography{mkbiblio}

@@ -6,6 +6,9 @@ strictly causal feedback available from the receiver. While feedback does not
 increase capacity, it often leads to a great reduction in complexity compared
 with the case without feedback. 
 
+
+\section{A First Example}
+
 If a Gaussian source $S$ of variance~$\ssq$ is to be transmitted across an AWGN
 channel with noise variance~$\szq$, where the channel can be used $n$~times per
 source symbol, it is well known that the average mean squared error~$D$ and the
@@ -35,9 +38,10 @@ it should be made clear here what the difference to source coding is.]}
 \begin{example}
   \label{ex:gaussfb}
   Define $E_0 = S$. In the $i^{\text{th}}$ channel use, transmit
-  \begin{equation*}
+  \begin{equation}
+    \label{eq:gaussfbxi}
     X_i = \sqrt{\frac{P}{\Var E_{i-1}}} E_{i-1}.
-  \end{equation*}
+  \end{equation}
   Both the receiver and the sender now compute the minimum mean-squared
   error (MMSE) estimator $\Eh_{i-1}$ of $E_{i-1}$ given $Y_i$. The sender
   computes $E_i = \Eh_{i-1} - E_{i-1}$ and proceeds to the next round.
@@ -56,8 +60,8 @@ it should be made clear here what the difference to source coding is.]}
     \Sh &= E_0 + E_1 - E_1 - E_2 + E_2 + E_3 - \cdots \pm E_{n-1} \pm E_n \\
     &= E_0 \pm E_n,
   \end{align*}
-  and thus $\mse = \E[E_n^2]$, where $E_n$ is the remaining error after the last
-  round of transmission.
+  and since we have defined $E_0 = S$, we have $\mse = \E[E_n^2]$, where $E_n$
+  is the remaining error after the last round of transmission.
 
   To compute $\E[E_n^2]$, note that since $\Eh_i$ is the MMSE estimator of
   $E_i$, the estimation error variance is given by (see
@@ -74,6 +78,28 @@ it should be made clear here what the difference to source coding is.]}
   to~\eqref{eq:mindist}.
 \end{example}
 
+\begin{remark}
+  \label{rem:snrscalingfeedback}
+  The resulting distortion in Example~\ref{ex:gaussfb} does not depend on the
+  distribution of the source. The transmission strategy therefore achieves a
+  distortion of $\ssq/(1+P/\szq)^n$ for any source. 
+
+  For an arbitrary analog source with variance~$\ssq$ and differential entropy
+  $h(S) < \infty$, the rate distortion function under mean squared error
+  distortion can be bounded as~\cite{Shannon1959}
+  \begin{equation*}
+    h(S) - \frac12 \log(2\pi e D) \le R(D).
+  \end{equation*}
+  Applying this bound to the inequality $R(D) \le nC(P)$, the mean squared error
+  is therefore lower bounded by
+  \begin{equation*}
+    D \ge \frac{2^{2h(S)}}{2\pi e} (1 + P/\szq)^{-n},
+  \end{equation*}
+  where $2^{2h(S)}/2\pi e \le \ssq$, and so the strategy of
+  Example~\ref{ex:gaussfb} yields a distortion that is at most a constant
+  multiple of the theoretically minimal distortion.
+\end{remark}
+
 The case of a Gaussian source and channel with squared error distortion measure
 and average input power constraint is somewhat special because it naturally
 fulfills certain general conditions for optimality, as the following section
@@ -84,8 +110,9 @@ shows.
 \label{sec:fboptimality}
 
 The goal of this section is to review the conditions for a communication system
-to operate at an \emph{optimal cost-distortion tradeoff}. The derivation is a
-slightly expanded version of that found in~\cite[Section~3.5]{GastparThesis}.
+to operate at an \emph{optimal cost-distortion tradeoff}. The derivation is
+essentially that found in~\cite[Section~3.5]{GastparThesis}, with a slightly
+more expanded discussion on the ``information losslessness'' of the code.
 
 \begin{theorem}
   \label{thm:feedbackconv}
@@ -108,8 +135,8 @@ slightly expanded version of that found in~\cite[Section~3.5]{GastparThesis}.
     \item The estimates $\Sh^k$ form a sufficient statistic for $S^k$ given the
       outputs $Y^n$. 
     \item The encoder is information lossless.
-    \item The channel output sequence $Y^k$ consists of independent random
-      variables. 
+    \item The channel output sequence $Y^k$ consists of mutually independent
+      random variables. 
     \item The marginal distributions $p(x_i)$ of the channel inputs all achieve
       the capacity at the same average cost~$P$.
   \end{enumerate}
@@ -130,11 +157,10 @@ slightly expanded version of that found in~\cite[Section~3.5]{GastparThesis}.
     &\stackrel{(e)}{\le} nC(P).
   \end{align*}
   Inequality~(a) follows from the definition of $R(D)$ and becomes an equality
-  if and only if $p(s^k|\sh^k)=\prod_i p(s_i|\sh_i)$ and each $p(s_i|\sh_i)$
-  achieves $R(D)$ at the same average distortion. (b) is the data processing
-  inequality; it becomes an equality if $S^k - \Sh^k - Y^n$ forms a Markov chain
-  or, equivalently, $\Sh^k$ is a sufficient statistic for $S^k$ given~$Y^n$.
-  To prove (c), write
+  if and only if Condition~1 of the theorem is satisfied. (b) is the data
+  processing inequality; it becomes an equality if $S^k - \Sh^k - Y^n$ forms a
+  Markov chain, which is another way of saying that $\Sh^k$ is a sufficient
+  statistic for $S^k$ given~$Y^n$.  To prove (c), write
   \begin{align*}
     I(S^k; Y^n)
     % &= \sum_{i=1}^n I(Y_i; S^k | Y^{i-1}) \\
@@ -147,7 +173,7 @@ slightly expanded version of that found in~\cite[Section~3.5]{GastparThesis}.
   the third equality follows from the Markov chain $(S^k, Y^{i-1}) - X^i - Y_i$.
   The inequality becomes an inequality if the encoder is information lossless in
   the sense that $X^i - (S^k, Y^{i-1}) - Y_i$ forms a Markov chain (see
-  Remark~\ref{rem:inflosslessenc} below). Next, (c) is Theorem~2
+  Remark~\ref{rem:inflosslessenc} below). Next, (d) is Theorem~2
   in~\cite{Massey1990} and becomes an equality if the $Y_1$, \dots, $Y_n$ are
   mutually independent. Finally (e) follows from the definition of~$C(P)$ and
   becomes an equality if all the $p(x_i)$ achieve capacity at the same~$P$. 
@@ -213,6 +239,51 @@ generalize the capacity achieving channel coding schemes of Schalkwijk and
 Kailath~\cite{SchalkwijkK1966} and Horstein~\cite{Horstein1963} to arbitrary
 channels with feedback.
 
+Before continuing we prove some properties of cumulative distribution functions
+(\cdf s).
+
+\begin{lemma}
+  \label{lem:cdfunif}
+  Let $X$ be a continuous random variable with density $f(x)$ and \cdf\ $F_X$,
+  \ie,
+  \begin{equation*}
+    F_X(x) = \Pr[X \le x].
+  \end{equation*}
+  Then the random variable $F_X(X)$ is uniformly distributed on~$[0,1]$.
+\end{lemma}
+
+\begin{proof}
+  Let $Y = F_X(X)$. Then
+  \begin{align*}
+    \Pr[Y \le y] &= \Pr[F_X(X) \le y] \\
+    &= \Pr[X \le F_X^{-1}(y)] \\
+    &= \int_{-\infty}^{F_X^{-1}(y)} f(x) dx \\
+    &= F_X(F_X^{-1}(y)) = y,
+  \end{align*}
+  which is the \cdf\ of a uniform random variable on $[0,1]$.
+\end{proof}
+
+
+\begin{lemma}
+  \label{lem:invcdf}
+  Let $U$ be a uniform random variable on~$[0,1]$ and let $F$ be the \cdf\ of an
+  arbitrary random variable~$X$. Let $F^{-1}$ be the ``inverse'' of~$F$, in the
+  sense
+  \begin{equation}
+    \label{eq:invcdf}
+    F^{-1}(y) = \sup \{x : F(x) \le y\}.
+  \end{equation}
+  Then the random variable $F^{-1}(U)$ has the same distribution as~$X$.
+\end{lemma}
+
+\begin{proof}
+  The definition of $F^{-1}$ according to~\eqref{eq:invcdf} has the property
+  that $\Pr[F^{-1}(U) \le x] = \Pr[U \le F(x)]$. Thus,
+  \begin{align*}
+    \Pr[F^{-1}(U) \le x] &= \Pr[U \le F(x)] \\
+    &= \int_0^{F(x)} d\xi = F(x).
+  \end{align*}
+\end{proof}
 
 \subsection{Achieving Channel Capacity}
 
@@ -225,15 +296,17 @@ As before, we assume perfect feedback. The problem is to encode one source
 symbol of an \emph{analog} source into~$n$ channel inputs. 
 
 Let $\Fpi$ be the cumulative distribution function (\cdf) of the distribution
-$\pi(x)$, and let $F_S(\x)$ be the \cdf\ of the source. In the first channel
+$\pi(x)$, and let $F_S$ be the \cdf\ of the source. In the first channel
 use, the encoder produces
-\begin{equation*}
+\begin{equation}
+  \label{eq:posteriorx1}
   X_1 = \Fpi^{-1}(F_S(S)),
-\end{equation*}
-where $\Fpi^{-1}$ is the inverse function of $\Fpi$. The random variable
-$F_S(S)$ has uniform distribution on $[0,1]$, and the application of $\Fpi^{-1}$
-to a uniform random variable produces a random variable with \cdf\ $\Fpi$. Thus,
-$X_1$ has the capacity achieving distribution~$\pi(x)$. 
+\end{equation}
+where $\Fpi^{-1}$ is the inverse of $\Fpi$ according to~\eqref{eq:invcdf}. By
+Lemma~\ref{lem:cdfunif}, $F_S(S)$ has uniform distribution on $[0,1]$, and so by
+Lemma~\ref{lem:invcdf}, $\Fpi^{-1}(F_S(S))$ to a uniform random variable
+produces a random variable with \cdf\ $\Fpi$. Thus, $X_1$ has the capacity
+achieving distribution~$\pi(x)$. 
 
 After $i-1$ rounds of transmission, the encoder knows $y_1$, \ldots, $y_{i-1}$,
 the values of the $i-1$ past received symbols, and can compute the conditional
@@ -245,7 +318,7 @@ use
 \end{equation}
 For any particular received values $y_1$, \ldots, $y_{i-1}$, therefore,
 \begin{equation*}
-  p(x_i|y_1, \dots, y_{i-1}) = \pi(x)
+  p(x_i|s, y_1, \dots, y_{i-1}) = \pi(x)
 \end{equation*}
 and so $X_i$ is independent of $Y_1$, \ldots, $Y_{i-1}$. 
 
@@ -253,6 +326,53 @@ Using this strategy the encoder produces an \iid\ sequence of inputs $X_i$
 with the capacity achieving distribution~$\pi(x)$, satisfying conditions~4 and~5
 of Theorem~\ref{thm:feedbackconv}; condition~3 of the theorem is satisfied
 trivially because the encoder is deterministic.
+
+Let us look at Example~\ref{ex:gaussfb} once more, now from the perspective of
+posterior matching.
+
+\begin{example}
+  \label{ex:gaussfbpost}
+  Let $F_{\N(\mu, \sq)}$ be the \cdf\ of a Gaussian random variable of
+  mean~$\mu$ and variance~$\sq$ and let $F_\N \deq F_{\N(0,1)}$. Then
+  $F_{\N(\mu,\sq)}(x) = F_\N((x-\mu)/\sigma)$. Furthermore, the inverse \cdf\ is
+  given by
+  \begin{equation*}
+    F_{\N(\mu,\sq)}^{-1}(y) = \sigma F_\N^{-1}(y) + \mu.
+  \end{equation*}
+
+  Since all involved random variables are jointly Gaussian, the source~$S$ can
+  be written as
+  \begin{equation*}
+    S = \gamma_1 Y_1 + \dots + \gamma_{i-1} Y_{i-1} + W,
+  \end{equation*}
+  where $W$ is a Gaussian random variable of zero mean and variance $\swq$,
+  independent of $Y_1$, \ldots, $Y_{i-1}$. Hence the distribution of~$S$ given
+  $Y_1$, \ldots, $Y_{i-1}$ is Gaussian with mean $\E[S|Y_1, \dots, Y_{i-1}] =
+  \gamma_1 Y_1 + \dots + \gamma_{i-1} Y_{i-1}$ and variance~$\swq$.  The
+  posterior matching encoder~\eqref{eq:posteriorxi} therefore evaluates to
+  \begin{align}
+    X_i &= \sqrt{P} F_\N^{-1}\left( F_\N\left( \frac{S - \E[S|Y_1^{i-1}]}
+    {\sqrt{\Var(S - \E[S|Y_1^{i-1}])}} \right) \right) \nonumber \\
+    \label{eq:gausspmenc}
+    &= \sqrt{P} \frac{S - \E[S|Y_1^{i-1}]}
+    {\sqrt{\Var(S - \E[S|Y_1^{i-1}])}} .
+  \end{align}
+  Write now
+  \begin{align*}
+    S &= E_0 + (E_1 - E_1) - (E_2 - E_2) + \dots \pm (E_{i-2} -
+    E_{i-2}) \\
+    &= (E_0 + E_1) - (E_1 + E_2) + (E_2 + E_3) - \dots - E_{i-2} \\
+    &= \Eh_0 - \Eh_1 + \Eh_2 - \dots - E_{i-2}.
+  \end{align*}
+  Since $\E[\Eh_j | Y_1^{i-1}] = \Eh_j$ for $j = 1$, \dots,~$i-2$, and
+  $\E[E_{i-2}|Y_1^{i-1}] = \Eh_{i-2}$, 
+  \begin{equation*}
+    \E[S|Y_1^{i-1}] = \Eh_0 - \Eh_1 + \dots  - \Eh_{i-2}
+  \end{equation*}
+  and so $S - \E[S|Y_1^{i-1}] = \Eh_{i-2} - E_{i-2} = E_{i-1}$. Plugging this
+  into~\eqref{eq:gausspmenc} yields exactly the encoder~\eqref{eq:gaussfbxi} of
+  Example~\ref{ex:gaussfb}.
+\end{example}
 
 
 \subsection{Achieving the Rate Distortion Function?}
@@ -263,86 +383,114 @@ independent of the previous outputs and had the capacity achieving distribution.
 As was explained in Section~\ref{sec:fboptimality}, a further necessary
 condition for a system to be optimal in the sense of equality
 in~\eqref{eq:shannonlimit} is
-that the joint distribution of $S$ and $\Sh$ achieves the rate distortion
-function. Is this possible using a similar distribution matching strategy?
-Unfortunately it turns out that the answer is no in general; the Gaussian
-distribution is a notable exception.
+that the conditional distribution of $\Sh$ given $S$ achieves the rate
+distortion function of the source. Is this possible using a similar distribution
+matching strategy?  Unfortunately it turns out that the answer is no in general;
+the Gaussian distribution is a notable exception.
 
-The rate distortion function is achieved if $p(\sh|s)$ minimizes the mutual
-information $I(S;\Sh)$ under the average distortion constraint. It is therefore
-appealing to apply a similar transformation at the channel output as done at the
-channel input for the capacity case, in order to make the conditional
-distribution of $\Sh$ given $S=s$ equal to the minimizing distribution
-$\Phi_s(\sh)$. The resulting decoder would produce
+It is appealing to apply a similar transformation at the channel output as done
+at the channel input for the capacity case, in order to make the conditional
+distribution of $\Sh$ given $S=s$ equal to the distribution
+$\Phi_s(\sh)$ that achieves the rate distortion function. Assume the source
+symbol~$S$ is transmitted across a single channel use. Let the decoder be given
+by
 \begin{equation}
   \label{eq:distmatchdec}
-  \sh = g(y) = F_{\Phi_s}^{-1}(F_{Y|S=s}(y)).
+  \Sh = g(Y) = F_{\Phi_s}^{-1}(F_{Y|S=s}(Y)).
 \end{equation}
-First, $y$ is transformed to be uniformly distributed given $S=s$, and then the
-inverse \cdf\ of the desired conditional distribution is applied. It is
-immediately clear, however, that such an approach cannot work -- both \cdf s
-needed to implement this decoder depend on the actual value of~$s$, which
-naturally is not known at the decoder. The notable fact about the Gaussian
-case is that while both $F_{\Phi_s}$ and $F_{Y|S=s}$ individually depend on~$s$,
-their concatenation $F_{\Phi_s} \circ F_{Y|S=s}$ does not, as the following
-example shows. 
+For any~$s$, therefore, $\Sh$ given~$s$ is distributed according to~$\Phi_s$,
+and so the rate distortion function is achieved.
+
+It is immediately clear, however, that this approach cannot work -- both \cdf s
+needed to implement this decoder depend on the actual value of~$s$, which is
+obviously not known at the decoder (there would not really be a communication
+problem otherise). Interestingly, though, in the Gaussian case the dependence
+on~$s$ of $F_{\Phi_s}$ and of $F_{Y|S=s}$ cancel each other out, and the
+decoder~\eqref{eq:distmatchdec} yields again the MMSE decoder, as the following
+example shows.
 
 \begin{example}
   Let the source $S$ be distributed as $\N(0,1)$ and let the channel be AWGN
-  with noise variance~$\szq$ and input constraint $\sum_i \E[X_i^2]/n \le P$.
-  The distortion is the squared error. If a single channel use is allowed,  the
-  smallest achievable distortion is
+  with noise variance~$1$ and input constraint $\E[X^2] \le P$.
+  The distortion is the squared error. The smallest achievable distortion is
   \begin{equation}
     \label{eq:exmindist}
-    D_{\min} = \frac{1}{1 + P/\szq}.
+    D_{\min} = \frac{1}{1 + P}.
   \end{equation}
+  The capacity-achieving input distribution is $\N(0,P)$ and the conditional
+  distribution of $\Sh$ given $S=s$ that achieves the rate distortion function
+  at distortion~$D$ is $\N((1-D)s, D(1-D))$.
+  
+  The encoder that makes $X$ capacity achieving is therefore~$X = \sqrt{P}S$.
+  The decoder from~\eqref{eq:distmatchdec} is
+  \begin{align*}
+    g(y) &= F_{\Phi_s}^{-1} \circ F_{Y|S=s}(y) \\
+    &= \sqrt{D(1-D)} F_{\N}^{-1} \circ F_{\N}\left( y-\sqrt{P}s
+    \right) + (1-D)s \\
+    &= \sqrt{D(1-D)} \left( y-\sqrt{P}s \right) + (1-D)s,
+  \end{align*}
+  where we used $F_{\N}$ to denote the \cdf\ of a $\N(0,1)$ distribution.
+  This expression still depends on~$s$; if we plug in the optimal distortion
+  $D_{\min}$ from~\eqref{eq:exmindist}, however, the decoder becomes
+  \begin{align*}
+    g(y) &= \frac{\sqrt{P}}{P+1} (y - \sqrt{P}s) + \frac{P}{P +
+    1}s \\ 
+    &= \frac{\sqrt{P}y}{P + 1},
+  \end{align*}
+  which no longer depends on~$s$. Furthermore, this decoder is the MMSE decoder.
 \end{example}
-The capacity-achieving input distribution is $\N(0,P)$ and the conditional
-distribution of $\Sh$ given $S=s$ that achieves the rate distortion function at
-distortion~$D$ is $\N((1-D)s, D(1-D))$.
-
-The encoder that makes $X$ capacity achieving is therefore~$X = \sqrt{P}S$. The
-decoder from~\eqref{eq:distmatchdec} becomes
-\begin{align*}
-  g(y) &= F_{\Phi_s}^{-1} \circ F_{Y|S=s}(y) \\
-  &= \sqrt{D(1-D)} F_{\N}^{-1} \circ F_{\N}\left( \frac{y-\sqrt{P}s}{\sz}
-  \right) + (1-D)s \\
-  &= \sqrt{D(1-D)} \left( \frac{y-\sqrt{P}s}{\sz} \right) + (1-D)s,
-\end{align*}
-where we used $F_{\N}$ to denote the \cdf\ of a $\N(0,1)$ distribution. Now this
-expression still depends on~$s$; if we plug in the optimal distortion $D_{\min}$
-from~\eqref{eq:exmindist}, however, the decoder becomes
-\begin{align*}
-  g(y) &= \frac{\sz \sqrt{P}}{P+\szq} \frac{y - \sqrt{P}s}{\sz} + \frac{P}{P +
-  \szq}s \\ 
-  &= \frac{\sqrt{P}y}{P + \szq},
-\end{align*}
-which no longer depends on~$s$. Furthermore, this decoder is the MMSE decoder.
 
 
+\begin{remark}
+  \label{rem:increasingdec}
+  Suppose a communication system achieves $R(D) = C(P)$ with a single letter
+  encoder and decoder. One might think that the encoder and the decoder can
+  always be written in the form~\eqref{eq:posteriorx1}
+  and~\eqref{eq:distmatchdec}, respectively. This is not the case, as a simple
+  argument shows. Note that both~\eqref{eq:posteriorx1}
+  and~\eqref{eq:distmatchdec} are increasing functions. Using the results
+  of~\cite{GastparThesis}, on the other hand, one can select arbitrary encoding
+  and decoding functions that are not increasing and then choose the cost and
+  distortion measures such that $R(D) = C(P)$.
+\end{remark}
 
 
-\section{Geometric Interpretation}
+\section{Gaussian Case: Geometrical Interpretation}
 
-This section is about the interpretation of random variables as a vector space,
-and how this connects to the feedback problem. For this section we should also
-look again at the book by Cramer and Leadbetter, ``Stationary and related
-stochastic processes'', Ch.~5, Sections~5.6 and~5.7 as recommended by Burnashev.
+If the channel is an AWGN channel, the distortion measure is the squared error,
+and the decoder computes the LMMSE estimator, there is a nice geometrical
+interpretation for the feedback transmission problem. (In the derivation of the
+inner product space we follow Cramér and Leadbetter~\cite{CramerL1967}.)
 
-Depending on what this section will contain exactly, it may be moved after the
-next section.
+\begin{definition}
+  An \emph{inner product space} $H$ is a set of elements (points, vectors) $x$,
+  $y$, \dots satisfying the following properties.
+  \begin{enumerate}
+    \item There is an operation of \emph{addition}, assigning to each two
+      elements $x, y \in H$ a unique element $z \in H$, denoted $x + y$.
+      The unique element $y$ satisfying $x + y = z$ is denoted $y = z - x$. The
+      element $0 = x-x$ is unique. 
+    \item For every $c \in \R$, the operation of \emph{scalar multiplication}
+      maps each $x \in H$ to $cx \in H$. 
+    \item To every two elements $x,y \in H$ corresponds a unique scalar $\sp x
+      y$ called the \emph{inner product} of $x$ and $y$ with the properties that
+      for all $c \in \R$ and $x,y, z\in H$, $\sp{cx+y}{z} = c\sp xz + \sp yz$,
+      and $\sp xx \ge 0$, with equality if and only if $x = 0$. The
+      \emph{norm} of an element $x \in H$ is defined as $\|x\| = \sqrt{\sp xx}$.
+      If $\sp xy = 0$ for some $x$ and $y$, then $x$ and $y$ are called
+      \emph{orthogonal}.
+  \end{enumerate}
+\end{definition}
+
+Let $H$ be the set of random variables with zero mean and finite variance, and
+define for $X, Y \in H$ the inner product $\sp XY = \E[X Y]$. It is quickly
+verified that this definition has all the properties of an inner product.
+The norm of a random variable $\|X\|$ is then equal to its variance. 
+
+It is important not to confuse this notion with the notion of \emph{random
+vectors}, which are elements of~$\R^n$ whose components are random variables.
 
 
-\section{The Case $k$:$n$}
-
-Some thoughts about the $k$:$n$ case as treated in my technical report.
-
-
-\section{Noisy Feedback}
-
-Possibly a section about the case with noisy feedback for the Gaussian case. We
-could give the example that if the feedback noise vs.\ channel noise ratio is
-constant then the distortion scales only as $\snr^{-1}$.
 
 
 \section{Towards the Feedbackless Case}
@@ -353,10 +501,10 @@ achieved exactly with a simple transmission scheme that encodes a single source
 symbol at a time. The goal of the present section is to draw insights from this
 example that can help in the case without feedback. 
 
-Recall Example~\ref{ex:gaussfb}. In the first round the source was
-transmitted uncoded and the receiver computed the LMMSE estimator~$\Eh_0$. In
+In the first round of Example~\ref{ex:gaussfb} the source was
+transmitted uncoded and the receiver computed the MMSE estimator~$\Eh_0$. In
 each subsequent round, the error $E_i = \Eh_{i-1} - E_{i-1}$ was transmitted
-uncoded and again estimated at the receiver using LMMSE. Let us now express the
+uncoded and again estimated at the receiver using MMSE. Let us now express the
 source as
 \begin{equation*}
   S = S + E_1 - E_1 - E_2 + E_2 + \cdots \pm E_{n-1} \mp E_{n-1}.
@@ -365,18 +513,19 @@ Using the definition of $E_i$ repeatedly, this can be written as
 \begin{equation*}
   S = \Eh_0 - \Eh_1 + \Eh_2 - \cdots \pm \Eh_{n-1} \mp E_{n-1}.
 \end{equation*}
-This transmission scheme therefore implicitly decomposes $S$ into $n$
-components. Moreover, the first $n-1$ components are known exactly by the
-decoder, so the only error is due to the last transmission.
+Since each $\Eh_i$ is a linear function of~$Y_i$ and the $Y_i$ are mutually
+independent, this transmission scheme implicitly decomposes $S$ into
+$n$ independent components. Moreover, the first $n-1$ components are known
+exactly by the decoder, so the only error is due to the last transmission.
 
 In the absence of feedback, a possible strategy is therefore to do the
 following:
 \begin{enumerate}
-  \item Break up the source into the sum of $n$ components.
+  \item Break up the source into the sum of $n$ (approximately) independent
+    components.
   \item Transmit these components such that the first $n-1$ components are
-    decoded practically error free and transmit the last component uncoded.
+    decoded (approximately) error free and transmit the last component uncoded.
 \end{enumerate}
-Furthermore, the $n$ components should be (approximately) independent.
 
 The investigation and analysis of strategies based on this principle is the
 subject of the next chapter. 

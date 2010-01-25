@@ -134,31 +134,31 @@ capacity per unit cost.
 %  Figure~\ref{fig:bsccap}. 
 \end{example}
 \medbreak
-%\begin{figure}[tbph]
-%  \begin{center}
-%      \begin{tikzpicture}[xscale=5,yscale=8]
-%        \draw[gridstyle] (-0.01,-0.01) grid[xstep=0.16,ystep=0.1] (0.81,0.51);
-%
-%        % Axes
-%        \draw[->] (-0.02,0) -- (0.82,0) node[right] {$C(P)$};
-%        \draw[->] (0,-0.02) -- (0, 0.52) node[above] {$P$};
-%
-%        % The function to plot
-%        \draw[color=black,domain=0.23:0.61] plot[id=bsccap1] 
-%        function{0.6*(-0.47 + (-1.64+1.51*x) * log(1.14-1.05*x)
-%        + (0.2-1.51*x) * log(-0.14 + 1.05*x))};
-%        \draw[color=black,domain=0.61:0.77] plot[id=bsccap2]
-%        function{0.6*0.53};
-%        \draw[color=red,domain=0:0.71] plot[id=tangent1]
-%        function{0.6*x};
-%      \end{tikzpicture}
-%  \end{center}
-%  \caption{The capacity-cost function for the BSC in Example~\ref{ex:bsccap}.
-%  The optimal cost function is such that a tangent through the origin touches
-%  the the $C(P)$~curve in the operating point that corresponds to the given
-%  input distribution~$\px$.}
-%  \label{fig:bsccap}
-%\end{figure}
+\begin{figure}[tbph]
+  \begin{center}
+      \begin{tikzpicture}[xscale=5,yscale=8]
+        \draw[gridstyle] (-0.01,-0.01) grid[xstep=0.16,ystep=0.1] (0.81,0.51);
+
+        % Axes
+        \draw[->] (-0.02,0) -- (0.82,0) node[right] {$C(P)$};
+        \draw[->] (0,-0.02) -- (0, 0.52) node[above] {$P$};
+
+        % The function to plot
+        \draw[color=black,domain=0.23:0.61] plot[id=bsccap1] 
+        function{0.6*(-0.47 + (-1.64+1.51*x) * log(1.14-1.05*x)
+        + (0.2-1.51*x) * log(-0.14 + 1.05*x))};
+        \draw[color=black,domain=0.61:0.77] plot[id=bsccap2]
+        function{0.6*0.53};
+        \draw[color=red,domain=0:0.71] plot[id=tangent1]
+        function{0.6*x};
+      \end{tikzpicture}
+  \end{center}
+  \caption{The capacity-cost function for the BSC in Example~\ref{ex:bsccap}.
+  The optimal cost function is such that a tangent through the origin touches
+  the the $C(P)$~curve in the operating point that corresponds to the given
+  input distribution~$\px$.}
+  \label{fig:bsccap}
+\end{figure}
 
 \begin{example}
   Consider the AWGN channel $Y=X+Z$, where $X \sim \N(0,\sxq)$ and $Z \sim

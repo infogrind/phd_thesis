@@ -1,0 +1,225 @@
+(* Content-type: application/mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 6.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       145,          7]
+NotebookDataLength[      5605,        215]
+NotebookOptionsPosition[      4792,        182]
+NotebookOutlinePosition[      5146,        198]
+CellTagsIndexPosition[      5103,        195]
+WindowFrame->Normal
+ContainsDynamic->False*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{"Integrate", "[", 
+  RowBox[{
+   RowBox[{"x", " ", 
+    RowBox[{"Exp", "[", 
+     RowBox[{
+      RowBox[{"-", 
+       RowBox[{"x", "^", "2"}]}], "/", "2"}], "]"}]}], ",", "x"}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.473164203171413*^9, 3.47316422274648*^9}}],
+
+Cell[BoxData[
+ RowBox[{"-", 
+  SuperscriptBox["\[ExponentialE]", 
+   RowBox[{"-", 
+    FractionBox[
+     SuperscriptBox["x", "2"], "2"]}]]}]], "Output",
+ CellChangeTimes->{3.473164223798334*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Integrate", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"x", "^", "2"}], " ", 
+    RowBox[{"Exp", "[", 
+     RowBox[{
+      RowBox[{"-", 
+       RowBox[{"x", "^", "2"}]}], "/", "2"}], "]"}]}], ",", " ", "x"}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.473164227490443*^9, 3.47316423481138*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"-", 
+    SuperscriptBox["\[ExponentialE]", 
+     RowBox[{"-", 
+      FractionBox[
+       SuperscriptBox["x", "2"], "2"]}]]}], " ", "x"}], "+", 
+  RowBox[{
+   SqrtBox[
+    FractionBox["\[Pi]", "2"]], " ", 
+   RowBox[{"Erf", "[", 
+    FractionBox["x", 
+     SqrtBox["2"]], "]"}]}]}]], "Output",
+ CellChangeTimes->{3.473164235410824*^9}]
+}, Open  ]],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{
+   ButtonBox["Erf",
+    BaseStyle->"Link",
+    ButtonData->"paclet:ref/Erf"], "[", 
+   StyleBox["z", "TI"], "]"}]], "InlineFormula"],
+ " is the integral of the Gaussian distribution, given by ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{"erf", "(", "z", ")"}], "=", 
+    RowBox[{
+     FractionBox["2", 
+      SqrtBox["\[Pi]"]], 
+     RowBox[{
+      SubsuperscriptBox["\[Integral]", "0", "z"], 
+      RowBox[{
+       SuperscriptBox["e", 
+        RowBox[{"-", 
+         SuperscriptBox["t", "2"]}]], "d", "\[InvisibleSpace]", "t"}]}]}]}], 
+   TraditionalForm]], "InlineMath"],
+ ". "
+}], "Text"],
+
+Cell[TextData[{
+ "In terms of the ",
+ Cell[BoxData[
+  FormBox["Q", TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ "-function, ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{"Erf", "[", "x", "]"}], " ", "=", " ", 
+    RowBox[{"1", " ", "-", " ", 
+     RowBox[{"2", " ", 
+      RowBox[{"Q", "(", 
+       RowBox[{
+        SqrtBox["2"], "y"}], ")"}]}]}]}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ "."
+}], "Text",
+ CellChangeTimes->{{3.473164868723008*^9, 3.47316489488011*^9}, {
+  3.473164925007606*^9, 3.4731649307641773`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Q", "[", "x_", "]"}], " ", ":=", " ", 
+  RowBox[{"Integrate", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"1", "/", 
+       RowBox[{"Sqrt", "[", 
+        RowBox[{"2", "\[Pi]"}], "]"}]}], ")"}], " ", 
+     RowBox[{"Exp", "[", 
+      RowBox[{
+       RowBox[{"-", 
+        RowBox[{"z", "^", "2"}]}], "/", "2"}], "]"}]}], ",", " ", 
+    RowBox[{"{", 
+     RowBox[{"z", ",", " ", "x", ",", " ", "\[Infinity]"}], "}"}]}], 
+   "]"}]}]], "Input",
+ CellChangeTimes->{{3.473164950071411*^9, 3.473164984656814*^9}, {
+  3.473165024496872*^9, 3.473165026400301*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Erf2", "[", "x_", "]"}], " ", ":=", " ", 
+  RowBox[{"1", " ", "-", " ", 
+   RowBox[{"2", 
+    RowBox[{"Q", "[", 
+     RowBox[{
+      RowBox[{"Sqrt", "[", "2", "]"}], " ", "x"}], "]"}]}]}]}]], "Input",
+ CellChangeTimes->{{3.47316493877076*^9, 3.4731649464613113`*^9}, {
+  3.47316499695784*^9, 3.473165001846222*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Q", "[", "x", "]"}]], "Input",
+ CellChangeTimes->{{3.473164987916061*^9, 3.4731649886477127`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  FractionBox["1", "2"], " ", 
+  RowBox[{"Erfc", "[", 
+   FractionBox["x", 
+    SqrtBox["2"]], "]"}]}]], "Output",
+ CellChangeTimes->{3.47316499196423*^9, 3.473165028696666*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Erf2", "[", "x", "]"}], " ", "-", " ", 
+  RowBox[{"Erf", "[", "x", "]"}]}]], "Input",
+ CellChangeTimes->{{3.4731650089170303`*^9, 3.4731650101899147`*^9}, {
+  3.4731650509956293`*^9, 3.473165097501122*^9}}],
+
+Cell[BoxData[
+ RowBox[{"1", "-", 
+  RowBox[{"Erf", "[", "x", "]"}], "-", 
+  RowBox[{"Erfc", "[", "x", "]"}]}]], "Output",
+ CellChangeTimes->{3.47316509789673*^9}]
+}, Open  ]]
+},
+WindowSize->{640, 750},
+WindowMargins->{{4, Automatic}, {Automatic, 4}},
+ShowSelection->True,
+FrontEndVersion->"6.0 for Mac OS X x86 (32-bit) (May 21, 2008)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[590, 23, 285, 9, 27, "Input"],
+Cell[878, 34, 194, 6, 40, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1109, 45, 315, 10, 27, "Input"],
+Cell[1427, 57, 381, 14, 55, "Output"]
+}, Open  ]],
+Cell[1823, 74, 641, 23, 40, "Text"],
+Cell[2467, 99, 551, 19, 34, "Text"],
+Cell[3021, 120, 608, 18, 27, "Input"],
+Cell[3632, 140, 350, 9, 27, "Input"],
+Cell[CellGroupData[{
+Cell[4007, 153, 122, 2, 27, "Input"],
+Cell[4132, 157, 201, 6, 49, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4370, 168, 241, 5, 27, "Input"],
+Cell[4614, 175, 162, 4, 27, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+
