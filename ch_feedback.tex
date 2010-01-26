@@ -66,9 +66,10 @@ it should be made clear here what the difference to source coding is.]}
   To compute $\E[E_n^2]$, note that since $\Eh_i$ is the MMSE estimator of
   $E_i$, the estimation error variance is given by (see
   \eg~\cite[Section~8.3]{Scharf1990})
-  \begin{equation*}
+  \begin{equation}
+    \label{eq:gaussvardec}
     \E[(\Eh_i - E_i)^2] = \frac{\E[E_i^2]}{1 + P/\szq}.
-  \end{equation*}
+  \end{equation}
   Using $\E[E_0^2] = \E[S^2] = \ssq$ and recursively applying the above, we find
   that
   \begin{equation*}
@@ -160,17 +161,20 @@ more expanded discussion on the ``information losslessness'' of the code.
   if and only if Condition~1 of the theorem is satisfied. (b) is the data
   processing inequality; it becomes an equality if $S^k - \Sh^k - Y^n$ forms a
   Markov chain, which is another way of saying that $\Sh^k$ is a sufficient
-  statistic for $S^k$ given~$Y^n$.  To prove (c), write
+  statistic for $S^k$ given~$Y^n$.  Inequality~(c) is the equivalent of the data
+  processing inequality for channels with feedback. One way to prove it is as
+  follows.
   \begin{align*}
     I(S^k; Y^n)
     % &= \sum_{i=1}^n I(Y_i; S^k | Y^{i-1}) \\
-    &= \sum_{i=1}^n H(Y_i|Y^{i-1}) - H(Y_i | S^k Y^{i-1}) \\
-    &\le \sum_{i=1}^n H(Y_i|Y^{i-1}) - H(Y_i | S^k X^i Y^{i-1}) \\
-    &= \sum_{i=1}^n H(Y_i|Y^{i-1}) - H(Y_i | X^i Y^{i-1}) \\
+    &= \sum_{i=1}^n I(S^k; Y_i | Y^{i-1}) \\
+    &\le \sum_{i=1}^n I(S^k; Y_i | Y^{i-1}) + I(X^i;Y_i | S^k Y^{i-1}) \\
+    &= \sum_{i=1}^n I(S^k X^i; Y_i | Y^{i-1}) \\
+    &= \sum_{i=1}^n I(X^i; Y_i | Y^{i-1}) + I(S^k; Y_i | X^i Y^{i-1}) \\
+    &= \sum_{i=1}^n I(X^i; Y_i | Y^{i-1}) \\
     &= I(X^n \ra Y^n),
   \end{align*}
-  where the inequality is because conditioning does not increase the entropy and
-  the third equality follows from the Markov chain $(S^k, Y^{i-1}) - X^i - Y_i$.
+  where the fifth line is because the channel is memoryless.
   The inequality becomes an inequality if the encoder is information lossless in
   the sense that $X^i - (S^k, Y^{i-1}) - Y_i$ forms a Markov chain (see
   Remark~\ref{rem:inflosslessenc} below). Next, (d) is Theorem~2
@@ -459,8 +463,9 @@ example shows.
 
 If the channel is an AWGN channel, the distortion measure is the squared error,
 and the decoder computes the LMMSE estimator, there is a nice geometrical
-interpretation for the feedback transmission problem. (In the derivation of the
-inner product space we follow Cramér and Leadbetter~\cite{CramerL1967}.)
+interpretation for the feedback transmission problem. (The derivation of the
+inner product space follows Cramér and
+Leadbetter~\cite[Section~5.6]{CramerL1967}.)
 
 \begin{definition}
   An \emph{inner product space} $H$ is a set of elements (points, vectors) $x$,
@@ -482,15 +487,71 @@ inner product space we follow Cramér and Leadbetter~\cite{CramerL1967}.)
   \end{enumerate}
 \end{definition}
 
-Let $H$ be the set of random variables with zero mean and finite variance, and
-define for $X, Y \in H$ the inner product $\sp XY = \E[X Y]$. It is quickly
-verified that this definition has all the properties of an inner product.
-The norm of a random variable $\|X\|$ is then equal to its variance. 
+\begin{lemma}
+  \label{lem:rvinprodsp}
+  The set of zero-mean random variables with finite variance forms an inner
+  product space under ordinary addition and with $\sp XY = \E[X Y]$. 
+\end{lemma}
 
-It is important not to confuse this notion with the notion of \emph{random
-vectors}, which are elements of~$\R^n$ whose components are random variables.
+\begin{lemma}
+  \label{lem:inprodspcond}
+  Given a set of random variables in an inner product space~$H$ as defined
+  above, the space of the random variables conditioned on $X \in H$ is
+  equivalent to the projection of $H$ on the subspace orthogonal to~$X$.
+\end{lemma}
+\begin{proof}
+  Conditioned on~$X$, we have $\sp YZ = \E[YZ|X]$. The covariance between $Y$
+  and~$Z$ given~$X$ is
+  \begin{align*}
+    \Cov(Y, Z \mid X) &= \E[YZ|X] - \E[Y|X]\E[Z|X] \\
+    &= \E[YZ|X] - \frac{\E[XY|X]\E[XZ|X]}{\E[X^2|X]} \\
+    &= \sp YZ - \frac{\sp XY \sp XZ}{\|X\|^2} \\
+    &= \left\bra Y - \frac{\sp XY}{\|X\|^2} X, Z - \frac{\sp XZ}{\|X\|^2} X
+    \right\ket \\
+    &= \sp{Y_{\perp X}}{Z_{\perp X}},
+  \end{align*}
+  where the subscript $\perp X$ denotes the projection onto the subspace
+  orthogonal to~$X$.
+\end{proof}
 
 
+From the point of view of this inner product space, the first two rounds of
+communication in Example~\ref{ex:gaussfb} can be illustrated as in
+Figure~\ref{fig:gaussfb1}.
+\begin{figure}[tbph]
+  \begin{center}
+    \texttt{fig:gaussfb1}
+  \end{center}
+  \caption{Geometrical interpretation of the first two rounds of
+  Example~\ref{ex:gaussfb}. The estimate $\Eh_0$ of the first transmission is
+  the \emph{projection} of $S$ onto $Y_1$, hence the estimation error $E_1$ is
+  orthogonal to~$Y_1$.}
+  \label{fig:gaussfb1}
+\end{figure}
+The figure shows that while $X_1$ and $X_2$ are not independent, $X_2$ is
+independent of $Y_1$. Since all future rounds of communication involve only
+linear combinations of~$E_1$ and the noise components $Z_2$, $Z_3$, \dots, all
+future communication takes place in a subspace orthogonal to~$Y_1$. For
+reference, \figref{gaussfb2} shows the next round of communication.
+\begin{figure}[tbph]
+  \begin{center}
+    \texttt{fig:gaussfb2}
+  \end{center}
+  \caption{Second and third round of communication of \exref{gaussfb}.}
+  \label{fig:gaussfb2}
+\end{figure}
+
+Since the estimate $\Eh_i$ is the projection of $E_i$ onto $Y_{i+1}$, 
+\begin{equation*}
+  \Eh_i = \frac{\sp{E_i}{Y_{i+1}}}{\|Y_{i+1}\|^2} Y_{i+1}.
+\end{equation*}
+Writing $Y_{i+1} = \alpha E_i + Z_{i+1}$, with $\alpha = \sqrt{P}/\|E_i\|$,
+yields
+\begin{equation*}
+  \|E_{i+1}\|^2 = \|\Eh_i - E_i\|^2 = \frac{\|E_i\|^2}{1 + P/\|Z_{i+1}\|^2},
+\end{equation*}
+which is nothing else than Equation~\ref{eq:gaussvardec} expressed in the inner
+product space formalism.
 
 
 \section{Towards the Feedbackless Case}
