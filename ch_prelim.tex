@@ -1,0 +1,417 @@
+\chapter{Preliminaries}
+\label{ch:prelim}
+
+The problem considered in this and the next chapter is the transmission of
+analog sources across Gaussian channels. The present chapter provides the
+necessary definitions and notation, and recalls previous results.
+
+\section{Basic Definitions and Notation}
+\label{sec:defs}
+
+\begin{definition}[Source]
+  \label{def:analogsource}
+  A discrete-time analog source is specified by a probability density function
+  (\pdf) $\pS(s)$ on~$\R$.
+\end{definition}
+
+\begin{definition}[Channel]
+  \label{def:dtmlc}
+  A discrete-time memoryless channel is specified by a conditional probability
+  distribution $\pyx(y|x)$, assigning for each channel input~$x$ an output
+  distribution $p_{Y|X=x}$. 
+\end{definition}
+
+\begin{definition}[AWGN channel]
+  \label{def:awgn}
+  An additive white Gaussian noise channel (AWGN channel) with noise
+  variance~$\sq$ is a discrete-time memoryless channel whose output, conditioned
+  on an input $X=x$, is a Gaussian random variable $Y$ with mean~$x$ and
+  variance~$\sq$. An AWGN channel is sometimes also specified by relating the
+  output $Y$ to the input $X$ through $Y = X + Z$, where $Z$ is zero-mean
+  Gaussian with variance~$\sq$. 
+\end{definition}
+
+\begin{definition}[Joint source/channel code]
+  \label{def:knsccode}
+  A $(k,n)$~\emph{joint source/channel code} $(f,g)$ consists of an
+  \emph{encoder} function $f : \R^k \ra \R^n$ and a \emph{decoder}
+  function $g:\R^n \ra \R^k$. The \emph{rate} of a $(k,n)$~joint
+  source/channel code is defined as $\k = k/n$. If $\k < 1$, the code is called
+  a \emph{bandwidth compression} code; if $k > 1$, the code is called a
+  \emph{bandwidth expansion} code. If $\k = 1$, the code is called a
+  \emph{bandwidth matched} code.
+\end{definition}
+
+\begin{definition}[Minimal-delay codes]
+  \label{def:mindelcode}
+  A $(k,n)$~\emph{minimal-delay} joint source\slash channel code is a
+  $(k,n)$~joint source/channel code with $\gcd(k,n) = 1$. A minimal-delay joint
+  source/channel code of rate~$1$ is called a \emph{single letter} code.
+\end{definition}
+
+\begin{definition}
+  \label{def:jointsccommsys}
+  A \emph{source/channel communication system} of rate~$\k$ consists of a
+  discrete-time memoryless source~$\pS$, a discrete memoryless channel~$\pyx$,
+  and a joint source/channel code~$(f,g)$ of rate~$\k$. The encoder maps
+  $k$~source symbols $S^k \deq (S_1, \dots, S_k)$ into $n$~channel input
+  symbols~$X^n = f(S^k)$, and the decoder maps $n$~channel output symbols $Y^n$
+  into $k$~source estimates $\Sh^k = g(Y^n)$.
+\end{definition}
+
+For an illustration of a general source/channel communication system, see
+\figref{gensccommsys}.
+\begin{figure}[tbp]
+  \begin{center}
+    \figbox{gensccommsys}
+  \end{center}
+  \caption{A general source/channel communication system of rate $\k = k/n$
+  according to \defref{jointsccommsys}.}
+  \label{fig:gensccommsys}
+\end{figure}
+
+\begin{definition}
+  \label{def:PD}
+  The \emph{expected channel input power} or \emph{expected transmit power}~$P$
+  and \emph{mean squared error}~$D$ incorred by a source/channel communication
+  are defined by
+  \begin{equation*}
+    P = \frac1n \sn \E[X_i^2] \quad \text{and} \quad
+    D = \frac1k \sk \E[(S_i - \Sh_i)^2],
+  \end{equation*}
+  respectively. For a source with finite variance~$\ssq$, the
+  \emph{signal-to-distortion ratio} \sdr\ is defined as $\sdr = \ssq / D$, and
+  for an additive noise channel with noise variance~$\szq$ the
+  \emph{signal-to-noise ratio} \snr\ is defined as $\snr = P/\szq$.
+\end{definition}
+
+\begin{definition}
+  \label{def:codingscheme}
+  A $(k,n)$~\emph{coding scheme} for an AWGN channel is a family of
+  $(k,n)$~joint source/channel codes indexed by a positive parameter~\snr.
+\end{definition}
+
+
+\section{Fundamental Limits of Performance}
+\label{sec:limits}
+
+The most general bound on the performance of a joint source/channel coding
+system is the converse to Shannon's separation theorem. Applied to AWGN
+channels, it is stated as follows.
+
+\begin{theorem}
+  \label{thm:sepconverse}
+  When a discrete-time source is transmitted over an AWGN channel with noise
+  variance~$\szq$ using a code of rate~$\k$, the average transmit power~$P$ and
+  the mean squared error~$D$ are related by
+  \begin{equation}
+    \label{eq:sepconverse}
+    \k R(D) \le \frac12 \log_2(1 + P/\szq),
+  \end{equation}
+  where $R(D)$ is the rate-distortion function of the source.
+\end{theorem}
+
+\begin{proof}
+  This is just the general converse to the separation theorem, $\k R(D) \le
+  C(P)$, with $C(P)$ replaced by the capacity of the AWGN channel.
+\end{proof}
+
+\begin{definition}
+  \label{def:optimalcode}
+  A joint source/channel communication system that satisfies the bound of
+  \thmref{sepconverse} with equality is said to use an \emph{optimal code}.
+\end{definition}
+
+Using Shannon's lower bound on the rate distortion function, the \sdr\ can be
+bounded further as in the next theorem.
+\begin{theorem}
+  \label{thm:sdrlb}
+  If a discrete-time analog source $\pS$ of variance~$\ssq$ is transmitted
+  across an AWGN channel with noise variance~$\szq$ using a code of rate~$\k$,
+  the \sdr\ is bounded by
+  \begin{equation}
+    \label{eq:sdrlb}
+    \sdr \le 2^{2 D(\pS \| \phi_{\ssq})} (1 + \snr)^{1/\k},
+  \end{equation}
+  where $D(\cdot \| \cdot)$ is the relative entropy or Kullback-Leibler distance
+  between two distributions (see \eg~\cite{CoverT1991}) and $\phi_{\ssq}$ is a
+  centered Gaussian distribution of variance~$\ssq$.
+\end{theorem}
+
+\begin{proof}
+  The rate distortion function of an analog source of finite entropy~$h(S)$
+  with squared error distortion satisfies~\cite{Shannon1959}
+  \begin{equation*}
+    R(D) \ge h(S) - \frac12 \log_2(2\pi e D).
+  \end{equation*}
+  Applying this to~\eqref{eq:sepconverse} yields
+  \begin{equation*}
+    \frac1D \le 2^{-2h(S)} 2\pi e (1 + \snr)^{1/\k}.
+  \end{equation*}
+  Multiplying both sides with~$\ssq$ and noting that $0.5 \log_2(2\pi e \ssq) =
+  h(\phi_{\ssq})$ leads to
+  \begin{equation*}
+    \sdr \le 2^{2(h(\phi_{\ssq}) - h(S))} (1 + \snr)^{1/\k}.
+  \end{equation*}
+  Applying the property $h(\phi_{\ssq}) - h(S) = D(\pS \|
+  \phi_{\ssq})$~\cite[Theorem~8.6.5]{CoverT1991} completes the proof.
+\end{proof}
+
+\begin{remark}
+  \label{rem:perflimitgaussiansource}
+  For a Gaussian source the bound of \thmref{sdrlb} simplifies to $\sdr \le (1 +
+  \snr)^{1/\k}$ and coincides with that of \thmref{sepconverse}. For other
+  sources the bound is generally not tight but becomes tight as $\snr \ra
+  \infty$~\cite{LinderZ1994}.
+\end{remark}
+
+\begin{remark}
+  \label{rem:asympbound}
+  In asymptotic terms, \thmref{sdrlb} says that the \sdr\ scales at best as
+  $\snr^{1/\k}$, or $\sdr \in O(\snr^{1/\k})$. (See \appref{asymptotic} for the
+  definition of the $O$-notation.)
+\end{remark}
+
+\begin{definition}
+  A coding scheme is called \emph{asymptotically optimal} if it satisfies $\sdr
+  \in \Omega(\snr^{1/\k})$.
+\end{definition}
+
+The direct part of the separation theorem says that there exist codes for
+which 
+\begin{equation*}
+  \k R(D) = \frac12 \log_2(1 + P/\szq) - \e
+\end{equation*}
+for arbitrarily small $\e > 0$. It also states that asymptotically optimal
+coding schemes exist for arbitrary sources. The codes whose existence is proved
+by the theorem, however, are of unbounded blocklength (\ie, delay) and of
+unbounded complexity. The sections that follow focus on the performance of
+minimal-delay codes instead.
+
+
+\section{Optimal Minimal-Delay Codes}
+\label{sec:optmindel}
+
+\subsection{Bandwith Matched Codes}
+
+By definition, minimal-delay bandwidth matched codes are single letter codes.
+The following example is a well known optimal single letter code.
+\begin{example}
+  \label{ex:gausssingle}
+  Let the source be zero-mean Gaussian with variance~$\ssq$ and let the channel
+  be AWGN with noise variance~$\szq$. The encoder is given by $X = f(S) =
+  \sqrt{P/\ssq} S$ and the decoder is given by $\Sh = g(Y) = \sqrt{P} \ssq Y /
+  (P + \szq)$. Using $Y = X + Z$ it is quickly verified that 
+  \begin{equation*}
+    D = \E[(S - \Sh)^2] = \ssq / (1 + P/\szq),
+  \end{equation*}
+  which is indeed the optimal distortion according to
+  \remref{perflimitgaussiansource}.
+\end{example}
+
+\exref{gausssingle} is in fact a particular instance of a more general paradigm
+called \emph{measure matching}. For an excellent treatment of measure matching
+the reader is referred to Gastpar~\cite{GastparRV2003,GastparThesis}; in the
+sequel only the results relevant to this thesis are quoted.
+
+The first result from~\cite{GastparRV2003} says that any bandwidth matched code
+is optimal, provided that the source, channel, code, and the cost and distortion
+measures of interest are suitably matched.
+
+\begin{theorem}
+  \label{thm:tcntcbwmatch}
+  A single letter code is optimal for a source/channel communication system of
+  rate one, \ie, $R(D) = C(P)$, if and only if the following conditions are
+  met.
+  \begin{enumerate}[(i)]
+    \item The cost measure~$\rho(x)$ satisfies
+      \begin{equation}
+        \label{eq:optcost}
+        \rho(x)
+        \begin{cases}
+          = c_1 D(p_{Y|X=x} \| p_Y) + \beta & \text{if $p_X(x) > 0$} \\
+          \ge c_1 D(p_{Y|X=x} \| p_Y) + \beta & \text{if $p_X(x) = 0$},
+        \end{cases}
+      \end{equation}
+      where $c_1 > 0$ and $\beta$ are arbitrary real constants.
+
+    \item The distortion measure~$d(s,\sh)$ satisfies
+      \begin{equation}
+        \label{eq:optdist}
+        d(s,\sh) = - c_2 \log_2 \frac{p(\sh|s)}{p(\sh)} + d_0(s),
+      \end{equation}
+      where $c_2 > 0$ and $d_0(\cdot)$ is an arbitrary function.
+
+    \item The code is information lossless in the sense that~$I(S;\Sh) =
+      I(X;Y)$.
+  \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+  The proof hinges on the inequality chain $R(D) \le I(S;\Sh) \le I(X;Y) \le
+  C(P)$. The complete proof, found in~\cite{GastparRV2003}, shows that $I(X;Y) =
+  C(P)$ if and only if condition~(i) is satisfied and that $R(D) = I(S;\Sh)$ if
+  and only if condition~(ii) is satisfied. It is then clear that condition~(iii)
+  is the third condition needed for $R(D) = C(P)$.
+\end{proof}
+
+\begin{remark}
+  \label{rem:tcntcrug}
+  The statement of \thmref{tcntcbwmatch} ignores a few special cases,
+  notably the case $I(S;\Sh) = 0$ and the case $I(X;Y) = \max_P C(P)$; these are
+  treated in detail in~\cite{GastparRV2003} and are not relevant here.
+\end{remark}
+
+The single letter code of \exref{gausssingle} is optimal precisely because
+$\rho(x) = x^2$ satisfies condition~(i) and $d(s,\sh) = (s - \sh)^2$ satisfies
+condition~(ii) for the communication system at hand. Moreover, since the encoder
+and decoder are both one-to-one maps, condition~(iii) is trivially satisfied.
+
+According to \thmref{tcntcbwmatch} there exists an infinity of optimal
+minimal-delay codes for the matched bandwidth case. For systems with bandwith
+expansion or compression, however, no optimal codes may exist, as the following
+section shows.
+
+
+\subsection{Bandwidth Expansion/Compression Codes}
+
+This section considers the case where $k \ne n$ and $\gcd(k,n) = 1$.  For this
+case there are no known optimal minimal-delay codes. In particular, Ingber et
+al.~\cite{IngberLZF2008} showed using a result by Ziv and Zakai~\cite{ZivZ1973}
+that both when $k >1 $, $n = 1$ and when $k = 1$, $n >1$, the achievable \sdr\
+is strictly less than the optimal value from \remref{perflimitgaussiansource}. 
+
+For codes that are not bandwidth matched, optimality is no longer only a matter
+of measure matching according to \thmref{tcntcbwmatch}; additional conditions
+need to be fulfilled. The following theorem is essentially Theorem~3.9
+in~\cite{GastparThesis}, adapted to the case without feedback and with a
+slightly more extended discussion on the ``information lossless'' property of
+the code. 
+
+\begin{theorem}
+  \label{thm:tcntc1n}
+  For $k \ne n$, a $(k, n)$~joint jource/channel code is optimal if and only if
+  the following conditions are met.
+  \begin{enumerate}[(i)]
+    \item
+      \begin{enumerate}[(a)]
+        \item The conditional distribution of the source symbols given the
+          estimates can be factored as $p(s^k|\sh^k) = \pk p(s_i|\sh_i)$, and
+        \item each $p(s_i|\sh_i)$ achieves the rate distortion function at the
+          same average distortion.
+      \end{enumerate}
+
+    \item The estimates $\Sh^k$ form a sufficient statistic for $S^k$ given the
+      outputs~$Y^n$.
+
+    \item The encoder is information lossless in the sense that $I(S^k; Y^n) =
+      I(X^n; Y^n)$. 
+
+    \item The distribution of the channel outputs $Y_1$, \ldots, $Y_n$ factors
+      as
+      \begin{equation*}
+        p(y_1, \dots, y_n) = \pn p_Y(y_i)
+      \end{equation*}
+      for a fixed distribution~$p_Y$, \ie, the outputs are mutually independent
+      and identically distributed.
+
+    \item The marginal distributions $p(y_i)$ of the channel outputs all achieve
+      the capacity at the same average cost.
+  \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+  Put the proof here. I suppose we first need to define general $D$ and $P$ for
+  block codes. Previously we have defined them as the mean squared error and
+  power, respectively. Not sure if this was good. This needs to be reconciled.
+\end{proof}
+
+\begin{discussion}
+  If $k = 1$, condition~(i)(a) of the theorem is trivially satisfied. If $n =
+  1$, condition~(iv) is trivially satisfied. Furthermore, if condition~(i)(a) is
+  satisfied then condition~(i)(b) is satisfied if the distortion measure is
+  suitably matched. Similarly, if condition~(iv) is satisfied then achieving
+  condition~(v) is a matter of matching the cost measure to the output
+  distribution. 
+\end{discussion}
+
+The following lemma gives a condition equivalent to conditions~(i)(a) and~(ii).
+\begin{lemma}
+  \label{lem:ssil}
+  Adapt here the lemma from the feedback case to the feedbackfree case.
+\end{lemma}
+\begin{proof}
+  \todo.
+\end{proof}
+
+\begin{remark}
+  \label{rem:inflosslessenc}
+  A deterministic encoder is sufficient but not necessary for condition~(iii).
+  Nevertheless, any nondeterministic encoder satisfying condition~(iii) can be
+  turned into a deterministic encoder that also satisfies the condition as the
+  following argument shows. 
+
+  \todo: Complete this argument.
+\end{remark}
+
+The consequence of \thmref{tcntc1n} and the discussion that followed is that
+to find an optimal code when $k \ne n$ is no longer only a matter of matching
+the cost and distortion measure to the other components of the system.  The
+additional conditions for a communication system to be optimal are
+conditions~(iii) and~(iv) on the encoder side and conditions~(i)(a) and~(ii) on
+the decoder side.  While conditions~(i)(b) and~(v) are ``relative'' conditions,
+in the sense that their fulfillment depends on the relation between various
+components of the system, the new conditions are ``absolute'': they only depend
+on statistical properties of the respective random variables.
+
+To get insight about this problem, one can look at the case where the encoder
+has perfect feedback from the receiver. When feedback is present, the
+communication system consisting of a Gaussian source and Channel allows an
+optimal minimal-delay code for $1:n$ bandwidth expansion, as shown in the next
+section.
+
+
+\section{Optimal Minimal-Delay Codes with Feedback}
+\label{sec:optmindelfb}
+
+\subsection{An Optimal Bandwidth Expansion Code}
+
+
+\subsection{Posterior Matching}
+
+
+\subsection{Statisticically Sufficient Decoder}
+
+
+\subsection{Geometric Interpretation}
+
+
+\subsection{Other Results}
+
+\subsubsection{Noisy Feedback}
+
+\subsubsection{Minimal-Delay Codes for Arbitrary Rates}
+
+
+\begin{subappendices}
+  \section{Asymptotic Notation}
+  \label{app:asymptotic}
+
+  \begin{definition}
+    \label{def:bigo}
+    Let $f(x)$ and $g(x)$ be two functions defined on~$\R$. The set $O(g(x))$ is
+    defined as
+    \begin{equation*}
+      f(x) \in O(g(x))
+    \end{equation*}
+    if and only if there exists an $x_0$ and a constant~$c$ such that
+    \begin{equation*}
+      f(x) \le c g(x)
+    \end{equation*}
+    for all $x > x_0$. 
+    Similarly, $f(x) \in \Omega(g(x))$ if $\le$ is replaced by $\ge$ in
+    the above definition. Finally, $\Theta(g(x)) \deq O(g(x)) \cap
+    \Omega(g(x))$.
+  \end{definition}
+
+\end{subappendices}

@@ -27,6 +27,7 @@
 \newcommand{\sh}{{\hat{s}}}
 \newcommand{\Qh}{\hat{Q}}
 \newcommand{\Eh}{\hat{E}}
+\newcommand{\pt}{\tilde{p}}
 
 % Macros for the feedback chapter
 \newcommand{\Fpi}{{F_{\pi}}}
@@ -43,13 +44,17 @@
 % Sums and products
 \newcommand\sk{{\sum_{i=1}^k}}
 \newcommand\sn{{\sum_{i=1}^n}}
+\newcommand\pk{{\prod_{i=1}^k}}
+\newcommand\pn{{\prod_{i=1}^n}}
 
 % Typographical shortcuts
 \newcommand{\ie}{i.e.}
 \newcommand{\eg}{e.g.}
 \newcommand{\abbrev}[1]{\textsc{\MakeLowercase{#1}}}
 \newcommand\cdf{\abbrev{CDF}}
+\newcommand\pdf{pdf}
 \newcommand\snr{\abbrev{SNR}}
+\newcommand\sdr{\abbrev{SDR}}
 
 % Shortcuts for references
 \newcommand{\secref}[1]{Section~\ref{sec:#1}}
@@ -58,6 +63,8 @@
 \newcommand{\appref}[1]{Appendix~\ref{app:#1}}
 \newcommand{\lemref}[1]{Lemma~\ref{lem:#1}}
 \newcommand{\thmref}[1]{Theorem~\ref{thm:#1}}
+\newcommand{\remref}[1]{Remark~\ref{rem:#1}}
+\newcommand{\defref}[1]{Definition~\ref{def:#1}}
 
 % Used in distortion lower bound
 \newcommand{\pS}{{p_S}}
@@ -97,6 +104,7 @@
 \let\ket\rangle
 \def\sp#1#2{\bra #1, #2 \ket}
 \let\e\epsilon
+\let\k\kappa
 \let\l\ell
 
 
@@ -138,4 +146,12 @@
 \newcommand{\cN}{\ensuremath{\mathcal{N}}}
 \newcommand\iid{\emph{iid}}
 
+% To make a place holder for figures
+\newcommand{\figbox}[1]{%
+\begin{boxedminipage}[b]{\textwidth}
+  \centering\strut\par\texttt{fig:#1}\par\strut
+\end{boxedminipage}}
 
+
+% TODO marker
+\newcommand{\todo}{\textbf{TODO}}
