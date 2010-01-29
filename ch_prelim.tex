@@ -369,15 +369,18 @@ lossless'' property of the code.
   of~$C(P)$ and becomes an equality if and only if condition~(v) is satisfied.
 \end{proof}
 
-The following lemma gives a condition equivalent to conditions~(i)(a) and~(ii).
-\begin{lemma}
-  \label{lem:ssil}
-  Adapt here the lemma from the feedback case to the feedbackfree case.
-\end{lemma}
-\begin{proof}
-  \todo.
-\end{proof}
+% [Marius] Disabled the following lemma, since it might not be true. To be
+% resolved. 
 
+%The following lemma gives a condition equivalent to conditions~(i)(a) and~(ii).
+%\begin{lemma}
+%  \label{lem:ssil}
+%  Adapt here the lemma from the feedback case to the feedbackfree case.
+%\end{lemma}
+%\begin{proof}
+%  \todo.
+%\end{proof}
+%
 \begin{remark}
   \label{rem:inflosslessenc}
   A deterministic encoder is sufficient but not necessary for condition~(iii).
@@ -385,7 +388,26 @@ The following lemma gives a condition equivalent to conditions~(i)(a) and~(ii).
   turned into a deterministic encoder that also satisfies the condition as the
   following argument shows. 
 
-  \todo: Complete this argument.
+  Assume $I(S^k; Y^n) = I(X^n;Y^n)$. For $s^k$, $x^n$ such that $p(s^k, x^n) >
+  0$, we can then factor the joint distribution of $s^k$, $x^n$, $y^n$ as
+  \begin{equation*}
+    p(s^k, x^n, y^n) = p(y^n | s^k) p(x^n|s^k) p(s^k),
+  \end{equation*}
+  where $p(x^n|s^k)$ specifies the nondeterministic encoder. Suppose we replace
+  $p(x^n|s^k)$ with another distribution $\pt(x^n|s^k)$ with the property that
+  $\pt(x^n|s^k) = 0$ whenever $p(x^n|s^k) = 0$. Then the joint distribution
+  becomes
+  \begin{equation*}
+    \pt(s^k,x^n,y^n) = p(y^n|s^k) \pt(x^n|s^k) p(s^k).
+  \end{equation*}
+  Consequently, $\pt(x^n,y^n|s^k) = p(y^n|s^k)\pt(x^n|s^k)$, so
+  $\It(X^n;Y^n|S^k) = 0$. Furthermore,
+  \begin{equation*}
+    \pt(s^k,y^n) = \sum_{x^n} \pt(s^k, x^n, y^n) = p(y^n|s^k) p(s^k),
+  \end{equation*}
+  and so $\It(S^k;Y^n) = I(S^k; Y^n)$. In particular, we can choose for
+  $\pt(x^n|s^k)$ a distribution that has all its mass in a single $x^n$,
+  which is nothing but a deterministic encoder. 
 \end{remark}
 
 The consequence of \thmref{tcntc1n}, and the discussion following it, is this:

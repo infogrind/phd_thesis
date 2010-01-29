@@ -2,10 +2,3 @@ Last updated: 2010-01-27
 
 o Reconcile definition of optimal code with Gastpar's thesis.
 o Mention alternative names/optimality definitions such as OPTA.
-o Add definition of D and P as general average cost and distortion, as far as it
-  is required.
-o Adapt the lemma connecting sufficiency and a product distribution of the
-  backward test channel to the feedbackfree case (or omit it completely).
-o Complete argument that we can always restrict the encoders to deterministic
-  ones for an optimal system. (Could we even say that I(X^n;Y^n|S^k) can always
-  improve a system by using a deterministic encoder instead of a random one?
