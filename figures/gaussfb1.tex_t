@@ -1,0 +1,38 @@
+% vim:ft=tex
+
+\begin{tikzpicture}
+  \coordinate (o) at (0,0);
+  \coordinate (E0) at (4,0);
+  \coordinate (X1) at ($ (0,0)!1.33!(E0) $);
+  \coordinate (Z1) at ($ (0,0)!0.8!90:(E0) $);
+  \coordinate (Y1) at ($ (X1) + (Z1) $);
+
+  \coordinate (X1r) at ($ (o)!(X1)!(Y1) $);
+  \coordinate (X2) at ($ (o)!1!90:(X1r) $);
+  
+  % The estimate Eh0 is E0 projected onto Y1.
+  \coordinate (Eh0) at ($ (o)!(E0)!(Y1) $);
+
+  \coordinate (E1) at ($ (Eh0) - (E0) $);
+
+  \draw[l] (o) -- (E0) node[below] {$E_0$};
+  \draw[l] (o) -- (X1) node[below] {$X_1$};
+  \draw[l] (o) -- (Z1) node[above] {$Z_1$};
+  \draw[l] (o) -- (Y1) node[right] {$Y_1$};
+
+  \draw[l] (o) -- (Eh0) node[above] {$\Eh_0$};
+
+  \draw[l] (o) -- (E1) node[left] {$E_1$};
+
+  \draw[l] (o) -- (X2) node[left] {$X_2$};
+
+  % To illustrate Z_2 coming out towards the observer from the origin.
+  \draw (o) circle (3pt);
+  \fill (o) circle (1pt);
+  \node[below] at (o) {$Z_2$};
+
+  % Dashed line for illustration purposes.
+  \draw[dl] (Z1) -- (Y1);
+  \draw[dl] (X1) -- (Y1);
+  \draw[dl] (E0) -- (Eh0);
+\end{tikzpicture}

@@ -10,8 +10,9 @@ necessary definitions and notation, and recalls previous results.
 
 \begin{definition}[Source]
   \label{def:analogsource}
-  A discrete-time analog source is specified by a probability density function
-  (\pdf) $\pS(s)$ on~$\R$.
+  A discrete-time memoryless source is specified by a probability distribution
+  $\pS(s)$ on~$\R$. An \emph{analog} source is a source that admits a
+  probability density function \emph{(\pdf)}.
 \end{definition}
 
 \begin{definition}[Channel]
@@ -63,7 +64,7 @@ For an illustration of a general source/channel communication system, see
 \figref{gensccommsys}.
 \begin{figure}[tbp]
   \begin{center}
-    \figbox{gensccommsys}
+    \input{figures/sc_gen.tex_t}
   \end{center}
   \caption{A general source/channel communication system of rate $\k = k/n$
   according to \defref{jointsccommsys}.}
@@ -100,11 +101,11 @@ For an illustration of a general source/channel communication system, see
 
 \begin{definition}
   \label{def:codingscheme}
-  A $(k,n)$ coding scheme consists of a function $\tilde{f} : \R^k \times \R_+
-  \ra \R^n$ and a function $\tilde{g}: \R^n \times \R_+ \ra \R^k$, such that for
-  every value of $\snr$, $(f(\cdot, \snr), g(\cdot, \snr))$ is a $(k,n)$~joint
-  source/channel code that when used in a Gaussian communication system leads to
-  $P/\szq = \snr$.
+  A $(k,n)$ \emph{coding scheme} consists of a function $\tilde{f} : \R^k \times
+  \R_+ \ra \R^n$ and a function $\tilde{g}: \R^n \times \R_+ \ra \R^k$, such
+  that for every value of $\snr$, $(f(\cdot, \snr), g(\cdot, \snr))$ is a
+  $(k,n)$~joint source/channel code that when used in a Gaussian communication
+  system leads to $P/\szq = \snr$.
 \end{definition}
 
 
@@ -112,7 +113,7 @@ For an illustration of a general source/channel communication system, see
 \label{sec:limits}
 
 The most general bound on the performance of a joint source/channel coding
-system is the converse to Shannon's separation theorem.
+system is Shannon's separation theorem, stated below.
 
 \begin{theorem}
   \label{thm:sepconverse}
@@ -132,8 +133,8 @@ system is the converse to Shannon's separation theorem.
 
 \begin{definition}
   \label{def:optimalcode}
-  A joint source/channel communication system that satisfies the bound of
-  \thmref{sepconverse} with equality is said to use an \emph{optimal code}.
+  A source/channel communication system that satisfies the bound of
+  \thmref{sepconverse} with equality is said to be \emph{optimal}.
 \end{definition}
 
 For Gaussian channels, \thmref{sepconverse} leads to the following upper bound
@@ -155,7 +156,7 @@ on the~\sdr.
 \begin{remark}
   \label{rem:perflimitgaussiansource}
   For a Gaussian source the bound of \thmref{sdrub} simplifies to $\sdr \le (1 +
-  \snr)^{1/\k}$ and is simply that of \thmref{sepconverse} applied to a Gaussian
+  \snr)^{1/\k}$ and is simply \thmref{sepconverse} applied to a Gaussian
   source and channel. This bound is therefore tight, in the sense that there
   exist codes that can come arbitrarily close to equality. 
   For other sources the bound is generally not tight, but it becomes tight as
@@ -171,9 +172,9 @@ on the~\sdr.
   Inserting the capacity of the Gaussian channel into~\eqref{eq:sepconverse}
   results in
   \begin{equation*}
-    \k R(D) \le \frac12 \log_2(1 + \snr).
+    \k R(D) \le \frac12 \log_2(1 + \snr)
   \end{equation*}
-  Combining the two above inequalities yields
+  and combining the two above inequalities yields
   \begin{equation*}
     \frac1D \le 2^{-2h(S)} 2\pi e (1 + \snr)^{1/\k}.
   \end{equation*}
@@ -268,20 +269,20 @@ distortion.
   \end{enumerate}
 \end{theorem}
 
-\begin{proof}
-  The proof hinges on the inequality chain $R(D) \le I(S;\Sh) \le I(X;Y) \le
-  C(P)$. The complete proof, found in~\cite{GastparRV2003}, shows that $I(X;Y) =
-  C(P)$ if and only if condition~(i) is satisfied and that $R(D) = I(S;\Sh)$ if
-  and only if condition~(ii) is satisfied. It is then clear that condition~(iii)
-  is the third condition needed for $R(D) = C(P)$.
-\end{proof}
-
 \begin{remark}
   \label{rem:tcntcrug}
   The statement of \thmref{tcntcbwmatch} ignores a few special cases,
   notably the case $I(S;\Sh) = 0$ and the case $I(X;Y) = \max_P C(P)$; these are
   treated in detail in~\cite{GastparRV2003} and are not relevant here.
 \end{remark}
+
+\begin{proof}[Proof of \thmref{tcntcbwmatch}]
+  The proof hinges on the inequality chain $R(D) \le I(S;\Sh) \le I(X;Y) \le
+  C(P)$. The complete proof, found in~\cite{GastparRV2003}, shows that $I(X;Y) =
+  C(P)$ if and only if condition~(i) is satisfied and that $R(D) = I(S;\Sh)$ if
+  and only if condition~(ii) is satisfied. It is then clear that condition~(iii)
+  is the third condition needed for $R(D) = C(P)$.
+\end{proof}
 
 The single letter code of \exref{gausssingle} is optimal precisely because
 $\rho(x) = x^2$ satisfies condition~(i) and $d(s,\sh) = (s - \sh)^2$ satisfies
@@ -296,11 +297,10 @@ argues.
 
 \subsection{Bandwidth Expansion/Compression Codes}
 
-If $k \ne n$ and $\gcd(k,n) = 1$ it is not known whether minimal delay codes
-exist.  For the particular case of a Gaussian source and a Gaussian channel with
-input power constraint and squared error distortion, Ingber et
-al.~\cite{IngberLZF2008} used a result by Ziv and Zakai~\cite{ZivZ1973} to prove
-that no optimal $(1,n)$ or $(k,1)$~code exists.
+If $k \ne n$ it is not known whether optimal minimal delay codes exist.  For the
+particular case of a Gaussian source and a Gaussian channel with input power
+constraint and squared error distortion, it has in fact been proven that no
+optimal $(k,1)$ and $(1,n)$~codes exist~\cite{IngberLZF2008}.
 
 For codes that are not bandwidth matched, optimality is no longer only a matter
 of measure matching in the sense of \thmref{tcntcbwmatch}; additional conditions
@@ -338,10 +338,9 @@ lossless'' property of the code.
 \begin{discussion}
   If $k = 1$, condition~(i)(a) of the theorem is trivially satisfied. If $n =
   1$, condition~(iv) is trivially satisfied. Furthermore, if condition~(i)(a) is
-  satisfied then condition~(i)(b) is satisfied if the distortion measure is
-  suitably matched. Similarly, if condition~(iv) is satisfied then achieving
-  condition~(v) is a matter of matching the cost measure to the output
-  distribution. 
+  satisfied then condition~(i)(b) is only a matter of matching the distortion
+  measure. Similarly, if condition~(iv) is satisfied then condition~(v) is only
+  a matter of matching the cost measure. 
 \end{discussion}
 
 \begin{proof}
@@ -358,16 +357,16 @@ lossless'' property of the code.
     \label{eq:14step5}
     &\le n C(P).
   \end{align}
-  \eqref{eq:14step1} is by definition of~$R(D)$; it becomes an equality if and
-  only if condition~(i) is satisfied. \eqref{eq:14step2} is the data processing
-  inequality, it becomes an inequality if and only if condition~(ii) is
-  satisfied. Next, \eqref{eq:14step3} is again the data processing inequality
-  and it is satisfied with equality if and only if condition~(iii) is satisfied.
-  Inequality~\eqref{eq:14step4} follows because the channel is memoryless and
-  because conditioning can only decrease the entropy. It becomes an inequality
-  if and only if condition~(iv) is satisfied. Inequality~\eqref{eq:14step5},
-  finally, follows from the definition of~$C(P)$ and becomes an equality if and
-  only if condition~(v) is satisfied.
+  Inequality \eqref{eq:14step1} follows from the definition of~$R(D)$; it
+  becomes an equality if and only if condition~(i) is satisfied.
+  \eqref{eq:14step2} is the data processing inequality, it becomes an inequality
+  if and only if condition~(ii) is satisfied. Next, \eqref{eq:14step3} is again
+  the data processing inequality and it is satisfied with equality if and only
+  if condition~(iii) is satisfied.  Inequality~\eqref{eq:14step4} follows
+  because the channel is memoryless and because conditioning can only decrease
+  the entropy. It becomes an inequality if and only if condition~(iv) is
+  satisfied. Inequality~\eqref{eq:14step5}, finally, follows from the definition
+  of~$C(P)$ and becomes an equality if and only if condition~(v) is satisfied.
 \end{proof}
 
 The following lemma gives a condition equivalent to conditions~(i)(a) and~(ii).
@@ -390,18 +389,20 @@ The following lemma gives a condition equivalent to conditions~(i)(a) and~(ii).
 \end{remark}
 
 The consequence of \thmref{tcntc1n}, and the discussion following it, is this:
-when $k \ne n$, finding an optimal code is no longer only a matter of matching
-the cost and distortion measure. More precisely, only conditions~(i)(b) and~(v)
-can be fulfilled by choosing a matching cost and distortion measure, and only
-provided that the remaining conditions are satisfied. These remaining conditions
-are absolute; they depend only on the statistical properties of the relevant
-quantities. These findings are summarized in the following lemma.
+when $k \ne n$, finding an optimal communication system is no longer only a
+matter of matching cost and distortion measures. More precisely, only
+conditions~(i)(b) and~(v) can be fulfilled by choosing a matching cost and
+distortion measure, and only provided that the remaining conditions are
+satisfied. These remaining conditions are absolute: they depend only on the
+statistical properties of the relevant quantities. These findings are summarized
+in the following lemma.
 
 \begin{lemma}
   \label{lem:optcodenkexist}
   For the communication system of \figref{gensccommsys} with $k \ne n$, an
-  optimal minimal delay $(k,n)$~code exists if and only if there exists a
-  $(k,n)$~code satisfying conditions~(i)(a) and (ii)--(iv) of \thmref{tcntc1n}.
+  optimal minimal delay $(k,n)$~source/channel communication system exists if
+  and only if there exists an $(k,n)$~communication system satisfying
+  conditions~(i)(a) and (ii)--(iv) of \thmref{tcntc1n}.
 \end{lemma}
 
 
@@ -419,15 +420,15 @@ quantities. These findings are summarized in the following lemma.
   \label{def:fbcommsys}
   A $(k,n)$ \emph{source/channel communication system with feedback} is a
   $(k,n)$ communication system where the encoder has noiseless feedback from the
-  channel output. A $(k,n)$ feedback code computes the $i^{\text{th}}$ channel
-  input as $X_i = f_i(S^k, Y^{i-1})$ and the source estimate as $\Sh^k =
+  channel output, and a $(k,n)$ feedback code computes the $i^{\text{th}}$
+  channel input as $X_i = f_i(S^k, Y^{i-1})$ and the source estimate as $\Sh^k =
   g(Y^n)$. 
 \end{definition}
 
 \figref{fbcommsys} has a schematic depiction of a feedback communication system.
 \begin{figure}[tbp]
   \begin{center}
-    \figbox{fbcommsys}
+    \input{figures/sc_gen_feedback.tex_t}
   \end{center}
   \caption{A general source/channel communication system with feedback.}
   \label{fig:fbcommsys}
@@ -436,9 +437,10 @@ quantities. These findings are summarized in the following lemma.
 Since feedback does not increase the capacity of memoryless channels, the bound
 of \thmref{sepconverse} also applies to systems with feedback. It is therefore
 clear that an optimal single letter code for a system without feedback is also
-optimal for a system with feedback. While there are no known optimal codes for
-the feedbackfree case when $k \ne n$, there is at least one known optimal
-feedback system with $k = 1$ and $n > 1$, as the following example shows.
+optimal for a system with feedback. While there are no known optimal
+communication systems without feedback when $k \ne n$, there is at least one
+known optimal feedback system with $k = 1$ and $n > 1$, as the following example
+shows.
 
 \begin{example}
   \label{ex:gaussfb}
@@ -464,7 +466,8 @@ feedback system with $k = 1$ and $n > 1$, as the following example shows.
   To compute the overall distortion $\mse$, note that by definition $\Eh_{i-1} =
   E_{i-1} + E_i$, so \eqref{eq:shdecom1}~can be written as
   \begin{align*}
-    \Sh &= E_0 + E_1 - E_1 - E_2 + E_2 + E_3 - \cdots \pm E_{n-1} \pm E_n \\
+    \Sh &= (E_0 + E_1) - (E_1 + E_2) + (E_2 + E_3) - \cdots \pm (E_{n-1} + E_n)
+    \\
     &= E_0 \pm E_n,
   \end{align*}
   and since we have defined $E_0 = S$, we have $\mse = \E[E_n^2]$, where $E_n$
@@ -521,7 +524,7 @@ feedback.
   \sn I(X_i; Y_i)$, where $I(X^n \ra Y^n)$ is the \emph{directed information}
   from~$X^n$ to~$Y^n$ (see~\cite{Massey1990,Kramer1998}). A necessary and
   sufficient condition for $I(X^n \ra Y^n) = \sn I(X_i; Y_i)$ is condition~(iv)
-  of the theorem; this completes the proof.
+  of the theorem~\cite[Theorem~2]{Massey1990}.
 \end{proof}
 
 Let us now revisit Example~\ref{ex:gaussfb} and see why it achieves the optimal
@@ -531,7 +534,7 @@ jointly Gaussian and the encoder and decoder are linear, all channel inputs
 $X_i$ are Gaussian; since they are scaled to have variance~$P$ they all achieve
 the capacity at the same average cost. Next, because the estimation error of an
 MMSE estimator is uncorrelated with the observation and because in the Gaussian
-case uncorrelated implies independence, $E_i$ is independent of $Y_{i-1}$ and
+case uncorrelated implies independent, $E_i$ is independent of $Y_{i-1}$ and
 thus so are~$X_i$ and~$Y_i$, satisfying condition~(iv). Condition~(iii) is
 satisfied because the encoder is deterministic. For conditions~(i) and~(ii),
 observe that the final estimate $\Sh$ is such that $S = \Sh + E_n$, where $E_n$
@@ -539,29 +542,29 @@ is independent of $\Sh$ and of $Y^n$. Given $\Sh$, $S$ is therefore independent
 of~$Y^n$, which makes $\Sh$ a sufficient statistic, satisfying condition~(ii).
 Moreover, the relationship between $S$ and $\Sh$ is exactly the one leading to
 the distribution that achieves the rate distortion function (see
-\eg~\cite{CoverT1991}), fulfilling condition~(i)(b). Condition~(i)(a) is
-trivially satisfied since~$k=1$.
+\eg~\cite[Theorem~10.3.2]{CoverT1991}), fulfilling condition~(i)(b).
+Condition~(i)(a) is trivially satisfied since~$k=1$.
 
 It appears as though this example works only because of the particular
 properties of the Gaussian distribution: preservation of distribution under
 linear transformation, linear MMSE decoder, equivalence of uncorrelatedness and
-independence, and so on. One would assume, therefore, that this example does not
-give any indication about how to use the feedback for general sources and
-channels. As the next section shows, though, conditions~(iii)--(v) of
-\thmref{tcntcfb} can be achieved with minimal complexity for any
-channel if perfect feedback is available.
+independence, and so on. From this example alone, one would therefore not
+conclude that there exist optimal codes for other sources and channels. As the
+next section shows, though, at least conditions~(iii)--(v) of \thmref{tcntcfb}
+can be achieved with a minimal delay code for any source and channel if perfect
+feedback is available.
 
 
 \subsection{Posterior Matching}
 
-We have seen in Example~\ref{ex:gaussfb} how a simple transmission scheme can
-achieve the optimal distortion using noiseless feedback. The discussion in the
-previous section showed how the particular properties of the Gaussian
-distribution helped in achieving this. In the sequel we show that
-conditions~(iii) to~(v) of \thmref{tcntcfb} can be satisfied for arbitrary
-channels. The underlying idea, called \emph{posterior matching}, was used by
-Shayevitz and Feder in~2007~\cite{ShayevitzF2007,ShayevitzF2008} to generalize
-the capacity achieving channel coding schemes of Schalkwijk and
+Example~\ref{ex:gaussfb} showed how a simple transmission scheme can achieve the
+optimal distortion using noiseless feedback. The discussion in the previous
+section showed how the particular properties of the Gaussian distribution helped
+in achieving this. In the sequel we show that conditions~(iii) to~(v) of
+\thmref{tcntcfb} can be satisfied for arbitrary sources and channels. The
+underlying idea, called \emph{posterior matching}, was used by Shayevitz and
+Feder in~2007~\cite{ShayevitzF2007,ShayevitzF2008} to generalize the capacity
+achieving channel coding schemes of Schalkwijk and
 Kailath~\cite{SchalkwijkK1966} and Horstein~\cite{Horstein1963} to arbitrary
 channels with feedback.
 
@@ -593,8 +596,8 @@ Before continuing we prove some properties of cumulative distribution functions
 \begin{lemma}
   \label{lem:invcdf}
   Let $U$ be a uniform random variable on~$[0,1]$ and let $F$ be the \cdf\ of an
-  arbitrary random variable~$X$. Let $F^{-1}$ be the ``inverse'' of~$F$, in the
-  sense
+  arbitrary random variable~$X$. If $F$~is not invertible in the strict sense,
+  define $F^{-1}$ as
   \begin{equation}
     \label{eq:invcdf}
     F^{-1}(y) = \sup \{x : F(x) \le y\}.
@@ -611,13 +614,13 @@ Before continuing we prove some properties of cumulative distribution functions
   \end{align*}
 \end{proof}
 
-Consider now a channel $p(y|x)$ and let $\pi(x)$ be the capacity achieving
+Consider now a channel~$\pyx$ and let $\pi(x)$ be the capacity achieving
 distribution at average cost~$P$, \ie, 
 \begin{equation*}
   \pi(x) = \arg\max_{p(x): \E[\rho(X)] \le P} I(X;Y).
 \end{equation*}
-As before, we assume perfect feedback. The problem is to encode one source
-symbol of an \emph{analog} source into~$n$ channel inputs. 
+The problem is to encode one source symbol of an \emph{analog} source into~$n$
+channel inputs, making use of the feedback.
 
 Let $\Fpi$ be the cumulative distribution function (\cdf) of the distribution
 $\pi(x)$, and let $F_S$ be the \cdf\ of the source. In the first channel
@@ -628,19 +631,17 @@ use, the encoder produces
 \end{equation}
 where $\Fpi^{-1}$ is the inverse of $\Fpi$ according to~\eqref{eq:invcdf}. By
 Lemma~\ref{lem:cdfunif}, $F_S(S)$ has uniform distribution on $[0,1]$, and so by
-Lemma~\ref{lem:invcdf}, $\Fpi^{-1}(F_S(S))$ to a uniform random variable
-produces a random variable with \cdf\ $\Fpi$. Thus, $X_1$ has the capacity
-achieving distribution~$\pi(x)$. 
+Lemma~\ref{lem:invcdf}, $\Fpi^{-1}(F_S(S))$ is a random variable with \cdf\
+$\Fpi$.
 
-After $i-1$ rounds of transmission, the encoder knows $y_1$, \ldots, $y_{i-1}$,
-the values of the $i-1$ past received symbols, and can compute the conditional
-\cdf\ $F_{S|y_1, \ldots, y_{i-1}}$. It then sends in the $i^{\text{th}}$ channel
-use
+After $i-1$ rounds of transmission, the encoder knows $y_1$, \ldots, $y_{i-1}$
+and can compute the conditional
+\cdf\ $F_{S|y_1, \ldots, y_{i-1}}$. It then sends
 \begin{equation}
   \label{eq:posteriorxi}
   X_i = \Fpi^{-1}(F_{S|y_1,\dots,y_{i-1}}(S)).
 \end{equation}
-For any particular received values $y_1$, \ldots, $y_{i-1}$, therefore,
+For any $y_1$, \ldots, $y_{i-1}$, therefore,
 \begin{equation*}
   p(x_i|s, y_1, \dots, y_{i-1}) = \pi(x)
 \end{equation*}
@@ -651,37 +652,41 @@ with the capacity achieving distribution~$\pi(x)$, satisfying conditions~(iv)
 and~(v) of \thmref{tcntcfb}; condition~(iii) of the theorem is
 trivially satisfied because the encoder is deterministic.
 
-Let us look at Example~\ref{ex:gaussfb} once more, now from the perspective of
-posterior matching.
+Let us now derive the posterior matching encoder for the communication system of
+\exref{gaussfb}.
 
 \begin{example}
   \label{ex:gaussfbpost}
-  Let $F_{\N(\mu, \sq)}$ be the \cdf\ of a Gaussian random variable of
-  mean~$\mu$ and variance~$\sq$ and let $F_\N \deq F_{\N(0,1)}$. Then
-  $F_{\N(\mu,\sq)}(x) = F_\N((x-\mu)/\sigma)$. Furthermore, the inverse \cdf\ is
-  given by
+  First, a few properties of Gaussian \cdf s are given. Let $F_{\N(\mu, \sq)}$
+  be the \cdf\ of a Gaussian random variable of mean~$\mu$ and variance~$\sq$
+  and let $F_\N \deq F_{\N(0,1)}$. Then $F_{\N(\mu,\sq)}(x) =
+  F_\N((x-\mu)/\sigma)$. Furthermore, the inverse \cdf\ is 
   \begin{equation*}
     F_{\N(\mu,\sq)}^{-1}(y) = \sigma F_\N^{-1}(y) + \mu.
   \end{equation*}
 
-  Since all involved random variables are jointly Gaussian, the source~$S$ can
-  be written as
+  Let $\pi(x) = \N(0,P)$. According to~\eqref{eq:posteriorx1}, the first channel
+  input is
   \begin{equation*}
-    S = \gamma_1 Y_1 + \dots + \gamma_{i-1} Y_{i-1} + W,
+    X_1 = \sqrt{P} F_{\N}^{-1}(F_{\N}(S/\sigma_S)) = \sqrt{\frac{P}{\ssq}} S,
   \end{equation*}
-  where $W$ is a Gaussian random variable of zero mean and variance $\swq$,
-  independent of $Y_1$, \ldots, $Y_{i-1}$. Hence the distribution of~$S$ given
-  $Y_1$, \ldots, $Y_{i-1}$ is Gaussian with mean $\E[S|Y_1, \dots, Y_{i-1}] =
-  \gamma_1 Y_1 + \dots + \gamma_{i-1} Y_{i-1}$ and variance~$\swq$.  The
-  posterior matching encoder~\eqref{eq:posteriorxi} therefore evaluates to
-  \begin{align}
-    X_i &= \sqrt{P} F_\N^{-1}\left( F_\N\left( \frac{S - \E[S|Y_1^{i-1}]}
-    {\sqrt{\Var(S - \E[S|Y_1^{i-1}])}} \right) \right) \nonumber \\
+  which coincides with~\eqref{eq:gaussfbxi} in \exref{gaussfb} when~$i=1$.
+
+  Given $Y_1$, $S$ is Gaussian with mean $\E[S|Y_1]$ and variance $\Var(S -
+  \E[S|Y_1])$. Following~\eqref{eq:posteriorxi}, the second channel input is
+  thus
+  \begin{align*}
+    X_2 &= \sqrt P F_{\N}^{-1} \left( F_{\N} \left( \frac{S - \E[S|Y_1]}
+    {\sqrt{\Var(S-\E[S|Y_1])}} \right) \right) \\
+    &= \sqrt{P} \frac{S - \E[S|Y_1]}{\sqrt{\Var(S-\E[S|Y_1])}}.
+  \end{align*}
+  Continuing this way, the $i^{\text{th}}$ channel input is found to be
+  \begin{equation}
     \label{eq:gausspmenc}
-    &= \sqrt{P} \frac{S - \E[S|Y_1^{i-1}]}
-    {\sqrt{\Var(S - \E[S|Y_1^{i-1}])}} .
-  \end{align}
-  Write now
+    X_i = \sqrt{P} \frac{S - \E[S|Y_1^{i-1}]}{\sqrt{\Var(S-\E[S|Y_1^{i-1}])}}.
+  \end{equation}
+  That this is equal to~\eqref{eq:gaussfbxi} can be seen as follows. In
+  \exref{gaussfb}, write
   \begin{align*}
     S &= E_0 + (E_1 - E_1) - (E_2 - E_2) + \dots \pm (E_{i-2} -
     E_{i-2}) \\
@@ -698,31 +703,41 @@ posterior matching.
   Example~\ref{ex:gaussfb}.
 \end{example}
 
+\begin{remark}
+  \label{rem:alwaysdistmatch}
+  A question of interest is whether the encoder of \emph{any} optimal
+  source/channel communication system can be expressed as a posterior matching
+  encoder. The answer is in fact negative. Since by definition cumulative
+  distribution functions are increasing, the posterior matching
+  encoders~\eqref{eq:posteriorx1} and~\eqref{eq:posteriorxi} are always
+  increasing functions. Yet, using measure matching it is straightforward to
+  come up with an optimal $(1,1)$~communication system that has a nonincreasing
+  encoder: just take the encoder to be an arbitrary function, and select the
+  cost and distortion measures accordingly following \thmref{tcntcbwmatch}.
+\end{remark}
 
-\subsection{Achieving the Rate Distortion Function?}
 
-Above it was shown how, having knowledge of the past channel outputs,
-the decoder could deterministically produce a new channel input that was
-independent of the previous outputs and had the capacity achieving distribution.
-According to \thmref{tcntcfb}, a further necessary
-condition for a system to be optimal is that the conditional distribution of
-$\Sh$ given $S$ achieves the rate distortion function of the source. While we
-can use measure matching to find an the distortion function for which an
-arbitrary Is this possible using a similar distribution matching strategy?
-Unfortunately it turns out that the answer is no in general; the Gaussian
-distribution is a notable exception.
+\subsection{Achieving $R(D)$ using Posterior Matching?}
 
-It is appealing to apply a similar transformation at the channel output as done
-at the channel input for the capacity case, in order to make the conditional
-distribution of $\Sh$ given $S=s$ equal to the distribution $\Phi_s(\sh)$ that
-achieves the rate distortion function. Assume the source symbol~$S$ is
-transmitted across a single channel use. Let the decoder be given by
+The previous section showed how one can turn an arbitrary distribution into the
+capacity achieving distribution. Can the same trick be used to make the
+conditional distribution of~$\Sh$ given~$S$ achieve the rate distortion
+function? 
+
+For simplicity consider a $(1,1)$ communication system (whether it has feedback
+or not is irrelevant). For a fixed~$D$, let
+\begin{equation*}
+  \Phi_s(\sh) = \arg\min_{p(\sh|s): \E[d(S,\Sh)] \le D} I(S;\Sh),
+\end{equation*}
+\ie, $\Phi_s(\sh)$ is the conditional distribution of~$\Sh$ given~$S$ that
+achieves the rate distortion function at expected distortion~$D$. Let the
+decoder be
 \begin{equation}
   \label{eq:distmatchdec}
-  \Sh = g(Y) = F_{\Phi_s}^{-1}(F_{Y|S=s}(Y)).
+  g(y) = F_{\Phi_s}^{-1}(F_{Y|S=s}(y)).
 \end{equation}
-For any~$s$, therefore, $\Sh$ given~$s$ is distributed according to~$\Phi_s$,
-and so the rate distortion function is achieved.
+According to the previous section, the resulting joint distribution of $\Sh =
+g(Y)$ and~$S$ satisfies thus $I(S;\Sh) = R(D)$. 
 
 It is immediately clear, however, that this approach cannot work -- both \cdf s
 needed to implement this decoder depend on the actual value of~$s$, which is
@@ -740,20 +755,17 @@ example shows.
     \label{eq:exmindist}
     D_{\min} = \frac{1}{1 + P}.
   \end{equation}
-  The capacity-achieving input distribution is $\N(0,P)$ and the conditional
+  The capacity-achieving input distribution is $\N(0,P)$, and the conditional
   distribution of $\Sh$ given $S=s$ that achieves the rate distortion function
   at distortion~$D$ is $\N((1-D)s, D(1-D))$.
-  
-  The encoder that makes $X$ capacity achieving is therefore~$X = \sqrt{P}S$.
-  The decoder from~\eqref{eq:distmatchdec} is
+  Let $X = \sqrt{P}S$.  The decoder from~\eqref{eq:distmatchdec} is
   \begin{align*}
-    g(y) &= F_{\Phi_s}^{-1} \circ F_{Y|S=s}(y) \\
-    &= \sqrt{D(1-D)} F_{\N}^{-1} \circ F_{\N}\left( y-\sqrt{P}s
-    \right) + (1-D)s \\
-    &= \sqrt{D(1-D)} \left( y-\sqrt{P}s \right) + (1-D)s,
+    g(y) &= F_{\Phi_s}^{-1} (F_{Y|S=s}(y)) \\
+    &= \sqrt{D(1-D)} F_{\N}^{-1} \left( F_{\N}\left( y-\sqrt{P}s
+    \right) \right) + (1-D)s \\
+    &= \sqrt{D(1-D)} \left( y-\sqrt{P}s \right) + (1-D)s.
   \end{align*}
-  where we used $F_{\N}$ to denote the \cdf\ of a $\N(0,1)$ distribution.
-  This expression still depends on~$s$; if we plug in the optimal distortion
+  This expression still depends on~$s$. If we plug in the optimal distortion
   $D_{\min}$ from~\eqref{eq:exmindist}, however, the decoder becomes
   \begin{align*}
     g(y) &= \frac{\sqrt{P}}{P+1} (y - \sqrt{P}s) + \frac{P}{P +
@@ -794,71 +806,71 @@ Leadbetter~\cite[Section~5.6]{CramerL1967}.)
   \end{enumerate}
 \end{definition}
 
+The following lemma, which can easily be verified, allows us to view the
+Gaussian feedback communication problem in a geometric setting.
 \begin{lemma}
   \label{lem:rvinprodsp}
-  The set of zero-mean random variables with finite variance forms an inner
-  product space under ordinary addition and with $\sp XY = \E[X Y]$. 
+  Any set of jointly Gaussian random variables with finite variance forms an
+  inner product space under ordinary addition and with $\sp XY = \Cov(X,Y)$. 
 \end{lemma}
 
-\begin{lemma}
-  \label{lem:inprodspcond}
-  Given a set of random variables in an inner product space~$H$ as defined
-  above, the space of the random variables conditioned on $X \in H$ is
-  equivalent to the projection of $H$ on the subspace orthogonal to~$X$.
-\end{lemma}
-\begin{proof}
-  Conditioned on~$X$, we have $\sp YZ = \E[YZ|X]$. The covariance between $Y$
-  and~$Z$ given~$X$ is
-  \begin{align*}
-    \Cov(Y, Z \mid X) &= \E[YZ|X] - \E[Y|X]\E[Z|X] \\
-    &= \E[YZ|X] - \frac{\E[XY|X]\E[XZ|X]}{\E[X^2|X]} \\
-    &= \sp YZ - \frac{\sp XY \sp XZ}{\|X\|^2} \\
-    &= \left\bra Y - \frac{\sp XY}{\|X\|^2} X, Z - \frac{\sp XZ}{\|X\|^2} X
-    \right\ket \\
-    &= \sp{Y_{\perp X}}{Z_{\perp X}},
-  \end{align*}
-  where the subscript $\perp X$ denotes the projection onto the subspace
-  orthogonal to~$X$.
-\end{proof}
 
 
-From the point of view of this inner product space, the first two rounds of
-communication in Example~\ref{ex:gaussfb} can be illustrated as in
-Figure~\ref{fig:gaussfb1}.
-\begin{figure}[tbph]
+% [Marius] Disabled the following lemma and proof for now, it doesn't seem to be
+% quite solid.
+%\begin{lemma}
+%  \label{lem:inprodspcond}
+%  Given a set of random variables in an inner product space~$H$ as defined
+%  above, the space of the random variables conditioned on $X \in H$ is
+%  equivalent to the projection of $H$ on the subspace orthogonal to~$X$.
+%\end{lemma}
+%\begin{proof}
+%  Conditioned on~$X$, we have $\sp YZ = \E[YZ|X]$. The covariance between $Y$
+%  and~$Z$ given~$X$ is
+%  \begin{align*}
+%    \Cov(Y, Z \mid X) &= \E[YZ|X] - \E[Y|X]\E[Z|X] \\
+%    &= \E[YZ|X] - \frac{\E[XY|X]\E[XZ|X]}{\E[X^2|X]} \\
+%    &= \sp YZ - \frac{\sp XY \sp XZ}{\|X\|^2} \\
+%    &= \left\bra Y - \frac{\sp XY}{\|X\|^2} X, Z - \frac{\sp XZ}{\|X\|^2} X
+%    \right\ket \\
+%    &= \sp{Y_{\perp X}}{Z_{\perp X}},
+%  \end{align*}
+%  where the subscript $\perp X$ denotes the projection onto the subspace
+%  orthogonal to~$X$.
+%\end{proof}
+
+From the point of view of this inner product space, the communication strategy
+of Example~\ref{ex:gaussfb} is illustrated in Figure~\ref{fig:gaussfb1}.
+\begin{figure}[tbp]
   \begin{center}
-    \figbox{gaussfb1}
+    \input{figures/gaussfb1.tex_t}
   \end{center}
-  \caption{Geometrical interpretation of the first two rounds of
+  \caption{Geometrical interpretation of the feedback communication scheme of
   Example~\ref{ex:gaussfb}. The estimate $\Eh_0$ of the first transmission is
-  the \emph{projection} of $S$ onto $Y_1$, hence the estimation error $E_1$ is
-  orthogonal to~$Y_1$.}
+  the \emph{projection} of $S = E_0$ onto $Y_1$, hence the estimation error
+  $E_1$ is orthogonal to~$Y_1$. Note in particular that $X_2$ is \emph{not}
+  independent of $X_1$ (as would be a condition for optimality in the case
+  without feedback).}
   \label{fig:gaussfb1}
 \end{figure}
 The figure shows that while $X_1$ and $X_2$ are not independent, $X_2$ is
 independent of $Y_1$. Since all future rounds of communication involve only
 linear combinations of~$E_1$ and the noise components $Z_2$, $Z_3$, \dots, all
-future communication takes place in a subspace orthogonal to~$Y_1$. For
-reference, \figref{gaussfb2} shows the next round of communication.
-\begin{figure}[tbph]
-  \begin{center}
-    \figbox{gaussfb2}
-  \end{center}
-  \caption{Second and third round of communication of \exref{gaussfb}.}
-  \label{fig:gaussfb2}
-\end{figure}
+future communication takes place in a subspace orthogonal to~$Y_1$. This
+communication strategy thus produces a projection of $S$ onto the subspace
+spanned by the orthogonal vectors $Y_1$, \ldots, $Y_n$.
 
-Since the estimate $\Eh_i$ is the projection of $E_i$ onto $Y_{i+1}$, 
-\begin{equation*}
-  \Eh_i = \frac{\sp{E_i}{Y_{i+1}}}{\|Y_{i+1}\|^2} Y_{i+1}.
-\end{equation*}
-Writing $Y_{i+1} = \alpha E_i + Z_{i+1}$, with $\alpha = \sqrt{P}/\|E_i\|$,
-yields
-\begin{equation*}
-  \|E_{i+1}\|^2 = \|\Eh_i - E_i\|^2 = \frac{\|E_i\|^2}{1 + P/\|Z_{i+1}\|^2},
-\end{equation*}
-which is nothing else than Equation~\ref{eq:gaussvardec} expressed in the inner
-product space formalism.
+%Since the estimate $\Eh_i$ is the projection of $E_i$ onto $Y_{i+1}$, 
+%\begin{equation*}
+%  \Eh_i = \frac{\sp{E_i}{Y_{i+1}}}{\|Y_{i+1}\|^2} Y_{i+1}.
+%\end{equation*}
+%Writing $Y_{i+1} = \alpha E_i + Z_{i+1}$, with $\alpha = \sqrt{P}/\|E_i\|$,
+%yields
+%\begin{equation*}
+%  \|E_{i+1}\|^2 = \|\Eh_i - E_i\|^2 = \frac{\|E_i\|^2}{1 + P/\|Z_{i+1}\|^2},
+%\end{equation*}
+%which is nothing else than Equation~\ref{eq:gaussvardec} expressed in the inner
+%product space formalism.
 
 
 
