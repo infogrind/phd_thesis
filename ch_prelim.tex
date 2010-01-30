@@ -1,12 +1,69 @@
 \chapter{Preliminaries}
 \label{ch:prelim}
 
-The problem considered in this and the next chapter is the transmission of
-analog sources across Gaussian channels. The present chapter provides the
-necessary definitions and notation, and recalls previous results.
+The problem treated in this chapter and the next is the transmission of
+discrete-time memoryless sources across a discrete-time memoryless channels,
+where $n$~symbols can be transmitted across the channel for each $k$~source
+symbols.  The goal of the present chapter is to establish the playing field by
+providing all necessary definitions and by deriving the known theoretical
+limits.
 
-\section{Basic Definitions and Notation}
-\label{sec:defs}
+The most fundamental boundary to the problem at hand comes from Shannon's
+separation theorem\footnote{What is the best reference for this?}. It states
+that the average cost and distortion $P$ and~$D$ of any point-to-point
+communication system are related by
+\begin{equation}
+  \label{eq:shannonlimit}
+  k R(D) \le n C(P),
+\end{equation}
+where $R(D)$ and $C(P)$ are the rate distortion function and the capacity of the
+source and the channel, respectively. This puts (depending on the perspective) a
+lower bound on the incurred distortion for a fixed cost or a lower bound on the
+cost needed to achieve a given distortion.
+
+Shannon also showed that there exists a sequence of source and channel codes of
+increasing blocklength that, when put together, can come arbitrarily close to
+equality in~\eqref{eq:shannonlimit}, establishing the operational significance
+of the bound. In many practical situations, however, the delays implied by large
+blocklengths are punitive; imagine for example the case of a telephone or video
+call.
+
+%Under a limited blocklength, the performance of a code is clearly at most as
+%good as when the blocklength is unrestricted, and in many cases it is worse.
+%The shortcoming of the separation theorem is that it does not take into account
+%blocklength limitations. 
+%
+This and the next chapter focus on codes with the smallest possible delays. Such
+minimal delay codes encode $k$~source symbols into $n$~channel inputs, with
+$\gcd(k,n) = 1$.  The first question to ask is: are there any communication
+systems employing minimal delay codes that satisfy~\eqref{eq:shannonlimit} with
+equality? It turns out that when $k=n$, there is in fact an infinity of such
+communication systems, as Gastpar's excellent treatment of the problem
+showed~\cite{GastparRV2003}. If $k \ne n$,
+\cite{GastparRV2003,GastparThesis}~give necessary and sufficient conditions for
+a communication system to be optimal but do not in fact make any statement about
+the \emph{existence} of such an optimal system; this question is still open. 
+
+
+This part of the thesis does not try to find optimal communication systems in
+the sense of equality in~\eqref{eq:shannonlimit}. Instead, with the focus
+limited on the additive white Gaussian noise channel, its goal is to find
+communication strategies that perform well in the loose sense that the
+achievable mean squared error decays fast with increasing SNR. Nevertheless, the
+conditions for optimality in the strict sense may give helpful indications
+towards this goal. Hence, after \secref{defs} introduces the necessary
+definitions and \secref{limits} formally states the problem,
+Sections~\ref{sec:optmindel} and~\ref{sec:optmindelfb} review the optimality
+conditions from~\cite{GastparThesis} for channels without and with feedback,
+respectively, in the hope of getting insights that will help to solve the
+problem of interest. 
+
+
+\section{Basic Definitions and Notation}\label{sec:defs}
+
+At the heart of the problem are the fundamental concepts of source and channel,
+modeling the information to be communicated and the noisy medium over which it
+is to be transmitted. 
 
 \begin{definition}[Source]
   \label{def:analogsource}
@@ -22,6 +79,7 @@ necessary definitions and notation, and recalls previous results.
   distribution $p_{Y|X=x}$. 
 \end{definition}
 
+Of particular interest is the standard Gaussian channel. 
 \begin{definition}
   \label{def:awgn}
   An additive white Gaussian noise channel (AWGN channel) with noise
@@ -31,6 +89,7 @@ necessary definitions and notation, and recalls previous results.
   output $Y$ to the input $X$ through $Y = X + Z$, where $Z$ is zero-mean
   Gaussian with variance~$\sq$. 
 \end{definition}
+
 
 \begin{definition}[Joint source/channel code]
   \label{def:knsccode}
@@ -71,6 +130,9 @@ For an illustration of a general source/channel communication system, see
   \label{fig:gensccommsys}
 \end{figure}
 
+The performance of a general source/channel communication system can be measured
+by the tradeoff between average cost and distortion, according to the following
+definition.
 \begin{definition}
   \label{def:PDgen}
   For a given \emph{channel input cost measure}~$\rho(x)$ and a given
@@ -84,6 +146,9 @@ For an illustration of a general source/channel communication system, see
   respectively.
 \end{definition}
 
+Using the concepts of \sdr\ and \snr, the performance tradeoff can be succinctly
+expressed in a single formula that is valid independent of the source variance
+and the channel noise variance. 
 \begin{definition}
   \label{def:sdrsnr}
   Consider a source/channel communication system whose source has
@@ -98,7 +163,8 @@ For an illustration of a general source/channel communication system, see
   \end{equation*}
 \end{definition}
 
-
+In general, the same code may not be the optimal one for different values
+of~\snr. Hence we use the concept of coding schemes.
 \begin{definition}
   \label{def:codingscheme}
   A $(k,n)$ \emph{coding scheme} consists of a function $\tilde{f} : \R^k \times
@@ -109,22 +175,21 @@ For an illustration of a general source/channel communication system, see
 \end{definition}
 
 
-\section{Fundamental Limits of Performance}
-\label{sec:limits}
+\section{Theoretical Limits and Problem Statement\looseness=-1}\label{sec:limits}
 
 The most general bound on the performance of a joint source/channel coding
-system is Shannon's separation theorem, stated below.
+system is Shannon's separation theorem, which was already stated at the
+beginning of this chapter.  For completeness, it is given here again formally.
 
 \begin{theorem}
   \label{thm:sepconverse}
-  The expected distortion~$D$ and expected cost~$P$ of a source/channel
-  communication system of rate~$\k$ are related by
+  When a memoryless source with rate distortion function~$R(D)$ is transmitted
+  across a memoryless channel with capacity~$C(P)$ using a code of rate~$\k$,
+  the expected distortion~$D$ and expected cost~$P$ are related by
   \begin{equation}
     \label{eq:sepconverse}
-    \k R(D) \le C(P), 
+    \k R(D) \le C(P).
   \end{equation}
-  where $R(D)$ is the rate-distortion function of the source and $C(P)$ is the
-  capacity-cost function of the channel.
 \end{theorem}
 
 \begin{proof}
@@ -134,7 +199,9 @@ system is Shannon's separation theorem, stated below.
 \begin{definition}
   \label{def:optimalcode}
   A source/channel communication system that satisfies the bound of
-  \thmref{sepconverse} with equality is said to be \emph{optimal}.
+  \thmref{sepconverse} with equality is said to be \emph{optimal}, or
+  \emph{strictly optimal} where necessary to distinguish this definition from
+  weaker forms of optimality.
 \end{definition}
 
 For Gaussian channels, \thmref{sepconverse} leads to the following upper bound
@@ -187,29 +254,34 @@ on the~\sdr.
   \phi_{\ssq})$~\cite[Theorem~8.6.5]{CoverT1991} completes the proof.
 \end{proof}
 
-\begin{remark}
-  \label{rem:asympbound}
-  In asymptotic terms, \thmref{sdrub} says that the \sdr\ scales at best as
-  $\snr^{1/\k}$, or $\sdr \in O(\snr^{1/\k})$. (See \appref{asymptotic} for the
-  definition of the $O$-notation.)
-\end{remark}
 
+\subsection{Formal Problem Statement}
+
+The problem considered in the first part of this thesis is to develop and
+analyze coding schemes for the Gaussian channel that have a good asymptotic
+performance. According to \thmref{sdrub}, the \sdr\ of any coding scheme scales
+at most as $\snr^{1/\k}$. Expressed in the asymptotic notation explained in
+\appref{asymptotic}, this is written as
+\begin{equation*}
+  \sdr \in O(\snr^{1/\k}).
+\end{equation*}
+In view of this limit, the following looser definition of optimality can be
+formulated. 
 \begin{definition}
-  A coding scheme is called \emph{asymptotically optimal} if it satisfies $\sdr
-  \in \Omega(\snr^{1/\k})$.
+  A coding scheme for the Gaussian channel is called \emph{asymptotically
+  optimal} if it satisfies $\sdr \in \Omega(\snr^{1/\k})$.
 \end{definition}
+As \secref{optmindelfb} will show, if the channel has noiseless feedback then a
+simple asymptotically optimal coding scheme exists. In the absence of feedback,
+however, the existence of an asymptotically optimal coding scheme is as yet
+unknown.
+
+The next two sections take again a step back and look at the conditions for
+strict optimality in communication systems made up of general sources and
+channels.
 
 
-According to the source coding and channel coding theorems, there exist
-asymptotically optimal coding schemes. The codes whose existence is proved by
-these theorems, however, are of unbounded blocklength (\ie, unbounded delay) and
-of unbounded complexity. For minimal delay codes, bounds based on
-\thmref{sepconverse} are in general not tight; the remainder of this chapter
-studies certain exceptions.
-
-
-\section{Optimal Minimal-Delay Codes}
-\label{sec:optmindel}
+\section{Optimal Minimal-Delay Codes}\label{sec:optmindel}
 
 \subsection{Bandwith Matched Codes}
 
@@ -427,9 +499,52 @@ in the following lemma.
   conditions~(i)(a) and (ii)--(iv) of \thmref{tcntc1n}.
 \end{lemma}
 
+The following lemma provides a necessary condition for the asymptotic optimality
+of a communication system.
 
-\section{Optimal Minimal-Delay Codes with Feedback}
-\label{sec:optmindelfb}
+\begin{lemma}
+  \label{lem:asymptoptinputs}
+  Consider a sequence of zero-mean input distributions $\{p(x^n)\}$ on the
+  Gaussian channel with covariance matrix sequence~$\{K\}$ satisfying $\Tr K /
+  (n \szq) = \snr$ and 
+  \begin{equation*}
+    \limsup_{\snr \goesto \infty} D(p(y^n) \| \phi_{K + \szq I}) < \infty,
+  \end{equation*}
+  where $\phi_K$ is the distribution of a centered Gaussian random vector with
+  covariance matrix~$K$. If the distributions $p(x^n)$ are nondegenerate then
+  $2^{2 (X^n; Y^n)} \in \Omega(\snr^n)$. 
+\end{lemma}
+
+\begin{proof}
+  Write the mutual information as $I(X^n; Y^n) = h(Y^n) - h(Z^n)$. Since $Y^n$
+  has covariance matrix $K + \szq I$, its entropy can be written
+  as~\cite[Theorem~8.6.5]{CoverT1991}
+  \begin{equation*}
+    h(Y^n) = h(\phi_{K + \szq I}) - D(p(y^n) \| \phi_{K + \szq I}).
+  \end{equation*}
+  Next, 
+  \begin{align*}
+    h(\phi_{K + \szq I}) - h(Z^n) &= \frac12 \log_2 \left(
+    \frac{\det(K + \szq I)}{(\szq)^n} \right) \\
+    &= \frac12 \log_2 \left( \frac{\pn (\lambda_i + \szq)}{(\szq)^n} \right),
+  \end{align*}
+  where the~$\lambda_i$ are the eigenvalues of~$K$. Write now $K = P \Kt$, where
+  $\Tr \Kt = n$. Then $\lambda_i = P \lt_i$, where the $\lt_i$ are the
+  eigenvalues of~$\Kt$. With this and the above, we have
+  \begin{equation*}
+    I(X^n; Y^n) = \frac12 \log_2 \left(
+    \frac{ \pn(P \lt_i + \szq)}{(\szq)^n} \right) - D(p(y^n) \| \phi_{K + \szq
+    I}).
+  \end{equation*}
+  Using the assumption on the divergence, there exists a constant~$c$ such that
+  \begin{equation*}
+    2^{2 I(X^n; Y^n)} \ge c \frac{ \pn(P \lt_i + \szq)}{(\szq)^n}.
+  \end{equation*}
+  If the distributions~$p(x^n)$ are nondegenerate, all the $\lt_i$ are strictly
+  positive and thus $2^{2 I(X^n; Y^n)} \in \Omega((P/\szq)^n) = \Omega(\snr^n)$.
+\end{proof}
+
+\section{Optimal Minimal-Delay Codes with Feedback}\label{sec:optmindelfb}
 
 \begin{definition}
   \label{def:fbcode}
@@ -904,8 +1019,7 @@ spanned by the orthogonal vectors $Y_1$, \ldots, $Y_n$.
 
 
 \begin{subappendices}
-  \section{Asymptotic Notation}
-  \label{app:asymptotic}
+  \section{Asymptotic Notation}\label{app:asymptotic}
 
   \begin{definition}
     \label{def:bigo}
