@@ -2,11 +2,10 @@
 \label{ch:prelim}
 
 The problem treated in this chapter and the next is the transmission of
-discrete-time memoryless sources across a discrete-time memoryless channels,
-where $n$~symbols can be transmitted across the channel for each $k$~source
-symbols.  The goal of the present chapter is to establish the playing field by
-providing all necessary definitions and by deriving the known theoretical
-limits.
+discrete-time memoryless sources across discrete-time memoryless channels, where
+the channel is used $n$~times for each $k$~source symbols.  The goal of the
+present chapter is to establish the playing field by providing all necessary
+definitions and by deriving the known theoretical limits.
 
 The most fundamental boundary to the problem at hand comes from Shannon's
 separation theorem\footnote{What is the best reference for this?}. It states
@@ -47,7 +46,7 @@ the \emph{existence} of such an optimal system; this question is still open.
 
 This part of the thesis does not try to find optimal communication systems in
 the sense of equality in~\eqref{eq:shannonlimit}. Instead, with the focus
-limited on the additive white Gaussian noise channel, its goal is to find
+limited on the additive white Gaussian noise channel, the goal is to find
 communication strategies that perform well in the loose sense that the
 achievable mean squared error decays fast with increasing SNR. Nevertheless, the
 conditions for optimality in the strict sense may give helpful indications
@@ -79,7 +78,7 @@ is to be transmitted.
   distribution $p_{Y|X=x}$. 
 \end{definition}
 
-Of particular interest is the standard Gaussian channel. 
+Of particular interest is the Gaussian noise channel. 
 \begin{definition}
   \label{def:awgn}
   An additive white Gaussian noise channel (AWGN channel) with noise
@@ -90,7 +89,7 @@ Of particular interest is the standard Gaussian channel.
   Gaussian with variance~$\sq$. 
 \end{definition}
 
-
+The next few definitions concern joint source/channel codes. 
 \begin{definition}[Joint source/channel code]
   \label{def:knsccode}
   A $(k,n)$~\emph{joint source/channel code} $(f,g)$ consists of an
@@ -102,11 +101,22 @@ Of particular interest is the standard Gaussian channel.
   \emph{bandwidth matched} code.
 \end{definition}
 
+The following definition of the blocklength differs from the conventional use of
+the term in source coding and channel coding. Nevertheless, it has the
+intuitively appealing property that the ``shortest'' joint source/channel code
+for a given system, \ie, the one with the smallest possible delay, has
+blocklength one. 
+\begin{definition}
+  \label{def:blocklength}
+  The blocklength of a $(k,n)$ joint source/channel code is defined
+  as~$\gcd(k,n)$.
+\end{definition}
+
 \begin{definition}[Minimal-delay codes]
   \label{def:mindelcode}
   A $(k,n)$~\emph{minimal-delay} joint source\slash channel code is a
-  $(k,n)$~joint source/channel code with $\gcd(k,n) = 1$. A minimal-delay joint
-  source/channel code of rate~$1$ is also called a \emph{single letter} code.
+  $(k,n)$~joint source/channel code of blocklength~$1$. A minimal-delay code of
+  rate~$1$ is also called a \emph{single letter} code.
 \end{definition}
 
 \begin{definition}
@@ -119,8 +129,8 @@ Of particular interest is the standard Gaussian channel.
   estimates $\Sh^k = g(Y^n)$.
 \end{definition}
 
-For an illustration of a general source/channel communication system, see
-\figref{gensccommsys}.
+\figref{gensccommsys} shows the components of a source/channel communication
+system and their connections.
 \begin{figure}[tbp]
   \begin{center}
     \input{figures/sc_gen.tex_t}
@@ -151,7 +161,7 @@ expressed in a single formula that is valid independent of the source variance
 and the channel noise variance. 
 \begin{definition}
   \label{def:sdrsnr}
-  Consider a source/channel communication system whose source has
+  Consider a source/channel communication system with source
   variance~$\ssq$ and whose channel is Gaussian with noise variance~$\szq$. If
   the cost measure is the input power, \ie, $\rho(x) = x^2$, and the distortion
   measure is the squared error, \ie, $d(s,\sh) = (s - \sh)^2$, then the
@@ -163,15 +173,15 @@ and the channel noise variance.
   \end{equation*}
 \end{definition}
 
-In general, the same code may not be the optimal one for different values
-of~\snr. Hence we use the concept of coding schemes.
+Often a whole family of codes for Gaussian channels is defined implicitly by
+making the encoder and decoder depend on the~\snr. To accommodate this,
+\defref{knsccode} needs to be slightly extended as follows.
 \begin{definition}
   \label{def:codingscheme}
-  A $(k,n)$ \emph{coding scheme} consists of a function $\tilde{f} : \R^k \times
-  \R_+ \ra \R^n$ and a function $\tilde{g}: \R^n \times \R_+ \ra \R^k$, such
-  that for every value of $\snr$, $(f(\cdot, \snr), g(\cdot, \snr))$ is a
-  $(k,n)$~joint source/channel code that when used in a Gaussian communication
-  system leads to $P/\szq = \snr$.
+  A \emph{coding scheme} for the Gaussian channel is a code whose encoder and
+  decoder not only depend on the source and the channel output, respectively,
+  but also on the value of~\snr. The notation used is usually just $f(s^k)$ and
+  $g(y^n)$ instead of the technically correct $f(s^k,\snr)$ and $g(y^n,\snr)$.
 \end{definition}
 
 
@@ -185,7 +195,7 @@ beginning of this chapter.  For completeness, it is given here again formally.
   \label{thm:sepconverse}
   When a memoryless source with rate distortion function~$R(D)$ is transmitted
   across a memoryless channel with capacity~$C(P)$ using a code of rate~$\k$,
-  the expected distortion~$D$ and expected cost~$P$ are related by
+  the expected distortion~$D$ and the expected cost~$P$ are related by
   \begin{equation}
     \label{eq:sepconverse}
     \k R(D) \le C(P).
@@ -225,7 +235,8 @@ on the~\sdr.
   For a Gaussian source the bound of \thmref{sdrub} simplifies to $\sdr \le (1 +
   \snr)^{1/\k}$ and is simply \thmref{sepconverse} applied to a Gaussian
   source and channel. This bound is therefore tight, in the sense that there
-  exist codes that can come arbitrarily close to equality. 
+  exists a sequence of communication systems of rate~$\k$ (with increasing
+  blocklength) that can come arbitrarily close to equality. 
   For other sources the bound is generally not tight, but it becomes tight as
   $\snr \ra \infty$~\cite{LinderZ1994}.
 \end{remark}
@@ -271,7 +282,7 @@ formulated.
   A coding scheme for the Gaussian channel is called \emph{asymptotically
   optimal} if it satisfies $\sdr \in \Omega(\snr^{1/\k})$.
 \end{definition}
-As \secref{optmindelfb} will show, if the channel has noiseless feedback then a
+\secref{optmindelfb} will show that if the channel has noiseless feedback then a
 simple asymptotically optimal coding scheme exists. In the absence of feedback,
 however, the existence of an asymptotically optimal coding scheme is as yet
 unknown.
@@ -297,8 +308,7 @@ connected to a Gaussian channel, as given in the following example.
   \begin{equation*}
     D = \E[(S - \Sh)^2] = \ssq / (1 + P/\szq),
   \end{equation*}
-  which is indeed the optimal distortion according to
-  \remref{perflimitgaussiansource}.
+  which is indeed the optimal distortion according to \thmref{sdrub}
 \end{example}
 
 \exref{gausssingle} is a particular instance of a more general paradigm called
@@ -308,15 +318,14 @@ For an excellent treatment of measure matching the reader is referred to
 Gastpar~\cite{GastparRV2003,GastparThesis}; in the sequel only the results
 relevant to this thesis are quoted.
 
-The first relevant result from~\cite{GastparRV2003} says that any bandwidth
-matched code is optimal for \emph{some} way of measuring the cost and
+The first relevant result from~\cite{GastparRV2003} says that \emph{any}
+bandwidth matched code is optimal for \emph{some} way of measuring the cost and
 distortion.
 
 \begin{theorem}
   \label{thm:tcntcbwmatch}
-  A single letter code is optimal for a source/channel communication system of
-  rate one, \ie, $R(D) = C(P)$, if and only if the following conditions are
-  met.
+  A a source/channel communication system of rate one is optimal if and only if
+  the following conditions are met.
   \begin{enumerate}[(i)]
     \item The cost measure~$\rho(x)$ satisfies
       \begin{equation}
@@ -349,11 +358,14 @@ distortion.
 \end{remark}
 
 \begin{proof}[Proof of \thmref{tcntcbwmatch}]
-  The proof hinges on the inequality chain $R(D) \le I(S;\Sh) \le I(X;Y) \le
-  C(P)$. The complete proof, found in~\cite{GastparRV2003}, shows that $I(X;Y) =
-  C(P)$ if and only if condition~(i) is satisfied and that $R(D) = I(S;\Sh)$ if
-  and only if condition~(ii) is satisfied. It is then clear that condition~(iii)
-  is the third condition needed for $R(D) = C(P)$.
+  The proof hinges on the inequality chain
+  \begin{equation*}
+    R(D) \le I(S;\Sh) \le I(X;Y) \le C(P).
+  \end{equation*}
+  The complete proof, found in~\cite{GastparRV2003}, shows that $I(X;Y) = C(P)$
+  if and only if condition~(i) is satisfied and that $R(D) = I(S;\Sh)$ if and
+  only if condition~(ii) is satisfied. It is then clear that condition~(iii) is
+  the third condition needed for $R(D) = C(P)$.
 \end{proof}
 
 The single letter code of \exref{gausssingle} is optimal precisely because
@@ -369,8 +381,8 @@ argues.
 
 \subsection{Bandwidth Expansion/Compression Codes}
 
-If $k \ne n$ it is not known whether optimal minimal delay codes exist.  For the
-particular case of a Gaussian source and a Gaussian channel with input power
+If $k \ne n$, it is not known whether optimal minimal delay codes exist.  For
+the particular case of a Gaussian source and a Gaussian channel with input power
 constraint and squared error distortion, it has in fact been proven that no
 optimal $(k,1)$ and $(1,n)$~codes exist~\cite{IngberLZF2008}.
 
@@ -378,13 +390,13 @@ For codes that are not bandwidth matched, optimality is no longer only a matter
 of measure matching in the sense of \thmref{tcntcbwmatch}; additional conditions
 need to be fulfilled. The following theorem lists these conditions. It is
 essentially Theorem~3.9 from~\cite{GastparThesis}, adapted to the case without
-feedback and with a slightly more extended discussion on the ``information
-lossless'' property of the code. 
+feedback and with a slightly expanded definition of the ``information lossless''
+property of the code. 
 
 \begin{theorem}
   \label{thm:tcntc1n}
-  For $k \ne n$, a $(k, n)$~source/channel communication system is optimal if
-  and only if the following conditions are met.
+  A $(k, n)$~source/channel communication system is optimal if and only if the
+  following conditions are met.
   \begin{enumerate}[(i)]
     \item
       \begin{enumerate}[(a)]
@@ -397,7 +409,7 @@ lossless'' property of the code.
     \item The estimates $\Sh^k$ form a sufficient statistic for $S^k$ given the
       outputs~$Y^n$.
 
-    \item The encoder is information lossless in the sense that $I(S^k; Y^n) =
+    \item The encoder is information lossless, \ie,  $I(S^k; Y^n) =
       I(X^n; Y^n)$. 
 
     \item The channel outputs $Y_1$, \ldots, $Y_n$ are mutually independent.
@@ -493,20 +505,23 @@ in the following lemma.
 
 \begin{lemma}
   \label{lem:optcodenkexist}
-  For the communication system of \figref{gensccommsys} with $k \ne n$, an
-  optimal minimal delay $(k,n)$~source/channel communication system exists if
+  An optimal minimal delay $(k,n)$~source/channel communication system exists if
   and only if there exists an $(k,n)$~communication system satisfying
   conditions~(i)(a) and (ii)--(iv) of \thmref{tcntc1n}.
 \end{lemma}
 
-The following lemma provides a necessary condition for the asymptotic optimality
-of a communication system.
+In order for a Gaussian communication system to be asymptotically optimal, the
+channel output sequence need neither be independent nor have the capacity
+achieving distribution, as the following result shows. 
 
 \begin{lemma}
   \label{lem:asymptoptinputs}
   Consider a sequence of zero-mean input distributions $\{p(x^n)\}$ on the
-  Gaussian channel with covariance matrix sequence~$\{K\}$ satisfying $\Tr K /
-  (n \szq) = \snr$ and 
+  Gaussian channel with covariance matrix sequence~$\{K\}$ satisfying
+  \begin{equation*}
+    \frac{\Tr K}{n \szq} = \snr
+  \end{equation*}
+  and 
   \begin{equation*}
     \limsup_{\snr \goesto \infty} D(p(y^n) \| \phi_{K + \szq I}) < \infty,
   \end{equation*}
@@ -546,6 +561,13 @@ of a communication system.
 
 \section{Optimal Minimal-Delay Codes with Feedback}\label{sec:optmindelfb}
 
+While the problem studied here concerns channels without feedback, the case of
+feedback channels is nevertheless of interest, since it provides the only known
+instance of a strictly optimal $(1,n)$~communication system. 
+
+For channels with feedback the definitions of a code and of a communication
+system must be slightly adapted. 
+
 \begin{definition}
   \label{def:fbcode}
   A $(k,n)$ \emph{joint source/channel feedback code} $(f,g)$ consists of
@@ -562,7 +584,6 @@ of a communication system.
   g(Y^n)$. 
 \end{definition}
 
-\figref{fbcommsys} has a schematic depiction of a feedback communication system.
 \begin{figure}[tbp]
   \begin{center}
     \input{figures/sc_gen_feedback.tex_t}
@@ -570,6 +591,7 @@ of a communication system.
   \caption{A general source/channel communication system with feedback.}
   \label{fig:fbcommsys}
 \end{figure}
+\figref{fbcommsys} has a schematic depiction of a feedback communication system.
 
 Since feedback does not increase the capacity of memoryless channels, the bound
 of \thmref{sepconverse} also applies to systems with feedback. It is therefore
@@ -600,8 +622,8 @@ shows.
   \end{equation}
   (The sign of the last term is $+$ if $n$~is even and $-$ if $n$~is odd.)
 
-  To compute the overall distortion $\mse$, note that by definition $\Eh_{i-1} =
-  E_{i-1} + E_i$, so \eqref{eq:shdecom1}~can be written as
+  To compute the overall distortion $\mse$, note that $\Eh_{i-1} = E_{i-1} +
+  E_i$ by definition, so \eqref{eq:shdecom1}~can be written as
   \begin{align*}
     \Sh &= (E_0 + E_1) - (E_1 + E_2) + (E_2 + E_3) - \cdots \pm (E_{n-1} + E_n)
     \\
@@ -660,8 +682,8 @@ feedback.
   inequality $I(X^n;Y^n) \le \sn I(X_i; Y_i)$ is replaced by $I(X^n \ra Y^n) \le
   \sn I(X_i; Y_i)$, where $I(X^n \ra Y^n)$ is the \emph{directed information}
   from~$X^n$ to~$Y^n$ (see~\cite{Massey1990,Kramer1998}). A necessary and
-  sufficient condition for $I(X^n \ra Y^n) = \sn I(X_i; Y_i)$ is condition~(iv)
-  of the theorem~\cite[Theorem~2]{Massey1990}.
+  sufficient condition for equality is condition~(iv) of the
+  theorem~\cite[Theorem~2]{Massey1990}.
 \end{proof}
 
 Let us now revisit Example~\ref{ex:gaussfb} and see why it achieves the optimal
@@ -733,8 +755,8 @@ Before continuing we prove some properties of cumulative distribution functions
 \begin{lemma}
   \label{lem:invcdf}
   Let $U$ be a uniform random variable on~$[0,1]$ and let $F$ be the \cdf\ of an
-  arbitrary random variable~$X$. If $F$~is not invertible in the strict sense,
-  define $F^{-1}$ as
+  arbitrary random variable~$X$. If $F$~is not invertible, define $F^{-1}$ with
+  a slight abuse of notation as
   \begin{equation}
     \label{eq:invcdf}
     F^{-1}(y) = \sup \{x : F(x) \le y\}.
@@ -743,7 +765,7 @@ Before continuing we prove some properties of cumulative distribution functions
 \end{lemma}
 
 \begin{proof}
-  The definition of $F^{-1}$ according to~\eqref{eq:invcdf} has the property
+  The definition of $F^{-1}$ according to~\eqref{eq:invcdf} is such
   that $\Pr[F^{-1}(U) \le x] = \Pr[U \le F(x)]$. Thus,
   \begin{align*}
     \Pr[F^{-1}(U) \le x] &= \Pr[U \le F(x)] \\
@@ -850,7 +872,7 @@ Let us now derive the posterior matching encoder for the communication system of
   increasing functions. Yet, using measure matching it is straightforward to
   come up with an optimal $(1,1)$~communication system that has a nonincreasing
   encoder: just take the encoder to be an arbitrary function, and select the
-  cost and distortion measures accordingly following \thmref{tcntcbwmatch}.
+  cost and distortion measures accordingly, following \thmref{tcntcbwmatch}.
 \end{remark}
 
 
@@ -943,8 +965,8 @@ Leadbetter~\cite[Section~5.6]{CramerL1967}.)
   \end{enumerate}
 \end{definition}
 
-The following lemma, which can easily be verified, allows us to view the
-Gaussian feedback communication problem in a geometric setting.
+The following easily verified lemma allows us to view the Gaussian feedback
+communication problem in a geometric setting.
 \begin{lemma}
   \label{lem:rvinprodsp}
   Any set of jointly Gaussian random variables with finite variance forms an
@@ -1011,11 +1033,13 @@ spanned by the orthogonal vectors $Y_1$, \ldots, $Y_n$.
 
 
 
-\subsection{Other Results}
+%\subsection{Other Results}
+%
+%\subsubsection{Noisy Feedback}
+%
+%\subsubsection{Minimal-Delay Codes for Arbitrary Rates}
 
-\subsubsection{Noisy Feedback}
-
-\subsubsection{Minimal-Delay Codes for Arbitrary Rates}
+\section{Lessons for the Feedbackfree Case}
 
 
 \begin{subappendices}
