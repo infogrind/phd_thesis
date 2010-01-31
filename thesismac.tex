@@ -158,6 +158,12 @@
   \centering\strut\par\texttt{fig:#1}\par\strut
 \end{boxedminipage}}
 
+% To make a ``note'' box
+\newenvironment{notebox}{\setlength{\fboxrule}{2pt}%
+\par\noindent\begin{boxedminipage}[b]{\textwidth}%
+\textsf{\textbf{NOTE:}}\par\parindent=1em\noindent\ignorespaces}%
+{\end{boxedminipage}\par\ignorespacesafterend\noindent}
+
 
 % TODO marker
 \newcommand{\todo}{\textbf{TODO}}

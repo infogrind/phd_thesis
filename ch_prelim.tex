@@ -1,6 +1,11 @@
 \chapter{Preliminaries}
 \label{ch:prelim}
 
+\begin{notebox}
+  I have used boxes like these to add notes in the text wherever I felt
+  something was missing or not right, but did not find a proper way to write it
+  or was lacking the necessary results.
+\end{notebox}
 The problem treated in this chapter and the next is the transmission of
 discrete-time memoryless sources across discrete-time memoryless channels, where
 the channel is used $n$~times for each $k$~source symbols.  The goal of the
@@ -308,7 +313,7 @@ connected to a Gaussian channel, as given in the following example.
   \begin{equation*}
     D = \E[(S - \Sh)^2] = \ssq / (1 + P/\szq),
   \end{equation*}
-  which is indeed the optimal distortion according to \thmref{sdrub}
+  which is indeed the optimal distortion according to \thmref{sdrub}.
 \end{example}
 
 \exref{gausssingle} is a particular instance of a more general paradigm called
@@ -559,6 +564,13 @@ achieving distribution, as the following result shows.
   positive and thus $2^{2 I(X^n; Y^n)} \in \Omega((P/\szq)^n) = \Omega(\snr^n)$.
 \end{proof}
 
+\begin{notebox}
+  It would appear that the condition of an nondegenerate input distribution is
+  not only sufficient but also necessary. However, since we are talking about
+  \emph{sequences} of distributions here, I am not sure how to formulate the
+  conditions exactly. 
+\end{notebox}
+
 \section{Optimal Minimal-Delay Codes with Feedback}\label{sec:optmindelfb}
 
 While the problem studied here concerns channels without feedback, the case of
@@ -713,6 +725,14 @@ next section shows, though, at least conditions~(iii)--(v) of \thmref{tcntcfb}
 can be achieved with a minimal delay code for any source and channel if perfect
 feedback is available.
 
+\begin{remark}
+  \label{rem:lmmse}
+  Note that the \sdr\ achievable by the scheme of \exref{gaussfb} does not
+  depend on the distribution of the source. Comparing the performance of this
+  scheme with the bound of \thmref{sdrub}, it follows that the scheme can be
+  used to construct an asymptotically optimal Gaussian communication system for
+  arbitrary analog sources.
+\end{remark}
 
 \subsection{Posterior Matching}
 
@@ -934,10 +954,31 @@ example shows.
   which no longer depends on~$s$. Furthermore, this decoder is the MMSE decoder.
 \end{example}
 
-\subsection{Statisticically Sufficient Decoder}
+\subsection{Statistically Sufficient Decoder}
+
+\begin{notebox}
+According to the Wikipedia article on \emph{Exponential
+Families}\urldef{\wikiexp}\url{http://en.wikipedia.org/wiki/Exponential_family}\footnote{\wikiexp},
+the \emph{Pitman-Koopman-Darmois theorem} says that ``only in exponential
+families is there a sufficient statistic whose dimension remains bounded as
+sample size increases.'' This seems to mean that unless the distribution
+of~$Y^n$ given~$S$ is an exponential family (in which category the Gaussian
+distribution falls), the estimate~$\Sh$ cannot be a sufficient statistic for~$n
+> 1$. Unfortunately, the relevant papers are quite mathematical and it may take
+some time to figure out the exact consequences for our problem. 
+\end{notebox}
 
 
 \subsection{Geometric Interpretation}
+
+\begin{notebox}
+  While the derivation in this section is nice and appealing, we don't actually
+  use it to prove anything or get any particular insights. Furthermore, it seems
+  to be a well known fact that random variables of finite variance form a vector
+  space. Hence I am not sure if there is a good reason to keep this section,
+  other than the fact that it takes up some space (and that I independently came
+  up with it).
+\end{notebox}
 
 If the channel is an AWGN channel, the distortion measure is the squared error,
 and the decoder computes the LMMSE estimator, there is a nice geometrical
@@ -1039,8 +1080,43 @@ spanned by the orthogonal vectors $Y_1$, \ldots, $Y_n$.
 %
 %\subsubsection{Minimal-Delay Codes for Arbitrary Rates}
 
+
 \section{Lessons for the Feedbackfree Case}
 
+\begin{notebox}
+  I have been trying to support the intuitive arguments in this paragraph with
+  solid formulas, but so far without success. I would like to formulate the
+  statement ``the encoder knows the decoder's state'' using mutual information.
+
+  Is it possible to express a particular mutual information
+  once for the feedback case and once for the case without feedback (using
+  Massey's definition $p(x_i|x^{i-1},y^{i-1}) = p(x_i|x^{i-1})$ for ``used
+  without feedback''), and then show for which condition the two mutual
+  informations are equal? This condition would be the formal equivalent of ``the
+  encoder knows the state of the decoder''.
+\end{notebox}
+The two preceding sections show that when $n > 1$, the only known optimal
+$(1,n)$~communication system requires feedback. The same is true for the only
+known \emph{asymptotically optimal} $(1,n)$~communication system.  To state the
+very obvious: the difference between the case with and without feedback is that
+if the channel has feedback, the encoder knows exactly the state of the decoder
+before sending each subsequent channel input. The encoder can thus exactly
+determine the additional information needed to refine the decoder's estimate and
+can avoid sending anything redundant. 
+
+If there is no feedback, by the very nature of the Gaussian channel, the encoder
+does not know the state of the decoder after transmitting a symbol across the
+channel. If it were possible, though, by using appropriate transformations at
+the channel input and output to turn the Gaussian channel into an error free
+channel, then this would in essence bring about the same situation as in the
+case with feedback. 
+
+Probably the most well known way to turn a channel into an error free channel is
+the channel coding theorem. As was already stated on several occasions
+throughout this chapter, however, this requires large blocklenghts, which are
+unsuitable for the problem of finding good \emph{minimal delay} codes. The
+establishment of minimal delay codes that turn a Gaussian channel into a channel
+that is with high probability error free is the subject of the next chapter. 
 
 \begin{subappendices}
   \section{Asymptotic Notation}\label{app:asymptotic}
