@@ -1,0 +1,13 @@
+% vim:ft=tex
+\begin{tikzpicture}
+
+  % Fill single voronoi region
+  \fill[gray!50!white] (-.5,-.5) rectangle (.5,.5);
+
+  \foreach \x in {-1,0,1,2}
+  \foreach \y in {-1,0,1}
+  \fill (\x,\y) circle (2pt);
+
+  \foreach \x in {-.5,.5,1.5} \draw (\x,-1.5) -- (\x,1.5);
+  \foreach \y in {-.5,.5} \draw (-1.5,\y) -- (2.5,\y);
+\end{tikzpicture}

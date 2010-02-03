@@ -1,0 +1,29 @@
+% vim:ft=tex
+\begin{tikzpicture}
+%  \useasboundingbox (-1.5,-1.5) rectangle (2.5,1.5);
+
+  \coordinate (a) at (2.5,0); 
+  \coordinate (b) at ($ (0,0)!sin(60)!90:(a) $);
+
+  \foreach \i in {0,1,2,3,4,5}
+  \coordinate (a\i) at ($ (0,0)!1!\i*60:(a) $);
+
+
+  \draw[thick,fill=gray!20!white] (a0) -- ++(a2) -- ++(a3) -- ++(a4) -- ++(a5)
+  -- ++(a0) -- cycle;
+
+  \fill (0,0) circle (2pt);
+
+  \foreach \i in {0,1,2,3,4,5}
+  \draw (a\i) -- ($ (0,0)!.2!(a\i) + (a\i) $);
+
+  % Packing and covering sphere
+  \draw (0,0) circle (2.5);
+  \pgfmathsetmacro{\rad}{2.5*sin(60)}
+  \draw (0,0) circle (\rad);
+
+  \draw[->] (0,0) -- node[above] {$R$} (10:2.5);
+  \draw[->] (0,0) -- node[above right] {$\rho$} (110:\rad);
+
+\end{tikzpicture}
+

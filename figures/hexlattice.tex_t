@@ -1,0 +1,32 @@
+% vim:ft=tex
+\begin{tikzpicture}
+%  \useasboundingbox (-1.5,-1.5) rectangle (2.5,1.5);
+
+  \foreach \i in {0,1,2,3,4,5}
+  \coordinate (a\i) at ($ (0,0)!1!\i*60:(.5,0) $);
+
+  \coordinate (b) at ($ (0,0)!sin(60)!90:(a0) $);
+
+  % Fill the Voronoi cell of a single point.
+  \coordinate (p) at ($ 1*3*(a0) + 1*2*(b) $);
+  \fill[gray!50!white] ($ (p) + (a0) $) -- ++(a2) -- ++(a3) -- ++(a4) --
+  ++(a5) -- ++(a0) -- cycle;
+
+  % Now draw the whole lattice, center points and voronoi regions.
+  \foreach \x in {0,1,2,3}
+  \foreach \y in {0,1,2}
+  {
+    \coordinate (p) at ($ \x*3*(a0) + \y*2*(b) $);
+    \fill (p) circle (2pt);
+    \fill ($ (p) + (a0) + (a1) $) circle (2pt);
+
+    \draw ($ (p) + (a0) $) -- ++(a2) -- ++(a3) -- ++(a4) -- ++(a5) -- ++(a0)
+    -- cycle;
+
+    \draw ($ (p) + (a0) $) -- ++(a0) -- ++(a1) -- ++(a2) -- ++(a3) -- ++(a4);
+  }
+
+
+
+\end{tikzpicture}
+

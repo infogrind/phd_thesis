@@ -1,0 +1,24 @@
+% vim:ft=tex
+\begin{tikzpicture}
+%  \useasboundingbox (-1.5,-1.5) rectangle (2.5,1.5);
+
+  \foreach \i in {0,1,2,3,4,5}
+  \coordinate (a\i) at ($ (0,0)!1!\i*60:(.5,0) $);
+
+  \coordinate (b) at ($ (0,0)!sin(60)!90:(a0) $);
+
+  \foreach \x in {0,1,...,10}
+  \foreach \y in {0,1,...,18}
+  {
+    \coordinate (p) at ($ \x*3*(a0) + \y*2*(b) $);
+    \fill (p) circle (2pt);
+    \fill ($ (p) + (a0) + (a1) $) circle (2pt);
+
+    \draw[help lines] ($ (p) + (a0) $) -- ++(a2) -- ++(a3) -- ++(a4) -- ++(a5)
+    -- ++(a0) -- cycle;
+
+    \draw[help lines] ($ (p) + (a0) $) -- ++(a0) -- ++(a1) -- ++(a2) -- ++(a3) -- ++(a4);
+  }
+
+\end{tikzpicture}
+

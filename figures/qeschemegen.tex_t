@@ -1,0 +1,41 @@
+% vim:ft=tex
+    \begin{tikzpicture}
+      \node (S) at (-1,0) {$S$};
+
+      \def\ycoords{{0,-2,-6}}
+      \def\yname{{"1","2","n-1"}}
+      \foreach \i in {0,1,2} {
+        \coordinate (vp) at ($ (0,\ycoords[\i]) $);
+        \node[coordinate,name=pp\i] at (vp) {};
+        \node[c,name=Q\i] at ($ (vp) + (2,0) $) {Quantizer};
+
+        \node[coordinate,name=p\i] at ($ (vp) + (3.25,0) $) {};
+        \node[trir,name=s1\i] at ($ (vp) + (4,0) $) {};
+        % To put text in the triangle:
+        %\node at (s1\i) {$A$};
+
+%        \node[awgn,name=awgn\i] at ($ (vp) + (5.5,0) $) {$+$};
+%        \node[c,name=ML\i] at ($ (vp) + (7,0) $) {ML};
+%        \node[trir,name=s2\i] at ($ (vp) + (8.5,0) $) {};
+
+        \node[awgn,name=diff\i] at ($ (vp) + (0,-1) $) {$+$};
+
+        \draw[l] (Q\i) -- (s1\i);
+        \draw[l] (s1\i) -- +(0.5,0) node[right]
+        {$X_{\pgfmathparse{\yname[\i]}\pgfmathresult}$};
+%        \draw[l] (s1\i) -- (awgn\i);
+%        \draw[l] (awgn\i) -- (ML\i);
+%        \draw[l] (ML\i) -- (s2\i);
+        \draw[l] (p\i) |- node[above,very near end] {$-$} (diff\i);
+        }
+
+        \draw[-] (S) -- (pp0);
+        \draw[l] (pp0) -- (Q0);
+        \draw[l] (pp0) -- (diff0);
+        \draw[l] (diff0) -- (diff1);
+        \draw[l] (pp1) -- (Q1);
+        \draw[l] (diff1) -- +(0,-1) node[below] {$\vdots$};
+        \draw[<-] (diff2) -- +(0,1);
+        
+
+    \end{tikzpicture}
