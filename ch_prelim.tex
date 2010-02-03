@@ -72,8 +72,8 @@ is to be transmitted.
 \begin{definition}[Source]
   \label{def:analogsource}
   A discrete-time memoryless source is specified by a probability distribution
-  $\pS(s)$ on~$\R$. An \emph{analog} source is a source that admits a
-  probability density function \emph{(\pdf)}.
+  $\pS(s)$ on~$\R$. A \emph{continuous-amplitude} or \emph{analog} source is a
+  source that admits a probability density function \emph{(\pdf)}.
 \end{definition}
 
 \begin{definition}[Channel]
@@ -91,7 +91,7 @@ Of particular interest is the Gaussian noise channel.
   on the input $X=x$, is a Gaussian random variable $Y$ with mean~$x$ and
   variance~$\sq$. An AWGN channel is sometimes also specified by relating the
   output $Y$ to the input $X$ through $Y = X + Z$, where $Z$ is zero-mean
-  Gaussian with variance~$\sq$. 
+  Gaussian with variance~$\sq$ and independent of~$X$. 
 \end{definition}
 
 The next few definitions concern joint source/channel codes. 
@@ -185,8 +185,9 @@ making the encoder and decoder depend on the~\snr. To accommodate this,
   \label{def:codingscheme}
   A \emph{coding scheme} for the Gaussian channel is a code whose encoder and
   decoder not only depend on the source and the channel output, respectively,
-  but also on the value of~\snr. The notation used is usually just $f(s^k)$ and
-  $g(y^n)$ instead of the technically correct $f(s^k,\snr)$ and $g(y^n,\snr)$.
+  but may also depend on the value of~\snr. The notation used is usually just
+  $f(s^k)$ and $g(y^n)$ instead of the technically correct $f(s^k,\snr)$ and
+  $g(y^n,\snr)$.
 \end{definition}
 
 
@@ -591,7 +592,7 @@ system must be slightly adapted.
   \label{def:fbcommsys}
   A $(k,n)$ \emph{source/channel communication system with feedback} is a
   $(k,n)$ communication system where the encoder has noiseless feedback from the
-  channel output, and a $(k,n)$ feedback code computes the $i^{\text{th}}$
+  channel output, and a $(k,n)$ feedback code computes the $i\th$
   channel input as $X_i = f_i(S^k, Y^{i-1})$ and the source estimate as $\Sh^k =
   g(Y^n)$. 
 \end{definition}
@@ -617,7 +618,7 @@ shows.
   \label{ex:gaussfb}
   In this example, a Gaussian source is transmitted across an AWGN channel, and
   the channel is used $n$~times per source symbol.  Define $E_0 = S$. In the
-  $i^{\text{th}}$ channel use, the encoder produces
+  $i\th$ channel use, the encoder produces
   \begin{equation}
     \label{eq:gaussfbxi}
     X_i = \sqrt{\frac{P}{\Var E_{i-1}}} E_{i-1}.
@@ -859,7 +860,7 @@ Let us now derive the posterior matching encoder for the communication system of
     {\sqrt{\Var(S-\E[S|Y_1])}} \right) \right) \\
     &= \sqrt{P} \frac{S - \E[S|Y_1]}{\sqrt{\Var(S-\E[S|Y_1])}}.
   \end{align*}
-  Continuing this way, the $i^{\text{th}}$ channel input is found to be
+  Continuing this way, the $i\th$ channel input is found to be
   \begin{equation}
     \label{eq:gausspmenc}
     X_i = \sqrt{P} \frac{S - \E[S|Y_1^{i-1}]}{\sqrt{\Var(S-\E[S|Y_1^{i-1}])}}.
@@ -1109,7 +1110,8 @@ does not know the state of the decoder after transmitting a symbol across the
 channel. If it were possible, though, by using appropriate transformations at
 the channel input and output to turn the Gaussian channel into an error free
 channel, then this would in essence bring about the same situation as in the
-case with feedback. 
+case with feedback, with the penalty that the capacity of the transformed
+channel may be decreased.
 
 Probably the most well known way to turn a channel into an error free channel is
 the channel coding theorem. As was already stated on several occasions

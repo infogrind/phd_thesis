@@ -7,6 +7,16 @@
 \newcommand{\Y}{\vect{Y}}
 \newcommand{\x}{\vect{x}}
 \newcommand{\X}{\vect{X}}
+\newcommand{\z}{\vect{z}}
+\newcommand{\Q}{\vect{Q}}
+\newcommand{\Evc}{\vect{E}}
+\newcommand{\Qhv}{\hat{\vect{Q}}}
+\newcommand{\Ehv}{\hat{\vect{E}}}
+\renewcommand{\S}{\vect{S}}
+\newcommand{\Shv}{\hat{\vect{S}}}
+\newcommand{\s}{\vect{s}}
+\newcommand{\Dv}{\vect{\Delta}}
+
 
 % Single letter abbreviations: sets and the like
 \newcommand{\R}{\mathbb{R}}
@@ -33,6 +43,9 @@
 \newcommand{\lt}{\tilde{\lambda}}
 \newcommand{\ft}{\tilde{f}}
 \newcommand{\gt}{\tilde{g}}
+
+% Subscript abbreviations
+\newcommand{\QL}{{Q_{\Lambda}}}
 
 % Macros for the feedback chapter
 \newcommand{\Fpi}{{F_{\pi}}}
@@ -61,6 +74,7 @@
 \newcommand\pdf{pdf}
 \newcommand\snr{\abbrev{SNR}}
 \newcommand\sdr{\abbrev{SDR}}
+\renewcommand\th{{\ensuremath{^{\text{th}}}}}
 
 % Shortcuts for references
 \newcommand{\secref}[1]{Section~\ref{sec:#1}}
@@ -76,6 +90,7 @@
 \newcommand{\pS}{{p_S}}
 \newcommand{\pmin}{{p_{\min}}}
 \newcommand{\mse}{{\E[(\Sh - S)^2]}}
+\newcommand{\msev}{{\E[\|\Shv - \S\|^2]}}
 \newcommand{\msecond}{{\E[(\Sh - S)^2 | s]}}
 \newcommand{\msecondd}{{\E[(\Sh - S - \Delta)^2 | s + \Delta]}}
 \newcommand{\dhsq}{{\left(\frac{\Delta}{2}\right)^2}}
@@ -153,9 +168,9 @@
 \newcommand\iid{\emph{iid}}
 
 % To make a place holder for figures
-\newcommand{\figbox}[1]{%
-\begin{boxedminipage}[b]{\textwidth}
-  \centering\strut\par\texttt{fig:#1}\par\strut
+\newcommand{\figbox}[2][\textwidth]{%
+\begin{boxedminipage}[b]{#1}
+  \centering\strut\par\texttt{fig:#2}\par\strut
 \end{boxedminipage}}
 
 % To make a ``note'' box

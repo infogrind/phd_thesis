@@ -1,14 +1,23 @@
 % To use coordinate calculations
 \usetikzlibrary{calc}
 
+% For special shapes such as polygon
+\usetikzlibrary{shapes.geometric}
+
 % This makes the grids invisible
 \tikzstyle{gridstyle}=[draw opacity=0]
 
 % Everything needed for communication diagrams.
 \tikzstyle{c}=[rectangle,draw,minimum width=1.5cm,minimum height=1cm]
 \tikzstyle{sc}=[c,draw,double]
-\tikzstyle{awgn}=[circle,draw,minimum size=1cm]
+\tikzstyle{awgn}=[circle,draw,minimum size=.5cm]
 \tikzstyle{l}=[->]
 
 \tikzstyle{dl}=[gray,ultra thin,dashed]
+
+% Triangle node shapes
+\tikzstyle{tri}=[regular polygon,regular polygon sides=3,thick,draw,
+inner sep=2pt]
+\tikzstyle{trir}=[tri,rotate=-90]
+\tikzstyle{trid}=[tri,rotate=180]
 
