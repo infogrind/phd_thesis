@@ -1,6 +1,7 @@
 % vim:ft=tex
 \begin{tikzpicture}
-%  \useasboundingbox (-1.5,-1.5) rectangle (2.5,1.5);
+%  \clip (0,0) rectangle (4,3);
+  \path[clip] (-0.15,-0.25)  rectangle (3.9,2.5);
 
   \foreach \i in {0,1,2,3,4,5}
   \coordinate (a\i) at ($ (0,0)!1!\i*60:(.5,0) $);
@@ -14,7 +15,7 @@
 
   % Now draw the whole lattice, center points and voronoi regions.
   \foreach \x in {0,1,2,3}
-  \foreach \y in {0,1,2}
+  \foreach \y in {-1,0,1,2,3}
   {
     \coordinate (p) at ($ \x*3*(a0) + \y*2*(b) $);
     \fill (p) circle (2pt);

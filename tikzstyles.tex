@@ -4,6 +4,9 @@
 % For special shapes such as polygon
 \usetikzlibrary{shapes.geometric}
 
+% Smaller fonts where needed
+\tikzstyle{smallfont}=[font=\sffamily\footnotesize]
+
 % This makes the grids invisible
 \tikzstyle{gridstyle}=[draw opacity=0]
 
@@ -11,13 +14,15 @@
 \tikzstyle{c}=[rectangle,draw,minimum width=1.5cm,minimum height=1cm]
 \tikzstyle{sc}=[c,draw,double]
 \tikzstyle{awgn}=[circle,draw,minimum size=.5cm]
+\tikzstyle{smallplus}=[circle,draw,minimum size=.3cm,smallfont,inner sep=1pt]
 \tikzstyle{l}=[->]
+
+\tikzstyle{sq}=[c,minimum width=1cm,minimum height=0.5cm,smallfont]
 
 \tikzstyle{dl}=[gray,ultra thin,dashed]
 
 % Triangle node shapes
-\tikzstyle{tri}=[regular polygon,regular polygon sides=3,thick,draw,
-inner sep=2pt]
+\tikzstyle{tri}=[regular polygon,regular polygon sides=3,draw,inner sep=4pt]
 \tikzstyle{trir}=[tri,rotate=-90]
 \tikzstyle{trid}=[tri,rotate=180]
 

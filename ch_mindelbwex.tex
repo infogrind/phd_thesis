@@ -136,7 +136,185 @@ correspondingly large delays, so they are not directly comparable with minimum
 delay schemes.
 
 
+
+
+\section{Lattice Quantization Basics}\label{sec:latquantbasics}
+
+This section contains the very basics on lattices and lattice quantization
+needed in the remainer of the chapter. For a comprehensive treatment of lattices
+and/or quantization the reader is referred to the books by Conway and
+Sloane~\cite{ConwayS1988} and by Gersho and Gray~\cite{GershoG1992}.
+
+\begin{definition}
+  An $n$-dimensional \emph{lattice} $\Lambda$ is a discrete set of vectors
+  (points) in~$\R^n$ such that for any $\x$, $\y \in \Lambda$, $\x + \y \in
+  \Lambda$. A sublattice of~$\Lambda$ is a subset $\Lambda' \subseteq \Lambda$
+  that is itself a lattice. 
+\end{definition}
+
+\begin{example}
+  \label{ex:scalarlattice}
+  In~$\R$ there exists only a single lattice (up to scaling), the scalar
+  lattice~$\Z$. Two examples of lattices in~$\R^2$ are displayed in
+  \figref{r2lattices}.
+\end{example}
+\begin{figure}[tbp]
+  \centerline{%
+  \subfloat[Rectangular lattice.]{%
+  \label{fig:rectlattice}\input{figures/rectlattice.tex_t}}%
+  \hfil
+  \subfloat[Hexagonal lattice.]{%
+  \label{fig:hexlattice}\input{figures/hexlattice.tex_t}}%
+  }
+  \caption{Two lattices in~$\R^2$ and the corresponding partition into Voronoi
+  regions. The Voronoi region of a particular point is shaded.}
+  \label{fig:r2lattices}
+\end{figure}
+\begin{proposition}
+  \label{prop:intsublattice}
+  If $\Lambda$ is a lattice and $\beta \in \NN$, then $\beta \Lambda$ is a
+  sublattice of~$\Lambda$. (The set $\beta \Lambda$ is defined as $\{ \beta \x :
+  \x \in \Lambda\}$.)
+\end{proposition}
+
+\begin{proof}
+  By definition of a lattice, $\beta \Lambda \subseteq \Lambda$. Moreover, if
+  $\x, \y \in \beta \Lambda$, then $\x = \beta \x'$ and $\y = \beta \y'$ with
+  $\x', \y' \in \Lambda$. It follows that $\x + \y = \beta (\x' + \y') \in \beta
+  \Lambda$, so $\beta\Lambda$ is itself a lattice.
+\end{proof}
+
+\begin{definition}
+  The \emph{Voronoi region} $V(\x)$ of a lattice point $\x \in \Lambda$ is
+  defined as
+  \begin{equation*}
+    V(\x) = \{\y \in \R^n : \|\y - \x\| \le \|\y - \z\|, \forall \z \in \Lambda,
+    \z \ne \x \},
+  \end{equation*}
+  \ie, $V(\x)$ is the set of points in $\R^n$ that are closer to $\x$ than to
+  any other lattice point.
+\end{definition}
+See \figref{r2lattices} for an illustration of the Voronoi region.
+
+\begin{definition}
+  The \emph{packing radius} $\rho$ of a lattice is half the minimal distance
+  between lattice points. Thus, $\rho$~is the largest radius of spheres that can
+  be packed in~$\R^n$ by placing them at the lattice points.
+\end{definition}
+
+\begin{definition}
+  The \emph{covering radius}~$R$ of a lattice~$\Lambda$ is the least upper
+  bound for the distance from any point of~$\R^n$ to the closest point $\x \in
+  \Lambda$. Thus, spheres of radius~$\rho$ around each lattice point will
+  cover~$\R^n$, and no smaller radius will do.~\cite{ConwayS1988}
+\end{definition}
+
+The packing radius and the covering radius are illustrated on
+\figref{packingcoveringr} for a hexagonal lattice.
+\begin{figure}[tbp]
+  \begin{center}
+    \input{figures/packingcoveringr.tex_t}
+  \end{center}
+  \caption{The packing radius~$\rho$ and the covering radius~$R$ for the
+  rectangular lattice and the hexagonal lattice.}
+  \label{fig:packingcoveringr}
+\end{figure}
+
+\begin{definition}
+  \label{def:latticequant}
+  A \emph{lattice quantizer} $\QL : \R^n \ra \Lambda$ maps each point
+  of~$\R^n$ to the closest lattice point. Thus, for any $\x \in \R^n$, $\y \in
+  \Lambda$,
+  \begin{equation*}
+    \| \x - \QL(\x) \| \le \|\x - \y\|.
+  \end{equation*}
+\end{definition}
+
+\begin{remark}
+  \label{rem:latticequant}
+  \defref{latticequant} does not unambiguously specify $\QL(\x)$ if $\x$~lies on
+  the boundary between the Voronoi regions of two adjacent lattice points. Since
+  quantization is only applied to continuous-valued random variables in this
+  chapter, however, the probability of this happening is zero, and this
+  ambiguity can be left alone without causing any trouble.
+\end{remark}
+
+\begin{example}
+  Let $\Lambda = \Z / \beta$ for some $\beta \in \NN$. The associated
+  quantizer~$\QL$ maps each real number to the closest multiple of $1/\beta$.
+\end{example}
+
+The following simple property will be useful later.
+\begin{proposition}
+  Let $\Lambda = \Z / \beta$ with $\beta \in \NN$ and let $x \in [-1/2, 1/2]$.
+  Then
+  \begin{equation*}
+    \QL(x) \in
+    \begin{cases}
+      \left\{ -\frac{\beta/2}{\beta}, -\frac{\beta/2 - 1}{\beta}, \dots, 
+      -\frac{1}{\beta}, 0, \frac1\beta, \dots, \frac{\beta/2}{\beta} \right\}
+      & \text{if $\beta$ is even} \\
+      \left\{ -\frac{(\beta - 1)/2}{\beta}, -\frac{(\beta-1)/2 - 1}{\beta}, 
+      \dots, -\frac1\beta, 0, \frac1\beta, \dots, \frac{(\beta-1)/2}{\beta}
+      \right\}
+      & \text{if $\beta$ is odd}.
+    \end{cases}
+  \end{equation*}
+\end{proposition}
+
+\begin{proof}
+  The proof is left as an exercise for the reviewers.
+\end{proof}
+
+The next lemma is useful to bound the transmit power when transmitting a
+quantized random vector.
+\begin{lemma}
+  \label{lem:latquantvar}
+  Let $\X$ be a random vector with probability density function $\fXv(\x)$,
+  zero-mean, and covariance matrix $K_{\X}$ satisfying $\Tr K_{\X} = \sq <
+  \infty$. Let $\Y = \QL(\X)$. Then $Tr K_{\Y} \le \sq + 2R\sigma + R^2$, 
+  where $R$~is the covering radius of~$\Lambda$.
+\end{lemma}
+
+\begin{proof}
+  First write $\Tr K_Y = \E[\|Y\|^2] = \E[\|\QL(\X)\|^2]$. Next,
+  \begin{equation*}
+    \E[\|\QL(\X)\|^2] = \int_{R^n} \|\QL(\x)\|^2 \fXv(\x) d\x
+    = \sum_{\p \in \Lambda} \|\p\|^2 \int_{V(\p)} \fXv(\x) d\x.
+  \end{equation*}
+  By definition of the covering radius, $\|\p\| \le \|\x\| + R$ for all $\x \in
+  V(\p)$. Thus,
+  \begin{align*}
+    \E[\|\QL(\X)\|^2] &\le \sum_{\p \in \Lambda} \int_{V(\p)} (\|\x\| + R)^2
+    \fXv(\x) d\x \\
+    &= \int_{R^n} (\|\x\| + R)^2 \fXv(\x) d\x.
+  \end{align*}
+  By assumption, $\int_{\R^n} \|\x\|^2 \fXv(\x) d\x = \sq$. Moreover, by the
+  positivity of the variance, $\E[\xi] \le (\E[\xi^2])^{1/2}$, and so
+  $\int_{\R^n} \|\x\| \fXv(\x) d\x \le \sigma$. Applying this to the above
+  yields
+  \begin{equation*}
+    \E[\|\QL(\X)\|^2] \le \sq + 2R\sigma + R^2,
+  \end{equation*}
+  thus completing the proof.
+\end{proof}
+
+\begin{example}
+  Let $X$ be a scalar zero-mean random variable of variance~$\sq$ and let
+  $\Lambda = \Z / \beta$, for some $\beta > 0$. The covering radius of this
+  lattice is $R = 1/\beta$, so $\E[\QL(X)^2] \le \sq + 2 \beta^{-1} \sigma +
+  \beta^{-2}$.
+\end{example}
+
+
 \section{Scalar Quantizer}\label{sec:scalarquant}
+
+The simplest version of the hybrid transmission scheme introduced in
+\secref{hybridscheme} encodes one source symbol into $n$~channel inputs using a
+scalar quantizer. This section derives upper and lower bounds on the \sdr\
+scaling for this case. The sections that follow will progressively extend the
+analysis to more general hybrid schemes.
+
 
 \subsection{Transmission Strategy}\label{sec:commscheme}
 
@@ -654,78 +832,6 @@ For an extremely comprehensive treatment of lattices, the reader is referred to
 the book by Conway and Sloane~\cite{ConwayS1988}. Hereafter, only the
 definitions relevant to the problem at hand are given.
 
-\begin{definition}
-  An $n$-dimensional \emph{lattice} $\Lambda$ is a discrete set of vectors
-  (points) in~$\R^n$ such that for any $\x$, $\y \in \Lambda$, $\x + \y \in
-  \Lambda$. 
-\end{definition}
-
-Examples of lattices in~$\R^2$ are the \emph{rectangular lattice}
-(\figref{rectlattice}) and the \emph{hexagonal lattice} (\figref{hexlattice}).
-\begin{figure}[tbp]
-  \centerline{%
-  \subfloat[Rectangular lattice.]{%
-  \label{fig:rectlattice}\input{figures/rectlattice.tex_t}}%
-  \hfil
-  \subfloat[Hexagonal lattice.]{%
-  \label{fig:hexlattice}\input{figures/hexlattice.tex_t}}%
-  }
-  \caption{Two lattices in~$\R^2$ and the corresponding partition into Voronoi
-  regions. The Voronoi region of a particular point is shaded.}
-  \label{fig:r2lattices}
-\end{figure}
-
-\begin{definition}
-  The \emph{Voronoi region} $V(\x)$ of a lattice point $\x \in \Lambda$ is
-  defined as
-  \begin{equation*}
-    V(\x) = \{\y \in \R^n : \|\y - \x\| \le \|\y - \z\|, \forall \z \in \Lambda,
-    \z \ne \x \},
-  \end{equation*}
-  \ie, $V(\x)$ is the set of points in $\R^n$ that are closer to $\x$ than to
-  any other lattice point.
-\end{definition}
-See \figref{r2lattices} for an illustration of the Voronoi region.
-
-\begin{definition}
-  The \emph{packing radius} $\rho$ of a lattice is half the minimal distance
-  between lattice points. Thus, $\rho$~is the largest radius of spheres that can
-  be packed in~$\R^n$ by placing them at the lattice points.
-\end{definition}
-
-\begin{definition}
-  A \emph{lattice quantizer} $\QL : \R^n \ra \Lambda$ maps each point
-  of~$\R^n$ to the closest lattice point. Thus, for any $\x \in \R^n$, $\y \in
-  \Lambda$,
-  \begin{equation*}
-    \| \x - \QL(\x) \| \le \|\x - \y\|.
-  \end{equation*}
-\end{definition}
-
-\begin{notebox}
-  The last two definitions are actually not needed. (They would only be needed
-  to show the achievability of the performance upper bound, but this can be done
-  much easier by arguing that $m$~rounds of the scalar quantizer can be seen as
-  vector quantization using the rectangular lattice.) Anyway, I left the
-  definitions in because I like \figref{packingcoveringr}. \texttt{:-)}
-\end{notebox}
-\begin{definition}
-  The \emph{covering radius}~$R$ of a lattice~$\Lambda$ is the least upper
-  bound for the distance from any point of~$\R^n$ to the closest point $\x \in
-  \Lambda$. Thus, spheres of radius~$\rho$ around each lattice point will
-  cover~$\R^n$, and no smaller radius will do.~\cite{ConwayS1988}
-\end{definition}
-
-The packing radius and the covering radius are illustrated on
-\figref{packingcoveringr} for a hexagonal lattice.
-\begin{figure}[tbp]
-  \begin{center}
-    \input{figures/packingcoveringr.tex_t}
-  \end{center}
-  \caption{The packing radius~$\rho$ and the covering radius~$R$ for the
-  hexagonal lattice.}
-  \label{fig:packingcoveringr}
-\end{figure}
 
 
 \subsection{Transmission Strategy}
@@ -848,14 +954,55 @@ It is restated here for completeness.
 
 \section{General Bandwidth Expansion}\label{sec:genbwexp}
 
-If $1 < k < n$, the strategy of \secref{scalarquant} must be slightly adapted.
-In the first $n-k$~channel uses, the $k$ source symbols are sent quantized. Then
-the quantization error is sent uncoded in the last $k$~channel uses. 
+So far, Section~\ref{sec:scalarquant} and~\ref{sec:latticequant} have treated
+the encoding of one source symbol into $n$~channel input symbols and of
+$m$~source symbols into $mn$~channel input symbols, respectively. This section
+extends the coding scheme of \secref{scalarquant} to encode $k$~source symbols
+into $n$~channel inputs, for any $k \le n$. It is shown that using a suboptimal
+decoder similar to that of \secref{achievable}, the \sdr\ scales as
+\textbf{[TO BE SPECIFIED]}.
 
-First, each of the $k$~sources is separately quantized, just like when~$k=1$,
-and the quantization is repeated $n-k$~times in total. The $k$~quantizer outputs
-from round~$j$ are then combined into the $j\th$~channel input symbol via a
-reversible transformation.
+For simplicity it is first assumed that the support of the source is limited to
+the interval~$[-1/2, 1/2]$; the general case will be treated afterwards. 
+
+
+\subsection{Transmission Strategy}
+
+The strategy used to encode the source symbols $S_1$, \dots, $S_k$ into the
+channel inputs $X_1$, \dots, $X_n$ is displayed schematically on
+\figref{knencoding} for~$k=3$ and~$n=5$. 
+\begin{figure}[tbp]
+  \begin{center}
+    \input{figures/knencoding.tex_t}
+  \end{center}
+  \caption{Schematic display of the transmission strategy of \secref{genbwexp}
+  for~$k = 3$ and~$n=5$. The boxes labeled~\textsf{Q} are uniform scalar
+  quantizers with resolution~$\beta$ as described in~\eqref{eq:QEdefkn}.}
+  \label{fig:knencoding}
+\end{figure}
+The encoder consists of $k$~parallel scalar encoders that encode each~$S_i$ into
+$n-k$~quantizer outputs $Q_{i,1}$, \dots, $Q_{i,n-k}$ and a quantization
+error~$E_{j,n-k}$, just like for the case~$k=1$. The quantizer outputs at each
+level are then combined into a single value $Q_{\tot,j}$
+(cf.~\figref{knencoding}). More precisely, letting $i \in \{1, \dots, k\}$ be
+the index of the source symbols, the encoder defines $E_{i,0} = S_i$ for
+each~$i$ and computes
+\begin{align}
+  Q_{i,j} &= \frac{1}{\beta} \Int(\beta E_{i,j-1}) \quad\text{and} \nonumber \\
+  E_{i,j} &= \beta(E_{i,j-1} - Q_{i,j}). \label{eq:QEdefkn}
+\end{align}
+(This is exactly the same as~\eqref{eq:QEdef}, except for the addition of the
+subscript~$i$.) For each quantization level~$j = 1$, \dots, $n-k$, the
+$i$~parallel quantizer outputs are combined into
+\begin{equation*}
+  Q_{\tot,j} = \sum_{i=1}^k \frac{1}{\beta^{i-1}} Q_{i,j}.
+\end{equation*}
+Since each $Q_{i,j}$ is assumed to lie in $[-1/2, 1/2]$, the mapping from the
+$Q_{i,j}$ into~$Q_{\tot,j}$ is invertible, and the inverse can be recursively
+specified as
+
+\subsection{Decoder}
+
 
 
 \subsection{Encoder and Decoder}

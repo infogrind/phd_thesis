@@ -1,6 +1,24 @@
 % vim:ft=tex
 \begin{tikzpicture}
-%  \useasboundingbox (-1.5,-1.5) rectangle (2.5,1.5);
+  \useasboundingbox (-3,-3) rectangle (3,3);
+
+  \fill[gray!20!white] (-1.8,-1.8) rectangle (1.8,1.8);
+
+  \foreach \x in {-1.8,1.8} \draw (\x,-2) -- (\x, 2);
+  \foreach \y in {-1.8,1.8} \draw (-2,\y) -- (2, \y);
+
+  \fill (0,0) circle (2pt);
+
+  \draw (0,0) circle (1.8);
+  \pgfmathsetmacro{\rad}{sqrt(2)*1.8}
+  \draw (0,0) circle (\rad);
+
+  \draw[->] (0,0) -- node[above] {$R$} (10:1.8);
+  \draw[->] (0,0) -- node[above right] {$\rho$} (110:\rad);
+\end{tikzpicture}
+\hfil
+\begin{tikzpicture}
+  \useasboundingbox (-3,-3) rectangle (3,3);
 
   \coordinate (a) at (2.5,0); 
   \coordinate (b) at ($ (0,0)!sin(60)!90:(a) $);
