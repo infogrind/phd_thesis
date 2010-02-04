@@ -277,7 +277,7 @@ quantized random vector.
 \end{lemma}
 
 \begin{proof}
-  First write $\Tr K_Y = \E[\|Y\|^2] = \E[\|\QL(\X)\|^2]$. Next,
+  First write $\Tr K_{\Y} = \E[\|\Y\|^2] = \E[\|\QL(\X)\|^2]$. Next,
   \begin{equation*}
     \E[\|\QL(\X)\|^2] = \int_{R^n} \|\QL(\x)\|^2 \fXv(\x) d\x
     = \sum_{\p \in \Lambda} \|\p\|^2 \int_{V(\p)} \fXv(\x) d\x.
@@ -298,6 +298,10 @@ quantized random vector.
   \end{equation*}
   thus completing the proof.
 \end{proof}
+
+\begin{notebox}
+  Todo: Add a general bound on the quantization error variance.
+\end{notebox}
 
 \begin{example}
   Let $X$ be a scalar zero-mean random variable of variance~$\sq$ and let
@@ -322,28 +326,13 @@ To encode a single source letter $S$ into $n$~channel input symbols $X_1$,
 \dots, $X_n$, we proceed as follows. Define $E_0 = S$ and recursively compute
 the pairs $(Q_i, E_i)$ as
 \begin{align}
-  Q_i &= \frac{1}{\beta} \Int(\beta E_{i-1}) \nonumber \\
+  Q_i &= \QL(E_{i-1}) \nonumber \\
   E_i &= \beta (E_{i-1} - Q_i) \label{eq:QEdef}
 \end{align}
-for $i = 1$, \dots, $n-1$ where $\Int(x)$ is the unique integer~$i$ such that
-\begin{equation*}
-%  \label{eq:intdef}
-  x \in \left[ i - \frac12 , i + \frac12 \right)
-\end{equation*}
-and $\beta$ is a scaling factor that \emph{grows with the power $P$}
-in a way to be determined later.  The following result will be useful in the
-sequel.
-\begin{lemma}
-  \label{lem:qvarconvergence}
-  As $\beta$ goes to infinity, the variance of $Q_i$ converges to that of
-  $E_{i-1}$ for all $i = 1$, \dots, $n-1$. 
-\end{lemma}
-
-\begin{proof}
-  Intuitively this is so since $Q_i$ is $E_{i-1}$ quantized, and the
-  quantization step becomes smaller as $\beta$ goes to infinity.  A rigorous
-  proof is given in Appendix~\ref{app:lemma1proof}.
-\end{proof}
+for $i = 1$, \dots, $n-1$ where $\Lambda = \Z/\beta$. The parameter $\beta \in
+\N$ determines the quantization resolution, the larger~$\beta$ the finer the
+quantization. Following the argument at the beginning of this chapter,
+$\beta$~is assumed to grow with the~\snr.
 
 \begin{proposition}
   \label{prop:qeproperties}
@@ -354,19 +343,6 @@ sequel.
       \label{eq:unwraprec}
       S = \sum_{i=1}^{n-1} \frac{1}{\beta^{i-1}} Q_i + \frac{1}{\beta^{n-1}}
       E_{n-1}.
-    \end{equation}
-
-  \item The variance of $E_0$ is $\ssq$ and for all $i = 1$, \dots, $n-1$, $E_i
-    \in [-1/2, 1/2)$ and $\var(E_i) \le 1/4$.
-  \item For any $\delta > 0$ there exists $\beta_0$ such that for $\beta
-    > \beta_0$,
-    \begin{equation}
-      \label{eq:qvarbound}
-      \var(Q_i) \le
-      \begin{cases}
-        \ssq + \delta & \text{for $i = 1$} \\
-        1/4 + \delta & \text{for $i = 2$, \dots, $n-1$.}
-      \end{cases}
     \end{equation}
 \end{enumerate}
 \end{proposition}
@@ -380,18 +356,8 @@ sequel.
       E_{i-1} = \frac{1}{\beta} E_i + Q_i.
     \end{equation}
     Repeated use of this relationship leads to the given expression for~$S$. 
-  \item First, $\var(E_0) = \var(S) = \ssq$. Next, $E_i \in [-1/2, 1/2)$ follows
-    trivially from the definition of~$E_i$.  Furthermore, the variance of any
-    random variable with support in an interval of length~$1$ is bounded from
-    above by~$1/4$. 
-  \item The result follows directly from Lemma~\ref{lem:qvarconvergence} and
-    from the bound on the variance of the $E_i$ in point~2 above.
   \end{enumerate}
 \end{proof}
-
-Without loss of generality we assume hereafter that $\ssq > 1/4$ so that the
-first bound of~\eqref{eq:qvarbound} applies to all~$Q_i$.
-
 
 We determine the channel input symbols $X_i$ from the $Q_i$ and from $E_{n-1}$
 according to 
@@ -1012,42 +978,44 @@ specified as
 
 
 \begin{subappendices}
-  \section{Proof of Lemma~\ref{lem:qvarconvergence}}
-  \label{app:lemma1proof}
-
-  Since all involved distributions are symmetric, $\E[Q_i] = 0$.  Writing $Q_i$
-  as a function of $E_{i-1}$, we have
-  \begin{equation}
-    \var(Q_i) = \E[Q_i^2] = \int_{-\infty}^\infty Q_i(\xi)^2 f(\xi) d\xi,
-    \label{eq:varqintegral}
-  \end{equation}
-  %\begin{align}
-  %  \var(Q_i) &= \E[Q_i^2] \nonumber\\
-  %  &= \int_{-\infty}^\infty Q_i(\xi)^2 f(\xi) d\xi,
-  %  \label{eq:varqintegral}
-  %\end{align}
-  where $f(\xi)$ is the pdf\footnote{probability density function} of $E_{i-1}$.
-  Now, $Q_i(\xi) = j/\beta$ whenever
-  \begin{equation*}
-    \xi \in \left[ \frac{j - 1/2}{\beta}, \frac{j + 1/2}{\beta} \right).
-  \end{equation*}
-  With this, the integral~\eqref{eq:varqintegral} becomes
-  \begin{align*}
-    \var(Q_i) &= \frac{1}{\beta^2} \sum_{j \in \Z} j^2 
-    \int_{\frac{j - 1/2}{\beta}}^{\frac{j + 1/2}{\beta}} f(\xi) d\xi \\
-    &= \sum_{j\in \Z} \left( \frac{j}{\beta} \right)^2 \left[ F\left( 
-    { \textstyle
-    \frac{j + 1/2}{\beta} }\right) - F \left( { \textstyle \frac{j - 1/2}{\beta}
-    } \right) \right],
-  \end{align*}
-  where $F(\xi)$ is the cdf\footnote{cumulative distribution function} of
-  $E_{i-1}$. As $\beta$ goes to infinity, this sum converges to a
-  Riemann-Stieltjes integral:
-  \begin{equation*}
-    \var(Q_i) \longrightarrow \int \xi^2 dF(\xi) = \var(E_{i-1}) \quad
-    \text{as $\beta \goesto \infty$.}
-  \end{equation*}
-  \qed
+  % [Marius] This is no longer needed, since we use the more general lemma that
+  % gives the upper bound on the quantization error for all lattices.
+%  \section{Proof of Lemma~\ref{lem:qvarconvergence}}
+%  \label{app:lemma1proof}
+%
+%  Since all involved distributions are symmetric, $\E[Q_i] = 0$.  Writing $Q_i$
+%  as a function of $E_{i-1}$, we have
+%  \begin{equation}
+%    \var(Q_i) = \E[Q_i^2] = \int_{-\infty}^\infty Q_i(\xi)^2 f(\xi) d\xi,
+%    \label{eq:varqintegral}
+%  \end{equation}
+%  %\begin{align}
+%  %  \var(Q_i) &= \E[Q_i^2] \nonumber\\
+%  %  &= \int_{-\infty}^\infty Q_i(\xi)^2 f(\xi) d\xi,
+%  %  \label{eq:varqintegral}
+%  %\end{align}
+%  where $f(\xi)$ is the pdf\footnote{probability density function} of $E_{i-1}$.
+%  Now, $Q_i(\xi) = j/\beta$ whenever
+%  \begin{equation*}
+%    \xi \in \left[ \frac{j - 1/2}{\beta}, \frac{j + 1/2}{\beta} \right).
+%  \end{equation*}
+%  With this, the integral~\eqref{eq:varqintegral} becomes
+%  \begin{align*}
+%    \var(Q_i) &= \frac{1}{\beta^2} \sum_{j \in \Z} j^2 
+%    \int_{\frac{j - 1/2}{\beta}}^{\frac{j + 1/2}{\beta}} f(\xi) d\xi \\
+%    &= \sum_{j\in \Z} \left( \frac{j}{\beta} \right)^2 \left[ F\left( 
+%    { \textstyle
+%    \frac{j + 1/2}{\beta} }\right) - F \left( { \textstyle \frac{j - 1/2}{\beta}
+%    } \right) \right],
+%  \end{align*}
+%  where $F(\xi)$ is the cdf\footnote{cumulative distribution function} of
+%  $E_{i-1}$. As $\beta$ goes to infinity, this sum converges to a
+%  Riemann-Stieltjes integral:
+%  \begin{equation*}
+%    \var(Q_i) \longrightarrow \int \xi^2 dF(\xi) = \var(E_{i-1}) \quad
+%    \text{as $\beta \goesto \infty$.}
+%  \end{equation*}
+%  \qed
 
   
   \section{Proof of Ziv's Lower Bound (Lemma~\ref{lem:zivbound})}
