@@ -28,6 +28,12 @@ Hence no matter what the strategy in the first $n-1$ channel uses was, we can
 get full advantage of the last channel use using uncoded transmission.
 
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION: HYBRID TRANSMISSION SCHEME
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Hybrid Transmission Scheme}\label{sec:hybridscheme}
 
 The hybrid transmission scheme at the heart of this chapter is illustrated in
@@ -76,240 +82,15 @@ can improve the asymptotic performance.
 \secref{genbwexp} discusses the case of general bandwidth expansion, where
 $k$~source symbols are encoded into $n$~channel inputs with $1 < k < n$. 
 
-\subsection{Historical Remarks}
-
-Schemes similar to the one proposed here have been considered before. Indeed,
-one of the first schemes to transmit an analog source across two uses of a
-Gaussian channel was suggested by Shannon~\cite{Shannon1949}. Notice its
-resemblance to the constellation studied here, shown in
-Figure~\ref{fig:shannoncomparison}.
-\begin{figure}
-  \centerline{\subfloat[Shannon's original proposition.]{\input{figures/shannonline.tex_t}}
-  \hfil
-  \subfloat[Mapping proposed in this paper
-  (for~$n=2$).]{\input{figures/ourconstellation.tex_t}} }% end centerline
-  \caption{A minimum-delay source-channel code for $n=2$ can be visualized as a
-  curve in $\R^2$ parametrized by the source. Here we compare the mapping
-  presented in this chapter (right) to Shannon's original suggestion (left).}
-  \label{fig:shannoncomparison}
-\end{figure}
-
-After Shannon, Wozencraft and Jacobs~\cite{WozencraftJ1965} were among the first
-to study source-channel mappings as curves in $n$-dimensional space.
-Ziv~\cite{Ziv1970} found important theoretical limitations of such mappings.
-Much of the later work is due to Ramstad and his coauthors
-(see~\cite{Ramstad2002}, \cite{FloorR2006}, \cite{CowardR2000,CowardR2000a},
-\cite{WernerssonSR2007}, \cite{HeklandFR2009}). A proof that the performance of
-minimal-delay codes is strictly smaller than that of codes with unrestricted
-delay when $n>1$ was given in 2008 by Ingber et al.~\cite{IngberLZF2008}.
-
-For $n=2$, the presented scheme is almost identical to the HSQLC scheme by
-Coward~\cite{Coward2001}, which uses a numerically optimized quantizer,
-transmitter and receiver to minimize the mean-squared error (MSE) for finite
-values of the SNR. Coward correctly conjectured that the right strategy for $n >
-2$ would be to repeatedly quantize the quantization error from the previous
-step, which is exactly what we do here.
-
-Another closely related communication scheme is the \emph{shift-map} scheme due
-to Chen and Wornell~\cite{ChenW1998}.  Vaishampayan and
-Costa~\cite{VaishampayanC2003} showed in their analysis that it achieves the
-scaling exponent $n-\e$ for any $\e > 0$ if the relevant parameters are chosen
-correctly as a function of the SNR. Up to rotation and a different constellation
-shaping, the shift-map scheme is in fact virtually identical to the one
-presented here, a fact that was pointed out recently by Taherzadeh and
-Khandani~\cite{TaherzadehK2008}. In their own paper they develop a scheme that
-achieves the optimal scaling exponent exactly and is in addition robust to SNR
-estimation errors; their scheme, however, is based on rearranging the digits of
-the binary expansion of the source and is thus quite different from the one
-presented here.
-
-Shamai, Verd\'u and Zamir~\cite{ShamaiVZ1998} used Wyner-Ziv coding to extend an
-existing analog system with a digital code when additional bandwidth is
-available. Mittal and Phamdo~\cite{MittalP2002} (see also the paper by Skoglund,
-Phamdo and Alajaji~\cite{SkoglundPA2002}) split up the source into a quantized
-part and a quantization error, much like we do here, but they use a
-separation-based code (or ``tandem'' code) to transmit the quantization symbols.
-Reznic et al.~\cite{ReznicFZ2006} use both quantization and Wyner-Ziv coding,
-and their scheme includes Shamai et al.\ and Mittal \& Phamdo as extreme cases.
-All three schemes, however, use long block codes for the digital phase and incur
-correspondingly large delays, so they are not directly comparable with minimum
-delay schemes.
 
 
 
 
-\section{Lattice Quantization Basics}\label{sec:latquantbasics}
 
-This section contains the very basics on lattices and lattice quantization
-needed in the remainer of the chapter. For a comprehensive treatment of lattices
-and/or quantization the reader is referred to the books by Conway and
-Sloane~\cite{ConwayS1988} and by Gersho and Gray~\cite{GershoG1992}.
 
-\begin{definition}
-  An $n$-dimensional \emph{lattice} $\Lambda$ is a discrete set of vectors
-  (points) in~$\R^n$ such that for any $\x$, $\y \in \Lambda$, $\x + \y \in
-  \Lambda$. A sublattice of~$\Lambda$ is a subset $\Lambda' \subseteq \Lambda$
-  that is itself a lattice. 
-\end{definition}
-
-\begin{example}
-  \label{ex:scalarlattice}
-  In~$\R$ there exists only a single lattice (up to scaling), the scalar
-  lattice~$\Z$. Two examples of lattices in~$\R^2$ are displayed in
-  \figref{r2lattices}.
-\end{example}
-\begin{figure}[tbp]
-  \centerline{%
-  \subfloat[Rectangular lattice.]{%
-  \label{fig:rectlattice}\input{figures/rectlattice.tex_t}}%
-  \hfil
-  \subfloat[Hexagonal lattice.]{%
-  \label{fig:hexlattice}\input{figures/hexlattice.tex_t}}%
-  }
-  \caption{Two lattices in~$\R^2$ and the corresponding partition into Voronoi
-  regions. The Voronoi region of a particular point is shaded.}
-  \label{fig:r2lattices}
-\end{figure}
-\begin{proposition}
-  \label{prop:intsublattice}
-  If $\Lambda$ is a lattice and $\beta \in \NN$, then $\beta \Lambda$ is a
-  sublattice of~$\Lambda$. (The set $\beta \Lambda$ is defined as $\{ \beta \x :
-  \x \in \Lambda\}$.)
-\end{proposition}
-
-\begin{proof}
-  By definition of a lattice, $\beta \Lambda \subseteq \Lambda$. Moreover, if
-  $\x, \y \in \beta \Lambda$, then $\x = \beta \x'$ and $\y = \beta \y'$ with
-  $\x', \y' \in \Lambda$. It follows that $\x + \y = \beta (\x' + \y') \in \beta
-  \Lambda$, so $\beta\Lambda$ is itself a lattice.
-\end{proof}
-
-\begin{definition}
-  The \emph{Voronoi region} $V(\x)$ of a lattice point $\x \in \Lambda$ is
-  defined as
-  \begin{equation*}
-    V(\x) = \{\y \in \R^n : \|\y - \x\| \le \|\y - \z\|, \forall \z \in \Lambda,
-    \z \ne \x \},
-  \end{equation*}
-  \ie, $V(\x)$ is the set of points in $\R^n$ that are closer to $\x$ than to
-  any other lattice point.
-\end{definition}
-See \figref{r2lattices} for an illustration of the Voronoi region.
-
-\begin{definition}
-  The \emph{packing radius} $\rho$ of a lattice is half the minimal distance
-  between lattice points. Thus, $\rho$~is the largest radius of spheres that can
-  be packed in~$\R^n$ by placing them at the lattice points.
-\end{definition}
-
-\begin{definition}
-  The \emph{covering radius}~$R$ of a lattice~$\Lambda$ is the least upper
-  bound for the distance from any point of~$\R^n$ to the closest point $\x \in
-  \Lambda$. Thus, spheres of radius~$\rho$ around each lattice point will
-  cover~$\R^n$, and no smaller radius will do.~\cite{ConwayS1988}
-\end{definition}
-
-The packing radius and the covering radius are illustrated on
-\figref{packingcoveringr} for a hexagonal lattice.
-\begin{figure}[tbp]
-  \begin{center}
-    \input{figures/packingcoveringr.tex_t}
-  \end{center}
-  \caption{The packing radius~$\rho$ and the covering radius~$R$ for the
-  rectangular lattice and the hexagonal lattice.}
-  \label{fig:packingcoveringr}
-\end{figure}
-
-\begin{definition}
-  \label{def:latticequant}
-  A \emph{lattice quantizer} $\QL : \R^n \ra \Lambda$ maps each point
-  of~$\R^n$ to the closest lattice point. Thus, for any $\x \in \R^n$, $\y \in
-  \Lambda$,
-  \begin{equation*}
-    \| \x - \QL(\x) \| \le \|\x - \y\|.
-  \end{equation*}
-\end{definition}
-
-\begin{remark}
-  \label{rem:latticequant}
-  \defref{latticequant} does not unambiguously specify $\QL(\x)$ if $\x$~lies on
-  the boundary between the Voronoi regions of two adjacent lattice points. Since
-  quantization is only applied to continuous-valued random variables in this
-  chapter, however, the probability of this happening is zero, and this
-  ambiguity can be left alone without causing any trouble.
-\end{remark}
-
-\begin{example}
-  Let $\Lambda = \Z / \beta$ for some $\beta \in \NN$. The associated
-  quantizer~$\QL$ maps each real number to the closest multiple of $1/\beta$.
-\end{example}
-
-The following simple property will be useful later.
-\begin{proposition}
-  Let $\Lambda = \Z / \beta$ with $\beta \in \NN$ and let $x \in [-1/2, 1/2]$.
-  Then
-  \begin{equation*}
-    \QL(x) \in
-    \begin{cases}
-      \left\{ -\frac{\beta/2}{\beta}, -\frac{\beta/2 - 1}{\beta}, \dots, 
-      -\frac{1}{\beta}, 0, \frac1\beta, \dots, \frac{\beta/2}{\beta} \right\}
-      & \text{if $\beta$ is even} \\
-      \left\{ -\frac{(\beta - 1)/2}{\beta}, -\frac{(\beta-1)/2 - 1}{\beta}, 
-      \dots, -\frac1\beta, 0, \frac1\beta, \dots, \frac{(\beta-1)/2}{\beta}
-      \right\}
-      & \text{if $\beta$ is odd}.
-    \end{cases}
-  \end{equation*}
-\end{proposition}
-
-\begin{proof}
-  The proof is left as an exercise for the reviewers.
-\end{proof}
-
-The next lemma is useful to bound the transmit power when transmitting a
-quantized random vector.
-\begin{lemma}
-  \label{lem:latquantvar}
-  Let $\X$ be a random vector with probability density function $\fXv(\x)$,
-  zero-mean, and covariance matrix $K_{\X}$ satisfying $\Tr K_{\X} = \sq <
-  \infty$. Let $\Y = \QL(\X)$. Then $Tr K_{\Y} \le \sq + 2R\sigma + R^2$, 
-  where $R$~is the covering radius of~$\Lambda$.
-\end{lemma}
-
-\begin{proof}
-  First write $\Tr K_{\Y} = \E[\|\Y\|^2] = \E[\|\QL(\X)\|^2]$. Next,
-  \begin{equation*}
-    \E[\|\QL(\X)\|^2] = \int_{R^n} \|\QL(\x)\|^2 \fXv(\x) d\x
-    = \sum_{\p \in \Lambda} \|\p\|^2 \int_{V(\p)} \fXv(\x) d\x.
-  \end{equation*}
-  By definition of the covering radius, $\|\p\| \le \|\x\| + R$ for all $\x \in
-  V(\p)$. Thus,
-  \begin{align*}
-    \E[\|\QL(\X)\|^2] &\le \sum_{\p \in \Lambda} \int_{V(\p)} (\|\x\| + R)^2
-    \fXv(\x) d\x \\
-    &= \int_{R^n} (\|\x\| + R)^2 \fXv(\x) d\x.
-  \end{align*}
-  By assumption, $\int_{\R^n} \|\x\|^2 \fXv(\x) d\x = \sq$. Moreover, by the
-  positivity of the variance, $\E[\xi] \le (\E[\xi^2])^{1/2}$, and so
-  $\int_{\R^n} \|\x\| \fXv(\x) d\x \le \sigma$. Applying this to the above
-  yields
-  \begin{equation*}
-    \E[\|\QL(\X)\|^2] \le \sq + 2R\sigma + R^2,
-  \end{equation*}
-  thus completing the proof.
-\end{proof}
-
-\begin{notebox}
-  Todo: Add a general bound on the quantization error variance.
-\end{notebox}
-
-\begin{example}
-  Let $X$ be a scalar zero-mean random variable of variance~$\sq$ and let
-  $\Lambda = \Z / \beta$, for some $\beta > 0$. The covering radius of this
-  lattice is $R = 1/\beta$, so $\E[\QL(X)^2] \le \sq + 2 \beta^{-1} \sigma +
-  \beta^{-2}$.
-\end{example}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION: SCALAR QUANTIZER
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Scalar Quantizer}\label{sec:scalarquant}
 
@@ -326,13 +107,55 @@ To encode a single source letter $S$ into $n$~channel input symbols $X_1$,
 \dots, $X_n$, we proceed as follows. Define $E_0 = S$ and recursively compute
 the pairs $(Q_i, E_i)$ as
 \begin{align}
-  Q_i &= \QL(E_{i-1}) \nonumber \\
+  Q_i &= \frac{1}{\beta}\Int(\beta E_{i-1}) \nonumber \\
   E_i &= \beta (E_{i-1} - Q_i) \label{eq:QEdef}
 \end{align}
-for $i = 1$, \dots, $n-1$ where $\Lambda = \Z/\beta$. The parameter $\beta \in
-\N$ determines the quantization resolution, the larger~$\beta$ the finer the
+for $i = 1$, \dots, $n-1$ where $\Int(x)$ is the unique integer~$i$ satisfying
+\begin{equation*}
+  x \in \left[i - \frac12, i +\frac12\right).
+\end{equation*}
+The parameter $\beta \in
+\NN$ determines the quantization resolution; the larger~$\beta$ the finer the
 quantization. Following the argument at the beginning of this chapter,
-$\beta$~is assumed to grow with the~\snr.
+$\beta$~is assumed to grow with the~\snr. The following result will be useful in
+the sequel.
+
+\begin{lemma}
+  \label{lem:Qvarbound}
+  The variance of $Q_i$ satisfies
+  \begin{equation*}
+    \Var Q_i \le \Var E_{i-1} + \frac{\sqrt{\Var E_{i-1}}}{\beta} +
+    \frac{1}{\beta^2}
+  \end{equation*}
+  for all $i = 1$, \dots, $n-1$. 
+\end{lemma}
+
+\begin{proof}
+  Let $f(\xi)$ be the probability density function of~$E_{i-1}$. Then
+  \begin{align*}
+    \Var Q_i &= \frac{1}{\beta^2} \int_{\R} \Int(\beta E_{i-1})^2 f(\xi) d\xi \\
+    &= \frac{1}{\beta^2} \sum_{i\in\Z} i^2
+    \int_{\frac{i-1/2}{\beta}}^{\frac{i+1/2}{\beta}} f(\xi) d\xi.
+  \end{align*}
+  Whenever $\xi \in [(i-1/2)/\beta, (i+1/2)/\beta)$, $|i| \le \beta|\xi| + 1/2$,
+  so
+  \begin{align*}
+    \Var Q_i &\le \frac{1}{\beta^2} \sum_{i\in \Z}
+    \int_{\frac{i-1/2}{\beta}}^{\frac{i+1/2}{\beta}} (\beta|\xi| + 1/2)^2 
+    f(\xi) d\xi \\
+    &= \frac{1}{\beta^2} \int_{\R} (\beta|\xi| + 1/2)^2 f(\xi) d\xi \\
+    &= \Var E_{i-1} + \frac{1}{4\beta^2} + \frac{1}{\beta} \int_{\R} |\xi|
+    f(\xi)d\xi.
+  \end{align*}
+  To bound the last integral, use the fact that $\E[|E_{i-1}|] \le \sqrt{\Var
+  E_{i-1}}$ to finally obtain
+  \begin{equation*}
+    \Var Q_i \le \Var E_{i-1} + \frac{\sqrt{\Var E_{i-1}}}{\beta} +
+    \frac{1}{\beta^2}.
+  \end{equation*}
+\end{proof}
+
+
 
 \begin{proposition}
   \label{prop:qeproperties}
@@ -344,6 +167,9 @@ $\beta$~is assumed to grow with the~\snr.
       S = \sum_{i=1}^{n-1} \frac{1}{\beta^{i-1}} Q_i + \frac{1}{\beta^{n-1}}
       E_{n-1}.
     \end{equation}
+
+  \item There exists a constant~$\gamma > 0$ such that $\Var Q_i \le \gamma^2$
+    and $\Var E_i \le \gamma^2$ for all~$i$, regardless of the value of~$\beta$.
 \end{enumerate}
 \end{proposition}
 
@@ -356,22 +182,28 @@ $\beta$~is assumed to grow with the~\snr.
       E_{i-1} = \frac{1}{\beta} E_i + Q_i.
     \end{equation}
     Repeated use of this relationship leads to the given expression for~$S$. 
+
+  \item First, $\Var E_0 = \Var S = \ssq$, which clearly doesn't depend
+    on~$\beta$. For $i = 1$, \ldots, $n-1$, $E_i \in [-1/2, 1/2)$ and so its
+    variance is upper bounded as well. Finally, since $\beta \ge 1$ and by
+    \lemref{Qvarbound}, 
+    \begin{align*}
+      \Var Q_i &\le \Var E_{i-1} + \sqrt{\Var E_{i-1}} + 1,
+    \end{align*}
+    which completes the proof.
   \end{enumerate}
 \end{proof}
 
-We determine the channel input symbols $X_i$ from the $Q_i$ and from $E_{n-1}$
+The channel input symbols $X_i$ are determined from the $Q_i$ and from $E_{n-1}$
 according to 
 \begin{align}
-  X_i &= \sqrt{\frac{P}{\ssq + \delta}} Q_i \quad
+  X_i &= \sqrt{P/\gamma} Q_i \quad
   \text{for $i = 1$, \dots, $n-1$ and} \nonumber\\
-  X_n &= \sqrt{\frac{P}{\seq}} E_{n-1},
+  X_n &= \sqrt{P/\gamma} E_{n-1}.
   \label{eq:Xdef}
 \end{align}
-where $\seq = \var(E_{n-1})$.  Following Proposition~\ref{prop:qeproperties},
-this ensures that $\E[X_i^2] \le P$ for all~$i$ and for $\beta >
-\beta_0(\delta)$.  Since we are interested in the large SNR regime and since we
-have defined $\beta$ to grow with~$P$, we can thus assume for the remainder that
-the power constraint is satisfied. 
+Following Proposition~\ref{prop:qeproperties}, this ensures that $\E[X_i^2] \le
+P$ for all~$i$. 
 
 
 \subsection{Lower Bound on the Squared Error}\label{sec:scalarlowerbound}
@@ -379,10 +211,19 @@ the power constraint is satisfied.
 The goal of this section is to lower bound the scaling of the mean squared error
 of the transmission strategy described in Section~\ref{sec:commscheme}.
 
-Throughout this section we assume $\beta^2 = \snr^{1-\e}$, where $\e = \e(\snr)$
-is a positive function of~$\snr$. This results in no loss of generality, since
-for an arbitrary positive function~$f$ we can set $\e(\snr) =
-1-\log(f(\snr))/\log\snr$ to get $\beta^2(\snr) = f(\snr)$.
+Throughout this section we assume $\beta = \lceil \snr^{(1-\e)/2}\rceil$, where
+$\e = \e(\snr)$ is a positive function of~$\snr$. This results in no loss of
+generality, since for an arbitrary positive function~$f$ we can set $\e(\snr) =
+1-2 \log(f(\snr))/\log\snr$ to get $\beta(\snr) = \lceil f(\snr) \rceil$.
+Writing $\beta$ in this form will slightly simplify the mathematical derivations
+to follow. Note that we can bound $\beta$ by $\snr^{(1-\e)/2} \le \beta \le
+\snr^{(1-\e)/2} + 1$. For any $n > 0$ there exist thus a constant~$c$ such that
+for large values of~\snr
+\begin{equation}
+  \label{eq:betabound}
+  \snr^{n(1-\e)/2} \le \beta^n \le c \snr^{n(1-\e)/2},
+\end{equation}
+a property that will prove useful in the derivations to come.
 
 Note that by~\eqref{eq:QEdef}, the $Q_i$ are completely determined by~$S$.
 In this section, with a slight abuse of notation, we therefore write $Q_i(s)$ to
@@ -394,7 +235,6 @@ the proofs of the lemmas that follow.
 
 \begin{lemma}
   \label{lem:zivbound}
-  \label{LEM:ZIVBOUND}
   Consider a communication system where a con\-tin\-u\-ous-valued source~$S$ is
   encoded into an $n$-dimensional vector $\X(S)$, sent across $n$~independent
   parallel AWGN channels with noise variance~$\szq$, and decoded at the receiver
@@ -509,7 +349,7 @@ choose~$\e(\snr)$ optimally will be the subject of Theorem~\ref{thm:scalinglb}.
     ).
   \end{equation*}
   Replacing $\beta^2 = \snr^{1-\e}$ and using the fact that $Q(x)$ converges to
-  $\exp\{-x^2/2\}/\sqrt{2\pi}x$ for $x \goesto \infty$
+  $e^{-x^2/2}/\sqrt{2\pi}x$ for $x \goesto \infty$
   (cf.~\cite{AbramowitzS1964}) we obtain
   \begin{equation*}
     \mse \ge c \snr^{-1 + \e/2} \exp\{-\snr^\e/k\}
@@ -575,9 +415,12 @@ tight.
 
 %
 \begin{proof}[Proof of Theorem~\ref{thm:scalinglb}]
-  For notational symplicity define $l_1(\snr, \e) = \snr^{-n+(n-1)\e}$ and $l_2(\snr,\e) = \snr^{-1+\e/2}
-  \exp\{-\snr^\e/k\}$. By Lemmata~\ref{lem:lowerbound1}
-  and~\ref{lem:lowerbound2},
+  For notational symplicity define
+  \begin{align*}
+    l_1(\snr, \e) &= \snr^{-n+(n-1)\e} \quad\text{and} \\
+    l_2(\snr,\e) &= \snr^{-1+\e/2} \exp\{-\snr^\e/k\}.
+  \end{align*}
+  By Lemmata~\ref{lem:lowerbound1} and~\ref{lem:lowerbound2},
   \begin{equation*}
     \mse \in \Omega\big(\max \left( l_1(\snr,\e), l_2(\snr,\e) \right) \big).
   \end{equation*}
@@ -784,6 +627,248 @@ where $\Eqi \deq \E[(Q_i - \Qh_i)^2]$ and $\Ee \deq \E[(E_{n-1} -
 \end{proof}
 
 
+\subsubsection{Optimizing the Quantization Resolution}
+
+Recall the formula for the overall error
+\begin{equation*}
+  \E[(S-\Sh)^2] = \sum_{i=1}^{n-1} \frac{1}{\beta^{2(i-1)}} \Eqi +
+  \frac{1}{\beta^{2(n-1)}} \Ee.
+\end{equation*}
+According to Lemma~\ref{lem:eqbound}, $\Eqi$ decreases exponentially
+when $\snr/\beta^2$ goes to infinity. This happens for increasing \snr\ if we
+set \eg
+\begin{equation*}
+  \beta^2 = \snr^{1-\e}
+\end{equation*}
+for some $\e > 0$, in which case $\Eqi \in O\left(\exp(-k \snr^\e) \right)$.
+From this and Lemma~\ref{lem:eedecay}, the overall error satisfies
+\begin{equation}
+  \label{eq:overallO}
+  \E[(S-\Sh)^2] \in O(\snr^{-(n - \e')}),
+\end{equation}
+where $\e' = (n-1)\e$ can be made as small as desired. The scaling exponent for
+a fixed $\e$ satisfies therefore
+\begin{equation}
+  \label{eq:sdrepsilon}
+  \limtoinf{\snr} \frac{\log\sdr}{\log\snr} \ge
+  \limtoinf{\snr} \frac{\log \ssq + (n - \e') \log\snr}{\log \snr} = n - \e'. 
+\end{equation}
+
+Note that the choice of $\e$ represents a tradeoff: for small $\e$ the error due
+to the ``discrete'' part vanishes only slowly, but the scaling exponent in the
+limit is larger. For larger $\e$, $\Eq$ vanishes quickly but the resulting
+exponent is smaller. In the remainder of this section we show how we can choose
+$\e$ as a function of~$\snr$ to achieve the optimal scaling. 
+
+Let now
+\begin{equation}
+  \label{eq:esnrdecay}
+  \e = \e(\snr) = \frac{\log(n \log\snr / k)}{\log\snr},
+\end{equation}
+where $k$ is the constant indicating the decay of $\Eqi$ in~\eqref{eq:eqidecay}.
+With this choice of $\e$,
+\begin{align*}
+  \Eqi &\in O\left( \exp\left( - k \snr^\e \right) \right) \\
+ % &= O\left( \exp\left( - \exp\left( \e \log \snr \right) \right) \right) \\
+ &= O(\snr^{-n}),
+\end{align*}
+hence the overall error is still dominated as in~\eqref{eq:overallO},
+and~\eqref{eq:sdrepsilon} still applies. Inserting~\eqref{eq:esnrdecay}
+in~\eqref{eq:sdrepsilon}, we find
+\begin{align*}
+  \lefteqn{ \limtoinf{\snr} \frac{\log\ssq + (n-(n-1)\e) \log\snr}{\log\snr} }
+  \quad \\
+  &= \limtoinf{\snr} \frac{\log\ssq + n\log\snr - (n-1)\log(n\log\snr/k)}
+  {\log\snr} \\
+  &= n,
+\end{align*}
+which is indeed the optimal scaling exponent.
+
+\begin{remark}
+  While the limiting \emph{exponent} above is indeed the optimal one, the SDR
+  scales as $\snr^n (\log\snr)^{-(n-1)}$  rather than the theoretic optimum
+  $\snr^n$.  This means that the \emph{gap} (in dB) between the theoretically
+  optimal $\sdr$ value and our lower bound grows to infinity as $\snr \ra
+  \infty$.  According to a result in~\cite{TaherzadehK2008}, however, no scheme
+  combining quantization and uncoded transmission as done here can achieve a
+  better SDR scaling than $\snr^n (\log\snr)^{-(n-1)}$.  In the scaling sense,
+  our bound is therefore tight.
+\end{remark}
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION: GENERAL BANDWIDTH EXPANSION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{General Bandwidth Expansion}\label{sec:genbwexp}
+
+\begin{notebox}
+  Write introductory paragraphs here.
+\end{notebox}
+
+For simplicity it is first assumed that the support of the source is limited to
+the interval~$[-1/2, 1/2]$; the general case will be treated afterwards.
+\begin{notebox}
+  Any source with bounded support can just be scaled down to lie in this
+  interval. This just changes the \sdr\ by a constant and doesn't influence the
+  scaling.
+\end{notebox}
+
+
+\subsection{Transmission Strategy}
+
+The strategy used to encode the source symbols $S_1$, \dots, $S_k$ into the
+channel inputs $X_1$, \dots, $X_n$ is displayed schematically on
+\figref{knencoding} for~$k=3$ and~$n=5$. 
+\begin{figure}[tbp]
+  \begin{center}
+    \input{figures/knencoding.tex_t}
+  \end{center}
+  \caption{Schematic display of the transmission strategy of \secref{genbwexp}
+  for~$k = 3$ and~$n=5$. The boxes labeled~\textsf{Q} are uniform scalar
+  quantizers with resolution~$\beta$ as described in~\eqref{eq:QEdefkn}.}
+  \label{fig:knencoding}
+\end{figure}
+The encoder consists of $k$~parallel scalar encoders that encode each~$S_i$ into
+$n-k$~quantizer outputs $Q_{i,1}$, \dots, $Q_{i,n-k}$ and a quantization
+error~$E_{j,n-k}$, just like for the case~$k=1$. The quantizer outputs at each
+level are then combined into a single value $Q_{\tot,j}$
+(cf.~\figref{knencoding}). More precisely, letting $i \in \{1, \dots, k\}$ be
+the index of the source symbols, the encoder defines $E_{i,0} = S_i$ for
+each~$i$ and computes
+\begin{align}
+  Q_{i,j} &= \frac{1}{\beta} \Int(\beta E_{i,j-1}) \quad\text{and} \nonumber \\
+  E_{i,j} &= \beta(E_{i,j-1} - Q_{i,j}). \label{eq:QEdefkn}
+\end{align}
+(This is exactly the same as~\eqref{eq:QEdef}, except for the addition of the
+subscript~$i$.) For each quantization level~$j = 1$, \dots, $n-k$, the
+$i$~parallel quantizer outputs are combined into
+\begin{equation}
+  \label{eq:Qtot}
+  Q_{\tot,j} = \sum_{i=1}^k \frac{1}{\beta^{i-1}} Q_{i,j}.
+\end{equation}
+Since each $Q_{i,j}$ is a multiple of $1/\beta$ and is assumed to lie in $[-1/2,
+1/2]$, the mapping from the $Q_{i,j}$ into~$Q_{\tot,j}$ is invertible, and the
+inverse can be recursively computed as
+\begin{align}
+  Q_{k,j} &= \beta^{k-1} Q_{\tot,j} \bmod 1 \nonumber \\
+  Q_{k-i,j} &= \beta^{k-1-i} Q_{\tot,j} - \sum_{l = 1}^i \beta^{-l} Q_{k - i +
+  l} \bmod 1, \quad\text{$i = 1$, \dots, $k-1$,} 
+  \label{eq:Qtotinv}
+\end{align}
+where $x \bmod 1 \deq x - \Int(x)$.
+
+\propref{qeproperties} from \secref{scalarquant} applies here as well, 
+
+
+\subsection{Decoder}
+
+Just like when $k=1$, the decoder first computes separate estimates~$\Qh_{i,j}$
+and~$E_{i,n-k}$ and then combines them into the estimates~$\Sh_i$. The
+$\Qh_{i,j}$ are obtained using a maximum likelihood (minimum distance) estimate
+of~$Q_{\tot,j}$ and then applying~\eqref{eq:Qtotinv}. The estimate of
+$Q_{\tot,j}$ is
+\begin{equation*}
+  \Qh_{\tot,j} = \frac{1}{\beta^k} \arg\min_{l\in\Z}
+  \left| \frac{l\sqrt P}{\gamma \beta^k} - Y_j \right|,
+\end{equation*}
+and the quantization errors~$E_{i,n-k}$ are estimated as
+\begin{equation*}
+  E_{i,n-k} = \frac{\E[E_{i,n-k} Y_{n-k+i}]}{\E[Y_{n-k+i}^2]}.
+\end{equation*}
+Using~\eqref{eq:unwraprec} and~\eqref{eq:Qtotinv}, the final estimate for $i =
+1$, \dots, $k$ is
+\begin{equation*}
+  \Sh_i = \sum_{j=1}^{n-k} \frac{1}{\beta^{j-1}} \Qh_{i,j} +
+  \frac{1}{\beta^{n-k}} \Eh_{i,n-k}.
+\end{equation*}
+
+
+\subsection{Error Analysis}
+
+As in the case~$k=1$, the overall mean squared error can be written as
+\begin{equation*}
+  \mse = \sum_{j=1}^{n-k} \frac{1}{\beta^{2(j-1)}} \Err_{Q,i,j} + 
+  \frac{1}{\beta^{2(n-k)}} \Err_{E,i}
+\end{equation*}
+where $\Err_{Q,i,j} \deq \E[(\Qh_{i,j} - Q_{i,j})^2]$ and $\Err_{E,i} \deq
+\E[(\Eh_{i,n-k} - E_{i,n-k})^2]$. The behavior of the~$\Err_{E,i}$ is exactly
+the same as when~$k=1$; the following lemma is therefore given without proof.
+
+\begin{lemma}
+  \label{lem:Eedecayk}
+  The estimation error of the $E_{i,n-k}$ satisfies
+  \begin{equation*}
+    \Err_{E,i} \in O(\snr^{-1})
+  \end{equation*}
+  for all $i = 1$, \dots, $k$. 
+\end{lemma}
+
+The main difference to the case~$k=1$ concerns the behavior of~$\Err_{Q,i,j}$.
+Because $k$~quantizer outputs are packed into a single channel input as
+described by~\eqref{eq:Qtot}, $\beta^2$ is raised to the exponent~$k$ in the
+following lemma (compare with \lemref{eqbound}).
+
+\begin{lemma}
+  \label{lem:eqboundk}
+  For each $i = 1$, \dots, $k$ and for each $j = 1$, \dots, $n-k$,
+  \begin{equation*}
+    \Err_{Q,i,j} \in O(\exp\{-c \snr/\beta^{2k} \})
+  \end{equation*}
+  where~$c > 0$ is a constant.
+\end{lemma}
+
+\begin{proof}
+  For any $i$ and~$j$, $| \Qh_{i,j} - Q_{i,j}| \ne 0$ only if $|Z_j| \ge
+  \sqrt{P} / 2 \gamma \beta^k$. Furthermore, since $\Qh_{i,j}, Q_{i,j} \in
+  [-1/2, 1/2)$, $|\Qh_{i,j} - Q_{i,j}| \le 1$. The error~$\Err_{Q,i,j}$ can thus
+  be upper bounded as
+  \begin{align*}
+    \E[(\Qh_{i,j} - Q_{i,j})^2] &\le \Pr\left[|Z_j| \ge \frac{\sqrt{P}}{2 \gamma
+    \beta^k} \right] \\
+    &= 2 Q\left( \frac{\sqrt\snr}{2\gamma\beta^k} \right) \\
+    &\le \exp\{-c \snr / \beta^{2k} \}
+  \end{align*}
+  with $c = 1/8\gamma$.
+\end{proof}
+
+
+Let now $\beta = \lceil \snr^{(1-\e)/2k} \rceil$. Then $\beta^{2k} \in
+O(\snr^{1-\e})$, and the bound from \lemref{eqboundk} becomes
+\begin{equation}
+  \label{eq:qboundkepsilon}
+  \Err_{Q,i,j} \in O(\exp\{-c \snr^\e\})
+\end{equation}
+(where $c > 0$ is not necessarily the same constant as in \lemref{eqboundk}).
+Moreover, using \lemref{Eedecayk},
+\begin{equation}
+  \label{eq:Eeboundkepsilon}
+  \frac{\Err_{E,i}}{\beta^{2(n-k)}} \in O(\snr^{\frac{n}{k} - \e
+  \frac{n-k}{k}}).
+\end{equation}
+
+The final step is to choose $\e$ as a function of~$\snr$ (again just as
+for~$k=1$). Let
+\begin{equation*}
+  \e(\snr) = \frac{\log(n \log\snr / c)}{\log\snr}.
+\end{equation*}
+Inserting this in~\eqref{eq:qboundkepsilon} and~\eqref{eq:Eeboundkepsilon}, 
+\begin{align*}
+  \Err_{Q,i,j} &\in O(\snr^{-n}) \quad\text{and} \\
+  \Err_{E,i} &\in O(\snr^{-n/k} (\log\snr)^{(n-k)/k}).
+\end{align*}
+The overall MSE scales thus as
+\begin{equation*}
+  \mse \in O(\snr^{-n/k} (\log\snr)^{(n-k)/k}).
+\end{equation*}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION: LATTICE QUANTIZERS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Lattice Quantizers}\label{sec:latticequant}
 
@@ -794,9 +879,176 @@ quantizers.
 
 \subsection{Lattice Basics}
 
-For an extremely comprehensive treatment of lattices, the reader is referred to
-the book by Conway and Sloane~\cite{ConwayS1988}. Hereafter, only the
-definitions relevant to the problem at hand are given.
+This section contains the very basics on lattices and lattice quantization
+needed in the remainer of the chapter. For a comprehensive treatment of lattices
+and/or quantization the reader is referred to the books by Conway and
+Sloane~\cite{ConwayS1988} and by Gersho and Gray~\cite{GershoG1992}.
+
+\begin{definition}
+  An $n$-dimensional \emph{lattice} $\Lambda$ is a discrete set of vectors
+  (points) in~$\R^n$ such that for any $\x$, $\y \in \Lambda$, $\x + \y \in
+  \Lambda$. A sublattice of~$\Lambda$ is a subset $\Lambda' \subseteq \Lambda$
+  that is itself a lattice. 
+\end{definition}
+
+\begin{example}
+  \label{ex:scalarlattice}
+  In~$\R$ there exists only a single lattice (up to scaling), the scalar
+  lattice~$\Z$. Two examples of lattices in~$\R^2$ are displayed in
+  \figref{r2lattices}.
+\end{example}
+\begin{figure}[tbp]
+  \centerline{%
+  \subfloat[Rectangular lattice.]{%
+  \label{fig:rectlattice}\input{figures/rectlattice.tex_t}}%
+  \hfil
+  \subfloat[Hexagonal lattice.]{%
+  \label{fig:hexlattice}\input{figures/hexlattice.tex_t}}%
+  }
+  \caption{Two lattices in~$\R^2$ and the corresponding partition into Voronoi
+  regions. The Voronoi region of a particular point is shaded.}
+  \label{fig:r2lattices}
+\end{figure}
+\begin{proposition}
+  \label{prop:intsublattice}
+  If $\Lambda$ is a lattice and $\beta \in \NN$, then $\beta \Lambda$ is a
+  sublattice of~$\Lambda$. (The set $\beta \Lambda$ is defined as $\{ \beta \x :
+  \x \in \Lambda\}$.)
+\end{proposition}
+
+\begin{proof}
+  By definition of a lattice, $\beta \Lambda \subseteq \Lambda$. Moreover, if
+  $\x, \y \in \beta \Lambda$, then $\x = \beta \x'$ and $\y = \beta \y'$ with
+  $\x', \y' \in \Lambda$. It follows that $\x + \y = \beta (\x' + \y') \in \beta
+  \Lambda$, so $\beta\Lambda$ is itself a lattice.
+\end{proof}
+
+\begin{definition}
+  The \emph{Voronoi region} $V(\x)$ of a lattice point $\x \in \Lambda$ is
+  defined as
+  \begin{equation*}
+    V(\x) = \{\y \in \R^n : \|\y - \x\| \le \|\y - \z\|, \forall \z \in \Lambda,
+    \z \ne \x \},
+  \end{equation*}
+  \ie, $V(\x)$ is the set of points in $\R^n$ that are closer to $\x$ than to
+  any other lattice point.
+\end{definition}
+See \figref{r2lattices} for an illustration of the Voronoi region.
+
+\begin{definition}
+  The \emph{packing radius} $\rho$ of a lattice is half the minimal distance
+  between lattice points. Thus, $\rho$~is the largest radius of spheres that can
+  be packed in~$\R^n$ by placing them at the lattice points.
+\end{definition}
+
+\begin{definition}
+  The \emph{covering radius}~$R$ of a lattice~$\Lambda$ is the least upper
+  bound for the distance from any point of~$\R^n$ to the closest point $\x \in
+  \Lambda$. Thus, spheres of radius~$\rho$ around each lattice point will
+  cover~$\R^n$, and no smaller radius will do.~\cite{ConwayS1988}
+\end{definition}
+
+The packing radius and the covering radius are illustrated on
+\figref{packingcoveringr} for a hexagonal lattice.
+\begin{figure}[tbp]
+  \begin{center}
+    \input{figures/packingcoveringr.tex_t}
+  \end{center}
+  \caption{The packing radius~$\rho$ and the covering radius~$R$ for the
+  rectangular lattice and the hexagonal lattice.}
+  \label{fig:packingcoveringr}
+\end{figure}
+
+\begin{definition}
+  \label{def:latticequant}
+  A \emph{lattice quantizer} $\QL : \R^n \ra \Lambda$ maps each point
+  of~$\R^n$ to the closest lattice point. Thus, for any $\x \in \R^n$, $\y \in
+  \Lambda$,
+  \begin{equation*}
+    \| \x - \QL(\x) \| \le \|\x - \y\|.
+  \end{equation*}
+\end{definition}
+
+\begin{remark}
+  \label{rem:latticequant}
+  \defref{latticequant} does not unambiguously specify $\QL(\x)$ if $\x$~lies on
+  the boundary between the Voronoi regions of two adjacent lattice points. Since
+  quantization is only applied to continuous-valued random variables in this
+  chapter, however, the probability of this happening is zero, and this
+  ambiguity can be left alone without causing any trouble.
+\end{remark}
+
+\begin{example}
+  Let $\Lambda = \Z / \beta$ for some $\beta \in \NN$. The associated
+  quantizer~$\QL$ maps each real number to the closest multiple of $1/\beta$.
+\end{example}
+
+The following simple property will be useful later.
+\begin{proposition}
+  Let $\Lambda = \Z / \beta$ with $\beta \in \NN$ and let $x \in [-1/2, 1/2]$.
+  Then
+  \begin{equation*}
+    \QL(x) \in
+    \begin{cases}
+      \left\{ -\frac{\beta/2}{\beta}, -\frac{\beta/2 - 1}{\beta}, \dots, 
+      -\frac{1}{\beta}, 0, \frac1\beta, \dots, \frac{\beta/2}{\beta} \right\}
+      & \text{if $\beta$ is even} \\
+      \left\{ -\frac{(\beta - 1)/2}{\beta}, -\frac{(\beta-1)/2 - 1}{\beta}, 
+      \dots, -\frac1\beta, 0, \frac1\beta, \dots, \frac{(\beta-1)/2}{\beta}
+      \right\}
+      & \text{if $\beta$ is odd}.
+    \end{cases}
+  \end{equation*}
+\end{proposition}
+
+\begin{proof}
+  The proof is left as an exercise for the reviewers.
+\end{proof}
+
+The next lemma is useful to bound the transmit power when transmitting a
+quantized random vector.
+\begin{lemma}
+  \label{lem:latquantvar}
+  Let $\X$ be a random vector with probability density function $\fXv(\x)$,
+  zero-mean, and covariance matrix $K_{\X}$ satisfying $\Tr K_{\X} = \sq <
+  \infty$. Let $\Y = \QL(\X)$. Then $Tr K_{\Y} \le \sq + 2R\sigma + R^2$, 
+  where $R$~is the covering radius of~$\Lambda$.
+\end{lemma}
+
+\begin{proof}
+  First write $\Tr K_{\Y} = \E[\|\Y\|^2] = \E[\|\QL(\X)\|^2]$. Next,
+  \begin{equation*}
+    \E[\|\QL(\X)\|^2] = \int_{R^n} \|\QL(\x)\|^2 \fXv(\x) d\x
+    = \sum_{\p \in \Lambda} \|\p\|^2 \int_{V(\p)} \fXv(\x) d\x.
+  \end{equation*}
+  By definition of the covering radius, $\|\p\| \le \|\x\| + R$ for all $\x \in
+  V(\p)$. Thus,
+  \begin{align*}
+    \E[\|\QL(\X)\|^2] &\le \sum_{\p \in \Lambda} \int_{V(\p)} (\|\x\| + R)^2
+    \fXv(\x) d\x \\
+    &= \int_{R^n} (\|\x\| + R)^2 \fXv(\x) d\x.
+  \end{align*}
+  By assumption, $\int_{\R^n} \|\x\|^2 \fXv(\x) d\x = \sq$. Moreover, by the
+  positivity of the variance, $\E[\xi] \le (\E[\xi^2])^{1/2}$, and so
+  $\int_{\R^n} \|\x\| \fXv(\x) d\x \le \sigma$. Applying this to the above
+  yields
+  \begin{equation*}
+    \E[\|\QL(\X)\|^2] \le \sq + 2R\sigma + R^2,
+  \end{equation*}
+  thus completing the proof.
+\end{proof}
+
+\begin{notebox}
+  Todo: Add a general bound on the quantization error variance.
+\end{notebox}
+
+\begin{example}
+  Let $X$ be a scalar zero-mean random variable of variance~$\sq$ and let
+  $\Lambda = \Z / \beta$, for some $\beta > 0$. The covering radius of this
+  lattice is $R = 1/\beta$, so $\E[\QL(X)^2] \le \sq + 2 \beta^{-1} \sigma +
+  \beta^{-2}$.
+\end{example}
+
 
 
 
@@ -890,9 +1142,9 @@ statements are in fact identical to the scalar case.
 
 \begin{lemma}
   \label{lem:lowerbound2vec}
-  For an arbitrary function $\e(\snr) \ge 0$ satisfying $\limtoinf{\snr}
-  \snr^{\e(\snr)} = \infty$, the mean squared error of the strategy of
-  \secref{latticequant} satisfies
+  For an arbitrary function $\e(\snr) \ge 0$ such that 
+  $\snr^{\e(\snr)}$ goes to infinity when $\snr \goesto \infty$, the mean
+  squared error of the strategy of \secref{latticequant} satisfies
   \begin{equation*}
     \msev \in \Omega(\snr^{-1 + \e/2} \exp\{- \snr^\e/k \},
   \end{equation*}
@@ -918,63 +1170,92 @@ It is restated here for completeness.
 \end{proof}
 
 
-\section{General Bandwidth Expansion}\label{sec:genbwexp}
-
-So far, Section~\ref{sec:scalarquant} and~\ref{sec:latticequant} have treated
-the encoding of one source symbol into $n$~channel input symbols and of
-$m$~source symbols into $mn$~channel input symbols, respectively. This section
-extends the coding scheme of \secref{scalarquant} to encode $k$~source symbols
-into $n$~channel inputs, for any $k \le n$. It is shown that using a suboptimal
-decoder similar to that of \secref{achievable}, the \sdr\ scales as
-\textbf{[TO BE SPECIFIED]}.
-
-For simplicity it is first assumed that the support of the source is limited to
-the interval~$[-1/2, 1/2]$; the general case will be treated afterwards. 
 
 
-\subsection{Transmission Strategy}
 
-The strategy used to encode the source symbols $S_1$, \dots, $S_k$ into the
-channel inputs $X_1$, \dots, $X_n$ is displayed schematically on
-\figref{knencoding} for~$k=3$ and~$n=5$. 
-\begin{figure}[tbp]
-  \begin{center}
-    \input{figures/knencoding.tex_t}
-  \end{center}
-  \caption{Schematic display of the transmission strategy of \secref{genbwexp}
-  for~$k = 3$ and~$n=5$. The boxes labeled~\textsf{Q} are uniform scalar
-  quantizers with resolution~$\beta$ as described in~\eqref{eq:QEdefkn}.}
-  \label{fig:knencoding}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION: HISTORICAL REMARKS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Historical Remarks}
+
+Schemes similar to the one proposed here have been considered before. Indeed,
+one of the first schemes to transmit an analog source across two uses of a
+Gaussian channel was suggested by Shannon~\cite{Shannon1949}. Notice its
+resemblance to the constellation studied here, shown in
+Figure~\ref{fig:shannoncomparison}.
+\begin{figure}
+  \centerline{\subfloat[Shannon's original proposition.]{\input{figures/shannonline.tex_t}}
+  \hfil
+  \subfloat[Mapping proposed in this paper
+  (for~$n=2$).]{\input{figures/ourconstellation.tex_t}} }% end centerline
+  \caption{A minimum-delay source-channel code for $n=2$ can be visualized as a
+  curve in $\R^2$ parametrized by the source. Here we compare the mapping
+  presented in this chapter (right) to Shannon's original suggestion (left).}
+  \label{fig:shannoncomparison}
 \end{figure}
-The encoder consists of $k$~parallel scalar encoders that encode each~$S_i$ into
-$n-k$~quantizer outputs $Q_{i,1}$, \dots, $Q_{i,n-k}$ and a quantization
-error~$E_{j,n-k}$, just like for the case~$k=1$. The quantizer outputs at each
-level are then combined into a single value $Q_{\tot,j}$
-(cf.~\figref{knencoding}). More precisely, letting $i \in \{1, \dots, k\}$ be
-the index of the source symbols, the encoder defines $E_{i,0} = S_i$ for
-each~$i$ and computes
-\begin{align}
-  Q_{i,j} &= \frac{1}{\beta} \Int(\beta E_{i,j-1}) \quad\text{and} \nonumber \\
-  E_{i,j} &= \beta(E_{i,j-1} - Q_{i,j}). \label{eq:QEdefkn}
-\end{align}
-(This is exactly the same as~\eqref{eq:QEdef}, except for the addition of the
-subscript~$i$.) For each quantization level~$j = 1$, \dots, $n-k$, the
-$i$~parallel quantizer outputs are combined into
-\begin{equation*}
-  Q_{\tot,j} = \sum_{i=1}^k \frac{1}{\beta^{i-1}} Q_{i,j}.
-\end{equation*}
-Since each $Q_{i,j}$ is assumed to lie in $[-1/2, 1/2]$, the mapping from the
-$Q_{i,j}$ into~$Q_{\tot,j}$ is invertible, and the inverse can be recursively
-specified as
 
-\subsection{Decoder}
+After Shannon, Wozencraft and Jacobs~\cite{WozencraftJ1965} were among the first
+to study source-channel mappings as curves in $n$-dimensional space.
+Ziv~\cite{Ziv1970} found important theoretical limitations of such mappings.
+Much of the later work is due to Ramstad and his coauthors
+(see~\cite{Ramstad2002}, \cite{FloorR2006}, \cite{CowardR2000,CowardR2000a},
+\cite{WernerssonSR2007}, \cite{HeklandFR2009}). A proof that the performance of
+minimal-delay codes is strictly smaller than that of codes with unrestricted
+delay when $n>1$ was given in 2008 by Ingber et al.~\cite{IngberLZF2008}.
+
+For $n=2$, the presented scheme is almost identical to the HSQLC scheme by
+Coward~\cite{Coward2001}, which uses a numerically optimized quantizer,
+transmitter and receiver to minimize the mean-squared error (MSE) for finite
+values of the SNR. Coward correctly conjectured that the right strategy for $n >
+2$ would be to repeatedly quantize the quantization error from the previous
+step, which is exactly what we do here.
+
+Another closely related communication scheme is the \emph{shift-map} scheme due
+to Chen and Wornell~\cite{ChenW1998}.  Vaishampayan and
+Costa~\cite{VaishampayanC2003} showed in their analysis that it achieves the
+scaling exponent $n-\e$ for any $\e > 0$ if the relevant parameters are chosen
+correctly as a function of the SNR. Up to rotation and a different constellation
+shaping, the shift-map scheme is in fact virtually identical to the one
+presented here, a fact that was pointed out recently by Taherzadeh and
+Khandani~\cite{TaherzadehK2008}. In their own paper they develop a scheme that
+achieves the optimal scaling exponent exactly and is in addition robust to SNR
+estimation errors; their scheme, however, is based on rearranging the digits of
+the binary expansion of the source and is thus quite different from the one
+presented here.
+
+Shamai, Verd\'u and Zamir~\cite{ShamaiVZ1998} used Wyner-Ziv coding to extend an
+existing analog system with a digital code when additional bandwidth is
+available. Mittal and Phamdo~\cite{MittalP2002} (see also the paper by Skoglund,
+Phamdo and Alajaji~\cite{SkoglundPA2002}) split up the source into a quantized
+part and a quantization error, much like we do here, but they use a
+separation-based code (or ``tandem'' code) to transmit the quantization symbols.
+Reznic et al.~\cite{ReznicFZ2006} use both quantization and Wyner-Ziv coding,
+and their scheme includes Shamai et al.\ and Mittal \& Phamdo as extreme cases.
+All three schemes, however, use long block codes for the digital phase and incur
+correspondingly large delays, so they are not directly comparable with minimum
+delay schemes.
 
 
 
-\subsection{Encoder and Decoder}
 
 
-\subsection{Error Analysis}
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                              %
+% CHAPTER APPENDICES                                                           %
+%                                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \begin{subappendices}
@@ -1018,6 +1299,8 @@ specified as
 %  \qed
 
   
+
+
   \section{Proof of Ziv's Lower Bound (Lemma~\ref{lem:zivbound})}
   \label{app:zivboundproof}
 
