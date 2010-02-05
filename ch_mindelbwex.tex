@@ -131,28 +131,7 @@ the sequel.
 \end{lemma}
 
 \begin{proof}
-  Let $f(\xi)$ be the probability density function of~$E_{i-1}$. Then
-  \begin{align*}
-    \Var Q_i &= \frac{1}{\beta^2} \int_{\R} \Int(\beta E_{i-1})^2 f(\xi) d\xi \\
-    &= \frac{1}{\beta^2} \sum_{i\in\Z} i^2
-    \int_{\frac{i-1/2}{\beta}}^{\frac{i+1/2}{\beta}} f(\xi) d\xi.
-  \end{align*}
-  Whenever $\xi \in [(i-1/2)/\beta, (i+1/2)/\beta)$, $|i| \le \beta|\xi| + 1/2$,
-  so
-  \begin{align*}
-    \Var Q_i &\le \frac{1}{\beta^2} \sum_{i\in \Z}
-    \int_{\frac{i-1/2}{\beta}}^{\frac{i+1/2}{\beta}} (\beta|\xi| + 1/2)^2 
-    f(\xi) d\xi \\
-    &= \frac{1}{\beta^2} \int_{\R} (\beta|\xi| + 1/2)^2 f(\xi) d\xi \\
-    &= \Var E_{i-1} + \frac{1}{4\beta^2} + \frac{1}{\beta} \int_{\R} |\xi|
-    f(\xi)d\xi.
-  \end{align*}
-  To bound the last integral, use the fact that $\E[|E_{i-1}|] \le \sqrt{\Var
-  E_{i-1}}$ to finally obtain
-  \begin{equation*}
-    \Var Q_i \le \Var E_{i-1} + \frac{\sqrt{\Var E_{i-1}}}{\beta} +
-    \frac{1}{\beta^2}.
-  \end{equation*}
+  See \appref{qvarboundproof}.
 \end{proof}
 
 
@@ -161,7 +140,8 @@ the sequel.
   \label{prop:qeproperties}
   The $Q_i$ and $E_i$ satisfy the following properties:
 \begin{enumerate}
-  \item The map $S \mapsto (Q_1, \dots, Q_{n-1}, E_{n-1})$ is one-to-one and
+  \item The map $S \mapsto (Q_1, \dots, Q_{n-1}, E_{n-1})$ is one-to-one, with
+    the inverse given by
     \begin{equation}
       \label{eq:unwraprec}
       S = \sum_{i=1}^{n-1} \frac{1}{\beta^{i-1}} Q_i + \frac{1}{\beta^{n-1}}
@@ -197,9 +177,9 @@ the sequel.
 The channel input symbols $X_i$ are determined from the $Q_i$ and from $E_{n-1}$
 according to 
 \begin{align}
-  X_i &= \sqrt{P/\gamma} Q_i \quad
+  X_i &= (\sqrt{P}/\gamma) Q_i \quad
   \text{for $i = 1$, \dots, $n-1$ and} \nonumber\\
-  X_n &= \sqrt{P/\gamma} E_{n-1}.
+  X_n &= (\sqrt{P}/\gamma) E_{n-1}.
   \label{eq:Xdef}
 \end{align}
 Following Proposition~\ref{prop:qeproperties}, this ensures that $\E[X_i^2] \le
@@ -212,18 +192,13 @@ The goal of this section is to lower bound the scaling of the mean squared error
 of the transmission strategy described in Section~\ref{sec:commscheme}.
 
 Throughout this section we assume $\beta = \lceil \snr^{(1-\e)/2}\rceil$, where
-$\e = \e(\snr)$ is a positive function of~$\snr$. This results in no loss of
-generality, since for an arbitrary positive function~$f$ we can set $\e(\snr) =
-1-2 \log(f(\snr))/\log\snr$ to get $\beta(\snr) = \lceil f(\snr) \rceil$.
-Writing $\beta$ in this form will slightly simplify the mathematical derivations
-to follow. Note that we can bound $\beta$ by $\snr^{(1-\e)/2} \le \beta \le
-\snr^{(1-\e)/2} + 1$. For any $n > 0$ there exist thus a constant~$c$ such that
-for large values of~\snr
-\begin{equation}
-  \label{eq:betabound}
-  \snr^{n(1-\e)/2} \le \beta^n \le c \snr^{n(1-\e)/2},
-\end{equation}
-a property that will prove useful in the derivations to come.
+$\e = \e(\snr)$ is a positive function of~$\snr$. This results in no
+loss of generality, since for an arbitrary positive function~$f$ we can set
+$\e(\snr) = 1-2 \log(f(\snr))/\log\snr$ to get $\beta(\snr) = \lceil f(\snr)
+\rceil$.  Writing $\beta$ in this form will slightly simplify the mathematical
+derivations to follow. Note that we can bound $\beta$ by $\snr^{(1-\e)/2} \le
+\beta \le \snr^{(1-\e)/2} + 1$, which implies $\beta \in
+\Theta(\snr^{(1-\e)/2})$.
 
 Note that by~\eqref{eq:QEdef}, the $Q_i$ are completely determined by~$S$.
 In this section, with a slight abuse of notation, we therefore write $Q_i(s)$ to
@@ -261,20 +236,26 @@ different class of~$\e$. They hold regardless of the decoder used.  (The
 $\Omega$-notation is defined in Appendix~\ref{app:asymptotic}.)
 
 \begin{lemma}
+  \label{lem:lowerbound2}
+  For an arbitrary function $\e(\snr) \ge 0$, the mean squared error
+  satisfies
+  \begin{equation*}
+    \mse \in \Omega(\snr^{-1+\e/2} \exp\{-c\snr^\e\})
+  \end{equation*}
+  if $\limtoinf{\snr} \snr^{\e(\snr)} = \infty$, where $c>0$ does not depend
+  on~\snr, and
+  \begin{equation*}
+    \mse \in \Omega(\snr^{-1})
+  \end{equation*}
+  otherwise.
+\end{lemma}
+
+\begin{lemma}
   \label{lem:lowerbound1}
   For an arbitrary function $\e(\snr) \ge 0$, the mean squared error satisfies
   \begin{equation*}
     \mse \in \Omega(\snr^{-n + (n-1)\e}).
   \end{equation*}
-\end{lemma}
-
-\begin{lemma}
-  \label{lem:lowerbound2}
-  For an arbitrary function $\e(\snr) \ge 0$, the mean squared error satisfies
-  \begin{equation*}
-    \mse \in \Omega(\snr^{-1+\e/2} \exp\{-\snr^\e/k\})
-  \end{equation*}
-  where $k > 0$ does not depend on~$\snr$.
 \end{lemma}
 
 \emph{Discussion:} An immediate consequence of the lemmata is that the
@@ -285,6 +266,40 @@ $\e = 0 $.  More generally, which one of the two lower bounds decays more slowly
 and is therefore tighter depends on the scaling of~$\e(\snr)$. How to
 choose~$\e(\snr)$ optimally will be the subject of Theorem~\ref{thm:scalinglb}.
 
+\begin{proof}[Proof of Lemma~\ref{lem:lowerbound2}]
+  Observe first that~\eqref{eq:QEdef} implies $Q_1(s + \beta^{-1}) = Q_1(s) +
+  \beta^{-1}$ and $E_1(s + \beta^{-1}) = E_1(s)$. Since all $Q_i$ and $E_i$ for
+  $i \ge 2$ are by recursion a function of $E_1$ only, $Q_i(s) = Q_i(s +
+  \beta^{-1})$ for $i = 2$, \dots, $n-1$, and $E_{n-1}(s) = E_{n-1}(s +
+  \beta^{-1})$. Consequently,  $X_i(s) = X_i(s + \beta^{-1})$ for all $i =
+  2$, \dots, $n$. By~\eqref{eq:Xdef} and the above, the Euclidean distance
+  between $\X(s)$ and~$\X(s+\beta^{-1})$ is therefore
+  \begin{equation}
+    \label{eq:xbetadist}
+    \frac{\sqrt P}{\gamma} |Q_1(s) - Q_1(s+\beta^{-1})| 
+    = \frac{\sqrt P}{\gamma\beta}.
+  \end{equation}
+
+  We now apply Lemma~\ref{lem:zivbound} with $\Delta = \beta^{-1}$. The
+  parameter $\beta$ will be chosen to increase with~$\snr$, therefore $\Delta
+  \in [0, B-A)$ holds for sufficiently large~$\snr$.
+
+  Using~\eqref{eq:xbetadist}, the resulting bound on the mean squared error is
+  \begin{equation*}
+    \mse \ge \frac{\pmin}{4} \beta^{-2}
+    Q\left (\frac{\sqrt{\snr}}{2\gamma\beta}  \right) (B-A-\beta^{-1}
+    ).
+  \end{equation*}
+  Replacing $\beta^2 = \snr^{1-\e}$ and using the fact that $Q(x)$ converges to
+  $e^{-x^2/2}/\sqrt{2\pi}x$ for $x \goesto \infty$
+  (cf.~\cite{AbramowitzS1964}) we obtain
+  \begin{equation*}
+    \mse \ge c_1 \snr^{-1 + \e/2} \exp\{-c_2\snr^\e\}
+  \end{equation*}
+  for sufficiently large~$\snr$, with $c_1$ and $c_2$ positive constants that do
+  not depend on~$\snr$, thus proving the lemma.
+\end{proof}
+
 \begin{proof}[Proof of Lemma~\ref{lem:lowerbound1}]
   Assume $\Delta \in [0, \beta^{-(n-1)})$ and define for $j \in \Z$
   \[ \I_j^\Delta = \left[ (j - \frac12 )\beta^{-(n-1)}, 
@@ -293,19 +308,19 @@ choose~$\e(\snr)$ optimally will be the subject of Theorem~\ref{thm:scalinglb}.
   some~$j$, the following properties hold: 1) $Q_i(s) = Q_i(s+\Delta)$ for
   $i=1$, \dots, $n-1$, and 2) $E_{n-1}(s+\Delta) - E_{n-1}(s) =
   \beta^{n-1}\Delta$.  From~\eqref{eq:Xdef} it follows that
-  $s \in \I_j^\Delta$ implies $d(s, \Delta) = \sqrt{P/\seq} \beta^{n-1}\Delta$.
+  $s \in \I_j^\Delta$ implies $d(s, \Delta) = \sqrt{P/\gamma^2} \beta^{n-1}\Delta$.
 
   We now apply Lemma~\ref{lem:zivbound} and restrict the integral to the
   set~$\psi(\Delta) \deq [A,B-\Delta) \cap \bigcup_{j\in\Z} \I_j^\Delta$. The
   lower bound is then relaxed to give
   \begin{equation*}
-    \mse \ge \frac{\pmin}{4} \Delta^2 Q(\sqrt{\snr/\seq} \beta^{n-1} \Delta/2)
-    \int_{\psi(\Delta)} ds.
+    \mse \ge \frac{\pmin}{4} \Delta^2 Q(\sqrt{\snr/\gamma^2} \beta^{n-1}
+    \Delta/2) \int_{\psi(\Delta)} ds.
   \end{equation*}
   Letting $\Delta = 1/(\sqrt{\snr}\beta^{n-1})$ and $\beta^2 = \snr^{1-\e}$
   yields
   \begin{equation*}
-    \mse \ge \frac{\pmin}{4} \snr^{-n+(n-1)\e} Q\left(\frac{1}{2\se}\right)
+    \mse \ge \frac{\pmin}{4} \snr^{-n+(n-1)\e} Q\left(1/2\gamma\right)
     \int_{\psi(\Delta)} ds.
   \end{equation*}
 
@@ -323,41 +338,6 @@ choose~$\e(\snr)$ optimally will be the subject of Theorem~\ref{thm:scalinglb}.
   complete.
 \end{proof}
 
-\begin{proof}[Proof of Lemma~\ref{lem:lowerbound2}]
-  Observe first that~\eqref{eq:QEdef} implies $Q_1(s + \beta^{-1}) = Q_1(s) +
-  \beta^{-1}$ and $E_1(s + \beta^{-1}) = E_1(s)$. Since all $Q_i$ and $E_i$ for
-  $i \ge 2$ are by recursion a function of $E_1$ only, $Q_i(s) = Q_i(s +
-  \beta^{-1})$ for $i = 2$, \dots, $n-1$, and $E_{n-1}(s) = E_{n-1}(s +
-  \beta^{-1})$. Consequently,  $X_i(s) = X_i(s + \beta^{-1})$ for all $i =
-  2$, \dots, $n$. By~\eqref{eq:Xdef} and the above, the Euclidean distance
-  between $\X(s)$ and~$\X(s+\beta^{-1})$ is therefore
-  \begin{equation}
-    \label{eq:xbetadist}
-    \sqrt{\frac{P}{\ssq + \delta}} |Q_1(s) - Q_1(s+\beta^{-1})| 
-    = \sqrt{\frac{P}{\ssq + \delta}} \beta^{-1}.
-  \end{equation}
-
-  We now apply Lemma~\ref{lem:zivbound} with $\Delta = \beta^{-1}$. The
-  parameter $\beta$ will be chosen to increase with~$\snr$, therefore $\Delta
-  \in [0, B-A)$ holds for sufficiently large~$\snr$.
-
-  Using~\eqref{eq:xbetadist}, the resulting bound on the mean squared error is
-  \begin{equation*}
-    \mse \ge \frac{\pmin}{4} \beta^{-2}
-    Q\left (\sqrt{\frac{\snr}{\ssq + \delta}} \frac{\beta^{-1}}{2} \right)
-    (B-A-\beta^{-1}
-    ).
-  \end{equation*}
-  Replacing $\beta^2 = \snr^{1-\e}$ and using the fact that $Q(x)$ converges to
-  $e^{-x^2/2}/\sqrt{2\pi}x$ for $x \goesto \infty$
-  (cf.~\cite{AbramowitzS1964}) we obtain
-  \begin{equation*}
-    \mse \ge c \snr^{-1 + \e/2} \exp\{-\snr^\e/k\}
-  \end{equation*}
-  for sufficiently large~$\snr$, with $c$ and $k$ positive constants that do
-  not depend on~$\snr$, thus proving the lemma.
-\end{proof}
-
 The following lemma will be used to prove Theorem~\ref{thm:scalinglb}, the main
 result of this section.
 
@@ -366,34 +346,34 @@ result of this section.
   Define $W(x)$ to be the function that satisfies $W(x)e^{W(x)} = x$ for $x >
   0$.  This function is well defined and is sometimes called the \emph{Lambert
   $W$-function}~\textnormal{\cite{CorlessGHJK1996}}. Then for $\snr > 1$ and
-  arbitrary real constants $a$, $b>0$, and $k > 0$, 
+  arbitrary real constants $a$, $b>0$, and $c > 0$, 
   \begin{equation}
     \label{eq:epsequation}
-    \snr^{a+b\e} = \exp\{-\snr^\e/k\},
+    \snr^{a+b\e} = \exp\{-c\snr^\e\},
   \end{equation}
   if and only if
   \begin{equation}
     \label{eq:epssolution}
-    \snr^\e = bk W(\snr^{-a/b} / bk).
+    \snr^\e = (b/c) W(c\snr^{-a/b} / b).
   \end{equation}
 \end{lemma}
 
 \begin{proof}
   Let $\snr>1$. Since $\snr^{a+b\e}$ is strictly increasing and
-  $\exp\{-\snr^\e/k\}$ is strictly decreasing in~$\e$, there is at most one
+  $\exp\{-c \snr^\e\}$ is strictly decreasing in~$\e$, there is at most one
   solution to~\eqref{eq:epsequation}.  Assume now $\snr^\e$ is as
   in~\eqref{eq:epssolution}. Then
   \begin{equation*}
-    \exp\{-\snr^\e/k\} = \exp\{-b W(\snr^{-a/b}/bk)\}.
+    \exp\{-c \snr^\e\} = \exp\{-b W(c \snr^{-a/b}/b)\}.
   \end{equation*}
   On the other hand,
   \begin{align*}
-    \snr^{a+b\e} &= \snr^a \left( bk W(\snr^{-a/b}/bk) \right)^b \\
-    &= \left( W(\snr^{-a/b}/bk) / (\snr^{-a/b}/bk) \right)^b.
+    \snr^{a+b\e} &= \snr^a \left( (b/c) W(c\snr^{-a/b}/b) \right)^b \\
+    &= \left( W(c\snr^{-a/b}/b) / (c\snr^{-a/b}/b) \right)^b.
   \end{align*}
   By definition, $W(x)/x = e^{-W(x)}$, so the above is equal to
   \begin{equation*}
-    \snr^{a+b\e} = \exp\{-bW(\snr^{-a/b}/bk)\},
+    \snr^{a+b\e} = \exp\{-bW(c \snr^{-a/b}/b)\},
   \end{equation*}
   which proves the claim.
 \end{proof}
@@ -415,10 +395,10 @@ tight.
 
 %
 \begin{proof}[Proof of Theorem~\ref{thm:scalinglb}]
-  For notational symplicity define
+  For notational simplicity define
   \begin{align*}
     l_1(\snr, \e) &= \snr^{-n+(n-1)\e} \quad\text{and} \\
-    l_2(\snr,\e) &= \snr^{-1+\e/2} \exp\{-\snr^\e/k\}.
+    l_2(\snr,\e) &= \snr^{-1+\e/2} \exp\{-c\snr^\e\}.
   \end{align*}
   By Lemmata~\ref{lem:lowerbound1} and~\ref{lem:lowerbound2},
   \begin{equation*}
@@ -432,31 +412,31 @@ tight.
   \end{equation}
   is minimized. Now for any fixed~$\snr$, $l_1(\snr,\e)$ is increasing in~$\e$,
   and $l_2(\snr,\e)$ is increasing in~$\e$ for $0 \le \e < \xi =
-  \log(k/2)/\log\snr$ and decreasing in~$\e$ for $\e \ge \xi$.
-  The maximum
+  \log(1/2c)/\log\snr$ and decreasing in~$\e$ for $\e \ge \xi$.  The maximum
   in~\eqref{eq:epsmax} is therefore minimized either for $\e = 0$ or for $\e \ge
-  \xi$
-  such that $l_1(\e) = l_2(\e)$. As we have remarked earlier, $\e = 0$ leads to
-  a worse performance than that achieved in Section~\ref{sec:achievable}, and so
-  this cannot be the optimal parameter. We therefore have to choose
-  $\e(\snr)$ such that $l_1(\snr,\e) = l_2(\snr, \e)$.  Inserting the
-  definitions of $l_1$ and $l_2$ and rearranging the terms yields
+  \xi$ such that $l_1(\e) = l_2(\e)$. As we have remarked earlier, $\e = 0$
+  leads to a worse performance than that achieved in
+  Section~\ref{sec:achievable}, and so this cannot be the optimal parameter. We
+  therefore have to choose $\e(\snr)$ such that $l_1(\snr,\e) = l_2(\snr, \e)$.
+  Inserting the definitions of $l_1$ and $l_2$ and rearranging the terms yields
   \begin{equation*}
-    \snr^{-(n-1) + (n-3/2)\e} = \exp\{-\snr^\e/k\},
+    \snr^{-(n-1) + (n-3/2)\e} = \exp\{-c\snr^\e\},
   \end{equation*}
   which is of the form~\eqref{eq:epsequation} with $a = -(n-1)$ and $b = n-3/2$.
   By Lemma~\ref{lem:epssolution}, for $\snr > 1$,
   \begin{equation*}
-    \snr^\e = (n-3/2)k W(\snr^{\frac{2(n-1)}{2n-3}} / ((n-3/2)k)).
+    \snr^\e = \frac{n-3/2}{c}
+    W\left( \frac{c\snr^{\frac{2(n-1)}{2n-3}}}{n-3/2} \right).
   \end{equation*}
   We now use the fact that $W(x)/\log x$ converges to~$1$ for $x \ra \infty$;
   this can be shown using L'H\^opital's rule and because the derivative of
   $W(x)$ is $W(x)/[x(1 + W(x))]$ (cf.~\cite{CorlessGHJK1996}).
 
-  For sufficiently large $\snr$, therefore, there exists a constant $c > 0$ such
-  that
+  For sufficiently large $\snr$, therefore, there exists a constant $c_1 > 0$
+  such that
   \begin{equation*}
-    \snr^\e \ge c(n-3/2)k \left[ \frac{2(n-1)}{2n-3}\log\snr - \log((n-3/2)k)
+    \snr^\e \ge c_1 \frac{n-3/2}{c} \left[ \frac{2(n-1)}{2n-3}\log\snr -
+    \log\left(\frac{n-3/2}{c}\right)
     \right],
   \end{equation*}
   and so $\snr^\e \in \Omega(\log\snr)$. Plugging this into the bound of
@@ -491,8 +471,8 @@ To estimate the $Q_i$ we use a maximum likelihood (ML) decoder, which yields the
 minimum distance estimate
 \begin{equation}
   \label{eq:mldecoder}
-  \Qh_i = \frac{1}{\beta} \arg \min_{j\in \Z} \left| \sqrt{\frac{P}{\ssq
-  + \delta} } \frac{j}{\beta} - Y_i \right|.
+  \Qh_i = \frac{1}{\beta} \arg \min_{j\in \Z} \left| \frac{j\sqrt{P}}
+  {\gamma\beta} - Y_i \right|.
 \end{equation}
 To estimate $E_{n-1}$, we use a linear minimum mean-square error (LMMSE)
 estimator (see \eg~\cite[Section~8.3]{Scharf1990}), which computes
@@ -542,8 +522,8 @@ where $\Eqi \deq \E[(Q_i - \Qh_i)^2]$ and $\Ee \deq \E[(E_{n-1} -
 \begin{proof}
   Define the interval
   \begin{equation*}
-    \I_j = \left[ \frac{(j - \frac12) \sqrt{P}}{\beta \sqrt{\ssq + \delta}},
-    \frac{(j + \frac12) \sqrt{P}}{\beta \sqrt{\ssq + \delta}} \right).
+    \I_j = \left[ \frac{(j - \frac12) \sqrt{P}}{\gamma\beta},
+    \frac{(j + \frac12) \sqrt{P}}{\gamma\beta } \right).
   \end{equation*}
   According to the minimum distance decoder~\eqref{eq:mldecoder}, $\Qh_i - Q_i
   = j/\beta$ whenever $Z_i \in \I_j$.  The error $\Eqi$ satisfies thus
@@ -556,9 +536,8 @@ where $\Eqi \deq \E[(Q_i - \Qh_i)^2]$ and $\Ee \deq \E[(E_{n-1} -
   where the second equality follows from the symmetry of the distribution
   of~$Z_i$. Now,
   \begin{equation*}
-    \Pr[Z_i \in \I_j] = Q\left( \frac{(j - \frac12) \sqrt \snr}{\beta \sqrt{\ssq
-    + \delta }} \right) - Q\left( \frac{(j + \frac12) \sqrt{\snr}}{\beta
-    \sqrt{\ssq + \delta}} \right),
+    \Pr[Z_i \in \I_j] = Q\left( \frac{(j - \frac12) \sqrt \snr}{\gamma\beta}
+    \right) - Q\left( \frac{(j + \frac12) \sqrt{\snr}}{\gamma\beta } \right),
   \end{equation*}
   where
   \begin{equation*}
@@ -571,15 +550,14 @@ where $\Eqi \deq \E[(Q_i - \Qh_i)^2]$ and $\Ee \deq \E[(E_{n-1} -
   For $\beta \ge 1$ we can now bound~\eqref{eq:eqexact} as
   \begin{equation*}
     \Eqi \le \sum_{j=1}^\infty j^2 \exp\left\{ - \frac{(j - 1/2)^2
-    \snr}{2\beta^2(\ssq + \delta)} \right\}.
+    \snr}{2\gamma^2\beta^2} \right\}.
   \end{equation*}
   Note that for $j \ge 2$, $(j - 1/2)^2 > j$.  Thus
   \begin{eqnarray}
-    \Eqi &\le & \exp \left \{ - \frac{\snr}{8 \beta^2 (\ssq +\delta)} \right\}
+    \Eqi &\le & \exp \left \{ - \frac{\snr}{8 \gamma^2 \beta^2} \right\}
     \nonumber \\
     & & \mbox{} + 
-    \sum_{j = 2}^\infty j^2 \exp \left \{ - \frac{j \snr}{2\beta^2(\ssq
-    +\delta)}
+    \sum_{j = 2}^\infty j^2 \exp \left \{ - \frac{j \snr}{2\gamma^2 \beta^2}
     \right\}. \label{eq:eqibound}
   \end{eqnarray}
   To bound the infinite sum we use 
@@ -588,11 +566,11 @@ where $\Eqi \deq \E[(Q_i - \Qh_i)^2]$ and $\Ee \deq \E[(E_{n-1} -
     \sum_{j=2}^\infty j^2 p^j \le \sum_{j=1}^\infty j^2 p^j = 
     \frac{p^2+p}{(1-p)^3}
   \end{equation}
-  with $p = \exp\{-\snr/2 \beta^2 (\ssq+\delta)\}$. The first term
+  with $p = \exp\{-\snr/2 \gamma^2 \beta^2\}$. The first term
   of~\eqref{eq:eqibound} thus dominates for large values of
   $\snr/\beta^2$ and
   \begin{equation*}
-    \Eqi \le c\exp\left\{ - \frac{\snr}{8 \beta^2 (\ssq + \delta)} \right\}
+    \Eqi \le c\exp\left\{ - \frac{\snr}{8 \gamma^2 \beta^2} \right\}
   \end{equation*}
   for some~$c > 0$, which completes the proof. 
 \end{proof}
@@ -611,10 +589,10 @@ where $\Eqi \deq \E[(Q_i - \Qh_i)^2]$ and $\Ee \deq \E[(E_{n-1} -
   \end{equation}
   Since
   \begin{equation*}
-    Y_n = X_n + Z_n = \sqrt{\frac{P}{\seq}} E_{n-1} + Z_n,
+    Y_n = X_n + Z_n = \frac{\sqrt{P}}{\gamma} E_{n-1} + Z_n,
   \end{equation*}
-  we have $\E[E_{n-1}Y_n] = \sqrt{P\seq}$. Moreover, $\E[Y_n^2] = \E[X^2] +
-  \E[Z^2] = P+\szq$.  Inserting this into~\eqref{eq:lmmse-error} we obtain
+  we have $\E[E_{n-1}Y_n] = \sqrt{P}\seq/\gamma$. Moreover, $\E[Y_n^2] = \E[X^2]
+  + \E[Z^2] = P+\szq$.  Inserting this into~\eqref{eq:lmmse-error} we obtain
   \begin{align*}
     \Ee &= \seq - \frac{P \seq}{P + \szq} \\
     &= \seq \left( 1 - \frac{P}{P + \szq} \right) \\
@@ -1298,8 +1276,34 @@ delay schemes.
 %  \end{equation*}
 %  \qed
 
-  
 
+\section{Proof of \lemref{Qvarbound}}\label{app:qvarboundproof}
+
+\begin{proof}
+  Let $f(\xi)$ be the probability density function of~$E_{i-1}$. Then
+  \begin{align*}
+    \Var Q_i &= \frac{1}{\beta^2} \int_{\R} \Int(\beta E_{i-1})^2 f(\xi) d\xi \\
+    &= \frac{1}{\beta^2} \sum_{i\in\Z} i^2
+    \int_{\frac{i-1/2}{\beta}}^{\frac{i+1/2}{\beta}} f(\xi) d\xi.
+  \end{align*}
+  Whenever $\xi \in [(i-1/2)/\beta, (i+1/2)/\beta)$, $|i| \le \beta|\xi| + 1/2$,
+  so
+  \begin{align*}
+    \Var Q_i &\le \frac{1}{\beta^2} \sum_{i\in \Z}
+    \int_{\frac{i-1/2}{\beta}}^{\frac{i+1/2}{\beta}} (\beta|\xi| + 1/2)^2 
+    f(\xi) d\xi \\
+    &= \frac{1}{\beta^2} \int_{\R} (\beta|\xi| + 1/2)^2 f(\xi) d\xi \\
+    &= \Var E_{i-1} + \frac{1}{4\beta^2} + \frac{1}{\beta} \int_{\R} |\xi|
+    f(\xi)d\xi.
+  \end{align*}
+  To bound the last integral, use the fact that $\E[|E_{i-1}|] \le \sqrt{\Var
+  E_{i-1}}$ to finally obtain
+  \begin{equation*}
+    \Var Q_i \le \Var E_{i-1} + \frac{\sqrt{\Var E_{i-1}}}{\beta} +
+    \frac{1}{\beta^2}.
+  \end{equation*}
+\end{proof}
+  
 
   \section{Proof of Ziv's Lower Bound (Lemma~\ref{lem:zivbound})}
   \label{app:zivboundproof}
