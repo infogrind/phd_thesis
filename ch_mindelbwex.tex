@@ -592,16 +592,16 @@ where $\Eqi \deq \E[(Q_i - \Qh_i)^2]$ and $\Ee \deq \E[(E_{n-1} -
     Y_n = X_n + Z_n = \frac{\sqrt{P}}{\gamma} E_{n-1} + Z_n,
   \end{equation*}
   we have $\E[E_{n-1}Y_n] = \sqrt{P}\seq/\gamma$. Moreover, $\E[Y_n^2] = \E[X^2]
-  + \E[Z^2] = P+\szq$.  Inserting this into~\eqref{eq:lmmse-error} we obtain
+  + \E[Z^2] = P\seq / \gamma^2 +\szq$.  Inserting this
+  into~\eqref{eq:lmmse-error} we obtain
   \begin{align*}
-    \Ee &= \seq - \frac{P \seq}{P + \szq} \\
-    &= \seq \left( 1 - \frac{P}{P + \szq} \right) \\
-    &= \frac{\seq}{1 + \snr} \\
-    & < \frac{\seq}{\snr}.
+    \Ee &= \seq - \frac{P \se^4/\gamma^2}{P\seq/\gamma^2 + \szq} \\
+    &= \seq \left( 1 - \frac{P\seq/\gamma^2}{P\seq/\gamma^2 + \szq} \right) \\
+    &= \frac{\seq}{1 + \snr\seq/\gamma^2} \\
+    & < \frac{\gamma^2}{\snr}.
   \end{align*}
-  Since $\seq$ is bounded (cf.\ Proposition~\ref{prop:qeproperties}), 
-  $\Ee \in O(\snr^{-1})$ as claimed.
-
+  Since $\gamma$ is independent of~\snr\ (cf.\
+  Proposition~\ref{prop:qeproperties}), $\Ee \in O(\snr^{-1})$ as claimed.
 \end{proof}
 
 
@@ -684,18 +684,8 @@ which is indeed the optimal scaling exponent.
 
 \section{General Bandwidth Expansion}\label{sec:genbwexp}
 
-\begin{notebox}
-  Write introductory paragraphs here.
-\end{notebox}
-
 For simplicity it is first assumed that the support of the source is limited to
 the interval~$[-1/2, 1/2]$; the general case will be treated afterwards.
-\begin{notebox}
-  Any source with bounded support can just be scaled down to lie in this
-  interval. This just changes the \sdr\ by a constant and doesn't influence the
-  scaling.
-\end{notebox}
-
 
 \subsection{Transmission Strategy}
 
@@ -847,6 +837,20 @@ The overall MSE scales thus as
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SECTION: LATTICE QUANTIZERS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\subsection{Extension to General Sources}
+
+The assumption in \secref{genbwexp} was so far that the support of the source
+was limited to~$[-1/2,1/2]$. If a source~$S$ has support outside this interval
+but its support still lies within a bounded set, just define $S' = S/\alpha$,
+with $\alpha > 1$~a constant such that $S' \in [-1/2, 1/2]$. Then use the
+described scheme to transmit~$S'$ and finally let $\Sh = \alpha \Sh'$. The
+incurred distortion is $\E[(S - \Sh)^2] = \alpha^2 \E[(S' - \Sh')^2]$; the \sdr\
+therefore still scales in the same way as when~$S \in [-1/2, 1/2]$.
+
+
 
 \section{Lattice Quantizers}\label{sec:latticequant}
 
