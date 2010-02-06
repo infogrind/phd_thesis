@@ -2,7 +2,7 @@
 \begin{tikzpicture}
 
   % Fill single voronoi region
-  \fill[gray!50!white] (-.5,-.5) rectangle (.5,.5);
+  %\fill[gray!50!white] (-.5,-.5) rectangle (.5,.5);
 
   \foreach \x in {-1,0,1,2}
   \foreach \y in {-1,0,1}

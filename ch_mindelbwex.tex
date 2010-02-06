@@ -191,14 +191,18 @@ P$ for all~$i$.
 The goal of this section is to lower bound the scaling of the mean squared error
 of the transmission strategy described in Section~\ref{sec:commscheme}.
 
-Throughout this section we assume $\beta = \lceil \snr^{(1-\e)/2}\rceil$, where
-$\e = \e(\snr)$ is a positive function of~$\snr$. This results in no
-loss of generality, since for an arbitrary positive function~$f$ we can set
-$\e(\snr) = 1-2 \log(f(\snr))/\log\snr$ to get $\beta(\snr) = \lceil f(\snr)
-\rceil$.  Writing $\beta$ in this form will slightly simplify the mathematical
-derivations to follow. Note that we can bound $\beta$ by $\snr^{(1-\e)/2} \le
-\beta \le \snr^{(1-\e)/2} + 1$, which implies $\beta \in
-\Theta(\snr^{(1-\e)/2})$.
+\begin{remark}
+  \label{rem:betaepswlog}
+  Throughout this section we assume $\beta = \lceil \snr^{(1-\e)/2}\rceil$,
+  where $\e = \e(\snr)$ is a positive function of~$\snr$. This results in no
+  loss of generality, since for an arbitrary positive function~$f$ we can set
+  $\e(\snr) = 1-2 \log(f(\snr))/\log\snr$ to get $\beta(\snr) = \lceil f(\snr)
+  \rceil$.  Writing $\beta$ in this form will slightly simplify the mathematical
+  derivations to follow. Note that we can bound $\beta$ by $\snr^{(1-\e)/2} \le
+  \beta \le \snr^{(1-\e)/2} + 1$, which implies $\beta \in
+  \Theta(\snr^{(1-\e)/2})$ (the $\Theta$-notation is defined in
+  \appref{asymptotic}).
+\end{remark}
 
 Note that by~\eqref{eq:QEdef}, the $Q_i$ are completely determined by~$S$.
 In this section, with a slight abuse of notation, we therefore write $Q_i(s)$ to
@@ -290,9 +294,9 @@ choose~$\e(\snr)$ optimally will be the subject of Theorem~\ref{thm:scalinglb}.
     Q\left (\frac{\sqrt{\snr}}{2\gamma\beta}  \right) (B-A-\beta^{-1}
     ).
   \end{equation*}
-  Replacing $\beta^2 = \snr^{1-\e}$ and using the fact that $Q(x)$ converges to
-  $e^{-x^2/2}/\sqrt{2\pi}x$ for $x \goesto \infty$
-  (cf.~\cite{AbramowitzS1964}) we obtain
+  Using $\beta^2 \in \Theta(\snr^{1-\e})$ (see \remref{betaepswlog}) and the
+  fact that $Q(x)$ converges to $e^{-x^2/2}/\sqrt{2\pi}x$ for $x \goesto \infty$
+  (cf.~\cite[\Spg~26.2.12]{AbramowitzS1964}) we obtain
   \begin{equation*}
     \mse \ge c_1 \snr^{-1 + \e/2} \exp\{-c_2\snr^\e\}
   \end{equation*}
@@ -317,10 +321,10 @@ choose~$\e(\snr)$ optimally will be the subject of Theorem~\ref{thm:scalinglb}.
     \mse \ge \frac{\pmin}{4} \Delta^2 Q(\sqrt{\snr/\gamma^2} \beta^{n-1}
     \Delta/2) \int_{\psi(\Delta)} ds.
   \end{equation*}
-  Letting $\Delta = 1/(\sqrt{\snr}\beta^{n-1})$ and $\beta^2 = \snr^{1-\e}$
-  yields
+  Letting $\Delta = 1/(\sqrt{\snr}\beta^{n-1})$ and using $\beta^2 \in
+  \Theta(\snr^{1-\e})$ yields (for sufficiently large \snr)
   \begin{equation*}
-    \mse \ge \frac{\pmin}{4} \snr^{-n+(n-1)\e} Q\left(1/2\gamma\right)
+    \mse \ge c \snr^{-n+(n-1)\e} Q\left(1/2\gamma\right)
     \int_{\psi(\Delta)} ds.
   \end{equation*}
 
@@ -526,9 +530,9 @@ where $\Eqi \deq \E[(Q_i - \Qh_i)^2]$ and $\Ee \deq \E[(E_{n-1} -
     \frac{(j + \frac12) \sqrt{P}}{\gamma\beta } \right).
   \end{equation*}
   According to the minimum distance decoder~\eqref{eq:mldecoder}, $\Qh_i - Q_i
-  = j/\beta$ whenever $Z_i \in \I_j$.  The error $\Eqi$ satisfies thus
+  \le j/\beta$ whenever $Z_i \in \I_j$.  The error $\Eqi$ satisfies thus
   \begin{align}
-    \E[(Q_i - \Qh_i)^2] &= \frac{1}{\beta^2} \sum_{j \in \Z} j^2 \Pr[Z_i \in
+    \E[(Q_i - \Qh_i)^2] &\le \frac{1}{\beta^2} \sum_{j \in \Z} j^2 \Pr[Z_i \in
     \I_j]  \nonumber \\
     &= \frac{2}{\beta^2} \sum_{j = 1}^\infty j^2 \Pr[Z_i \in \I_j],
     \label{eq:eqexact}
@@ -616,7 +620,7 @@ According to Lemma~\ref{lem:eqbound}, $\Eqi$ decreases exponentially
 when $\snr/\beta^2$ goes to infinity. This happens for increasing \snr\ if we
 set \eg
 \begin{equation*}
-  \beta^2 = \snr^{1-\e}
+  \beta = \lceil \snr^{(1-\e)/2} \rceil
 \end{equation*}
 for some $\e > 0$, in which case $\Eqi \in O\left(\exp(-k \snr^\e) \right)$.
 From this and Lemma~\ref{lem:eedecay}, the overall error satisfies
@@ -624,21 +628,22 @@ From this and Lemma~\ref{lem:eedecay}, the overall error satisfies
   \label{eq:overallO}
   \E[(S-\Sh)^2] \in O(\snr^{-(n - \e')}),
 \end{equation}
-where $\e' = (n-1)\e$ can be made as small as desired. The scaling exponent for
-a fixed $\e$ satisfies therefore
-\begin{equation}
-  \label{eq:sdrepsilon}
-  \limtoinf{\snr} \frac{\log\sdr}{\log\snr} \ge
-  \limtoinf{\snr} \frac{\log \ssq + (n - \e') \log\snr}{\log \snr} = n - \e'. 
-\end{equation}
+where $\e' = (n-1)\e$ can be made as small as desired.
+%The scaling exponent for
+%a fixed $\e$ satisfies therefore
+%\begin{equation}
+%  \label{eq:sdrepsilon}
+%  \limtoinf{\snr} \frac{\log\sdr}{\log\snr} \ge
+%  \limtoinf{\snr} \frac{\log \ssq + (n - \e') \log\snr}{\log \snr} = n - \e'. 
+%\end{equation}
 
 Note that the choice of $\e$ represents a tradeoff: for small $\e$ the error due
 to the ``discrete'' part vanishes only slowly, but the scaling exponent in the
 limit is larger. For larger $\e$, $\Eq$ vanishes quickly but the resulting
 exponent is smaller. In the remainder of this section we show how we can choose
-$\e$ as a function of~$\snr$ to achieve the optimal scaling. 
+$\e$ as a function of~$\snr$ to optimize \sdr\ scaling. 
 
-Let now
+Let
 \begin{equation}
   \label{eq:esnrdecay}
   \e = \e(\snr) = \frac{\log(n \log\snr / k)}{\log\snr},
@@ -650,30 +655,12 @@ With this choice of $\e$,
  % &= O\left( \exp\left( - \exp\left( \e \log \snr \right) \right) \right) \\
  &= O(\snr^{-n}),
 \end{align*}
-hence the overall error is still dominated as in~\eqref{eq:overallO},
-and~\eqref{eq:sdrepsilon} still applies. Inserting~\eqref{eq:esnrdecay}
-in~\eqref{eq:sdrepsilon}, we find
-\begin{align*}
-  \lefteqn{ \limtoinf{\snr} \frac{\log\ssq + (n-(n-1)\e) \log\snr}{\log\snr} }
-  \quad \\
-  &= \limtoinf{\snr} \frac{\log\ssq + n\log\snr - (n-1)\log(n\log\snr/k)}
-  {\log\snr} \\
-  &= n,
-\end{align*}
-which is indeed the optimal scaling exponent.
-
-\begin{remark}
-  While the limiting \emph{exponent} above is indeed the optimal one, the SDR
-  scales as $\snr^n (\log\snr)^{-(n-1)}$  rather than the theoretic optimum
-  $\snr^n$.  This means that the \emph{gap} (in dB) between the theoretically
-  optimal $\sdr$ value and our lower bound grows to infinity as $\snr \ra
-  \infty$.  According to a result in~\cite{TaherzadehK2008}, however, no scheme
-  combining quantization and uncoded transmission as done here can achieve a
-  better SDR scaling than $\snr^n (\log\snr)^{-(n-1)}$.  In the scaling sense,
-  our bound is therefore tight.
-\end{remark}
-
-
+hence the overall error is still dominated as in~\eqref{eq:overallO}.
+Inserting~\eqref{eq:esnrdecay} in~\eqref{eq:overallO}, we find
+\begin{equation*}
+  \mse \in \snr^n (\log\snr)^{-(n-1)},
+\end{equation*}
+which coincides with the lower bound on the MSE scaling of \thmref{scalinglb}.
 
 
 
@@ -842,11 +829,11 @@ The overall MSE scales thus as
 
 \subsection{Extension to General Sources}
 
-The assumption in \secref{genbwexp} was so far that the support of the source
-was limited to~$[-1/2,1/2]$. If a source~$S$ has support outside this interval
-but its support still lies within a bounded set, just define $S' = S/\alpha$,
-with $\alpha > 1$~a constant such that $S' \in [-1/2, 1/2]$. Then use the
-described scheme to transmit~$S'$ and finally let $\Sh = \alpha \Sh'$. The
+The assumption in \secref{genbwexp} has so far been that the support of the
+source is limited to~$[-1/2,1/2]$. If a source~$S$ has support outside this
+interval but its support still lies within a bounded set, just define $S' =
+S/\alpha$, with $\alpha > 1$ such that $S' \in [-1/2, 1/2]$. Then use
+the described scheme to transmit~$S'$ and let $\Sh = \alpha \Sh'$. The
 incurred distortion is $\E[(S - \Sh)^2] = \alpha^2 \E[(S' - \Sh')^2]$; the \sdr\
 therefore still scales in the same way as when~$S \in [-1/2, 1/2]$.
 
@@ -888,7 +875,7 @@ Sloane~\cite{ConwayS1988} and by Gersho and Gray~\cite{GershoG1992}.
   \label{fig:hexlattice}\input{figures/hexlattice.tex_t}}%
   }
   \caption{Two lattices in~$\R^2$ and the corresponding partition into Voronoi
-  regions. The Voronoi region of a particular point is shaded.}
+  regions.}
   \label{fig:r2lattices}
 \end{figure}
 \begin{proposition}
@@ -906,14 +893,14 @@ Sloane~\cite{ConwayS1988} and by Gersho and Gray~\cite{GershoG1992}.
 \end{proof}
 
 \begin{definition}
-  The \emph{Voronoi region} $V(\x)$ of a lattice point $\x \in \Lambda$ is
+  The \emph{Voronoi region} $V(\p)$ of a lattice point $\p \in \Lambda$ is
   defined as
   \begin{equation*}
-    V(\x) = \{\y \in \R^n : \|\y - \x\| \le \|\y - \z\|, \forall \z \in \Lambda,
-    \z \ne \x \},
+    V(\p) = \{\x \in \R^n : \|\x - \p\| \le \|\x - \q\|, \forall \q \in
+    \Lambda\},
   \end{equation*}
-  \ie, $V(\x)$ is the set of points in $\R^n$ that are closer to $\x$ than to
-  any other lattice point.
+  \ie, $V(\p)$ is the set of points in $\R^n$ that at least as close to $\p$ as
+  to any other lattice point.
 \end{definition}
 See \figref{r2lattices} for an illustration of the Voronoi region.
 
@@ -961,33 +948,33 @@ The packing radius and the covering radius are illustrated on
 \end{remark}
 
 \begin{example}
-  Let $\Lambda = \Z / \beta$ for some $\beta \in \NN$. The associated
+  Let $\Lambda = \Z / \beta$ for some $\beta >0$. The associated
   quantizer~$\QL$ maps each real number to the closest multiple of $1/\beta$.
 \end{example}
 
-The following simple property will be useful later.
-\begin{proposition}
-  Let $\Lambda = \Z / \beta$ with $\beta \in \NN$ and let $x \in [-1/2, 1/2]$.
-  Then
-  \begin{equation*}
-    \QL(x) \in
-    \begin{cases}
-      \left\{ -\frac{\beta/2}{\beta}, -\frac{\beta/2 - 1}{\beta}, \dots, 
-      -\frac{1}{\beta}, 0, \frac1\beta, \dots, \frac{\beta/2}{\beta} \right\}
-      & \text{if $\beta$ is even} \\
-      \left\{ -\frac{(\beta - 1)/2}{\beta}, -\frac{(\beta-1)/2 - 1}{\beta}, 
-      \dots, -\frac1\beta, 0, \frac1\beta, \dots, \frac{(\beta-1)/2}{\beta}
-      \right\}
-      & \text{if $\beta$ is odd}.
-    \end{cases}
-  \end{equation*}
-\end{proposition}
-
-\begin{proof}
-  The proof is left as an exercise for the reviewers.
-\end{proof}
-
-The next lemma is useful to bound the transmit power when transmitting a
+%The following simple property will be useful later.
+%\begin{proposition}
+%  Let $\Lambda = \Z / \beta$ with $\beta \in \NN$ and let $x \in [-1/2, 1/2]$.
+%  Then
+%  \begin{equation*}
+%    \QL(x) \in
+%    \begin{cases}
+%      \left\{ -\frac{\beta/2}{\beta}, -\frac{\beta/2 - 1}{\beta}, \dots, 
+%      -\frac{1}{\beta}, 0, \frac1\beta, \dots, \frac{\beta/2}{\beta} \right\}
+%      & \text{if $\beta$ is even} \\
+%      \left\{ -\frac{(\beta - 1)/2}{\beta}, -\frac{(\beta-1)/2 - 1}{\beta}, 
+%      \dots, -\frac1\beta, 0, \frac1\beta, \dots, \frac{(\beta-1)/2}{\beta}
+%      \right\}
+%      & \text{if $\beta$ is odd}.
+%    \end{cases}
+%  \end{equation*}
+%\end{proposition}
+%
+%\begin{proof}
+%  The proof is left as an exercise for the reviewers.
+%\end{proof}
+%
+The next two lemmata are useful to bound the transmit power when transmitting a
 quantized random vector.
 \begin{lemma}
   \label{lem:latquantvar}
@@ -1020,16 +1007,28 @@ quantized random vector.
   thus completing the proof.
 \end{proof}
 
-\begin{notebox}
-  Todo: Add a general bound on the quantization error variance.
-\end{notebox}
-
 \begin{example}
   Let $X$ be a scalar zero-mean random variable of variance~$\sq$ and let
   $\Lambda = \Z / \beta$, for some $\beta > 0$. The covering radius of this
   lattice is $R = 1/\beta$, so $\E[\QL(X)^2] \le \sq + 2 \beta^{-1} \sigma +
   \beta^{-2}$.
 \end{example}
+
+\begin{lemma}
+  \label{lem:voronoivarbound}
+  Let $\X$~be a random vector whose support is limited to the Voronoi
+  region~$V(\vz)$ of a lattice~$\Lambda$, and let $K_{\X}$ be its covariance
+  matrix. Then $\Tr K_{\X} \le R\,\Vol(V(\vz))$, where $R$~is the covering
+  radius of~$\Lambda$ and $\Vol(V(\vz))$ is the volume of a Voronoi region.
+\end{lemma}
+
+\begin{proof}
+  \begin{align*}
+    \Tr K_{\X} &= \E[\|\X\|^2] \\
+    & = \int_{V(\vz)} \|x\|^2 \fXv(\x) d\x \\
+    & \le R \int_{V(\vz)} \fXv(\x) d\x = R\, \Vol(V(\vz)).
+  \end{align*}
+\end{proof}
 
 
 
@@ -1039,25 +1038,24 @@ quantized random vector.
 The procedure to encode a vector~$\S$ of $m$~source symbols into $mn$~channel
 input vectors $\X_1$, \ldots, $\X_n$ using the lattice~$\Lambda$ for
 quantization is analog to that in \secref{scalarquant}, except that now all
-involved quantities are $m$-dimensional vectors. First define $\Evc_0 = \S$.
+involved quantities are $m$-dimensional vectors.
+
+Let $\Lambda$ be some fixed lattice of dimension~$m$ and define $\Evc_0 = \S$.
 For $i = 1$, \ldots, $n-1$ define
 \begin{align}
-  \Q_i &= \frac{1}{\beta} \QL(\beta \Evc_{i-1})  \nonumber \\
-  \Evc_i &= \beta ( \Evc_{i-1} - \Q_i). \label{eq:latticeQE}
+  \Q_i &= \QLb(\Evc_{i-1})  \nonumber \\
+  \Evc_i &= \beta ( \Evc_{i-1} - \Q_i), \label{eq:latticeQE}
 \end{align}
-For the reasons given in \secref{scalarquant}, the variance of a quantized
-random vector converges to the variance of the random vector as the quantization
-resolution~$\beta$ grows. Moreover, as $\beta \goesto \infty$, the distribution
-of the quantization errors~$\Evc_i$ approaches a uniform distribution over the
-Voronoi region of the point~$\vz$~\cite{ZamirF1996}. There exists therefore
-$\beta_0$ and a constant~$\gamma$ such that $\Var \Q_i \le \gamma$ and
-$\Var \Evc_i \le \gamma$  for $\beta > \beta_0$ and for all $i = 1$, \ldots,
-$n-1$. 
+where $\beta \in \NN$. According to \lemref{latquantvar}, $\E[\|\Q_i\|^2]$~is
+upper bounded by a constant independent of~$\beta$. Moreover, $\Evc_i$
+is contained within the Voronoi region of~$\Lambda$ around the origin, so by
+\lemref{voronoivarbound} $\E[\|\Evc_i\|^2]$ is also upper bounded. Let
+$\gamma$~denote the upper bound on~$\E[\|\Q_i\|^2]$ and~$\E[\|\Evc_i\|^2]$.
 
-The channel inputs are now given by
+The channel inputs are given by
 \begin{align*}
-  \X_i &= \frac{\sqrt{mP}}{\gamma} \Q_i \quad \text{for $i = 1$, \dots, $n-1$ and}
-  \\
+  \X_i &= \frac{\sqrt{mP}}{\gamma} \Q_i \quad \text{for $i = 1$, \dots, $n-1$
+  and} \\
   \X_n &= \frac{\sqrt{mP}}{\gamma} \Evc_{n-1}.
 \end{align*}
 By the above argument, this ensures that $\E[\X_i^2]/m \le P$ for all~$i$.
@@ -1072,23 +1070,24 @@ same argument sequence as in \secref{scalarquant} can be used to lower bound the
 squared error, independent of the particular decoder used.
 
 In the following we again write the quantization resolution in terms of~$\snr$
-as $\beta^2 = \snr^{1-\e(\snr)}$, without loss of generality.
+as $\beta = \lceil \snr^{(1-\e)/2} \rceil$ as in \secref{scalarquant}, without
+loss of generality.
 
 \begin{lemma}
   \label{lem:zivboundvec}
   Consider a communication system where a continuous-valued source vector~$\S$
-  is encoded into a vector~$\X(S)$, sent across independent parallel scalar AWGN
-  channels with noise variance~$\szq$, and decoded at the receiver to produce
-  an estimate~$\Shv$. If the density $f_{\S}(\s)$ of the source is such that
-  there exists a set~$\Xi$ and a number $\pmin > 0$ such that $f_{\S}(\s) \ge
-  \pmin$ whenever $s \in \Xi$, then for any vector~$\Dv$ the mean squared
+  is encoded into a vector~$\X(\S)$, sent across independent parallel scalar
+  AWGN channels with noise variance~$\szq$, and decoded at the receiver to
+  produce an estimate~$\Shv$. If the density $f_{\S}(\s)$ of the source is such
+  that there exists a set~$\Xi$ and a number $\pmin > 0$ such that $f_{\S}(\s)
+  \ge \pmin$ whenever $s \in \Xi$, then for any vector~$\Dv$ the mean squared
   error incurred by the communication system satisfies
   \begin{equation*}
     \msev \ge \pmin  \left( \frac{\|\Dv\|}{2}\right)^2 \int_{\Xi \cap (\Xi -
     \Dv)} Q(d(\s, \Dv)/2 \sz) d\s,
   \end{equation*}
-  where $d(\s,\Dv) = \|\X(\s) - \X(\s + \Dv)\|$. The addition of a set $A$ and a
-  vector~$\x$ is defined as $A + \x = \{\vect{a} + \x : \vect{a} \in A\}$.
+  where $d(\s,\Dv) = \|\X(\s) - \X(\s + \Dv)\|$. (The addition of a set $A$ and
+  a vector~$\x$ is defined as $A + \x = \{\vect{a} + \x : \vect{a} \in A\}$.)
 \end{lemma}
 
 \begin{remark}
@@ -1140,8 +1139,9 @@ It is restated here for completeness.
 
 \begin{theorem}
   \label{thm:scalinglbvec}
-  For any parameter~$\beta$ and for any decoder, the mean squared error of the
-  lattice quantizer transmission strategy of \secref{latticequant} satisfies
+  For any choice of the parameter~$\beta$ (as a function of \snr) and for any
+  decoder, the mean squared error of the lattice quantizer transmission strategy
+  of \secref{latticequant} satisfies
   \begin{equation*}
     \msev \in \Omega(\snr^{-n} (\log\snr)^{n-1}).
   \end{equation*}
