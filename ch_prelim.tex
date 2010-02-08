@@ -161,31 +161,33 @@ definition.
   respectively.
 \end{definition}
 
-Using the concepts of \sdr\ and \snr, the performance tradeoff can be succinctly
-expressed in a single formula that is valid independent of the source variance
-and the channel noise variance. 
+Using the concepts of SDR and SNR, the performance tradeoff can be
+succinctly expressed in a single formula that is valid independent of the source
+variance and the channel noise variance. 
 \begin{definition}
   \label{def:sdrsnr}
   Consider a source/channel communication system with source
   variance~$\ssq$ and whose channel is Gaussian with noise variance~$\szq$. If
   the cost measure is the input power, \ie, $\rho(x) = x^2$, and the distortion
   measure is the squared error, \ie, $d(s,\sh) = (s - \sh)^2$, then the
-  \emph{source-to-distortion ratio} \sdr\ and the \emph{signal-to-noise ratio}
-  \snr\ are defined respectively as
+  \emph{source-to-distortion ratio} (SDR) and the \emph{signal-to-noise ratio}
+  (SNR) are defined respectively as
   \begin{equation*}
     \sdr = \frac{\ssq}{D} \quad \text{and} \quad
     \snr = \frac{P}{\szq}.
   \end{equation*}
+  [\todo: Write something about distinction between SNR and $\snr$ notation (the
+  latter is a variable).]
 \end{definition}
 
 Often a whole family of codes for Gaussian channels is defined implicitly by
-making the encoder and decoder depend on the~\snr. To accommodate this,
+making the encoder and decoder depend on the~SNR. To accommodate this,
 \defref{knsccode} needs to be slightly extended as follows.
 \begin{definition}
   \label{def:codingscheme}
   A \emph{coding scheme} for the Gaussian channel is a code whose encoder and
   decoder not only depend on the source and the channel output, respectively,
-  but may also depend on the value of~\snr. The notation used is usually just
+  but may also depend on the value of the~SNR. The notation used is usually just
   $f(s^k)$ and $g(y^n)$ instead of the technically correct $f(s^k,\snr)$ and
   $g(y^n,\snr)$.
 \end{definition}
@@ -221,12 +223,12 @@ beginning of this chapter.  For completeness, it is given here again formally.
 \end{definition}
 
 For Gaussian channels, \thmref{sepconverse} leads to the following upper bound
-on the~\sdr.
+on the~SDR.
 \begin{theorem}
   \label{thm:sdrub}
   If a discrete-time analog source $\pS$ of zero mean and variance~$\ssq$ is
   transmitted across an AWGN channel with noise variance~$\szq$ using a code of
-  rate~$\k$, the \sdr\ is bounded by
+  rate~$\k$, the SDR is bounded by
   \begin{equation}
     \label{eq:sdrub}
     \sdr \le 2^{2 D(\pS \| \phi_{\ssq})} (1 + \snr)^{1/\k},
@@ -276,7 +278,7 @@ on the~\sdr.
 
 The problem considered in the first part of this thesis is to develop and
 analyze coding schemes for the Gaussian channel that have a good asymptotic
-performance. According to \thmref{sdrub}, the \sdr\ of any coding scheme scales
+performance. According to \thmref{sdrub}, the SDR of any coding scheme scales
 at most as $\snr^{1/\k}$. Expressed in the asymptotic notation explained in
 \appref{asymptotic}, this is written as
 \begin{equation*}
@@ -658,7 +660,7 @@ shows.
     \frac{\ssq}{\E[E_n^2]} = \frac{\ssq}{\E[(\Eh_{n-1} - E_{n-1})^2]} =
     (1 + P/\szq)^n,
   \end{equation*}
-  which is indeed the largest possible \sdr\ according
+  which is indeed the largest possible SDR according
   to~\remref{perflimitgaussiansource}.
 \end{example}
 
@@ -728,7 +730,7 @@ feedback is available.
 
 \begin{remark}
   \label{rem:lmmse}
-  Note that the \sdr\ achievable by the scheme of \exref{gaussfb} does not
+  Note that the SDR achievable by the scheme of \exref{gaussfb} does not
   depend on the distribution of the source. Comparing the performance of this
   scheme with the bound of \thmref{sdrub}, it follows that the scheme can be
   used to construct an asymptotically optimal Gaussian communication system for

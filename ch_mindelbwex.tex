@@ -19,8 +19,8 @@ The decoder estimates~$\Eh$ and computes the final source estimate $\Sh = \Sh' -
   &= \E[(\Eh - E)^2] \\
   &= \frac{\seq}{1 + \snr}.
 \end{align*}
-The $\sdr$ after the first $n-1$~rounds of transmission was $\sdr' = \ssq/\seq$.
-The final $\sdr$ is thus
+The SDR after the first $n-1$~rounds of transmission was $\sdr' = \ssq/\seq$.
+The final SDR is thus
 \begin{equation*}
   \sdr = \frac{\ssq}{\E[(\Sh - S)^2]} = \sdr' (1 + \snr).
 \end{equation*}
@@ -53,9 +53,9 @@ input~$X_2$. This process is continued until after $n-1$~rounds the remaining
 quantization error~$E_{n-1}$ is simply scaled up to produce the final channel
 input~$X_n$. 
 
-With respect to the goal of an \sdr\ that grows fast with the \snr, a first
+With respect to the goal of an SDR that grows fast with the SNR, a first
 comment can be made. If a quantizer uses a resolution that is upper
-bounded with respect to the \snr, then as $\snr \goesto \infty$ the mutual
+bounded with respect to the SNR, then as $\snr \goesto \infty$ the mutual
 information of the corresponding channel approaches $H(Q_i)$, which is bounded.
 The resulting overall mutual information is then
 \begin{align*}
@@ -63,10 +63,10 @@ The resulting overall mutual information is then
   &\le H(Q_i) + \frac{n-1}{2} \log_2(1 + \snr).
 \end{align*}
 Following a similar line as in the proof of \thmref{sdrub}, it follows that the
-\sdr\ can grow at best as $\snr^{n-1}$. Since the optimal scaling is $\snr^n$,
+SDR can grow at best as $\snr^{n-1}$. Since the optimal scaling is $\snr^n$,
 this means that one channel use is ``lost'' in terms of order.  If there is to
 be any hope to get the optimal scaling, the resolution of all quantizers must
-therefore grow with the \snr.
+therefore grow with the SNR.
 
 The simplest implementation of the hybrid scheme uses the same uniform quantizer
 in every round. This setting is analyzed in detail in \secref{scalarquant},
@@ -96,7 +96,7 @@ $k$~source symbols are encoded into $n$~channel inputs with $1 < k < n$.
 
 The simplest version of the hybrid transmission scheme introduced in
 \secref{hybridscheme} encodes one source symbol into $n$~channel inputs using a
-scalar quantizer. This section derives upper and lower bounds on the \sdr\
+scalar quantizer. This section derives upper and lower bounds on the SDR
 scaling for this case. The sections that follow will progressively extend the
 analysis to more general hybrid schemes.
 
@@ -117,7 +117,7 @@ for $i = 1$, \dots, $n-1$ where $\Int(x)$ is the unique integer~$i$ satisfying
 The parameter $\beta \in
 \NN$ determines the quantization resolution; the larger~$\beta$ the finer the
 quantization. Following the argument at the beginning of this chapter,
-$\beta$~is assumed to grow with the~\snr. The following result will be useful in
+$\beta$~is assumed to grow with the~SNR. The following result will be useful in
 the sequel.
 
 \begin{lemma}
@@ -173,6 +173,21 @@ the sequel.
     which completes the proof.
   \end{enumerate}
 \end{proof}
+
+\begin{remark}
+  \label{rem:scgeometry}
+  The hierarchical quantization described by~\eqref{eq:QEdef} divides the source
+  space into intervals of the form $[(j-1/2)\beta^{-(n-1)},
+  (j+1/2)\beta^{-(n-1)})$, as illustrated in \figref{hierarchicalsq}.
+\end{remark}
+\begin{figure}[tbp]
+  \begin{center}
+    \figbox{hierarchicalsq}
+  \end{center}
+  \caption{The hierarchical quantization implied by the transmission scheme in
+  \secref{commscheme}.}
+  \label{fig:hierarchicalsq}
+\end{figure}
 
 The channel input symbols $X_i$ are determined from the $Q_i$ and from $E_{n-1}$
 according to 
@@ -247,7 +262,7 @@ $\Omega$-notation is defined in Appendix~\ref{app:asymptotic}.)
     \mse \in \Omega(\snr^{-1+\e/2} \exp\{-c\snr^\e\})
   \end{equation*}
   if $\limtoinf{\snr} \snr^{\e(\snr)} = \infty$, where $c>0$ does not depend
-  on~\snr, and
+  on~$\snr$, and
   \begin{equation*}
     \mse \in \Omega(\snr^{-1})
   \end{equation*}
@@ -285,8 +300,8 @@ choose~$\e(\snr)$ optimally will be the subject of Theorem~\ref{thm:scalinglb}.
   \end{equation}
 
   We now apply Lemma~\ref{lem:zivbound} with $\Delta = \beta^{-1}$. The
-  parameter $\beta$ will be chosen to increase with~$\snr$, therefore $\Delta
-  \in [0, B-A)$ holds for sufficiently large~$\snr$.
+  parameter $\beta$ will be chosen to increase with the SNR, therefore $\Delta
+  \in [0, B-A)$ holds for sufficiently large values of~$\snr$.
 
   Using~\eqref{eq:xbetadist}, the resulting bound on the mean squared error is
   \begin{equation*}
@@ -322,7 +337,7 @@ choose~$\e(\snr)$ optimally will be the subject of Theorem~\ref{thm:scalinglb}.
     \Delta/2) \int_{\psi(\Delta)} ds.
   \end{equation*}
   Letting $\Delta = 1/(\sqrt{\snr}\beta^{n-1})$ and using $\beta^2 \in
-  \Theta(\snr^{1-\e})$ yields (for sufficiently large \snr)
+  \Theta(\snr^{1-\e})$ yields (for sufficiently large~$\snr$)
   \begin{equation*}
     \mse \ge c \snr^{-n+(n-1)\e} Q\left(1/2\gamma\right)
     \int_{\psi(\Delta)} ds.
@@ -469,7 +484,7 @@ To estimate $S$ from  $Y_1$, \dots, $Y_n$, the decoder first
 computes separate estimates $\Qh_1$, \dots, $\Qh_{n-1}$ and $\Eh_{n-1}$, and
 then combines them to obtain the final estimate~$\Sh$.  While this strategy is
 suboptimal in terms of achieving a small MSE, we will see that it is good enough
-to achieve the desired \sdr\ scaling.
+to achieve the desired SDR scaling.
 
 To estimate the $Q_i$ we use a maximum likelihood (ML) decoder, which yields the
 minimum distance estimate
@@ -540,7 +555,7 @@ where $\Eqi \deq \E[(Q_i - \Qh_i)^2]$ and $\Ee \deq \E[(E_{n-1} -
   where the second equality follows from the symmetry of the distribution
   of~$Z_i$. Now,
   \begin{equation*}
-    \Pr[Z_i \in \I_j] = Q\left( \frac{(j - \frac12) \sqrt \snr}{\gamma\beta}
+    \Pr[Z_i \in \I_j] = Q\left( \frac{(j - \frac12) \sqrt{\snr}}{\gamma\beta}
     \right) - Q\left( \frac{(j + \frac12) \sqrt{\snr}}{\gamma\beta } \right),
   \end{equation*}
   where
@@ -604,7 +619,7 @@ where $\Eqi \deq \E[(Q_i - \Qh_i)^2]$ and $\Ee \deq \E[(E_{n-1} -
     &= \frac{\seq}{1 + \snr\seq/\gamma^2} \\
     & < \frac{\gamma^2}{\snr}.
   \end{align*}
-  Since $\gamma$ is independent of~\snr\ (cf.\
+  Since $\gamma$ is independent of~SNR (cf.\
   Proposition~\ref{prop:qeproperties}), $\Ee \in O(\snr^{-1})$ as claimed.
 \end{proof}
 
@@ -617,7 +632,7 @@ Recall the formula for the overall error
   \frac{1}{\beta^{2(n-1)}} \Ee.
 \end{equation*}
 According to Lemma~\ref{lem:eqbound}, $\Eqi$ decreases exponentially
-when $\snr/\beta^2$ goes to infinity. This happens for increasing \snr\ if we
+when $\snr/\beta^2$ goes to infinity. This happens for increasing SNR if we
 set \eg
 \begin{equation*}
   \beta = \lceil \snr^{(1-\e)/2} \rceil
@@ -641,7 +656,7 @@ Note that the choice of $\e$ represents a tradeoff: for small $\e$ the error due
 to the ``discrete'' part vanishes only slowly, but the scaling exponent in the
 limit is larger. For larger $\e$, $\Eq$ vanishes quickly but the resulting
 exponent is smaller. In the remainder of this section we show how we can choose
-$\e$ as a function of~$\snr$ to optimize \sdr\ scaling. 
+$\e$ as a function of~$\snr$ to optimize SDR scaling. 
 
 Let
 \begin{equation}
@@ -785,7 +800,7 @@ following lemma (compare with \lemref{eqbound}).
   \begin{align*}
     \E[(\Qh_{i,j} - Q_{i,j})^2] &\le \Pr\left[|Z_j| \ge \frac{\sqrt{P}}{2 \gamma
     \beta^k} \right] \\
-    &= 2 Q\left( \frac{\sqrt\snr}{2\gamma\beta^k} \right) \\
+    &= 2 Q\left( \frac{\sqrt{\snr}}{2\gamma\beta^k} \right) \\
     &\le \exp\{-c \snr / \beta^{2k} \}
   \end{align*}
   with $c = 1/8\gamma$.
@@ -834,7 +849,7 @@ source is limited to~$[-1/2,1/2]$. If a source~$S$ has support outside this
 interval but its support still lies within a bounded set, just define $S' =
 S/\alpha$, with $\alpha > 1$ such that $S' \in [-1/2, 1/2]$. Then use
 the described scheme to transmit~$S'$ and let $\Sh = \alpha \Sh'$. The
-incurred distortion is $\E[(S - \Sh)^2] = \alpha^2 \E[(S' - \Sh')^2]$; the \sdr\
+incurred distortion is $\E[(S - \Sh)^2] = \alpha^2 \E[(S' - \Sh')^2]$; the SDR
 therefore still scales in the same way as when~$S \in [-1/2, 1/2]$.
 
 
@@ -978,14 +993,13 @@ The next two lemmata are useful to bound the transmit power when transmitting a
 quantized random vector.
 \begin{lemma}
   \label{lem:latquantvar}
-  Let $\X$ be a random vector with probability density function $\fXv(\x)$,
-  zero-mean, and covariance matrix $K_{\X}$ satisfying $\Tr K_{\X} = \sq <
-  \infty$. Let $\Y = \QL(\X)$. Then $Tr K_{\Y} \le \sq + 2R\sigma + R^2$, 
-  where $R$~is the covering radius of~$\Lambda$.
+  Let $\X$ be a random vector satisfying $\E[\|\X\|^2] = \sq < \infty$. Let $\Y
+  = \QL(\X)$. Then $\E[\|\Y\|^2] \le \sq + 2R\sigma + R^2$, where $R$~is the
+  covering radius of~$\Lambda$.
 \end{lemma}
 
 \begin{proof}
-  First write $\Tr K_{\Y} = \E[\|\Y\|^2] = \E[\|\QL(\X)\|^2]$. Next,
+  The power of~$\Y$ is given by
   \begin{equation*}
     \E[\|\QL(\X)\|^2] = \int_{R^n} \|\QL(\x)\|^2 \fXv(\x) d\x
     = \sum_{\p \in \Lambda} \|\p\|^2 \int_{V(\p)} \fXv(\x) d\x.
@@ -1017,20 +1031,20 @@ quantized random vector.
 \begin{lemma}
   \label{lem:voronoivarbound}
   Let $\X$~be a random vector whose support is limited to the Voronoi
-  region~$V(\vz)$ of a lattice~$\Lambda$, and let $K_{\X}$ be its covariance
-  matrix. Then $\Tr K_{\X} \le R\,\Vol(V(\vz))$, where $R$~is the covering
+  region~$V(\vz)$ of a lattice~$\Lambda$. Then $\E[\|\X\|^2] \le
+  R\Vol(V(\vz))$, where $R$~is the covering
   radius of~$\Lambda$ and $\Vol(V(\vz))$ is the volume of a Voronoi region.
 \end{lemma}
 
 \begin{proof}
   \begin{align*}
-    \Tr K_{\X} &= \E[\|\X\|^2] \\
-    & = \int_{V(\vz)} \|x\|^2 \fXv(\x) d\x \\
-    & \le R \int_{V(\vz)} \fXv(\x) d\x = R\, \Vol(V(\vz)).
+    \E[\|\X\|^2] & = \int_{V(\vz)} \|x\|^2 \fXv(\x) d\x \\
+    & \le R \int_{V(\vz)} \fXv(\x) d\x = R \Vol(V(\vz)).
   \end{align*}
 \end{proof}
 
 
+The number is $c\snr$.
 
 
 \subsection{Transmission Strategy}
@@ -1139,7 +1153,7 @@ It is restated here for completeness.
 
 \begin{theorem}
   \label{thm:scalinglbvec}
-  For any choice of the parameter~$\beta$ (as a function of \snr) and for any
+  For any choice of the parameter~$\beta$ (as a function of the SNR) and for any
   decoder, the mean squared error of the lattice quantizer transmission strategy
   of \secref{latticequant} satisfies
   \begin{equation*}
@@ -1406,7 +1420,7 @@ delay schemes.
     \begin{equation*}
       \msev \ge c_3 \snr^{-n+(n-1)\e} \int_{\Psi(\Dv)} d\s,
     \end{equation*}
-    with $c_3 > 0$ a constant independent of~\snr.
+    with $c_3 > 0$ a constant independent of~$\snr$.
 
     It remains to prove the convergence of $\int_{\Psi(\Dv)} d\s$ to a constant.
     Since $\Delta$ goes to zero as $\snr \goesto \infty$, the set $\Psi(\Dv)$
@@ -1430,8 +1444,8 @@ delay schemes.
       \msev \ge c_1 \beta^{-2} Q(c_2 \sqrt{\snr} \beta^{-1}) \int_{\Xi \cap (\Xi
       - \Dv)} d\s,
     \end{equation*}
-    where $c_1$ and~$c_2$ are positive constants independent of~\snr.  The rest
-    of the proof is essentially identical to that of
+    where $c_1$ and~$c_2$ are positive constants independent of~$\snr$.  The
+    rest of the proof is essentially identical to that of
     \lemref{lowerbound2}. 
   \end{proof}
 

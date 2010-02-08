@@ -288,6 +288,58 @@ unique (up to a scaling factor).
   See Figure~\ref{fig:cuccongeom} for a geometric interpretation of this proof.
 \end{proof}
 
+The following counterexample shows that if the capacity function is not
+differentiable then the cost function for which the capacity per unit cost is
+achieved is not unique.
+
+\begin{example}
+  \label{ex:nondiffcapacity}
+  Consider the ternary-input channel shown in \figref{ternaryinputch}. The input
+  alphabet is $\{0,1,?\}$ and the output alphabet is~$\{0,1\}$. Let the cost be
+  given by $\rho(0) = \rho(1) = 2$ and $\rho(?) = 1$. If the average cost
+  constraint~$P$ is between~$1$ and~$2$, the capacity achieving distribution is
+  $\Pr[X=0] = \Pr[X=1] = (P-1)/2$ and $\Pr[X = ?] = 2 - P$, the resulting mutual
+  information is $I(X;Y) = P - 1$. If $P \ge 2$, the capacity achieving
+  distribution is $\Pr[X=0] = \Pr[X = 1] = 1/2$; the resulting mutual
+  information is $I(X;Y) = 1$. \figref{edgecapacity} displays the corresponding
+  capacity function. It is clear that when the capacity curve is moved
+  horizontally (by adding or subtracting a constant from~$\rho(x)$), the new
+  operating point will still achieve the capacity per unit cost.
+  \begin{figure}[tbp]
+    \centerline{%
+    \subfloat{
+    \begin{tikzpicture}[every node/.style={font=\footnotesize}]
+        \foreach \ya in {0,1,2} {
+        \foreach \yb in {0,2} {
+        \fill (0,\ya) circle (2pt);
+        \fill (2.5,\yb) circle (2pt);
+        \draw (0,\ya) -- (2.5,\yb);
+        }
+        }
+        \path (0,1) -- node[above,very near start] {$0.5$} (2.5,2);
+        \path (0,1) -- node[below,very near start] {$0.5$} (2.5,0);
+      \end{tikzpicture}}
+      \hfil
+      \subfloat{\label{fig:edgecapacity}
+      \begin{tikzpicture}[scale=1.5]
+        \coordinate (o) at (0,0);
+        \draw[l] (-0.2,0) -- (3.2,0) node[right] {$P$};
+        \draw[l] (0,-0.2) -- (0,1.2) node[above] {$C(P)$};
+        \draw (1,0) -- (2,1) -- (3,1);
+        %\draw[xshift=-.5cm] (1,0) -- (2,1) -- (3,1);
+        %\coordinate (p1) at (1.5,1);
+        \coordinate (p2) at (2,1);
+        %\draw[dashed] (0,0) -- ($ (0,0)!1.5!(p1) $);
+        \draw[dashed] (0,0) -- ($ (0,0)!1.5!(p2) $);
+        \draw[dashed] (p2) -- (o -| p2);
+      \end{tikzpicture}}
+      }%end centerline
+    \caption{Ternary input channel and corresponding capacity function for
+    \exref{nondiffcapacity}.}
+    \label{fig:ternaryinputch}
+  \end{figure}
+\end{example}
+
 \begin{figure}[tbph]
   \begin{center}
     \begin{tikzpicture}[scale=0.7]
