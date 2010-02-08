@@ -2,19 +2,25 @@
 
 \begin{tikzpicture}
   \coordinate (o) at (0,0);
+
+  % This is the only explicitly defined coordinate. Everything else is defined
+  % in terms of E0!
   \coordinate (E0) at (4,0);
   \coordinate (X1) at ($ (0,0)!1.33!(E0) $);
   \coordinate (Z1) at ($ (0,0)!0.8!90:(E0) $);
   \coordinate (Y1) at ($ (X1) + (Z1) $);
 
   \coordinate (X1r) at ($ (o)!(X1)!(Y1) $);
-  \coordinate (X2) at ($ (o)!1!90:(X1r) $);
   
   % The estimate Eh0 is E0 projected onto Y1.
   \coordinate (Eh0) at ($ (o)!(E0)!(Y1) $);
 
   \coordinate (E1) at ($ (Eh0) - (E0) $);
 
+  % X2 has the same length as X1 but is in the direction of E1.
+  \path let \p1 = (X1), \n1 = {veclen(\x1,\y1)} in
+  ($ (o)!\n1!(E1) $) node[coordinate] (X2) {};
+  
   \draw[l] (o) -- (E0) node[below] {$E_0$};
   \draw[l] (o) -- (X1) node[below] {$X_1$};
   \draw[l] (o) -- (Z1) node[above] {$Z_1$};
