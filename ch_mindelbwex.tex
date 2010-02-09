@@ -719,7 +719,7 @@ channel inputs $X_1$, \dots, $X_n$ is displayed schematically on
   quantizers with resolution~$\beta$ as described in~\eqref{eq:QEdefkn}. The
   part marked in thick lines corresponds exactly to the encoding scheme
   described in \secref{scalarquant} to encode one source symbol into three
-  channel uses.}
+  channel uses; compare this to \figref{1nencoding}.}
   \label{fig:knencoding}
 \end{figure}
 The encoder consists of $k$~parallel scalar encoders that encode each~$S_i$ into
@@ -1411,33 +1411,92 @@ delay schemes.
   \section{Proof of Lemmata~\ref{lem:lowerbound1vec}
   and~\ref{lem:lowerbound2vec}}
 
+  The following auxiliary result and its corollary will be useful for the proofs
+  to come. See \figref{voronoiintersect} for an illustration.
+
+  \begin{lemma}
+    \label{lem:subvoronoi}
+    Let $\Lambda$ be an arbitrary $m$-dimensional lattice and let $\Lambda' =
+    \Lambda/\beta$, where $\beta \in \NN$. (Clearly $\Lambda$ is a sublattice of
+    $\Lambda'$.) Then the fraction of Voronoi cells of $\Lambda$ that do not lie
+    on the boundary between two Voronoi cells of $\Lambda'$ is bounded away from
+    zero as $\beta$~grows large.
+  \end{lemma}
+
+  \begin{proof}
+    Let $V(\Lambda)$ be a Voronoi region of $\Lambda$ and let $V(\Lambda')$ be a
+    Voronoi region of~$\Lambda'$.  Consider a sphere of radius $\rho - 2R'$
+    around the center of $V(\Lambda)$, where $\rho$ is the
+    packing radius of $\Lambda$ and $R' = R/\beta$ is
+    the covering radius of~$\Lambda'$. By definition of the packing radius, this
+    sphere is completely contained within $V(\Lambda)$. Furthermore, the
+    distance from the border of the sphere to the border of $V(\Lambda)$ is
+    at least~$2R'$. Any Voronoi cell of $\Lambda'$ that intersects
+    with the boundary of $V(\Lambda)$ lies therefore outside the sphere. 
+    
+    The fraction of Voronoi cells of $\Lambda'$ that do not lie on the boundary
+    of $V(\Lambda)$ is therefore lower bounded by
+    \begin{align*}
+      \frac{(\rho - 2R')^m V^{(m)}(1)}{\Vol V(\Lambda)} &= \frac{(\rho -
+      2R/\beta)^n V^{(m)}(1)}{\Vol V(\Lambda)},
+    \end{align*}
+    where $V^{(m)}(1)$ is the volume of the $m$-dimensional unit sphere. As beta
+    grows large, this converges to $\rho V^{(n)}(1) / \Vol V(\Lambda) > 0$, and
+    the proof is complete.
+  \end{proof}
+
+  \begin{corollary}
+    Let $\Lambda$ be a fixed lattice and consider the sequence of lattices
+    $\Lambda/\beta$, $\Lambda/\beta^2$, \dots, $\Lambda/\beta^{n-1}$, where
+    $\beta \in \NN$. Then the fraction of Voronoi regions of
+    $\Lambda/\beta^{n-1}$ that do not lie on the boundary between two Voronoi
+    regions of any of its sublattices $\Lambda/\beta^i$, $i < n-1$, is bounded
+    away from zero as $\beta$ grows large.
+  \end{corollary}
+
+  \begin{proof}
+    Apply \lemref{subvoronoi} successively to the pairs $\Lambda/\beta^i$,
+    $\Lambda/\beta^{i+1}$, for $i = 1$, \dots, $n-2$.
+  \end{proof}
+
+  \begin{figure}[tbp]
+    \centerline{
+    \subfloat[$\beta = 3$]{\input{figures/hierhex3.tex_t}}
+    \hfil
+    \subfloat[$\beta = 4$]{\input{figures/hierhex4.tex_t}}
+    }
+    \caption{Illustration for \lemref{subvoronoi} and the corollary thereof.
+    Note how in the right picture the fraction of small Voronoi cells that are
+    not ``cut'' by a Voronoi boundary of the sublattice is larger.}
+    \label{fig:voronoiintersect}
+  \end{figure}
+
   \begin{proof}[Proof of \lemref{lowerbound1vec}]
     Consider the lattice $\Ln \deq \Lambda/\beta^{n-1}$. For $\p \in
     \Ln$, let $V(\p)$ be the Voronoi region of~$\p$.
+    For some $\vxi \in V(\vz)$ define $\Dv = \Delta \vxi$ for some $\Delta \le
+    1$ and define $\Vd(\p) = V(\p) \cap (V(\p) - \Dv)$. This set has the
+    property that $\x + \Dv \in V(\p)$ whenever $\x \in \Vd(\p)$.\footnote{For
+    reference, the sets $\Vd(\p)$ are the equivalent of the intervals
+    $\I_j^{\Delta}$ in the proof of \lemref{lowerbound1}.}
 
-    \begin{notebox}
-      Need to show that for each $\p \in \Ln$ there is a set $V'(\p) \subset
-      V(\p)$ with the property that~$V'(\p)$ is not divided by any of the
-      Voronoi regions of the higher level lattices.
-    \end{notebox}
-
-    For some $\vxi \in V'(\vz)$ define $\Dv = \Delta \vxi$ for some $\Delta \le
-    1$ and define $\Vd'(\p) = V'(\p) \cap (V'(\p) - \Dv)$. This set has the
-    property that $\y + \Dv \in V'(\p)$ whenever $\y \in \Vd'(\p)$.\footnote{For
-    reference, the sets $\Vd'(\p)$ for $\p \in \Ln$ are the equivalent of the
-    intervals $\I_j^{\Delta}$ in the proof of \lemref{lowerbound1}.}
-
-    The sets $\Vd'(\p)$ defined this way have the property that if $\s \in
-    \Vd'(\p)$ for some $\p \in \Ln$,
+    If $\p$ is such that $V(\p)$ does not lie on the boundary of the Voronoi
+    region of a sublattice, then $\Vd(\p)$ defined this way has the property
+    that if $\s \in \Vd(\p)$,
     \begin{align*}
       d(\s,\Dv) &= \frac{\sqrt{mP}}{\gamma} \| \Evc_{n-1}(\s) - \Evc_{n-1}(\s +
       \Dv) \| \\
       &= \frac{\sqrt{mP}}{\gamma} \| \vxi \| \beta^{n-1} \Delta.
     \end{align*}
     We can now apply \lemref{zivboundvec} and restrict the integral to the set
-    \[ \Psi(\Dv) \deq \Xi \cap (\Xi - \Dv) \cap \bigcup_{\p \in \Ln} \Vd'(\p).
+    \[ \Psi(\Dv) \deq \Xi \cap (\Xi - \Dv) \cap \bigcup_{\p \in \Ln'} \Vd(\p),
     \]
-    The lower bound is then relaxed to give
+    where $\Ln'$ is defined to be the subset of those points in $\Ln$ whose
+    Voronoi region does not lie on the boundary between Voronoi regions of a
+    sublattice. By the corollary to \lemref{subvoronoi}, this set has positive
+    probability.
+
+    The lower bound of \lemref{zivboundvec} is then relaxed to give
     \begin{equation*}
       \msev \ge c_1 \Delta^2 Q(c_2 \sqrt{\snr} \beta^{n-1} \Delta) 
       \int_{\Psi(\Dv)} d\s
@@ -1451,9 +1510,9 @@ delay schemes.
 
     It remains to prove the convergence of $\int_{\Psi(\Dv)} d\s$ to a constant.
     Since $\Delta$ goes to zero as $\snr \goesto \infty$, the set $\Psi(\Dv)$
-    converges to the set $\Xi \cap \bigcup_{\p \in \Ln} V'(\p)$. Since both
-    $\Xi$ and all~$V'(\p)$ have positive volume, the overall set also has
-    positive volume.
+    converges to the set $\Xi \cap \bigcup_{\p \in \Ln'} V(\p)$. Since both
+    $\Xi$ and~$\bigcup_{\p \in \Ln'} V(\p)$ have positive volume, the overall
+    set also has positive volume.
   \end{proof}
 
 
