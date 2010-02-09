@@ -70,7 +70,7 @@
   {
     % Add the source nodes and the connections.
     \pgfmathsetcount{\indj}{\j+1}
-    \node (S\j) at ($ (b00) + 3*(dh) + \j*(dv) $) {$S_{\the\indj}$};
+    \node (S\j) at ($ (b00) + 3*(dh) + \j*(dv) $) {$S$};
     \draw[l] (S\j) -- (b0\j);
 
     \path (sc2\j)
