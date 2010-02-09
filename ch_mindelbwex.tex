@@ -103,6 +103,16 @@ analysis to more general hybrid schemes.
 
 \subsection{Transmission Strategy}\label{sec:commscheme}
 
+The communication strategy described hereafter is displayed schematically on
+\figref{1nencoding}.
+\begin{figure}[tbp]
+  \begin{center}
+    \input{figures/1nencoding.tex_t}
+  \end{center}
+  \caption{Schematic display of the encoder described in \secref{commscheme} for
+  $n = 4$.}
+  \label{fig:1nencoding}
+\end{figure}
 To encode a single source letter $S$ into $n$~channel input symbols $X_1$,
 \dots, $X_n$, we proceed as follows. Define $E_0 = S$ and recursively compute
 the pairs $(Q_i, E_i)$ as
@@ -706,7 +716,10 @@ channel inputs $X_1$, \dots, $X_n$ is displayed schematically on
   \end{center}
   \caption{Schematic display of the transmission strategy of \secref{genbwexp}
   for~$k = 3$ and~$n=5$. The boxes labeled~\textsf{Q} are uniform scalar
-  quantizers with resolution~$\beta$ as described in~\eqref{eq:QEdefkn}.}
+  quantizers with resolution~$\beta$ as described in~\eqref{eq:QEdefkn}. The
+  part marked in thick lines corresponds exactly to the encoding scheme
+  described in \secref{scalarquant} to encode one source symbol into three
+  channel uses.}
   \label{fig:knencoding}
 \end{figure}
 The encoder consists of $k$~parallel scalar encoders that encode each~$S_i$ into
@@ -721,8 +734,8 @@ each~$i$ and computes
   E_{i,j} &= \beta(E_{i,j-1} - Q_{i,j}). \label{eq:QEdefkn}
 \end{align}
 (This is exactly the same as~\eqref{eq:QEdef}, except for the addition of the
-subscript~$i$.) For each quantization level~$j = 1$, \dots, $n-k$, the
-$k$~parallel quantizer outputs are combined into
+subscript~$i$; see also \figref{knencoding}.) For each quantization level~$j =
+1$, \dots, $n-k$, the $k$~parallel quantizer outputs are combined into
 \begin{equation}
   \label{eq:Qtot}
   Q_{\tot,j} = \sum_{i=1}^k \frac{1}{\beta^{i-1}} Q_{i,j}.

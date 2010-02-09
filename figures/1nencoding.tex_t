@@ -1,10 +1,10 @@
 % vim:ft=tex
 \begin{tikzpicture}[every node/.style=smallfont]
   % Horizontal position of ``channel''
-  \coordinate (chx) at (9,0);
+  \coordinate (chx) at (4,0);
 
-  \def\Elabelarray{{"3","4","5"}}
-  \foreach \i in {0,1} {
+  \def\Elabelarray{{"4"}}
+  \foreach \i in {0,1,2} {
 
     % Set up two counters. They will hold \i+1 and \j+1, which are used in
     % labels.
@@ -16,26 +16,14 @@
 
     % The ``anchor'' of this group. All elements will be specified relative to
     % this point.
-    \coordinate (a\i) at ($ \i*(0,-6.5) $);
+    \coordinate (a\i) at ($ \i*(0,-3.5) $);
 
     % The following coordinates denote the horizontal and vertial distance
     % between elements (quantizers, ...) in the same group.
     \coordinate (dh) at (-1,0);
     \coordinate (dv) at (0,-.8);
 
-    \path (a\i) ++(dv)  +(5.5,0) node[rectangle,draw,
-    minimum height=3cm,minimum width=2cm]
-    (combiner\i) {combine};
-
-    % A scaler to the right of the combiner.
-    \path (combiner\i) +(2.25,0) node[trir] (scca\i) {};
-
-    % Connections from the combiners to the scalers and then to the channel.
-    \draw[l] (combiner\i) -- node[above] {$Q_{\tot,\the\indi}$} (scca\i);
-    \draw[l] (scca\i) -- (scca\i -| chx) node[right] {$X_{\the\indi}$};
-
-    \foreach \j in {0,1,2} {
-      \begin{scope}[\if0\j ultra thick\fi]
+    \foreach \j in {0} {
 
       % Compute j + 1.
       \pgfmathsetcount{\indj}{\j+1}
@@ -46,45 +34,46 @@
 
       % Add the quantizers and the adder nodes and scalers below them.
       \path (b\i\j)
-      +(3,0)
+      +(1,0)
       node[sq] (quant\i\j) {Q}
-      +(0,-3)
+      +(3,0)
+      node[trir] (scc\i\j) {}
+      +(0,-1)
       node[smallplus] (plus1\i\j) {$+$}
-      +(0,-5.25)
+      +(0,-2)
       node[trid] (sc\i\j) {}
       node {$\beta$}
-      +(0,-5.5)
+      +(0,-2.25)
       node[below right] {$E_{\the\indi,\the\indj}$};
+
+      % Add the channel input nodes
+      \path (quant\i\j -| chx) node (X\j) {} 
+      node[right] {$X_{\the\indj}$};
 
 
       % Draw all connections.
-        \draw[l] (b\i\j) -- (quant\i\j);
-        \draw[l] (b\i\j) -- (plus1\i\j);
-        \draw[l] (plus1\i\j) -- (sc\i\j);
-        \draw[l] (quant\i\j) |- node[above,pos=0.95] {$-$} (plus1\i\j);
-
-      % Horizontal connections from the quantizers to the combiner.
-      % Note the trick using -| to create a horizontal line to the node.
-      \draw[l] (quant\i\j) -- (quant\i\j.east -| combiner\i.west)
-      node[above left] {$Q_{\the\indi,\the\indj}$};
-
-      \end{scope}
+      \draw[l] (b\i\j) -- (quant\i\j);
+      \draw[l] (b\i\j) -- (plus1\i\j);
+      \draw[l] (plus1\i\j) -- (sc\i\j);
+      \draw[l] (quant\i\j) |- node[above,pos=0.95] {$-$} (plus1\i\j);
+      \draw[l] (scc\i\j) -- (X\j);
+%
+%      % Horizontal connections from the quantizers to the scaler.
+      \draw[l] (quant\i\j) 
+      -- node[above] {$Q_{\the\indi,\the\indj}$} (scc\i\j);
     }
   }
 
   % This adds the ``uncoded'' transmission branches of the three remaining
   % quantization errors.
-  \foreach \j in {0,1,2}
+  \foreach \j in {0}
   {
-    % A scope in which everything is drawn thick if j = 0.
-    \begin{scope}[\if0\j ultra thick\fi]
-
     % Add the source nodes and the connections.
     \pgfmathsetcount{\indj}{\j+1}
     \node (S\j) at ($ (b00) + 3*(dh) + \j*(dv) $) {$S_{\the\indj}$};
     \draw[l] (S\j) -- (b0\j);
 
-    \path (sc1\j)
+    \path (sc2\j)
     +(0,-1)
     node[coordinate] (p\j) {};
 
@@ -95,16 +84,15 @@
     % Connections between the scalers of the top group with the adders of the
     % bottom group.
     \draw (sc0\j) -- (b1\j);
+    \draw (sc1\j) -- (b2\j);
 
     % Connections from the beta scalers of the bottom group to the ``encoder''
     % scalers.
-    \draw[l] (sc1\j) -- (p\j) -- (scc\j);
+    \draw[l] (sc2\j) -- (p\j) -- (scc\j);
 
     % Connections to channel
     \draw[l] (scc\j) -- (scc\j -| chx) node[right] {$X_{
     \pgfmathparse{\Elabelarray[\j]}\pgfmathresult}$};
-
-    \end{scope}  % scope for drawing thick lines when j = 0
   }
 
   %\draw[step=1mm,help lines] (quant00) grid +(5,-3);
