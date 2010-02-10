@@ -31,6 +31,113 @@ get full advantage of the last channel use using uncoded transmission.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION: BASICS OF NONLINEAR MODULATION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Basics of Nonlinear Modulation}
+
+The simplest way to encode $k$~source symbols into $n$~channel inputs is to use
+a linear encoder. A linear encoder computes $\X = \A \S$, where $\S = (S_1,
+\dots, S_k)$, $\X = (X_1, \dots, X_n)$, and $\A$~is a $n \times k$ matrix. With
+such an encoder, however, one cannot hope to get an SDR that scales better than
+linearly with the~SNR. In fact, since $\X$~is contained in a $k$-dimensional
+subspace of~$\R^n$, its covariance matrix has at least $n-k$ zero eigenvalues.
+By \lemref{asymptoptinputs}, therefore, the mutual information $I(X^n;Y^n)$ is
+such that $2^{2 I(X^n;Y^n)}$ scales at best as $\snr$; the performance is
+therefore no better than if there had been only one channel use per source
+symbol.
+
+In order to get a better SDR scaling, therefore, the encoder must be nonlinear.
+If $k = 1$, a nonlinear encoder~$f(s)$ maps the source space into a curve
+in~$\R^n$.  More generally, the source space is mapped into a $k$-dimensional
+manifold in~$\R^n$. For simplicity of the notations and illustrations only the
+case $k=1$ is considered in this section; all results and insights carry over
+naturally to the more general case. 
+
+The set $\{f(s): s \in \Ss\}$ (where $\Ss$~is the support set of the source) is
+called the \emph{signal curve} or \emph{signal locus}. \figref{nonlinlocus}
+shows an example of a signal locus in~$\R^2$.  Because of the power constraint,
+the signal locus is roughly contained in a sphere of radius~$\sqrt{P}$. 
+\begin{figure}[tpbh]
+  \begin{center}
+    \figbox{nonlinlocus}
+  \end{center}
+  \caption{The signal locus corresponding to a nonlinear encoder from~$\R$
+  to~$\R^2$.}
+  \label{fig:nonlinlocus}
+\end{figure}
+
+The estimate that minimizes the mean squared error is the conditional mean $\E[S
+| Y^n]$. For nonlinear encoders, mathematical evaluation of the corresponding
+estimation error is usually hopelessly complicated. A decoder whose performance
+is easier to evaluate is the \emph{maximum likelihood} (ML) decoder. It computes
+$\sh = \arg\max_{s} f(\y|s)$, where $f(\y|s)$ is the conditional \pdf\ of~$\Y$
+given~$S$. For the AWGN channel, $\Y = f(S) + \Zv$, where $\Zv$ is circularly
+symmetric Gaussian noise of variance~$\szq$. In that case, $f(\y|s)$ is a
+monotone decreasing function of $\|\y - f(s)\|$, so the ML decoder can
+equivalently be described by $\sh = \arg\min_{s} \|\y - f(s)\|$; it
+decides thus for $\sh$ such that $f(\sh)$ is the point on the signal locus
+closest to~$\y$. 
+
+Suppose now that the transmitted point is $f(s_0)$ and suppose further that the
+curve~$f(s)$ is differentiable in~$s_0$. Then the signal curve can be linearly
+approximated in a small neighborhood around $s_0$ as
+\begin{equation}
+  \label{eq:linapprox}
+  f(s_0 + \Delta) = f(s_0) + \Delta \left. \frac{df(s)}{ds}\right|_{s = s_0}.
+\end{equation}
+If the noise is small, therefore, a valid approximation for the ML estimate is
+the projection of the noise vector onto the tangent through~$f(s_0)$ (see
+\figref{tangentproj}. This projection is a Gaussian random variable of
+variance~$\szq$, from~\eqref{eq:linapprox} with $\Delta = \Sh - s_0$ the average
+squared error given $S = s_0$ can therefore be approximated as
+\begin{equation}
+  \label{eq:errorlinapprox}
+  \E[(\Sh - s_0)^2] \approx \frac{\szq}{\displaystyle\left\| \left. \frac{df(s)}{ds}
+  \right|_{s=s_0} \right\|^2}.
+\end{equation}
+Write now $f(s) = \sqrt{P} \ft(s)$, with $\E[\|\ft(S)\|^2] \le 1$. Then
+$df(s)/ds = \sqrt{P} d\ft(s)/s$; the quantity $l(s) \deq d\ft(s)/ds$ is called
+the \emph{stretch} of the signal locus. In the case where $l(s) = l$ does not
+depend on~$s$, the overall MSE simplifies to
+\begin{equation}
+  \label{eq:constantstretch}
+  \mse \approx (\snr l^2)^{-1}.
+\end{equation}
+
+
+\begin{figure}[tbph]
+  \begin{center}
+    \figbox{tangentproj}
+  \end{center}
+  \caption{If the noise variance is small, the ML estimate can be approximated
+  by projecting the noise vector~$\Zv$ onto a tangent through~$f(s_0)$.}
+  \label{fig:tangentproj}
+\end{figure}
+
+As long as the noise level is small with respect to the distance between
+different folds of the signal curve, \eqref{eq:errorlinapprox}~is a valid
+approximation. It is clear, though, thath the MSE cannot be arbitrarily
+decreased by increasing the stretch: a larger stretch means also a longer signal
+curve, so the folds of the curve have to be placed closer together for the power
+constraint to remain satisfied. If the stretch becomes too large, the small
+noise assumption will be invalidated. On the other hand, if the SDR is to scale
+better than linearly with the SNR, then by~\eqref{eq:errorlinapprox} the stretch
+must increase with the SNR.
+
+The choice of the stretch represents a tradeoff. A bigger stretch results in a
+smaller error provided that the correct fold of the signal curve is decoded, but
+it also increases the probability that the wrong fold of the curve is decoded.
+Optimally, thus, the stretch is such that the two kinds of errors contribute
+equally to the overall error. The communication strategy presented in the
+following sections is based on this idea; it will be shown that for a simple
+type of signal locus the optimal stretch grows as $(\snr/\log\snr)^{(n-1)/2}$
+and so from~\eqref{eq:constantstretch} the resulting SDR scales as
+$\snr^n/(\log\snr)^{n-1}$.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SECTION: HYBRID TRANSMISSION SCHEME
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -38,7 +145,7 @@ get full advantage of the last channel use using uncoded transmission.
 
 The hybrid transmission scheme at the heart of this chapter is illustrated in
 \figref{qeschemegen}. It works as follows. The source~$S$ is quantized, and the
-\begin{figure}[tbp]
+\begin{figure}[tbph]
   \begin{center}
     \input{figures/qeschemegen.tex_t}
   \end{center}
@@ -105,7 +212,7 @@ analysis to more general hybrid schemes.
 
 The communication strategy described hereafter is displayed schematically on
 \figref{1nencoding}.
-\begin{figure}[tbp]
+\begin{figure}[tbph]
   \begin{center}
     \input{figures/1nencoding.tex_t}
   \end{center}
@@ -190,7 +297,7 @@ the sequel.
   space into intervals of the form $[(j-1/2)\beta^{-(n-1)},
   (j+1/2)\beta^{-(n-1)})$, as illustrated in \figref{hierarchicalsq}.
 \end{remark}
-\begin{figure}[tbp]
+\begin{figure}[tbph]
   \begin{center}
     \figbox{hierarchicalsq}
   \end{center}
@@ -710,7 +817,7 @@ the interval~$[-1/2, 1/2]$; the general case will be treated afterwards.
 The strategy used to encode the source symbols $S_1$, \dots, $S_k$ into the
 channel inputs $X_1$, \dots, $X_n$ is displayed schematically on
 \figref{knencoding} for~$k=3$ and~$n=5$. 
-\begin{figure}[tbp]
+\begin{figure}[tbph]
   \begin{center}
     \input{figures/knencoding.tex_t}
   \end{center}
@@ -1253,7 +1360,7 @@ delay schemes.
     lattice~$\Z$. Two examples of lattices in~$\R^2$ are displayed in
     \figref{r2lattices}.
   \end{example}
-  \begin{figure}[tbp]
+  \begin{figure}[tbph]
     \centerline{%
     \subfloat[Rectangular lattice.]{%
     \label{fig:rectlattice}\input{figures/rectlattice.tex_t}}%
@@ -1303,7 +1410,7 @@ delay schemes.
 
   The packing radius and the covering radius are illustrated on
   \figref{packingcoveringr} for a hexagonal lattice.
-  \begin{figure}[tbp]
+  \begin{figure}[tbph]
     \begin{center}
       \input{figures/packingcoveringr.tex_t}
     \end{center}
@@ -1466,7 +1573,7 @@ delay schemes.
     $\Lambda/\beta^{i+1}$, for $i = 1$, \dots, $n-2$.
   \end{proof}
 
-  \begin{figure}[tbp]
+  \begin{figure}[tbph]
     \centerline{
     \subfloat[$\beta = 3$]{\input{figures/hierhex3.tex_t}}
     \hfil
