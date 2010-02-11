@@ -1,0 +1,44 @@
+% vim:ft=tex
+    \begin{tikzpicture}[scale=1.5,p/.style={circle,draw,fill,inner sep=0pt,
+      minimum size=2pt}]
+
+      % Circle radius and smaller circle within, to delimit the locus.
+      \def\rad{2cm}
+      \pgfmathsetmacro{\smallrad}{0.8*\rad}
+      \pgfmathsetmacro{\diffrad}{\rad - \smallrad}
+
+      % The vertical resolution. There are in total 2*\np segments.
+      \def\np{7}
+
+      % The approximate distance between two segments.
+      \pgfmathsetmacro{\dy}{2*\smallrad/\np}
+
+      % Now generate points on the left and on the right half of the circle and
+      % perturb them randomly, and set coordinates. 
+      \foreach \i in {0,...,\np} {
+        % Compute y position
+        \pgfmathsetmacro{\ypos}{\i*\dy - \smallrad}
+
+        % Compute corresponding y coordinate to get on circle
+        \pgfmathsetmacro{\x}{sqrt(\smallrad^2 - (\ypos)^2)}
+
+        % Set actual left and right x positions slightly random.
+        \pgfmathsetmacro{\xl}{-\x - \diffrad*0.5*(rand+1) - 0.2*\diffrad}
+        \pgfmathsetmacro{\xr}{\x + \diffrad*0.5*(rand+1) + 0.2*\diffrad}
+        \pgfmathsetmacro{\yl}{\ypos + 0.3 * (rand+1)*\dy}
+        \pgfmathsetmacro{\yr}{\ypos + 0.4 * (rand+1)*\dy}
+        \coordinate (l\i) at (\xl pt,\yl pt);
+        \coordinate (r\i) at (\xr pt,\yr pt);
+        }
+
+      % Connect all the coordinates using a rounded corner path. This is the
+      % actual locus.
+      \draw[thick,rounded corners=20pt]  (l0)
+      \foreach \i in {1,...,\np} { -- (l\i) -- (r\i)};
+
+      % Finally, draw the circle and an arrow indicating the root of the power.
+      \draw (0,0) circle (\rad);
+      \draw[l] (0,0) -- node[left,near end] {$\sqrt{P}$} (-65:\rad);
+
+
+    \end{tikzpicture}

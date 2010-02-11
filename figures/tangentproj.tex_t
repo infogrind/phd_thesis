@@ -1,0 +1,69 @@
+% vim:ft=tex
+    \begin{tikzpicture}[scale=1.5,p/.style={circle,draw,fill,inner sep=0pt,
+      minimum size=2pt}]
+
+      % Clipping rectangle to include only what's important.
+      \clip (2,1) rectangle (8,4);
+
+      % The noise vector.
+      \coordinate (z) at (2.5,1.25);
+
+      % Start and end points for each Bezier segment.
+      \coordinate (s0) at (0,0.5);
+      \coordinate (e0) at (4,2);
+      \coordinate (s1) at (e0);
+      \coordinate (e1) at (8,3);
+
+      % The transmitted point is at the end of the first Bezier segment.
+      \coordinate (fs0) at (e0);
+
+      % The received point is the transmitted point plus noise.
+      \coordinate (y) at ($ (fs0) + (z) $);
+
+      % Direction vector for tangent through transmitted point.
+      \coordinate (dv) at (1,0.125);
+
+      % Bezier control points (for each curve segment a pair (pi,qi)).
+      \coordinate (p0) at (2,1.75);
+      \coordinate (q0) at ($ (e0) - (dv) $);
+      \coordinate (p1) at ($ (s1) + (dv) $);
+      \coordinate (q1) at (6,2.25);
+
+      % Start and end points of tangent through transmitted point.
+      \coordinate (st) at ($ (e0)!3.5cm!(q0) $);
+      \coordinate (et) at ($ (s1)!3.5cm!(p1) $);
+
+      % Projection of noise vector onto this tangent.
+      \coordinate (np) at ($ (st)!(y)!(et) $);
+
+      % Some dots to illustrate the important points.
+      \foreach \p in {fs0,y,np} \node[p] at (\p) {};
+
+      \foreach \i in {0,1} {
+
+%        % Draw a small point to visualize the control points.
+%        \foreach \j in {s,e,p,q}
+%          \path (\j\i) node[p,red] {} node[above] {$\j_\i$};
+%
+%        \draw[help lines] (s\i) -- (p\i);
+%        \draw[help lines] (q\i) -- (e\i);
+
+        \draw[thick] (s\i) .. controls (p\i) and (q\i) .. (e\i);
+      }
+
+      % Tangent through transmitted point
+      \draw (st) -- (et);
+
+      % Noise vector arrow.
+      \draw[-stealth] (fs0) -- node[above] {$\Zv$} (y) node[above] {$\Y$};
+
+      % Dashed line to illustrate noise projection.
+      \draw[dashed] (y) -- (np) node[below] {$f(\sh)$};
+
+      % Some labels
+      \node[below] at (e0) {$f(s_0)$};
+
+      % The grid.
+      %\draw[help lines] (0,0) grid (8,4);
+
+    \end{tikzpicture}

@@ -60,7 +60,7 @@ shows an example of a signal locus in~$\R^2$.  Because of the power constraint,
 the signal locus is roughly contained in a sphere of radius~$\sqrt{P}$. 
 \begin{figure}[tpbh]
   \begin{center}
-    \figbox{nonlinlocus}
+    \input{figures/nonlinlocus.tex_t}
   \end{center}
   \caption{The signal locus corresponding to a nonlinear encoder from~$\R$
   to~$\R^2$.}
@@ -108,9 +108,9 @@ depend on~$s$, the overall MSE simplifies to
 
 \begin{figure}[tbph]
   \begin{center}
-    \figbox{tangentproj}
+    \input{figures/tangentproj.tex_t}
   \end{center}
-  \caption{If the noise variance is small, the ML estimate can be approximated
+  \caption{If the noise level is small, the ML estimate can be approximated
   by projecting the noise vector~$\Zv$ onto a tangent through~$f(s_0)$.}
   \label{fig:tangentproj}
 \end{figure}
@@ -143,55 +143,90 @@ $\snr^n/(\log\snr)^{n-1}$.
 
 \section{Hybrid Transmission Scheme}\label{sec:hybridscheme}
 
-The hybrid transmission scheme at the heart of this chapter is illustrated in
-\figref{qeschemegen}. It works as follows. The source~$S$ is quantized, and the
+In the previous section we saw that to achieve SDR scaling better than linear in
+the SNR the encoder must be nonlinear. Let us now informally introduce a
+particular nonlinear encoding scheme and then analyze its performance in the
+sections to come.
+
+The principle of the transmission scheme is the following. To transmit $k$
+source symbols in $n$ channel uses, the $k$-dimensional source space is first
+partitioned into regular $k$-dimensional subsets. Given $S^k = s^k$, an index of
+the subset containing~$s^k$ is communicated in the first $n-k$ channel uses, and
+the position of~$s^k$ within the subset is communicated in the last $k$~channel
+uses.
+
+How the source space is partitioned and how the index of the subsets is
+transmitted in $n-k$ channel uses is explained easiest for $k=1$. Once we have
+completely analyzed this case we will move on to the general case.
+
+The partition of the source space is controlled by the integer~$\beta$. For $k =
+1$ the one-dimensional source space is first divided into intervals of
+length~$1/\beta$. Each interval is then itself divided into $\beta$~subsets of
+length~$1/\beta^2$. This procedure is repeated a total of $n-1$~times, so that
+at the lowest level an interval has length~$1/\beta^{n-1}$.  The resulting
+partition is illustrated on \figref{sourcepartition}.
+
 \begin{figure}[tbph]
   \begin{center}
-    \input{figures/qeschemegen.tex_t}
+    \figbox{sourcepartition}
   \end{center}
-  \caption{General structure of the hybrid transmission scheme studied in this
-  chapter.}
-  \label{fig:qeschemegen}
+  \caption{Example partition of the source space $[-1/2,1/2]$ for $\beta = 3$
+  and $n = 4$. The numbers in parentheses represent the indices of the
+  corresponding intervals.}
+  \label{fig:sourcepartition}
 \end{figure}
-quantizer output $Q_1$ is scaled up to produce the first channel input~$X_1$.
-Next, the resulting quantization error $E_1 = S - Q_1$ is scaled up and
-quantized again. The new quantizer output is scaled to be come the next channel
-input~$X_2$. This process is continued until after $n-1$~rounds the remaining
-quantization error~$E_{n-1}$ is simply scaled up to produce the final channel
-input~$X_n$. 
 
-With respect to the goal of an SDR that grows fast with the SNR, a first
-comment can be made. If a quantizer uses a resolution that is upper
-bounded with respect to the SNR, then as $\snr \goesto \infty$ the mutual
-information of the corresponding channel approaches $H(Q_i)$, which is bounded.
-The resulting overall mutual information is then
-\begin{align*}
-  I(X^n; Y^n) &\le H(Q_i) + \sum_{\substack{j = 1 \\ j \ne i}}^n I(X_i; Y_i) \\
-  &\le H(Q_i) + \frac{n-1}{2} \log_2(1 + \snr).
-\end{align*}
-Following a similar line as in the proof of \thmref{sdrub}, it follows that the
-SDR can grow at best as $\snr^{n-1}$. Since the optimal scaling is $\snr^n$,
-this means that one channel use is ``lost'' in terms of order.  If there is to
-be any hope to get the optimal scaling, the resolution of all quantizers must
-therefore grow with the SNR.
+Each of the small intervals of length $1/\beta^{n-1}$ is uniquely identified by
+specifying, for each of the $n-1$ partition levels, the position of the interval
+of the given level within the interval at the next higher level.
+\figref{sourcepartition} illustrates this for two particular intervals. Any
+source point~$s$ is thus unambiguously specified by these $n-1$ numbers along
+with the position of the point within the lowest level interval. To
+transmit~$s$, these $n$~numbers are now simply scaled to satisfy the power
+constraint and sent across the $n$~channel uses.
 
-The simplest implementation of the hybrid scheme uses the same uniform quantizer
-in every round. This setting is analyzed in detail in \secref{scalarquant},
-where upper and lower bounds on the asymptotic performance of the scheme are
-provided. 
+The signal locus resulting from this scheme is illustrated for $n = 2$ and $n =
+3$ in Figures~\ref{fig:hybridlocus-2} and~\ref{fig:hybridlocus-3}, respectively.
+It consists of parallel straight line segments arranged in a regular
+$n-1$-dimensional grid, each line segment corresponding to one of the intervals
+of length~$1/\beta^{n-1}$ of the source space. 
 
-It is straightforward to extend the scheme of \figref{qeschemegen} by
-considering blocks of $m$~source symbols and using vector quantizers, in
-particular lattices. This avenue is explored in \secref{latticequant}. In
-particular it is shown that in the order sense, no finite dimensional lattice
-can improve the asymptotic performance. 
+\begin{figure}[tbph]
+  \centerline{%
+  \subfloat[$\beta = 2$]{\label{fig:hybridlocus-2}%
+  \figbox[.45\textwidth]{hybridlocus-2}}
+  \hfil
+  \subfloat[$\beta = 3$]{\label{fig:hybridlocus-3}%
+  \figbox[.45\textwidth]{hybridlocus-3}}
+  }
+  \caption{The signal loci for the hybrid communication scheme for $\beta = 2$
+  and $\beta = 3$, respectively.}
+  \label{fig:hybridlocus}
+\end{figure}
 
-\secref{genbwexp} discusses the case of general bandwidth expansion, where
-$k$~source symbols are encoded into $n$~channel inputs with $1 < k < n$. 
+Given the transmission strategy, the problem is now how to choose~$\beta$ as a
+function of the SNR. Note that the larger $\beta$, the larger the number of
+intervals into which the source space is divided. Hence the number of parallel
+line segments in the signal locus increases, and for a fixed power constraint
+the segments have to be placed closer together. Conversely, if $\beta$ is small,
+the signal locus consists of only a few parallel lines, which are spaced far
+apart. Note also that for a fixed power constraint, each interval of length
+$1/\beta^{n-1}$ of the source space is scaled up to a constant length; the
+stretch of the signal curve therefore grows proportionally to $\beta^{n-1}$.
 
+Hence, if $\beta$ does not vary as the SNR increases, the stretch remains
+constant and the SDR scales only linearly in the SNR, as we have seen in the
+previous section. On the other hand, if $\beta$ increases too fast as a function
+of the SNR, the distance between segments of the signal locus decreases too
+rapidly and the probability that the wrong segment is decoded increases.
 
-
-
+The trick, then, is to make $\beta$ grow just fast enough so that the stretch
+increases quickly but the error due to decoding the wrong segment is kept in
+check. This idea is formally developped in \secref{scalarquant}, and the
+resulting optimal SDR scaling is derived. Subsequently, \secref{genbwexp}
+extends the communication scheme to transmit $k$~source symbols across
+$n$~channel uses, and \secref{latticequant} shows how $m$~source symbols can be
+encoded into $mn$~channel inputs using lattices.
 
 
 
