@@ -1,0 +1,66 @@
+  % vim:ft=tex
+    \begin{tikzpicture}
+      \newcount\ni   % Number of intervals on level i, to be computed.
+      \def\bt{3}     % beta
+      \def\nm{3}     % n-1
+      \def\lt{.9\textwidth}   % source space length
+
+      % Compute half the source space length.
+      \pgfmathsetmacro{\lth}{\lt / 2}
+      
+      % Compute the length of the smallest interval.
+      \pgfmathsetmacro{\ds}{\lt / \bt^(\nm)}
+
+      % Labels at the start, end, and middle of source space.
+      \node[left] at (0,0) {$-\frac12$};
+      \node[right] at (\lt,0) {$\frac12$};
+      \node[above] at (\lth pt,0) {$0$};
+
+      % Now two example labels for interval indices.
+      \node[pin=above:{$(2,1,3)$}] at (\lth pt - 2*\ds pt,0) {};
+      \node[pin=above:{$(3,1,1)$}] at (\lth pt + 5*\ds pt,0) {};
+
+      % Draw the source line.
+      %\draw (\lth pt, 0) -- +(\lt, 0);
+      \draw (0,0) -- (\lt, 0);
+
+      \foreach \i in {1,...,\nm} {
+        
+        % Compute the total number of intervals at this level.
+        \pgfmathsetcount{\ni}{\bt^(\nm + 1 - \i)}
+
+        % Compute the length of each interval.
+        \pgfmathsetmacro{\li}{\lt / \ni}
+
+        % Draw a small vertical line at the end of each interval.
+        \foreach \j in {1,...,\the\ni}
+        \draw (\j*\li pt, -\i*1mm) -- (\j*\li pt, \i*1mm);
+
+        % Draw a double arrow to illustrate the length of an interval.
+        % First compute the x position of the interval. For level i, it is given
+        % by 1/beta + 1/beta^2 + ... + 1/beta^{i-1}.
+        \pgfmathtruncatemacro{\im}{\nm + 1 - \i}
+        \coordinate (p) at (0,-\im);
+        % Compute i - 1
+%        \newcount\im
+%        \pgfmathsetcount{\im}{\nm - \i}
+%
+%        % Only need to compute anything if \im > 0.
+%        \ifnum0=\im\else
+%          \foreach \k in {1,...,\the\im} { 
+%            \coordinate (p) at ($ (p) + 1/\bt^(\k)*(\lt,0) $);
+%          } 
+%        \fi
+
+        %\draw[|<->|] (p) -- node[below] {$\beta^{-\im}$} +(\li pt,0);
+        \pgfmathtruncatemacro{\ii}{\nm - \i + 1}
+        \draw[|<->|] ($ \ii * \lt / \bt *(1pt,0) + (0,-1) $) --
+        node[below] {$\beta^{-\ii}$} 
+        +(-\li pt,0);
+
+      }
+
+      % Draw a vertical line at the beginning of the source space.
+      \draw (0,-\nm*1mm) -- (0,\nm*1mm);
+
+    \end{tikzpicture}

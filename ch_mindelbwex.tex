@@ -168,7 +168,7 @@ partition is illustrated on \figref{sourcepartition}.
 
 \begin{figure}[tbph]
   \begin{center}
-    \figbox{sourcepartition}
+    \input{figures/sourcepartition.tex_t}
   \end{center}
   \caption{Example partition of the source space $[-1/2,1/2]$ for $\beta = 3$
   and $n = 4$. The numbers in parentheses represent the indices of the
@@ -186,18 +186,18 @@ transmit~$s$, these $n$~numbers are now simply scaled to satisfy the power
 constraint and sent across the $n$~channel uses.
 
 The signal locus resulting from this scheme is illustrated for $n = 2$ and $n =
-3$ in Figures~\ref{fig:hybridlocus-2} and~\ref{fig:hybridlocus-3}, respectively.
+3$ in Figures~\ref{fig:hybridlocus2} and~\ref{fig:hybridlocus3}, respectively.
 It consists of parallel straight line segments arranged in a regular
 $n-1$-dimensional grid, each line segment corresponding to one of the intervals
 of length~$1/\beta^{n-1}$ of the source space. 
 
 \begin{figure}[tbph]
   \centerline{%
-  \subfloat[$\beta = 2$]{\label{fig:hybridlocus-2}%
-  \figbox[.45\textwidth]{hybridlocus-2}}
+  \subfloat[$\beta = 2$]{\label{fig:hybridlocus2}%
+  \input{figures/hybridlocus2.tex_t}}
   \hfil
-  \subfloat[$\beta = 3$]{\label{fig:hybridlocus-3}%
-  \figbox[.45\textwidth]{hybridlocus-3}}
+  \subfloat[$\beta = 3$]{\label{fig:hybridlocus3}%
+  \input{figures/hybridlocus3.tex_t}}
   }
   \caption{The signal loci for the hybrid communication scheme for $\beta = 2$
   and $\beta = 3$, respectively.}
@@ -325,21 +325,6 @@ the sequel.
     which completes the proof.
   \end{enumerate}
 \end{proof}
-
-\begin{remark}
-  \label{rem:scgeometry}
-  The hierarchical quantization described by~\eqref{eq:QEdef} divides the source
-  space into intervals of the form $[(j-1/2)\beta^{-(n-1)},
-  (j+1/2)\beta^{-(n-1)})$, as illustrated in \figref{hierarchicalsq}.
-\end{remark}
-\begin{figure}[tbph]
-  \begin{center}
-    \figbox{hierarchicalsq}
-  \end{center}
-  \caption{The hierarchical quantization implied by the transmission scheme in
-  \secref{commscheme}.}
-  \label{fig:hierarchicalsq}
-\end{figure}
 
 The channel input symbols $X_i$ are determined from the $Q_i$ and from $E_{n-1}$
 according to 

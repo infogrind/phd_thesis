@@ -1,0 +1,11 @@
+    \begin{tikzpicture}[z=.7cm]
+      %\draw (-2,-2) rectangle (2,2);
+
+      \draw[thin,->] (-2,0) -- (2,0) node[right] {$X_1$};
+      \draw[thin,->] (0,-2) -- (0,2) node[above] {$X_3$};
+      \draw[thin,->] (0,0,-2) -- (0,0,2) node[above,right] {$X_2$};
+
+      \foreach \x in {-1.8,-1.2,...,1.8} 
+      \foreach \z in {-1.8,-1.2,...,1.8} 
+      \draw[thick,red] (\x,-1.5,\z) -- (\x,1.5,\z); 
+    \end{tikzpicture}
