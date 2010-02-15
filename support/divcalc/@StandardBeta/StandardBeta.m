@@ -75,6 +75,38 @@ classdef StandardBeta
         
         % And finally the joint distribution of y1, y2, and s.
         function p = pys(obj, y1, y2, s, P, sq)
+
+            % Compute the channel inputs from s and the parameters.
+            [x1 x2] = compute_inputs(obj, s, P, sq);
+            
+            % Finally, since y1 and y2 are independent given s, the joint
+            % density can be factored. Furthermore, the density of s is constant
+            % and equal to one, so it doesn't occcur in the following
+            % expression.
+            p = normpdf(y1, x1, sq) .* normpdf(y2, x2, sq);
+        end
+        
+        
+        
+        % Conditional distribution of y1 given s.
+        function p = py1gs(obj, y1, s, P, sq)
+            [x1 x2] = compute_inputs(obj, s, P, sq);
+            
+            p = normpdf(y1, x1, sq);
+        end
+        
+        
+        % Conditional distribution of y2 given s.
+        function p = py2gs(obj, y2, s, P, sq)
+            [x1 x2] = compute_inputs(obj, s, P, sq);
+            
+            p = normpdf(y2, x2, sq);
+        end
+        
+        
+        % This function returns the channel inputs given the source symbol s and
+        % the SNR parameters.
+        function [x1 x2] = compute_inputs(obj, s, P, sq)
             snr = P/sq;
             b = beta(obj, snr);
             
@@ -89,13 +121,7 @@ classdef StandardBeta
             x1 = sqrt(12*P) * q;
             x2 = sqrt(12*P) * e;
             
-            % Finally, since y1 and y2 are independent given s, the joint
-            % density can be factored. Furthermore, the density of s is constant
-            % and equal to one, so it doesn't occcur in the following
-            % expression.
-            p = normpdf(y1, x1, sq) .* normpdf(y2, x2, sq);
         end
-        
         
         
         % Here is a helper function computing beta as a function of the SNR.
@@ -109,6 +135,37 @@ classdef StandardBeta
             e = log(n * log(snr) / k) / log(snr);
             assert(e >= 0 && e <= 1);
             b = ceil(sqrt(snr^(1 - e)));
+        end
+        
+        
+        % This function returns the marginals of y1, y2, y1_tilde and y2_tilde.
+        function [py1 py2 pyt] = compute_marginals(obj, ysupp, snr)
+            % Fixed power.
+            P = 1;
+            sq = P / snr;
+            
+            % Allocate space for return values.
+            py1 = zeros(size(ysupp));
+            py2 = zeros(size(ysupp));
+            
+            % For each value of y1, we integrate the joint distribution of y1
+            % and s over the space of the s, which is [-1/2, 1/2].
+            % We do the same for y2.
+            for k = 1:length(py1)
+                fh = @(s) py1gs(obj, ysupp(k), s, P, sq);
+                py1(k) = quad(fh, -1/2, 1/2);
+            end
+            
+            % To get the distribution of y2, we use the fact that x2 is uniform
+            % between -sqrt(12*P)/2 and sqrt(12*P)/2, and then compute the
+            % resulting convolution using Mathematica.
+            py2 = sqrt(pi/(2*sq)) * ( ...
+                erf( ((sqrt(3*P) - ysupp) * sqrt(sq)) / sqrt(2)) + ... 
+                erf( ((sqrt(3*P) + ysupp) * sqrt(sq)) / sqrt(2)) ...
+            );
+            
+            % Y1t and Y2t are marginals with power P + sq.
+            pyt = normpdf(ysupp, 0, P + sq);
         end
     end
     
