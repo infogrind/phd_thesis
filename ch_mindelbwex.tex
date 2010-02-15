@@ -1,32 +1,110 @@
 \chapter{Minimal-Delay Codes for Bandwidth Expansion}
 
-To get a good $(1,n)$~bandwidth expansion code, a promising method is to turn
-the channel into a reliable channel, thus emulating the effect of feedback. This
-is the lesson from the previous chapter. Upon closer inspection, the encoder in
-fact only needs to know the channel state after the first $n-1$ channel uses. If
-the encoder knows the best estimate of the decoder after $n-1$ channel uses, it
-can send the remaining error uncoded. 
 
-Suppose that after $n-1$~channel uses the decoder makes a preliminary
-estimate~$\Sh'$, and that the encoder knows this estimate. Let $E = \Sh' - S$ be
-the corresponding estimation error and let $\seq$ be its variance. In the
-$n\th$~channel use, the method of \exref{gausssingle} is used to transmit~$E$.
+\section{Two Alternative Perspectives}
 
-The decoder estimates~$\Eh$ and computes the final source estimate $\Sh = \Sh' -
-\Eh$. The resulting squared error is
-\begin{align*}
-  \E[(\Sh - S)^2] &= \E[(S + E - \Eh - S)^2] \\
-  &= \E[(\Eh - E)^2] \\
-  &= \frac{\seq}{1 + \snr}.
-\end{align*}
-The SDR after the first $n-1$~rounds of transmission was $\sdr' = \ssq/\seq$.
-The final SDR is thus
+The problem how to transmit a single symbol from a continuous-valued source
+across an AWGN channel in $n$~channel uses can be approached from two different
+perspectives. The first perspective is to take inspiration from the feedback
+case of \exref{gaussfb}. The second, more traditional perspective is a geometric
+analysis of the signal constellation. This chapter starts with a presentation of
+both points of view and shows how they both lead tho the same tradeoff. Based on
+this, a concrete transmission scheme is presented and analyzed in the
+subsequent sections. 
+
+
+\subsection{The Point of View from Feedback}
+
+The lesson from \exref{gaussfb} is that uncoded transmission is optimal if the
+transmitter knows the receiver's estimate given the previous channel outputs.
+Because of the inherent randomness of uncoded transmission, however, the
+transmitter has little chance of guessing the receiver's estimate correctly
+after a round of uncoded transmission if there is no feedback. Nevertheless, if
+the transmission in the first $n-1$ channel uses was such that the transmitter
+has a reasonably good idea of the receiver's estimate (by using some form of
+coding, for example) then the transmitter can send the estimation error uncoded
+in the last channel use, even if there is no feedback. 
+
+Indeed, suppose that after $n-1$~channel uses the receiver has a preliminary
+estimate~$\Sh'$ and suppose the transmitter knows~$\Sh'$. Then it 
+can use uncoded transmission to send the error $E \deq \Sh' - S$ in the last
+channel use. Upon receiving the corresponding channel output, the receiver
+computes an estimate $\Eh$ of~$E$ and sets the final estimate of~$S$ to be $\Sh
+= \Sh' - \Eh$. This results in the overall error $\Sh - S = \Sh' - E - S + E -
+\Eh = E - \Eh$. Now write the overall SDR as
 \begin{equation*}
-  \sdr = \frac{\ssq}{\E[(\Sh - S)^2]} = \sdr' (1 + \snr).
+  \sdr = \frac{\ssq}{\mse} = \frac{\ssq}{\E[(\Sh' - S)^2]} \cdot
+  \frac{\E[(\Sh' - S)^2]}{\msee}.
 \end{equation*}
-Hence no matter what the strategy in the first $n-1$ channel uses was, we can
-get full advantage of the last channel use using uncoded transmission.
+The first term on the right hand side is the SDR after $n-1$ channel uses. The
+second term, equal to $\E[E^2]/\msee$, is the SDR resulting from the
+uncoded transmission of~$E$, which, as seen in \exref{gausssingle}, scales
+linearly with the SNR. Hence, the overall SDR scales as $\sdr' \cdot \snr$ and
+so uncoded transmission in the last channel use boosts the SDR by a
+factor~$\snr$. 
 
+The above argument assumed that the transmitter knew the receiver's estimate
+exactly, even if there was no feedback. This is possible only in two cases.
+Either the estimate after $n-1$ channel uses is constant regardless of the value
+of~$S$, which is not very useful, or some form of coding is used to combat the
+unreliability of the channel. 
+
+Assume then that a perfect source code combined with a perfect channel code is
+used to transmit~$S$ across the first $n-1$~channel uses. This implies a
+decomposition of~$S$ as $S = Q + E$, where $Q$~is transmitted error free and
+the associated distortion $\E[E^2]$ scales as $\snr^{-(n-1)}$. If $E$ is
+transmitted uncoded in the $n\th$~channel use and the receiver lets $\Sh = Q +
+\Eh$, the overall SDR is
+\begin{equation*}
+  \sdr = \frac{\ssq}{\mse} = \frac{\ssq}{\E[E^2]} \cdot \frac{\E[E^2]}{\E[(\Eh -
+  E)^2]},
+\end{equation*}
+which scales as $\snr^{n-1} \cdot \snr = \snr^n$. 
+
+Unfortunately the constraint that a single source symbol must be encoded at a
+time prevents the use of a perfect source and channel code. Suppose thus that
+the receiver decodes not~$Q$ after $n-1$~channel uses but has only an
+estimate~$\Qh$. In that case, the overall estimate is $\Sh = \Qh - \Eh$ and the
+overall SDR, assuming $Q$ and~$E$ are estimated separately, is
+\begin{equation*}
+  \sdr = \frac{\ssq}{\mseq + \msee},
+\end{equation*}
+which can be broken down as
+\begin{equation}
+  \label{eq:sdrqesep}
+  \sdr = \frac{\ssq}{\E[E^2]} \cdot \frac{\E[E^2]}{\mseq + \E[(\Eh -
+  E)^2]}.
+\end{equation}
+If now $\mseq \in O(\msee)$ as $\snr \goesto \infty$, \ie,
+if the error in estimating~$\Qh$ is dominated by that of estimating~$E$, then
+the SDR scales as
+\begin{equation}
+  \label{eq:sdrscalingapprox}
+  \frac{\ssq}{\E[E^2]} \cdot \frac{\E[E^2]}{\msee}.
+\end{equation}
+The right hand side is again the SDR from the uncoded transmission of~$E$ and
+scales as~$\snr$; overall, the SDR scales thus as $\snr / \E[E^2]$.
+
+There is a tradeoff in how~$Q$ (and~$E$) are chosen as a function of~$S$. If
+$\mseq$ decreases too slowly, the eq:approximation~\eqref{eq:sdrscalingapprox}
+is not valid and~\eqref{eq:sdrqesep} scales instead as $\ssq / \mseq$, so the
+SDR gain from the uncoded transmission is lost.  If, on the other hand, $\mseq$
+decreases to fast then $\E[E^2]$ decreases only slowly and the overall SDR,
+$\snr / \E[E^2]$, grows only slowly with~$\snr$. It is clear, then, that the
+best SDR scaling is obtained when $\mseq$ scales the same as~$\msee$.
+
+The conclusion from all this is that error free communication in the first
+$n-1$~channel uses is not necessary to take advantage of uncoded communication
+in the last channel use. All that is needed is that the error from the first
+$n-1$~channel uses is dominated by that of the last channel use as $\snr \goesto
+\infty$. Furthermore, the choice of how $S$ is split up into parts transmitted
+in the first $n-1$ and in the $n\th$ channel use, respectively, represents a
+tradeoff, and SDR scaling is optimized when the two errors scale the same. The
+transmission schemes developed in this chapter are designed with this principle
+in mind.
+
+
+\subsection{The Geometric Point of View}
 
 
 
