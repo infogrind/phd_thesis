@@ -1,0 +1,4 @@
+The MATLAB files in this directory compute the divergence between the output of
+a two dimensional AWGN channel when the input is hybrid and when the input is
+Gaussian. This is used to study the Lemma in the preliminaries chapter about the
+condition for 2^2I(X;Y) scaling as SNR^n.
