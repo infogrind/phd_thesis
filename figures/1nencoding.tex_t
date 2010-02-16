@@ -60,7 +60,7 @@
 %
 %      % Horizontal connections from the quantizers to the scaler.
       \draw[l] (quant\i\j) 
-      -- node[above] {$Q_{\the\indi,\the\indj}$} (scc\i\j);
+      -- node[above] {$Q_{\the\indi}$} (scc\i\j);
     }
   }
 
