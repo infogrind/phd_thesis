@@ -1,7 +1,6 @@
 \chapter{Minimal-Delay Codes for Bandwidth Expansion}
 
-
-\section{Two Alternative Perspectives}
+\section{Introduction}
 
 How do you transmit a single source symbol in $n$~channel uses? This problem can
 be approached from two different perspectives.  The first perspective is to take
@@ -217,12 +216,42 @@ illustrated on \figref{hybridlocus}.
 \end{figure}
 
 
+\subsection{Chapter Organization}
+
+The remainder of this chapter is structured as follows. \secref{scalarquant}
+introduces a communication scheme for transmitting a single source symbol across
+$n$~channel uses, based on the ideas just discussed. It is shown that the SDR
+achieved by this scheme scales as $\snr^n / (\log\snr)^{n-1}$, and that no
+scheme of the same type achieves a better SDR scaling. In \secref{latticequant},
+the scheme of \secref{scalarquant} is extended to encode \emph{blocks} of
+$m$~source symbols into $mn$~channel inputs, using lattice quantizers.  It turns
+out that even when powerful high dimensional lattices are used, the SDR for any
+finite blocklength~$m$ scales just like when $m = 1$ (although the
+multiplicative constants are larger). \secref{genbwexp} extends the scheme of
+\secref{scalarquant} in a different way, namely to encode $k$~source symbols
+into $n$~channel inputs when $\gcd(k,n) = 1$, \ie, when communcation cannot be
+broken down into smaller blocks. For this case the achievable SDR is shown to
+scale as $\snr^{n/k}/(\log\snr)^{(n-k)/k}$. 
+
+None of the considered transmission schemes achieves the optimal SDR
+scaling~$\snr^n$. Instead, the optimal scaling is divided by a ``penalty
+factor'' of $\log\snr$ raised to a power equal to the fraction of channel input
+symbols per source symbol used for ``coded'' transmission. Is this phenomenon
+particular to the transmission strategy used here or is it due to a more
+fundamental limit?
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SECTION: SCALAR QUANTIZER
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Scalar Quantizer}\label{sec:scalarquant}
+\section{A Simple Hybrid Transmission Scheme}\label{sec:scalarquant}
+
+Based on the ideas outlined in the introduction of this chapter, this section
+introduces a simple communication strategy. It splits a single source symbol
+into $n-1$ discrete parts and a continous part (hence the term ``hybrid''), to
+be transmitted, respectively, in the first $n-1$ and in the last channel use. 
 
 
 \subsection{Transmission Strategy}\label{sec:commscheme}
@@ -251,10 +280,9 @@ for $i = 1$, \dots, $n-1$ where $\Int(x)$ is the unique integer~$i$ satisfying
   x \in \left[i - \frac12, i +\frac12\right).
 \end{equation*}
 
-The parameter $\beta \in
-\NN$ determines the quantization resolution; the larger~$\beta$ the finer the
-quantization. Following the argument at the beginning of this chapter,
-$\beta$~is assumed to grow with the~SNR.
+The equations~\ref{eq:QEdef} essentially define a \emph{hierarchical
+quantization} of the source.  The parameter $\beta \in \NN$ determines the
+quantization resolution; the larger~$\beta$ the finer the quantization.
 Note that \eqref{eq:QEdef}~implies a partition of the source space into
 intervals of length $1/\beta^{n-1}$, as is illustrated in
 \figref{sourcepartition}. The $Q_i$ determine the interval that contains~$S$,
@@ -286,8 +314,6 @@ The following result will be useful in the sequel.
 \begin{proof}
   See \appref{qvarboundproof}.
 \end{proof}
-
-
 
 \begin{proposition}
   \label{prop:qeproperties}
@@ -337,11 +363,33 @@ according to
 Following Proposition~\ref{prop:qeproperties}, this ensures that $\E[X_i^2] \le
 P$ for all~$i$. 
 
+\begin{remark}
+  \label{rem:betagrow}
+  If the quantization resolution $\beta$ is upper bounded as $\snr \goesto
+  \infty$, the SDR scales at best as $\snr$, as a simple argument shows. If
+  $\beta \le \beta_{\max}$, the entropy of the $Q_i$ is upper bounded, and so is
+  the entropy of the $X_i$ for $i = 1$, \ldots, $n$. As $\snr \goesto \infty$,
+  the entropy of the $Y_i$ converges to that of the $X_i$, and so for all $i =
+  1$, \ldots, $n$, the mutual information $I(X_i; Y_i)$ is upper bounded by a
+  constant independent of the SNR. Since the SDR scales at best
+  as $2^{I(X^n;Y^n)}$ (see Chapter~\ref{ch:prelim}), this limits the SDR scaling
+  to at best linear in the SNR.
+\end{remark}
+
 
 \subsection{Lower Bound on the Squared Error}\label{sec:scalarlowerbound}
 
-The goal of this section is to lower bound the scaling of the mean squared error
-of the transmission strategy described in Section~\ref{sec:commscheme}.
+To obtain a lower bound on the MSE that holds for all possible decoders, the
+obvious thing to do is to assume a minimum mean squared error (MMSE) decoder. As
+mentioned in this chapter's introduction, though, the MMSE decoder is in general
+hard to evaluate mathematically. This is no different for the scheme at hand.
+Fortunately there is a way around the MMSE decoder, devised by Ziv and
+Zakai~\cite{ZivZ1969} and later used by Ziv to develop fundamental lower bounds
+for the communication of analog sources~\cite{Ziv1970}. By exploiting certain
+regularity properties of the encoder, it is in fact possible to lower bound the
+MSE by the error probability of binary signaling. In this section, this method
+is applied to upper bound the MSE of the transmission scheme introduced in the
+previous section regardless of the decoder used. 
 
 \begin{remark}
   \label{rem:betaepswlog}
@@ -824,13 +872,165 @@ which coincides with the lower bound on the MSE scaling of \thmref{scalinglb}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION: LATTICE QUANTIZERS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\section{Encoding Blocks of Source Symbols}\label{sec:latticequant}
+
+The scalar quantizer scheme described in the previous section can be extended
+quite easily to treat blocks of $m$ source symbols and to use lattice
+quantizers. For those unfamiliar with lattices or in need of a refresher, a
+concise presentation of the necessary concepts and results can be found in
+\appref{latticebasics}.
+
+To anticipate the conclusion of this section, it turns out that for no
+finite~$m$ a scaling better than that for $m=1$ can be obtained. Choosing a high
+dimensional lattice does result, however, in larger (and thus better)
+multiplying constants.
+
+
+\subsection{Transmission Strategy}
+
+The procedure to encode a vector~$\S$ of $m$~source symbols into $mn$~channel
+input vectors $\X_1$, \ldots, $\X_n$ using the lattice~$\Lambda$ for
+quantization is analog to that in \secref{scalarquant}, except that now all
+involved quantities are $m$-dimensional vectors.
+
+Let $\Lambda$ be some fixed lattice of dimension~$m$ and define $\Evc_0 = \S$.
+For $i = 1$, \ldots, $n-1$ define
+\begin{align}
+  \Q_i &= \QLb(\Evc_{i-1})  \nonumber \\
+  \Evc_i &= \beta ( \Evc_{i-1} - \Q_i), \label{eq:latticeQE}
+\end{align}
+where $\beta \in \NN$. According to \lemref{latquantvar}, $\E[\|\Q_i\|^2]$~is
+upper bounded by a constant independent of~$\beta$. Moreover, $\Evc_i$
+is contained within the Voronoi region of~$\Lambda$ around the origin, so by
+\lemref{voronoivarbound} $\E[\|\Evc_i\|^2]$ is also upper bounded independent
+of~$\beta$. Let $\gamma$~denote the upper bound on~$\E[\|\Q_i\|^2]$
+and~$\E[\|\Evc_i\|^2]$.  The channel inputs are then given by
+\begin{align*}
+  \X_i &= \frac{\sqrt{mP}}{\gamma} \Q_i \quad \text{for $i = 1$, \dots, $n-1$
+  and} \\
+  \X_n &= \frac{\sqrt{mP}}{\gamma} \Evc_{n-1}.
+\end{align*}
+By the above argument, this ensures that $\E[\X_i^2]/m \le P$ for all~$i$.
+
+
+
+\subsection{Error Lower Bound}
+
+Ziv's lower bound on the mean squared error, used in \secref{scalarquant},
+allows a straightforward extension to vector sources. With this, essentially the
+same argument sequence as in \secref{scalarquant} can be used to lower bound the
+squared error, independent of the particular decoder used.
+(We again write the quantization resolution in terms of~$\snr$
+as $\beta = \lceil \snr^{(1-\e)/2} \rceil$ without loss of generality
+(cf.~\remref{betaepswlog}).)
+
+\begin{lemma}
+  \label{lem:zivboundvec}
+  Consider a communication system where a continuous-valued source vector~$\S$
+  is encoded into a vector~$\X(\S)$, sent across independent parallel scalar
+  AWGN channels with noise variance~$\szq$, and decoded at the receiver to
+  produce an estimate~$\Shv$. If the density $f_{\S}(\s)$ of the source is such
+  that there exists a set~$\Xi$ and a number $\pmin > 0$ such that $f_{\S}(\s)
+  \ge \pmin$ whenever $s \in \Xi$, then for any vector~$\Dv$ the mean squared
+  error incurred by the communication system satisfies
+  \begin{equation*}
+    \msev \ge \pmin  \left( \frac{\|\Dv\|}{2}\right)^2 \int_{\Xi \cap (\Xi -
+    \Dv)} Q(d(\s, \Dv)/2 \sz) d\s,
+  \end{equation*}
+  where $d(\s,\Dv) = \|\X(\s) - \X(\s + \Dv)\|$. (The addition of a set $A$ and
+  a vector~$\x$ is defined as $A + \x = \{\vect{a} + \x : \vect{a} \in A\}$.)
+\end{lemma}
+
+\begin{remark}
+  \label{rem:zivboundvec}
+  The set $\Xi \cap (\Xi - \Dv)$ is the equivalent of the interval $[A,
+  B-\Delta]$ in the scalar case. It has the property that for every $\s \in \Xi
+  \cap (\Xi - \Dv)$, $\s + \Dv \in \Xi$. To get a meaningful lower bound,
+  $\Dv$~should of course be chosen such that $\Xi \cap (\Xi - \Dv)$ is nonempty.
+  Note also that when $\|\Dv\| \goesto 0$, the volume (or area) of $\Xi \cap
+  (\Xi - \Dv)$ converges to the volume of~$\Xi$.
+\end{remark}
+
+\begin{proof}[Proof of \lemref{zivboundvec}]
+  The proof is essentially the same as that for the scalar case
+  (\lemref{zivbound}). The only difference is that the
+  integrals~$\int_A^{B-\Delta}$ and~$\int_{A+\Delta}^B$ are replaced,
+  respectively, with~$\int_{\Xi \cap (\Xi - \Dv)}$ and~$\int_{\Xi \cap (\Xi +
+  \Dv)}$.
+\end{proof}
+
+Using \lemref{zivboundvec}, Lemmata~\ref{lem:lowerbound1}
+and~\ref{lem:lowerbound2} can be rederived for the case of lattices; the
+statements are in fact identical to the scalar case.
+
+\begin{lemma}
+  \label{lem:lowerbound1vec}
+  For an arbitrary function~$\e(\snr)$, the mean squared error of the lattice
+  quantizer transmission scheme of \secref{latticequant} satisfies
+  \begin{equation*}
+    \msev \in \Omega(\snr^{-n + (n-1)\e}).
+  \end{equation*}
+\end{lemma}
+
+\begin{lemma}
+  \label{lem:lowerbound2vec}
+  For an arbitrary function $\e(\snr) \ge 0$, the mean squared error of the
+  strategy of \secref{latticequant} satisfies
+  \begin{equation*}
+    \msev \in \Omega(\snr^{-1 + \e/2} \exp\{- c \snr^\e \},
+  \end{equation*}
+  where $c > 0$ does not depend on~$\snr$.
+\end{lemma}
+
+See \appref{lbvecproofs} for the proofs.
+
+Since Lemmata~\ref{lem:lowerbound1vec} and~\ref{lem:lowerbound2vec} are
+identical to Lemmata~\ref{lem:lowerbound1} and~\ref{lem:lowerbound2}, it is a
+direct consequence that \thmref{scalinglb} also applies to lattice quantizers.
+It is restated here for completeness.
+
+\begin{theorem}
+  \label{thm:scalinglbvec}
+  For any choice of the parameter~$\beta$ (as a function of the SNR) and for any
+  decoder, the mean squared error of the lattice quantizer transmission strategy
+  of \secref{latticequant} satisfies
+  \begin{equation*}
+    \msev \in \Omega(\snr^{-n} (\log\snr)^{n-1}).
+  \end{equation*}
+\end{theorem}
+
+\begin{proof}
+  The proof is identical to that of \thmref{scalinglb}.
+\end{proof}
+
+
+\subsection{Achievability}
+
+The scalar quantizer scheme of \secref{scalarquant} is nothing but a lattice
+scheme using a onedimensional rectangular lattice. The achievability proof of
+that section therefore applies to general lattices as well, and the bound of
+\thmref{scalinglbvec} is trivially achievable using a lattice quantizer.
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SECTION: GENERAL BANDWIDTH EXPANSION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{General Bandwidth Expansion}\label{sec:genbwexp}
 
-For simplicity assume for now that the support of the source is limited to
-the interval~$[-1/2, 1/2]$; the general case will be treated afterwards.
+If the source~$S$ has bounded support, the transmission strategy of
+\secref{scalarquant} can easily be adapted to encode not one but $k$~source
+symbols into $n$~channel inputs (where $k < n$). For simplicity it is first
+assumed that the source support is contained in the interval $[-1/2, 1/2]$; a
+generalization follows in \secref{extgensources}.
+
 
 \subsection{Transmission Strategy}
 
@@ -990,13 +1190,8 @@ The overall MSE scales thus as
   \mse \in O(\snr^{-n/k} (\log\snr)^{(n-k)/k}).
 \end{equation*}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% SECTION: LATTICE QUANTIZERS
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
-\subsection{Extension to General Sources}
+\subsection{Extension to General Sources}\label{sec:extgensources}
 
 The assumption in \secref{genbwexp} has so far been that the support of the
 source is limited to~$[-1/2,1/2]$. If a source~$S$ has support outside this
@@ -1008,143 +1203,13 @@ therefore still scales in the same way as when~$S \in [-1/2, 1/2]$.
 
 
 
-\section{Lattice Quantizers}\label{sec:latticequant}
 
-The scalar quantizer scheme described in the previous section can be extended
-quite easily to treat blocks of $m$ source symbols and to use lattice
-quantizers. For those unfamiliar with lattices or in need of a refresher, a
-concise presentation of the necessary concepts and results can be found in
-\appref{latticebasics}.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION: TOWARDS A GENERAL SDR UPPER BOUND
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The conclusion of this section is that for no finite~$m$ a scaling better than
-that for $m=1$ can be obtained. Choosing a high dimensional lattice does result,
-however, in larger multiplying constants.
+\section{Towards a General SDR Upper Bound}
 
-
-\subsection{Transmission Strategy}
-
-The procedure to encode a vector~$\S$ of $m$~source symbols into $mn$~channel
-input vectors $\X_1$, \ldots, $\X_n$ using the lattice~$\Lambda$ for
-quantization is analog to that in \secref{scalarquant}, except that now all
-involved quantities are $m$-dimensional vectors.
-
-Let $\Lambda$ be some fixed lattice of dimension~$m$ and define $\Evc_0 = \S$.
-For $i = 1$, \ldots, $n-1$ define
-\begin{align}
-  \Q_i &= \QLb(\Evc_{i-1})  \nonumber \\
-  \Evc_i &= \beta ( \Evc_{i-1} - \Q_i), \label{eq:latticeQE}
-\end{align}
-where $\beta \in \NN$. According to \lemref{latquantvar}, $\E[\|\Q_i\|^2]$~is
-upper bounded by a constant independent of~$\beta$. Moreover, $\Evc_i$
-is contained within the Voronoi region of~$\Lambda$ around the origin, so by
-\lemref{voronoivarbound} $\E[\|\Evc_i\|^2]$ is also upper bounded independent
-of~$\beta$. Let $\gamma$~denote the upper bound on~$\E[\|\Q_i\|^2]$
-and~$\E[\|\Evc_i\|^2]$.  The channel inputs are then given by
-\begin{align*}
-  \X_i &= \frac{\sqrt{mP}}{\gamma} \Q_i \quad \text{for $i = 1$, \dots, $n-1$
-  and} \\
-  \X_n &= \frac{\sqrt{mP}}{\gamma} \Evc_{n-1}.
-\end{align*}
-By the above argument, this ensures that $\E[\X_i^2]/m \le P$ for all~$i$.
-
-
-
-\subsection{Error Lower Bound}
-
-Ziv's lower bound on the mean squared error, used in \secref{scalarquant},
-allows a straightforward extension to vector sources. With this, essentially the
-same argument sequence as in \secref{scalarquant} can be used to lower bound the
-squared error, independent of the particular decoder used.
-(We again write the quantization resolution in terms of~$\snr$
-as $\beta = \lceil \snr^{(1-\e)/2} \rceil$ without loss of generality
-(cf.~\remref{betaepswlog}).)
-
-\begin{lemma}
-  \label{lem:zivboundvec}
-  Consider a communication system where a continuous-valued source vector~$\S$
-  is encoded into a vector~$\X(\S)$, sent across independent parallel scalar
-  AWGN channels with noise variance~$\szq$, and decoded at the receiver to
-  produce an estimate~$\Shv$. If the density $f_{\S}(\s)$ of the source is such
-  that there exists a set~$\Xi$ and a number $\pmin > 0$ such that $f_{\S}(\s)
-  \ge \pmin$ whenever $s \in \Xi$, then for any vector~$\Dv$ the mean squared
-  error incurred by the communication system satisfies
-  \begin{equation*}
-    \msev \ge \pmin  \left( \frac{\|\Dv\|}{2}\right)^2 \int_{\Xi \cap (\Xi -
-    \Dv)} Q(d(\s, \Dv)/2 \sz) d\s,
-  \end{equation*}
-  where $d(\s,\Dv) = \|\X(\s) - \X(\s + \Dv)\|$. (The addition of a set $A$ and
-  a vector~$\x$ is defined as $A + \x = \{\vect{a} + \x : \vect{a} \in A\}$.)
-\end{lemma}
-
-\begin{remark}
-  \label{rem:zivboundvec}
-  The set $\Xi \cap (\Xi - \Dv)$ is the equivalent of the interval $[A,
-  B-\Delta]$ in the scalar case. It has the property that for every $\s \in \Xi
-  \cap (\Xi - \Dv)$, $\s + \Dv \in \Xi$. To get a meaningful lower bound,
-  $\Dv$~should of course be chosen such that $\Xi \cap (\Xi - \Dv)$ is nonempty.
-  Note also that when $\|\Dv\| \goesto 0$, the volume (or area) of $\Xi \cap
-  (\Xi - \Dv)$ converges to the volume of~$\Xi$.
-\end{remark}
-
-\begin{proof}[Proof of \lemref{zivboundvec}]
-  The proof is essentially the same as that for the scalar case
-  (\lemref{zivbound}). The only difference is that the
-  integrals~$\int_A^{B-\Delta}$ and~$\int_{A+\Delta}^B$ are replaced,
-  respectively, with~$\int_{\Xi \cap (\Xi - \Dv)}$ and~$\int_{\Xi \cap (\Xi +
-  \Dv)}$.
-\end{proof}
-
-Using \lemref{zivboundvec}, Lemmata~\ref{lem:lowerbound1}
-and~\ref{lem:lowerbound2} can be rederived for the case of lattices; the
-statements are in fact identical to the scalar case.
-
-\begin{lemma}
-  \label{lem:lowerbound1vec}
-  For an arbitrary function~$\e(\snr)$, the mean squared error of the lattice
-  quantizer transmission scheme of \secref{latticequant} satisfies
-  \begin{equation*}
-    \msev \in \Omega(\snr^{-n + (n-1)\e}).
-  \end{equation*}
-\end{lemma}
-
-\begin{lemma}
-  \label{lem:lowerbound2vec}
-  For an arbitrary function $\e(\snr) \ge 0$, the mean squared error of the
-  strategy of \secref{latticequant} satisfies
-  \begin{equation*}
-    \msev \in \Omega(\snr^{-1 + \e/2} \exp\{- c \snr^\e \},
-  \end{equation*}
-  where $c > 0$ does not depend on~$\snr$.
-\end{lemma}
-
-See \appref{lbvecproofs} for the proofs.
-
-Since Lemmata~\ref{lem:lowerbound1vec} and~\ref{lem:lowerbound2vec} are
-identical to Lemmata~\ref{lem:lowerbound1} and~\ref{lem:lowerbound2}, it is a
-direct consequence that \thmref{scalinglb} also applies to lattice quantizers.
-It is restated here for completeness.
-
-\begin{theorem}
-  \label{thm:scalinglbvec}
-  For any choice of the parameter~$\beta$ (as a function of the SNR) and for any
-  decoder, the mean squared error of the lattice quantizer transmission strategy
-  of \secref{latticequant} satisfies
-  \begin{equation*}
-    \msev \in \Omega(\snr^{-n} (\log\snr)^{n-1}).
-  \end{equation*}
-\end{theorem}
-
-\begin{proof}
-  The proof is identical to that of \thmref{scalinglb}.
-\end{proof}
-
-
-\subsection{Achievability}
-
-The scalar quantizer scheme of \secref{scalarquant} is nothing but a lattice
-scheme using a onedimensional rectangular lattice. The achievability proof of
-that section therefore applies to general lattices as well, and the bound of
-\thmref{scalinglbvec} is trivially achievable using a lattice quantizer.
 
 
 
@@ -1211,8 +1276,6 @@ and their scheme includes Shamai et al.\ and Mittal \& Phamdo as extreme cases.
 All three schemes, however, use long block codes for the digital phase and incur
 correspondingly large delays, so they are not directly comparable with minimum
 delay schemes.
-
-
 
 
 
