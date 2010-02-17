@@ -1,6 +1,6 @@
 \chapter{Minimal-Delay Codes for Bandwidth Expansion}
 
-\section{Introduction}
+\section{Introduction}\label{sec:mindelintro}
 
 How do you transmit a single source symbol in $n$~channel uses? This problem can
 be approached from two different perspectives.  The first perspective is to take
@@ -26,10 +26,10 @@ error uncoded in the last channel use, even if there is no feedback.
 Indeed, suppose that after $n-1$~channel uses the receiver has a preliminary
 estimate~$\Sh'$ and suppose the transmitter knows~$\Sh'$. Then it 
 can use uncoded transmission to send the error $E \deq \Sh' - S$ in the last
-channel use. Upon receiving the corresponding channel output the receiver
+channel use. Upon receiving the corresponding channel output, the receiver
 computes an estimate $\Eh$ of~$E$ and sets the final estimate of~$S$ to be $\Sh
 = \Sh' - \Eh$. This results in the overall error $\Sh - S = \Sh' - E - S + E -
-\Eh = E - \Eh$ and the SDR becomes
+\Eh = E - \Eh$ and an SDR of
 \begin{equation*}
   \sdr = \frac{\ssq}{\mse} = \frac{\ssq}{\E[(\Sh' - S)^2]} \cdot
   \frac{\E[(\Sh' - S)^2]}{\msee}.
@@ -41,11 +41,12 @@ linearly with the SNR. Hence, the overall SDR scales as $\sdr' \cdot \snr$ and
 so uncoded transmission in the last channel use boosts the SDR by a
 factor~$\snr$. 
 
-The above argument assumed that the transmitter knew the receiver's estimate
-exactly, even if there was no feedback. This is possible only in two cases.
-Either the estimate after $n-1$ channel uses is constant regardless of the value
-of~$S$, which is not very useful, or some form of coding is used to combat the
-unreliability of the channel. 
+The argument just given assumed that the transmitter knew the receiver's
+estimate exactly, even though there was no feedback. This is possible only in
+two cases.  Either the estimate after $n-1$ channel uses is constant regardless
+of the value of~$S$ or some form of coding is used to combat the unreliability
+of the channel. Since the former is not very useful, the focus hereafter is on
+the latter.
 
 Suppose a perfect source code combined with a perfect channel code is
 used to transmit~$S$ across the first $n-1$~channel uses. This implies a
@@ -59,18 +60,19 @@ and the receiver sets $\Sh = Q + \Eh$, the overall SDR is
 \end{equation*}
 which scales as $\snr^{n-1} \cdot \snr = \snr^n$. 
 
-Unfortunately the constraint that a single source symbol must be encoded at a
-time prevents the use of a perfect source and channel code. Suppose thus that
-the receiver decodes not~$Q$ after $n-1$~channel uses but has only an
-estimate~$\Qh$. In that case, the overall estimate is $\Sh = \Qh - \Eh$ and the
-overall SDR, assuming $Q$ and~$E$ are estimated separately, is
+Naturally, the constraint that a single source symbol must be encoded at a
+time prevents the use of a perfect source and channel code, which would require
+large blocklenghts. Suppose thus that
+the receiver decodes not~$Q$ after $n-1$~channel uses, but that it has only an
+estimate~$\Qh$. In that case the overall estimate is $\Sh = \Qh + \Eh$ and the
+overall SDR (assuming $Q$ and~$E$ are estimated separately) is
 \begin{equation}
   \label{eq:sdrqesep}
   \sdr = \frac{\ssq}{\mseq + \msee} =
   \frac{\ssq}{\E[E^2]} \cdot \frac{\E[E^2]}{\mseq + \E[(\Eh - E)^2]}.
 \end{equation}
 If now $\mseq \in O(\msee)$ as $\snr \goesto \infty$, \ie,
-if the error in estimating~$\Qh$ is dominated by that of estimating~$E$, then
+if the error in estimating~$Q$ is dominated by that of estimating~$E$ then
 the SDR scales as
 \begin{equation}
   \label{eq:sdrscalingapprox}
@@ -82,7 +84,7 @@ scales as~$\snr$; overall, the SDR scales thus as $\snr / \E[E^2]$.
 There is a tradeoff in how~$Q$ (and~$E$) are chosen as a function of~$S$. If
 $Q$~is such that
 $\mseq$ decreases too slowly, the approximation~\eqref{eq:sdrscalingapprox}
-is not valid and~\eqref{eq:sdrqesep} scales instead as $\ssq / \mseq$, and the
+is not valid and~\eqref{eq:sdrqesep} scales instead as $\ssq / \mseq$, so the
 SDR gain from the uncoded transmission is lost.  If, on the other hand, $\mseq$
 decreases to fast then $\E[E^2]$ decreases only slowly and the overall SDR,
 $\snr / \E[E^2]$, grows only slowly with~$\snr$. It is clear, then, that the
@@ -99,7 +101,7 @@ $n-1$~channel uses be dominated by that of the last channel use as $\snr \goesto
 
 If $f(s)$ is an encoding function that maps a single source symbol into
 $n$~channel inputs, one can gain insights about its performance by studying the
-set $\{f(s): s \in \Ss\}$, where $\Ss$~is the support set of the source. This
+set $\{f(s): s \in \Ss\}$ (where $\Ss$~is the support set of the source). This
 set is called the \emph{signal curve} or \emph{signal locus} corresponding
 to~$f(s)$. A sample signal locus is shown in \figref{nonlinlocus}. Because of
 the power constraint, the signal locus must be roughly contained within a sphere
@@ -119,11 +121,12 @@ The estimate that minimizes the mean squared error is the conditional mean $\E[S
 estimation error is in general hopelessly complicated. A decoder whose
 performance is easier to evaluate is the \emph{maximum likelihood} (ML) decoder.
 It computes $\sh = \arg\max_{s} f(\y|s)$, where $f(\y|s)$ is the conditional
-\pdf\ of~$\Y$ given~$S$. For the AWGN channel, $\Y = f(S) + \Zv$, where $\Zv$ is
-circularly symmetric Gaussian noise of variance~$\szq$. In this case $f(\y|s)$
-is a decreasing function of $\|\y - f(s)\|$, so the ML decoder can
-equivalently be described by $\sh = \arg\min_{s} \|\y - f(s)\|$. It decides thus
-for $\sh$ such that $f(\sh)$ is the point on the signal curve closest to~$\y$. 
+\pdf\ of~$\Y = (Y_1, \dots, Y_n)$ given~$S$. For the AWGN channel, $\Y = f(S) +
+\Zv$, where $\Zv$ is circularly symmetric Gaussian noise of variance~$\szq$. In
+this case $f(\y|s)$ is a decreasing function of $\|\y - f(s)\|$, so the ML
+decoder can equivalently be described by $\sh = \arg\min_{s} \|\y - f(s)\|$. It
+decides thus for $\sh$ such that $f(\sh)$ is the point on the signal curve
+closest to~$\y$. 
 
 Suppose now that the transmitted point is $f(s_0)$ and suppose further that
 $f(s)$ is differentiable in~$s_0$. Then the signal curve can be linearly
@@ -178,9 +181,9 @@ assumption will no longer be valid.  On the other hand, if the SDR is to scale
 more than linearly with the SNR, then by~\eqref{eq:errorlinapprox} the stretch
 must increase with the SNR.
 
-The choice of the stretch represents a tradeoff. A bigger stretch results in a
-smaller error, provided that the correct fold of the signal curve is decoded.
-But a bigger stretch also increases the probability that the wrong fold of the
+The choice of the stretch represents a tradeoff: a bigger stretch results in a
+smaller error, provided that the correct fold of the signal curve is decoded,
+but a bigger stretch also increases the probability that the wrong fold of the
 curve is decoded. Optimally, thus, the stretch is such that the two kinds of
 errors contribute equally to the overall error. 
 
@@ -220,13 +223,13 @@ illustrated on \figref{hybridlocus}.
 
 The remainder of this chapter is structured as follows. \secref{scalarquant}
 introduces a communication scheme for transmitting a single source symbol across
-$n$~channel uses, based on the ideas just discussed. It is shown that the SDR
-achieved by this scheme scales as $\snr^n / (\log\snr)^{n-1}$, and that no
-scheme of the same type achieves a better SDR scaling. In \secref{latticequant},
-the scheme of \secref{scalarquant} is extended to encode \emph{blocks} of
-$m$~source symbols into $mn$~channel inputs, using lattice quantizers.  It turns
-out that even when powerful high dimensional lattices are used, the SDR for any
-finite blocklength~$m$ scales just like when $m = 1$ (although the
+$n$~channel uses based on the ideas just discussed. It is shown that this scheme
+achieves an SDR that scales as $\snr^n / (\log\snr)^{n-1}$ and that no scheme of
+the same type achieves a better SDR scaling. In \secref{latticequant}, the
+communication scheme of \secref{scalarquant} is extended to encode \emph{blocks}
+of $m$~source symbols into $mn$~channel inputs using lattice quantizers.  It
+turns out that even when powerful high dimensional lattices are used, the SDR
+for any finite blocklength~$m$ scales just like when $m = 1$ (although the
 multiplicative constants are larger). \secref{genbwexp} extends the scheme of
 \secref{scalarquant} in a different way, namely to encode $k$~source symbols
 into $n$~channel inputs when $\gcd(k,n) = 1$, \ie, when communcation cannot be
@@ -235,10 +238,12 @@ scale as $\snr^{n/k}/(\log\snr)^{(n-k)/k}$.
 
 None of the considered transmission schemes achieves the optimal SDR
 scaling~$\snr^n$. Instead, the optimal scaling is divided by a ``penalty
-factor'' of $\log\snr$ raised to a power equal to the fraction of channel input
-symbols per source symbol used for ``coded'' transmission. Is this phenomenon
-particular to the transmission strategy used here or is it due to a more
-fundamental limit?
+factor'' of $\log\snr$ raised to a power equal to the number of channel input
+symbols per source symbol that are used for ``coded'' transmission. Is this
+phenomenon particular to the transmission strategy used here or is it due to a
+more fundamental limit? \secref{gensdrub} prepares the way towards answering
+this question by exploring possible avenues towards an SDR upper bound for more
+general transmission strategies. 
 
 
 
@@ -248,7 +253,7 @@ fundamental limit?
 
 \section{A Simple Hybrid Transmission Scheme}\label{sec:scalarquant}
 
-Based on the ideas outlined in the introduction of this chapter, this section
+Based on the ideas outlined in the previous section, this section
 introduces a simple communication strategy. It splits a single source symbol
 into $n-1$ discrete parts and a continous part (hence the term ``hybrid''), to
 be transmitted, respectively, in the first $n-1$ and in the last channel use. 
@@ -267,7 +272,7 @@ The communication strategy described hereafter is displayed schematically on
   \label{fig:1nencoding}
 \end{figure}
 To encode a single source letter $S$ into $n$~channel input symbols $X_1$,
-\dots, $X_n$, we proceed as follows. Define $E_0 = S$ and recursively compute
+\dots, $X_n$, it proceeds as follows. Define $E_0 = S$ and recursively compute
 the pairs $(Q_i, E_i)$ as
 \begin{subequations}\label{eq:QEdef}
 \begin{align}
@@ -286,7 +291,7 @@ quantization resolution; the larger~$\beta$ the finer the quantization.
 Note that \eqref{eq:QEdef}~implies a partition of the source space into
 intervals of length $1/\beta^{n-1}$, as is illustrated in
 \figref{sourcepartition}. The $Q_i$ determine the interval that contains~$S$,
-and $E_{n-1}$ determines the position of~$S$ within the interval. 
+and $E_{n-1}$ determines the position of~$S$ within an interval. 
 
 The following result will be useful in the sequel.
 
@@ -303,12 +308,11 @@ The following result will be useful in the sequel.
 
 \begin{lemma}
   \label{lem:Qvarbound}
-  The variance of $Q_i$ satisfies
+  For all $i = 1$, \dots, $n-1$, the variance of $Q_i$ satisfies
   \begin{equation*}
     \Var Q_i \le \Var E_{i-1} + \frac{\sqrt{\Var E_{i-1}}}{\beta} +
-    \frac{1}{\beta^2}
+    \frac{1}{4\beta^2}.
   \end{equation*}
-  for all $i = 1$, \dots, $n-1$. 
 \end{lemma}
 
 \begin{proof}
@@ -334,19 +338,19 @@ The following result will be useful in the sequel.
 
 \begin{proof}
   \begin{enumerate}
-    \item From the definition~\eqref{eq:QEdef} we have
+    \item From the definition~\eqref{eq:QEdefB}, 
     \begin{equation}
       \label{eq:reverserec}
       E_{i-1} = \frac{1}{\beta} E_i + Q_i.
     \end{equation}
     Repeated use of this relationship leads to the given expression for~$S$. 
 
-  \item First, $\Var E_0 = \Var S = \ssq$, which clearly doesn't depend
+  \item First, $\Var E_0 = \Var S = \ssq$, which doesn't depend
     on~$\beta$. For $i = 1$, \ldots, $n-1$, $E_i \in [-1/2, 1/2)$ and so its
     variance is upper bounded as well. Finally, since $\beta \ge 1$ and by
     \lemref{Qvarbound}, 
     \begin{align*}
-      \Var Q_i &\le \Var E_{i-1} + \sqrt{\Var E_{i-1}} + 1,
+      \Var Q_i &\le \Var E_{i-1} + \sqrt{\Var E_{i-1}} + \frac14,
     \end{align*}
     which completes the proof.
   \end{enumerate}
@@ -365,15 +369,15 @@ P$ for all~$i$.
 
 \begin{remark}
   \label{rem:betagrow}
-  If the quantization resolution $\beta$ is upper bounded as $\snr \goesto
-  \infty$, the SDR scales at best as $\snr$, as a simple argument shows. If
-  $\beta \le \beta_{\max}$, the entropy of the $Q_i$ is upper bounded, and so is
-  the entropy of the $X_i$ for $i = 1$, \ldots, $n$. As $\snr \goesto \infty$,
-  the entropy of the $Y_i$ converges to that of the $X_i$, and so for all $i =
-  1$, \ldots, $n$, the mutual information $I(X_i; Y_i)$ is upper bounded by a
-  constant independent of the SNR. Since the SDR scales at best
-  as $2^{I(X^n;Y^n)}$ (see Chapter~\ref{ch:prelim}), this limits the SDR scaling
-  to at best linear in the SNR.
+  If the quantization resolution $\beta$ is upper bounded then the SDR scales at
+  best as $\snr$, as a simple argument shows. If $\beta \le \beta_{\max}$, the
+  entropy of the $Q_i$ is upper bounded, and so is the entropy of the $X_i$ for
+  $i = 1$, \ldots, $n$. As $\snr \goesto \infty$, the entropy of the $Y_i$
+  converges to that of the $X_i$, and so for all $i = 1$, \ldots, $n-1$, the
+  mutual information $I(X_i; Y_i)$ is upper bounded by a constant independent of
+  the SNR. Since the SDR scales at best as $2^{I(X^n;Y^n)}$ (see
+  Chapter~\ref{ch:prelim}), this limits the SDR scaling to be at best linear in
+  the SNR.
 \end{remark}
 
 
@@ -393,12 +397,12 @@ previous section regardless of the decoder used.
 
 \begin{remark}
   \label{rem:betaepswlog}
-  Throughout this section we assume $\beta = \lceil \snr^{(1-\e)/2}\rceil$,
+  Throughout this section it is assumed that $\beta = \lceil \snr^{(1-\e)/2}\rceil$,
   where $\e = \e(\snr)$ is a positive function of~$\snr$. This results in no
-  loss of generality, since for an arbitrary positive function~$f$ we can set
+  loss of generality, since for an arbitrary positive function~$f$ one can set
   $\e(\snr) = 1-2 \log(f(\snr))/\log\snr$ to get $\beta(\snr) = \lceil f(\snr)
   \rceil$.  Writing $\beta$ in this form will slightly simplify the mathematical
-  derivations to follow. Note that we can bound $\beta$ by $\snr^{(1-\e)/2} \le
+  derivations to follow. Note that one can bound $\beta$ by $\snr^{(1-\e)/2} \le
   \beta \le \snr^{(1-\e)/2} + 1$, which implies $\beta \in
   \Theta(\snr^{(1-\e)/2})$ (the $\Theta$-notation is defined in
   \appref{asymptotic}).
@@ -475,10 +479,15 @@ choose~$\e(\snr)$ optimally will be the subject of Theorem~\ref{thm:scalinglb}.
   It can be verified from~\eqref{eq:QEdef} that if $s \in \I_j^\Delta$ for
   some~$j$, the following properties hold: 1) $Q_i(s) = Q_i(s+\Delta)$ for
   $i=1$, \dots, $n-1$, and 2) $E_{n-1}(s+\Delta) - E_{n-1}(s) =
-  \beta^{n-1}\Delta$.  From~\eqref{eq:Xdef} it follows that
-  $s \in \I_j^\Delta$ implies $d(s, \Delta) = \sqrt{P/\gamma^2} \beta^{n-1}\Delta$.
+  \beta^{n-1}\Delta$. Geometrically this means that $s$ and~$s + \Delta$ are
+  mapped to the same straight line segment; see \figref{sdrubproofa}.
+  From~\eqref{eq:Xdef} it follows that $s \in \I_j^\Delta$ implies
+  \begin{equation*}
+    d(s, \Delta) = \|\X(s) - \X(s+\Delta)\| = \sqrt{P/\gamma^2}
+    \beta^{n-1}\Delta.
+  \end{equation*}
 
-  We now apply Lemma~\ref{lem:zivbound} and restrict the integral to the
+  Now apply Lemma~\ref{lem:zivbound} and restrict the integral to the
   set~$\psi(\Delta) \deq [A,B-\Delta) \cap \bigcup_{j\in\Z} \I_j^\Delta$. The
   lower bound is then relaxed to give
   \begin{equation*}
@@ -492,12 +501,12 @@ choose~$\e(\snr)$ optimally will be the subject of Theorem~\ref{thm:scalinglb}.
     \int_{\psi(\Delta)} ds.
   \end{equation*}
 
-  The proof is almost complete, but we still have to show that
+  The proof is almost complete; it only remains to show that
   $\int_{\psi(\Delta)}ds$ can be bounded below by a constant for large SNR. The
   length of a single interval~$\I_j^\Delta$ is $\beta^{-(n-1)} - \Delta$. Within
-  $[A,B-\Delta)$ there are $(B-A-\Delta)\beta^{n-1}$ such
-  intervals. The total length of all intervals~$\I_j^\Delta$ in $[A, B-\Delta)$
-  is therefore
+  $[A,B-\Delta)$ there are $(B-A-\Delta)\beta^{n-1}$ such intervals (see
+  \figref{lowerbound1intervals}). The total
+  length of all intervals~$\I_j^\Delta$ in $[A, B-\Delta)$ is therefore
   \[ \int_{\psi(\Delta)} ds = (B-A-\Delta)
   (1 - \beta^{n-1}\Delta), \]
   which, for the given values of~$\beta$ and~$\Delta$, 
@@ -506,21 +515,32 @@ choose~$\e(\snr)$ optimally will be the subject of Theorem~\ref{thm:scalinglb}.
   complete.
 \end{proof}
 
+\begin{figure}
+  \begin{center}
+    \figbox{lowerbound1intervals}
+  \end{center}
+  \caption{Illustration of the intervals $\I_j^\Delta$ in the proof of
+  \lemref{lowerbound1}.}
+  \label{fig:lowerbound1intervals}
+\end{figure}
+
 \begin{proof}[Proof of Lemma~\ref{lem:lowerbound2}]
   Observe first that~\eqref{eq:QEdef} implies $Q_1(s + \beta^{-1}) = Q_1(s) +
   \beta^{-1}$ and $E_1(s + \beta^{-1}) = E_1(s)$. Since all $Q_i$ and $E_i$ for
   $i \ge 2$ are by recursion a function of $E_1$ only, $Q_i(s) = Q_i(s +
   \beta^{-1})$ for $i = 2$, \dots, $n-1$, and $E_{n-1}(s) = E_{n-1}(s +
   \beta^{-1})$. Consequently,  $X_i(s) = X_i(s + \beta^{-1})$ for all $i =
-  2$, \dots, $n$. By~\eqref{eq:Xdef} and the above, the Euclidean distance
+  2$, \dots, $n$. Geometrically speaking, $s$ and $s + \beta^{-1}$ are mapped to
+  the same position on two adjacent segments of the signal locus; see
+  \figref{sdrubproofb}. By~\eqref{eq:Xdef} and the above, the Euclidean distance
   between $\X(s)$ and~$\X(s+\beta^{-1})$ is therefore
   \begin{equation}
     \label{eq:xbetadist}
-    \frac{\sqrt P}{\gamma} |Q_1(s) - Q_1(s+\beta^{-1})| 
+    d(s, \beta^{-1}) = \frac{\sqrt P}{\gamma} |Q_1(s) - Q_1(s+\beta^{-1})| 
     = \frac{\sqrt P}{\gamma\beta}.
   \end{equation}
 
-  We now apply Lemma~\ref{lem:zivbound} with $\Delta = \beta^{-1}$. The
+  Apply now \lemref{zivbound} with $\Delta = \beta^{-1}$. The
   parameter $\beta$ will be chosen to increase with the SNR, therefore $\Delta
   \in [0, B-A)$ holds for sufficiently large values of~$\snr$.
 
@@ -535,7 +555,7 @@ choose~$\e(\snr)$ optimally will be the subject of Theorem~\ref{thm:scalinglb}.
   $\limtoinf{\snr} \snr^{\e(\snr)} = \infty$, use the fact that $Q(x)$~converges
   to $e^{-x^2/2}/\sqrt{2\pi}x$ (cf.~\cite[\Spg 26.2.12]{AbramowitzS1964}).
   Otherwise $\snr^{\e(\snr)}$ is upper bounded by a constant, in which case
-  $Q(x)$ is lower bounded and so is $e^{-x^2/2}/x$ for $x = \snr^{\e(\snr)}$.
+  $Q(x)$ is lower bounded for $x = \snr^{\e(\snr)}$ and so is $e^{-x^2/2}/x$.
   In any case, for sufficiently large values of~$\snr$,
   \begin{equation*}
     \mse \ge c_1 \snr^{-1 + \e/2} \exp\{-c_2\snr^\e\},
@@ -543,6 +563,30 @@ choose~$\e(\snr)$ optimally will be the subject of Theorem~\ref{thm:scalinglb}.
   with $c_1$ and $c_2$ positive constants that do not depend on~$\snr$, thus
   proving the lemma.
 \end{proof}
+
+\begin{figure}
+  \centerline{%
+  \subfloat[$\Delta \in [0, \beta^{-(n-1)})$]%
+  {\label{fig:sdrubproofa}\figbox[4cm]{sdrubproofa}}%
+  \hfil
+  \subfloat[$\Delta =
+  \beta^{-1}$]{\label{fig:sdrubproofb}\figbox[4cm]{sdrubproofb}}
+  } % end centerline
+  \caption{Geometrical view of the proofs of \lemref{lowerbound1} (left) and
+  \lemref{lowerbound2} (right). In the former case, $s$ and $s + \Delta$ are
+  mapped to the same line segment, whereas in the latter case they are mapped to
+  adjacent segments but at the same ``height''.}
+  \label{fig:sdrubproof}
+\end{figure}
+
+\begin{remark}
+  \label{rem:geomlb}
+  \figref{sdrubproof} nicely illustrates the connection to the geometric
+  argument given in \secref{mindelintro}. The MSE is lower bounded by
+  \lemref{lowerbound1} in case the correct fold of the signal curve is decoded
+  and by \lemref{lowerbound2} in case the wrong fold is decoded. The
+  parameter~$\e$ represents the tradeoff between the two kinds of errors.
+\end{remark}
 
 The following lemma will be used to prove Theorem~\ref{thm:scalinglb}, the main
 result of this section.
@@ -588,7 +632,7 @@ The following is the main result of this section.
 \begin{theorem}
   \label{thm:scalinglb}
   For any parameter~$\beta$ and for any decoder, the mean squared error of the
-  transmission strategy described in Section~\ref{sec:commscheme} satisfies
+  hybrid transmission strategy described in this section satisfies
   \begin{equation*}
     \mse \in \Omega(\snr^{-n}(\log\snr)^{n-1}).
   \end{equation*}
@@ -617,7 +661,7 @@ The following is the main result of this section.
     \label{eq:epsmax}
     \max\left( l_1(\snr,\e), l_2(\snr,\e) \right)
   \end{equation}
-  is minimized. Now for any fixed~$\snr$, $l_1(\snr,\e)$ is increasing in~$\e$,
+  is minimized. Now for any fixed~$\snr$, $l_1(\snr,\e)$ is increasing in~$\e$
   and $l_2(\snr,\e)$ is increasing in~$\e$ for $0 \le \e < \xi =
   \log(1/2c)/\log\snr$ and decreasing in~$\e$ for $\e \ge \xi$.  The maximum
   in~\eqref{eq:epsmax} is therefore minimized either for $\e = 0$ or for $\e \ge
@@ -659,9 +703,9 @@ The following is the main result of this section.
 \subsection{Asymptotical Achievability of Lower Bound}
 \label{sec:achievable}
 
-The previous section showed that the hybrid transmission strategy studied here
+The previous section showed that the hybrid transmission strategy 
 achieves an SDR scaling of at best $\snr^n/(\log\snr)^{n-1}$. Using a simple
-decoder, this scaling is in fact achievable, as will now be shown.
+decoder this scaling is in fact achievable, as will now be shown.
 
 \subsubsection{A Suboptimal Decoder}
 
@@ -700,23 +744,23 @@ Finally, using~\eqref{eq:unwraprec}, the estimate of~$S$ is computed as
 
 \subsubsection{Error Analysis}
 
-The overall MSE $\E[(S-\Sh)^2]$ can be broken up into contributions due to the
+The overall MSE $\mse$ can be broken up into contributions due to the
 errors in decoding $Q_i$ and $E_{n-1}$ as follows. From~\eqref{eq:unwraprec}
-and~\eqref{eq:unwrapestim}, the difference between $S$ and $\Sh$ is
+and~\eqref{eq:unwrapestim}, the difference between $\Sh$ and $S$ is
 \begin{equation*}
-  S - \Sh = \sum_{i=1}^{n-1} \frac1{\beta^{i-1}} (Q_i - \Qh_i) + \frac1{\beta^{n-1}}
-  (E_{n-1} - \Eh_{n-1}).
+  \Sh - S = \sum_{i=1}^{n-1} \frac1{\beta^{i-1}} (\Qh_i - Q_i) + \frac1{\beta^{n-1}}
+  (\Eh_{n-1} - E_{n-1}).
 \end{equation*}
-The error terms $Q_i - \Qh_i$ depend only on the noise of the respective channel
-uses and are therefore independent of each other and of $E_{n-1} - \Eh_{n-1}$,
+The error terms $\Qh_i - Q_i$ depend only on the noise of the respective channel
+uses and are therefore independent of each other and of $\Eh_{n-1} - E_{n-1}$,
 so the error variance can be written componentwise as
 \begin{equation}
   \label{eq:totalerror}
-  \E[(S-\Sh)^2] = \sum_{i=1}^{n-1} \frac{1}{\beta^{2(i-1)}} \Eqi +
+  \mse = \sum_{i=1}^{n-1} \frac{1}{\beta^{2(i-1)}} \Eqi +
   \frac{1}{\beta^{2(n-1)}} \Ee, 
 \end{equation}
-where $\Eqi \deq \E[(Q_i - \Qh_i)^2]$ and $\Ee \deq \E[(E_{n-1} -
-\Eh_{n-1})^2]$.
+where $\Eqi \deq \E[(\Qh_i - Q_i)^2]$ and $\Ee \deq \E[(\Eh_{n-1} -
+E_{n-1})^2]$.
 
 \begin{lemma}
   \label{lem:eqbound}
@@ -725,9 +769,9 @@ where $\Eqi \deq \E[(Q_i - \Qh_i)^2]$ and $\Ee \deq \E[(E_{n-1} -
     \label{eq:eqidecay}
     \Eqi \in O\left(\exp\{-c \snr/\beta^2\}\right),
   \end{equation}
-  where $\snr = P/\szq$ and $c > 0$~is a constant.
-\end{lemma}
+  where $c > 0$~is a constant.
 (The $O$-notation is defined in Appendix~\ref{app:asymptotic}.)
+\end{lemma}
 
 \begin{proof}
   Define the interval
@@ -801,9 +845,9 @@ where $\Eqi \deq \E[(Q_i - \Qh_i)^2]$ and $\Ee \deq \E[(E_{n-1} -
   \begin{equation*}
     Y_n = X_n + Z_n = \frac{\sqrt{P}}{\gamma} E_{n-1} + Z_n,
   \end{equation*}
-  we have $\E[E_{n-1}Y_n] = \sqrt{P}\seq/\gamma$. Moreover, $\E[Y_n^2] = \E[X^2]
+  $\E[E_{n-1}Y_n] = \sqrt{P}\seq/\gamma$. Moreover, $\E[Y_n^2] = \E[X^2]
   + \E[Z^2] = P\seq / \gamma^2 +\szq$.  Inserting this
-  into~\eqref{eq:lmmse-error} we obtain
+  into~\eqref{eq:lmmse-error} yields
   \begin{align*}
     \Ee &= \seq - \frac{P \se^4/\gamma^2}{P\seq/\gamma^2 + \szq} \\
     &= \seq \left( 1 - \frac{P\seq/\gamma^2}{P\seq/\gamma^2 + \szq} \right) \\
@@ -843,11 +887,12 @@ where $\e' = (n-1)\e$ can be made as small as desired.
 %  \limtoinf{\snr} \frac{\log \ssq + (n - \e') \log\snr}{\log \snr} = n - \e'. 
 %\end{equation}
 
-Note that the choice of $\e$ represents a tradeoff: for small $\e$ the error due
-to the ``discrete'' part vanishes only slowly, but the scaling exponent in the
-limit is larger. For larger $\e$, $\Eq$ vanishes quickly but the resulting
-exponent is smaller. The remainder of this section shows how to choose $\e$ as a
-function of~$\snr$ to optimize SDR scaling. 
+As already mentioned in \remref{geomlb}, the choice of $\e$ represents a
+tradeoff: for small $\e$ the error due to the ``discrete'' part vanishes only
+slowly, but the scaling exponent in the limit is larger. For larger $\e$, $\Eq$
+vanishes quickly but the resulting exponent is smaller. The remainder of this
+section shows how to choose $\e$ as a function of~$\snr$ in order to achieve the
+SDR scaling upper bound of \thmref{scalinglb}.
 
 Let
 \begin{equation}
@@ -871,30 +916,30 @@ which coincides with the lower bound on the MSE scaling of \thmref{scalinglb}.
 
 
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SECTION: LATTICE QUANTIZERS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-
 \section{Encoding Blocks of Source Symbols}\label{sec:latticequant}
 
 The scalar quantizer scheme described in the previous section can be extended
-quite easily to treat blocks of $m$ source symbols and to use lattice
-quantizers. For those unfamiliar with lattices or in need of a refresher, a
-concise presentation of the necessary concepts and results can be found in
-\appref{latticebasics}.
+quite easily to treat blocks of $m$ source symbols using lattices for the
+hierarchical quantization. For the reader unfamiliar with lattices or in need of
+a refresher, a concise presentation of the necessary concepts and results is
+provided in \appref{latticebasics}.
 
-To anticipate the conclusion of this section, it turns out that for no
-finite~$m$ a scaling better than that for $m=1$ can be obtained. Choosing a high
-dimensional lattice does result, however, in larger (and thus better)
-multiplying constants.
+To anticipate the conclusion of this section, it turns out that the SDR scaling
+achieved for $m=1$ cannot be improved upon by choosing a larger~$m$. Choosing a
+larger~$m$ and thus a lattice of larger dimension can however result in larger
+multiplicative constants and thus increase the SDR for any given SNR.
 
 
 \subsection{Transmission Strategy}
 
 The procedure to encode a vector~$\S$ of $m$~source symbols into $mn$~channel
-input vectors $\X_1$, \ldots, $\X_n$ using the lattice~$\Lambda$ for
+input vectors $\X_1$, \ldots, $\X_n$ using an $m$-dimensional lattice for
 quantization is analog to that in \secref{scalarquant}, except that now all
 involved quantities are $m$-dimensional vectors.
 
@@ -908,28 +953,27 @@ where $\beta \in \NN$. According to \lemref{latquantvar}, $\E[\|\Q_i\|^2]$~is
 upper bounded by a constant independent of~$\beta$. Moreover, $\Evc_i$
 is contained within the Voronoi region of~$\Lambda$ around the origin, so by
 \lemref{voronoivarbound} $\E[\|\Evc_i\|^2]$ is also upper bounded independent
-of~$\beta$. Let $\gamma$~denote the upper bound on~$\E[\|\Q_i\|^2]$
+of~$\beta$. Let $\gamma$~denote the common upper bound on~$\E[\|\Q_i\|^2]$
 and~$\E[\|\Evc_i\|^2]$.  The channel inputs are then given by
 \begin{align*}
   \X_i &= \frac{\sqrt{mP}}{\gamma} \Q_i \quad \text{for $i = 1$, \dots, $n-1$
   and} \\
   \X_n &= \frac{\sqrt{mP}}{\gamma} \Evc_{n-1}.
 \end{align*}
-By the above argument, this ensures that $\E[\X_i^2]/m \le P$ for all~$i$.
+By the above argument, this ensures that $\E[\|\X_i\|^2]/m \le P$ for all~$i$.
 
 
 
 \subsection{Error Lower Bound}
 
-Ziv's lower bound on the mean squared error, used in \secref{scalarquant},
+Ziv's lower bound on the mean squared error introduced in \secref{scalarquant}
 allows a straightforward extension to vector sources. With this, essentially the
 same argument sequence as in \secref{scalarquant} can be used to lower bound the
-squared error, independent of the particular decoder used.
-(We again write the quantization resolution in terms of~$\snr$
-as $\beta = \lceil \snr^{(1-\e)/2} \rceil$ without loss of generality
-(cf.~\remref{betaepswlog}).)
+mean squared error, independent of the particular decoder used.  (Again,
+the quantization resolution in terms of~$\snr$ is assumed to be $\beta = \lceil
+\snr^{(1-\e)/2} \rceil$ without loss of generality (cf.~\remref{betaepswlog}).)
 
-\begin{lemma}
+\begin{lemma}[Extension of \lemref{zivbound} to vector sources]
   \label{lem:zivboundvec}
   Consider a communication system where a continuous-valued source vector~$\S$
   is encoded into a vector~$\X(\S)$, sent across independent parallel scalar
@@ -949,11 +993,11 @@ as $\beta = \lceil \snr^{(1-\e)/2} \rceil$ without loss of generality
 \begin{remark}
   \label{rem:zivboundvec}
   The set $\Xi \cap (\Xi - \Dv)$ is the equivalent of the interval $[A,
-  B-\Delta]$ in the scalar case. It has the property that for every $\s \in \Xi
-  \cap (\Xi - \Dv)$, $\s + \Dv \in \Xi$. To get a meaningful lower bound,
-  $\Dv$~should of course be chosen such that $\Xi \cap (\Xi - \Dv)$ is nonempty.
-  Note also that when $\|\Dv\| \goesto 0$, the volume (or area) of $\Xi \cap
-  (\Xi - \Dv)$ converges to the volume of~$\Xi$.
+  B-\Delta]$ in the scalar case of \lemref{zivbound}. It has the property that
+  for every $\s \in \Xi \cap (\Xi - \Dv)$, $\s + \Dv \in \Xi$. To get a
+  meaningful lower bound, $\Dv$~should of course be chosen such that $\Xi \cap
+  (\Xi - \Dv)$ is nonempty.  Note also that when $\|\Dv\| \goesto 0$, the volume
+  (or area) of $\Xi \cap (\Xi - \Dv)$ converges to the volume of~$\Xi$.
 \end{remark}
 
 \begin{proof}[Proof of \lemref{zivboundvec}]
@@ -971,7 +1015,7 @@ statements are in fact identical to the scalar case.
 \begin{lemma}
   \label{lem:lowerbound1vec}
   For an arbitrary function~$\e(\snr)$, the mean squared error of the lattice
-  quantizer transmission scheme of \secref{latticequant} satisfies
+  communication scheme satisfies
   \begin{equation*}
     \msev \in \Omega(\snr^{-n + (n-1)\e}).
   \end{equation*}
@@ -980,14 +1024,14 @@ statements are in fact identical to the scalar case.
 \begin{lemma}
   \label{lem:lowerbound2vec}
   For an arbitrary function $\e(\snr) \ge 0$, the mean squared error of the
-  strategy of \secref{latticequant} satisfies
+  lattice communication scheme satisfies
   \begin{equation*}
     \msev \in \Omega(\snr^{-1 + \e/2} \exp\{- c \snr^\e \},
   \end{equation*}
   where $c > 0$ does not depend on~$\snr$.
 \end{lemma}
 
-See \appref{lbvecproofs} for the proofs.
+The proofs are given in \appref{lbvecproofs}.
 
 Since Lemmata~\ref{lem:lowerbound1vec} and~\ref{lem:lowerbound2vec} are
 identical to Lemmata~\ref{lem:lowerbound1} and~\ref{lem:lowerbound2}, it is a
@@ -1012,9 +1056,10 @@ It is restated here for completeness.
 \subsection{Achievability}
 
 The scalar quantizer scheme of \secref{scalarquant} is nothing but a lattice
-scheme using a onedimensional rectangular lattice. The achievability proof of
-that section therefore applies to general lattices as well, and the bound of
-\thmref{scalinglbvec} is trivially achievable using a lattice quantizer.
+scheme using a one-dimensional rectangular lattice. The achievability proof of
+that section therefore applies to general lattices as well, and the asymptotic
+bound of \thmref{scalinglbvec} is trivially achievable using a lattice
+quantizer.
 
 
 
@@ -1029,7 +1074,7 @@ If the source~$S$ has bounded support, the transmission strategy of
 \secref{scalarquant} can easily be adapted to encode not one but $k$~source
 symbols into $n$~channel inputs (where $k < n$). For simplicity it is first
 assumed that the source support is contained in the interval $[-1/2, 1/2]$; a
-generalization follows in \secref{extgensources}.
+generalization follows at the end of this section.
 
 
 \subsection{Transmission Strategy}
@@ -1044,25 +1089,26 @@ channel inputs $X_1$, \dots, $X_n$ is displayed schematically on
   \caption{Schematic display of the transmission strategy of \secref{genbwexp}
   for~$k = 3$ and~$n=5$. The boxes labeled~\textsf{Q} are uniform scalar
   quantizers with resolution~$\beta$ as described in~\eqref{eq:QEdefkn}. The
+  boxes marked ``combine'' implement the operation~\eqref{eq:Qtot}. The
   part marked in thick lines corresponds exactly to the encoding scheme
   described in \secref{scalarquant} to encode one source symbol into three
-  channel uses; compare this to \figref{1nencoding}.}
+  channel uses; compare this with \figref{1nencoding}.}
   \label{fig:knencoding}
 \end{figure}
 The encoder consists of $k$~parallel scalar encoders that encode each~$S_i$ into
 $n-k$~quantizer outputs $Q_{i,1}$, \dots, $Q_{i,n-k}$ and a quantization
-error~$E_{j,n-k}$, just like for the case~$k=1$. The quantizer outputs at each
+error~$E_{i,n-k}$, just like for the case~$k=1$. The quantizer outputs at each
 level are then combined into a single value $Q_{\tot,j}$
 (cf.~\figref{knencoding}). More precisely, letting $i \in \{1, \dots, k\}$ be
-the index of the source symbols, the encoder defines $E_{i,0} = S_i$ for
+the index of the source symbol, the encoder defines $E_{i,0} = S_i$ for
 each~$i$ and computes
 \begin{align}
   Q_{i,j} &= \frac{1}{\beta} \Int(\beta E_{i,j-1}) \quad\text{and} \nonumber \\
   E_{i,j} &= \beta(E_{i,j-1} - Q_{i,j}). \label{eq:QEdefkn}
 \end{align}
 (This is exactly the same as~\eqref{eq:QEdef}, except for the addition of the
-subscript~$i$; see also \figref{knencoding}.) For each quantization level~$j =
-1$, \dots, $n-k$, the $k$~parallel quantizer outputs are combined into
+subscript~$i$.) For each quantization level~$j = 1$, \dots, $n-k$, the
+$k$~parallel quantizer outputs are combined into
 \begin{equation}
   \label{eq:Qtot}
   Q_{\tot,j} = \sum_{i=1}^k \frac{1}{\beta^{i-1}} Q_{i,j}.
@@ -1091,11 +1137,11 @@ all $Q_{i,j}$ and~$E_{i,j}$ for all~$\beta$. The channel inputs are thus
 
 \subsection{Decoder}
 
-Just like when $k=1$, the decoder first computes separate estimates~$\Qh_{i,j}$
+Just like when $k=1$ the decoder first computes separate estimates~$\Qh_{i,j}$
 and~$E_{i,n-k}$ and then combines them into the estimates~$\Sh_i$. The
 $\Qh_{i,j}$ are obtained using a maximum likelihood (minimum distance) estimate
-of~$Q_{\tot,j}$ and then applying~\eqref{eq:Qtotinv}. The estimate of
-$Q_{\tot,j}$ is
+of~$Q_{\tot,j}$ and then by breaking it down according to~\eqref{eq:Qtotinv}.
+The estimate of $Q_{\tot,j}$ is
 \begin{equation*}
   \Qh_{\tot,j} = \frac{1}{\beta^k} \arg\min_{l\in\Z}
   \left| \frac{l\sqrt P}{\gamma \beta^k} - Y_j \right|,
@@ -1149,8 +1195,8 @@ following lemma (compare with \lemref{eqbound}).
 \begin{proof}
   For any $i$ and~$j$, $| \Qh_{i,j} - Q_{i,j}| \ne 0$ only if $|Z_j| \ge
   \sqrt{P} / 2 \gamma \beta^k$. Furthermore, since $\Qh_{i,j}, Q_{i,j} \in
-  [-1/2, 1/2)$, $|\Qh_{i,j} - Q_{i,j}| \le 1$. The error~$\Err_{Q,i,j}$ can thus
-  be upper bounded as
+  [-1/2, 1/2)$, $|\Qh_{i,j} - Q_{i,j}| \le 1$. The error~$\Err_{Q,i,j}$ is
+  therefore upper bounded by
   \begin{align*}
     \E[(\Qh_{i,j} - Q_{i,j})^2] &\le \Pr\left[|Z_j| \ge \frac{\sqrt{P}}{2 \gamma
     \beta^k} \right] \\
@@ -1201,6 +1247,9 @@ the described scheme to transmit~$S'$ and let $\Sh = \alpha \Sh'$. The
 incurred distortion is $\E[(S - \Sh)^2] = \alpha^2 \E[(S' - \Sh')^2]$; the SDR
 therefore still scales in the same way as when~$S \in [-1/2, 1/2]$.
 
+For sources with unbounded support, some form of compander must be used to bring
+them into a bounded interval; this problem is left as future work. 
+
 
 
 
@@ -1208,7 +1257,7 @@ therefore still scales in the same way as when~$S \in [-1/2, 1/2]$.
 % SECTION: TOWARDS A GENERAL SDR UPPER BOUND
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Towards a General SDR Upper Bound}
+\section{Towards a General SDR Upper Bound}\label{sec:gensdrub}
 
 
 
@@ -1220,7 +1269,7 @@ therefore still scales in the same way as when~$S \in [-1/2, 1/2]$.
 
 \section{Historical Remarks}
 
-Schemes similar to the one proposed here have been considered before. Indeed,
+Schemes similar to the ones proposed here have been considered before. Indeed,
 one of the first schemes to transmit an analog source across two uses of a
 Gaussian channel was suggested by Shannon~\cite{Shannon1949}. Notice its
 resemblance to the constellation studied here, shown in
@@ -1231,9 +1280,9 @@ Figure~\ref{fig:shannoncomparison}.
   \subfloat[Mapping proposed in this paper
   (for~$n=2$).]{\input{figures/ourconstellation.tex_t}} }% end centerline
   \caption{A minimum-delay source-channel code for $n=2$ can be visualized as a
-  curve in $\R^2$ parametrized by the source. Here we compare the mapping
-  presented in this chapter (right) to Shannon's original suggestion (left).}
-  \label{fig:shannoncomparison}
+  curve in $\R^2$ parametrized by the source. Here the mapping
+  presented in this \secref{scalarquant} is compared to Shannon's original
+  suggestion (left).} \label{fig:shannoncomparison}
 \end{figure}
 
 After Shannon, Wozencraft and Jacobs~\cite{WozencraftJ1965} were among the first
@@ -1296,44 +1345,6 @@ delay schemes.
 
 
 \begin{subappendices}
-  % [Marius] This is no longer needed, since we use the more general lemma that
-  % gives the upper bound on the quantization error for all lattices.
-%  \section{Proof of Lemma~\ref{lem:qvarconvergence}}
-%  \label{app:lemma1proof}
-%
-%  Since all involved distributions are symmetric, $\E[Q_i] = 0$.  Writing $Q_i$
-%  as a function of $E_{i-1}$, we have
-%  \begin{equation}
-%    \var(Q_i) = \E[Q_i^2] = \int_{-\infty}^\infty Q_i(\xi)^2 f(\xi) d\xi,
-%    \label{eq:varqintegral}
-%  \end{equation}
-%  %\begin{align}
-%  %  \var(Q_i) &= \E[Q_i^2] \nonumber\\
-%  %  &= \int_{-\infty}^\infty Q_i(\xi)^2 f(\xi) d\xi,
-%  %  \label{eq:varqintegral}
-%  %\end{align}
-%  where $f(\xi)$ is the pdf\footnote{probability density function} of $E_{i-1}$.
-%  Now, $Q_i(\xi) = j/\beta$ whenever
-%  \begin{equation*}
-%    \xi \in \left[ \frac{j - 1/2}{\beta}, \frac{j + 1/2}{\beta} \right).
-%  \end{equation*}
-%  With this, the integral~\eqref{eq:varqintegral} becomes
-%  \begin{align*}
-%    \var(Q_i) &= \frac{1}{\beta^2} \sum_{j \in \Z} j^2 
-%    \int_{\frac{j - 1/2}{\beta}}^{\frac{j + 1/2}{\beta}} f(\xi) d\xi \\
-%    &= \sum_{j\in \Z} \left( \frac{j}{\beta} \right)^2 \left[ F\left( 
-%    { \textstyle
-%    \frac{j + 1/2}{\beta} }\right) - F \left( { \textstyle \frac{j - 1/2}{\beta}
-%    } \right) \right],
-%  \end{align*}
-%  where $F(\xi)$ is the cdf\footnote{cumulative distribution function} of
-%  $E_{i-1}$. As $\beta$ goes to infinity, this sum converges to a
-%  Riemann-Stieltjes integral:
-%  \begin{equation*}
-%    \var(Q_i) \longrightarrow \int \xi^2 dF(\xi) = \var(E_{i-1}) \quad
-%    \text{as $\beta \goesto \infty$.}
-%  \end{equation*}
-%  \qed
 
 
 \section{Proof of \lemref{Qvarbound}}\label{app:qvarboundproof}
@@ -1341,12 +1352,13 @@ delay schemes.
 \begin{proof}
   Let $f(\xi)$ be the probability density function of~$E_{i-1}$. Then
   \begin{align*}
-    \Var Q_i &= \frac{1}{\beta^2} \int_{\R} \Int(\beta E_{i-1})^2 f(\xi) d\xi \\
+    \Var Q_i &\le \frac{1}{\beta^2} \int_{\R} \Int(\beta E_{i-1})^2 f(\xi) d\xi
+    \\
     &= \frac{1}{\beta^2} \sum_{i\in\Z} i^2
     \int_{\frac{i-1/2}{\beta}}^{\frac{i+1/2}{\beta}} f(\xi) d\xi.
   \end{align*}
-  Whenever $\xi \in [(i-1/2)/\beta, (i+1/2)/\beta)$, $|i| \le \beta|\xi| + 1/2$,
-  so
+  Now, $|i| \le \beta|\xi| + 1/2$ whenever $\xi \in [(i-1/2)/\beta,
+  (i+1/2)/\beta)$, so
   \begin{align*}
     \Var Q_i &\le \frac{1}{\beta^2} \sum_{i\in \Z}
     \int_{\frac{i-1/2}{\beta}}^{\frac{i+1/2}{\beta}} (\beta|\xi| + 1/2)^2 
@@ -1359,7 +1371,7 @@ delay schemes.
   E_{i-1}}$ to finally obtain
   \begin{equation*}
     \Var Q_i \le \Var E_{i-1} + \frac{\sqrt{\Var E_{i-1}}}{\beta} +
-    \frac{1}{\beta^2}.
+    \frac{1}{4\beta^2}.
   \end{equation*}
 \end{proof}
   
@@ -1367,12 +1379,12 @@ delay schemes.
   \section{Proof of Ziv's Lower Bound (Lemma~\ref{lem:zivbound})}
   \label{app:zivboundproof}
 
-  If we condition the mean squared error on~$S$ and use the assumption on~$p_S$
-  we obtain
+  Conditioning the mean squared error on~$S$ and using the assumption on~$p_S$
+  one obtains
   \begin{equation*}
     \mse \ge \pmin \int_A^B \msecond ds.
   \end{equation*}
-  For $\Delta \in [0, B-A]$ we can further bound this in two ways:
+  For $\Delta \in [0, B-A]$ one can further bound this in two ways:
   \begin{align*}
     \mse &\ge \pmin \intabd \msecond ds \\
     \mse &\ge \pmin \int_{A+\Delta}^B \msecond ds \\
@@ -1396,16 +1408,16 @@ delay schemes.
     \ge \dhsq \Pr[|\Sh - S - \Delta| \ge \Delta/2 \mid s+\Delta].
   \end{equation}
 
-  Now suppose that we use the communication system in question for binary
-  signaling. We want to send either $s$ or $s+\Delta$; at the decoder we use the
-  estimate~$\Sh$ to decide for~$s$ or $s + \Delta$ depending on which one $\Sh$
-  is closer to. When $s$ is sent, the decoder makes an error only if $|\Sh - s|
-  \ge \Delta/2$; when $s + \Delta$ is sent, it makes an error only if $|\Sh - s
-  - \Delta| \ge \Delta/2$. The conditional error probabilities therefore satisfy
-  $\Pr[\text{error} | s] \le \Pr[|\Sh - S| \ge \Delta/2 \mid s]$ and
-  $\Pr[\text{error} | s + \Delta] \le \Pr[|\Sh - S - \Delta| \ge \Delta/2 \mid s +
-  \Delta]$. Applying this to~\eqref{eq:markov1} and~\eqref{eq:markov2} and
-  inserting the result in~\eqref{eq:avglbd} yields
+  Now suppose that the communication system in question is used for binary
+  signaling. One wants to send either $s$ or $s+\Delta$; at the decoder the
+  estimate~$\Sh$ is used to decide for~$s$ or $s + \Delta$ depending on which
+  one $\Sh$ is closer to. When $s$ is sent, the decoder makes an error only if
+  $|\Sh - s| \ge \Delta/2$; when $s + \Delta$ is sent, it makes an error only if
+  $|\Sh - s - \Delta| \ge \Delta/2$. The conditional error probabilities
+  therefore satisfy $\Pr[\text{error} | s] \le \Pr[|\Sh - S| \ge \Delta/2 \mid
+  s]$ and $\Pr[\text{error} | s + \Delta] \le \Pr[|\Sh - S - \Delta| \ge
+  \Delta/2 \mid s + \Delta]$. Applying this to~\eqref{eq:markov1}
+  and~\eqref{eq:markov2} and inserting the result in~\eqref{eq:avglbd} yields
   \begin{equation}
     \label{eq:zivalmostproved}
     \mse \ge \pmin \dhsq \intabd \pe(s, \Delta) ds,
@@ -1425,8 +1437,8 @@ delay schemes.
 
   \section{Lattice Basics}\label{app:latticebasics}
 
-  This section contains the very basics on lattices and lattice quantization
-  needed in the remainer of the chapter. For a comprehensive treatment of
+  This appendix contains the very basics on lattices and lattice quantization
+  needed in \secref{latticequant}. For a comprehensive treatment of
   lattices and/or quantization the reader is referred to the books by Conway and
   Sloane~\cite{ConwayS1988} and by Gersho and Gray~\cite{GershoG1992}.
 
@@ -1437,12 +1449,6 @@ delay schemes.
     that is itself a lattice. 
   \end{definition}
 
-  \begin{example}
-    \label{ex:scalarlattice}
-    In~$\R$ there exists only a single lattice (up to scaling), the scalar
-    lattice~$\Z$. Two examples of lattices in~$\R^2$ are displayed in
-    \figref{r2lattices}.
-  \end{example}
   \begin{figure}
     \centerline{%
     \subfloat[Rectangular lattice.]{%
@@ -1455,6 +1461,14 @@ delay schemes.
     regions.}
     \label{fig:r2lattices}
   \end{figure}
+
+  \begin{example}
+    \label{ex:scalarlattice}
+    In~$\R$ there exists only a single lattice (up to scaling), the scalar
+    lattice~$\Z$. Two examples of lattices in~$\R^2$ are displayed in
+    \figref{r2lattices}.
+  \end{example}
+
   \begin{proposition}
     \label{prop:intsublattice}
     If $\Lambda$ is a lattice and $\beta \in \NN$, then $\beta \Lambda$ is a
@@ -1492,7 +1506,7 @@ delay schemes.
   \end{definition}
 
   The packing radius and the covering radius are illustrated on
-  \figref{packingcoveringr} for a hexagonal lattice.
+  \figref{packingcoveringr}.
   \begin{figure}
     \begin{center}
       \input{figures/packingcoveringr.tex_t}
@@ -1524,6 +1538,7 @@ delay schemes.
   \begin{example}
     Let $\Lambda = \Z / \beta$ for some $\beta >0$. The associated
     quantizer~$\QL$ maps each real number to the closest multiple of $1/\beta$.
+    This is exactly the quantizer used in \secref{scalarquant}.
   \end{example}
 
   %The following simple property will be useful later.
@@ -1581,24 +1596,24 @@ delay schemes.
   \end{proof}
 
   \begin{example}
-    Let $X$ be a scalar zero-mean random variable of variance~$\sq$ and let
+    \lemref{latquantvar} can be used to derive \lemref{Qvarbound}. Indeed,
+    let $X$ be a scalar zero-mean random variable of variance~$\sq$ and let
     $\Lambda = \Z / \beta$, for some $\beta > 0$. The covering radius of this
     lattice is $R = 1/\beta$, so $\E[\QL(X)^2] \le \sq + 2 \beta^{-1} \sigma +
-    \beta^{-2}$.
+    \beta^{-2}$. 
   \end{example}
 
   \begin{lemma}
     \label{lem:voronoivarbound}
     Let $\X$~be a random vector whose support is limited to the Voronoi
-    region~$V(\vz)$ of a lattice~$\Lambda$. Then $\E[\|\X\|^2] \le
-    R\Vol(V(\vz))$, where $R$~is the covering
-    radius of~$\Lambda$ and $\Vol(V(\vz))$ is the volume of a Voronoi region.
+    region~$V(\vz)$ of a lattice~$\Lambda$. Then $\E[\|\X\|^2] \le R$, where
+    $R$~is the covering radius of~$\Lambda$.
   \end{lemma}
 
   \begin{proof}
     \begin{align*}
       \E[\|\X\|^2] & = \int_{V(\vz)} \|x\|^2 \fXv(\x) d\x \\
-      & \le R \int_{V(\vz)} \fXv(\x) d\x = R \Vol(V(\vz)).
+      & \le R \int_{V(\vz)} \fXv(\x) d\x = R.
     \end{align*}
   \end{proof}
 
@@ -1614,10 +1629,10 @@ delay schemes.
   \begin{lemma}
     \label{lem:subvoronoi}
     Let $\Lambda$ be an arbitrary $m$-dimensional lattice and let $\Lambda' =
-    \Lambda/\beta$, where $\beta \in \NN$. (Clearly $\Lambda$ is a sublattice of
-    $\Lambda'$.) Then the fraction of Voronoi cells of $\Lambda$ that do not lie
-    on the boundary between two Voronoi cells of $\Lambda'$ is bounded away from
-    zero as $\beta$~grows large.
+    \Lambda/\beta$, where $\beta \in \NN$. (By \propref{intsublattice},
+    $\Lambda$ is a sublattice of $\Lambda'$.) Then the fraction of Voronoi cells
+    of $\Lambda$ that do not lie on the boundary between two Voronoi cells of
+    $\Lambda'$ is bounded away from zero as $\beta$~grows large.
   \end{lemma}
 
   \begin{proof}
@@ -1647,7 +1662,7 @@ delay schemes.
     $\Lambda/\beta$, $\Lambda/\beta^2$, \dots, $\Lambda/\beta^{n-1}$, where
     $\beta \in \NN$. Then the fraction of Voronoi regions of
     $\Lambda/\beta^{n-1}$ that do not lie on the boundary between two Voronoi
-    regions of any of its sublattices $\Lambda/\beta^i$, $i < n-1$, is bounded
+    regions of any of its sublattices $\Lambda/\beta^i$ is bounded
     away from zero as $\beta$ grows large.
   \end{corollary}
 
@@ -1685,12 +1700,15 @@ delay schemes.
       \Dv) \| \\
       &= \frac{\sqrt{mP}}{\gamma} \| \vxi \| \beta^{n-1} \Delta.
     \end{align*}
-    We can now apply \lemref{zivboundvec} and restrict the integral to the set
+    In other words, the lattice quantizers at each level map $\s$ and $\s +
+    \Dv$ to the same lattice point.
+
+    One can now apply \lemref{zivboundvec} and restrict the integral to the set
     \[ \Psi(\Dv) \deq \Xi \cap (\Xi - \Dv) \cap \bigcup_{\p \in \Ln'} \Vd(\p),
     \]
     where $\Ln'$ is defined to be the subset of those points in $\Ln$ whose
     Voronoi region does not lie on the boundary between Voronoi regions of a
-    sublattice. By the corollary to \lemref{subvoronoi}, this set has positive
+    sublattice. By the corollary to \lemref{subvoronoi} this set has positive
     probability.
 
     The lower bound of \lemref{zivboundvec} is then relaxed to give
@@ -1708,8 +1726,9 @@ delay schemes.
     It remains to prove the convergence of $\int_{\Psi(\Dv)} d\s$ to a constant.
     Since $\Delta$ goes to zero as $\snr \goesto \infty$, the set $\Psi(\Dv)$
     converges to the set $\Xi \cap \bigcup_{\p \in \Ln'} V(\p)$. Since both
-    $\Xi$ and~$\bigcup_{\p \in \Ln'} V(\p)$ have positive volume, the overall
-    set also has positive volume.
+    $\Xi$ and~$\bigcup_{\p \in \Ln'} V(\p)$ have positive volume and because the
+    points of $\Ln'$ grow closer and closer as $\snr$ and thus $\beta$
+    increases, the overall set also has positive volume.
   \end{proof}
 
 

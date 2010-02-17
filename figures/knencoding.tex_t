@@ -1,4 +1,8 @@
 % vim:ft=tex
+%
+% NOTE: The roles of the indices i and j are reversed here compared to the text.
+% I.e., here j is the source index and i denotes the quantization level.
+%
 \begin{tikzpicture}[every node/.style=smallfont]
   % Horizontal position of ``channel''
   \coordinate (chx) at (9,0);
@@ -54,7 +58,7 @@
       node[trid] (sc\i\j) {}
       node {$\beta$}
       +(0,-5.5)
-      node[below right] {$E_{\the\indi,\the\indj}$};
+      node[below right] {$E_{\the\indj,\the\indi}$};
 
 
       % Draw all connections.
@@ -66,7 +70,7 @@
       % Horizontal connections from the quantizers to the combiner.
       % Note the trick using -| to create a horizontal line to the node.
       \draw[l] (quant\i\j) -- (quant\i\j.east -| combiner\i.west)
-      node[above left] {$Q_{\the\indi,\the\indj}$};
+      node[above left] {$Q_{\the\indj,\the\indi}$};
 
       \end{scope}
     }

@@ -44,7 +44,7 @@
       node[trid] (sc\i\j) {}
       node {$\beta$}
       +(0,-2.25)
-      node[below right] {$E_{\the\indi,\the\indj}$};
+      node[below right] {$E_{\the\indi}$};
 
       % Add the channel input nodes
       \path (quant\i\j -| chx) node (X\j) {} 
