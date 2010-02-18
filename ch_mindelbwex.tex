@@ -522,10 +522,12 @@ choose~$\e(\snr)$ optimally will be the subject of Theorem~\ref{thm:scalinglb}.
 
 \begin{figure}
   \begin{center}
-    \figbox{lowerbound1intervals}
+    \input{figures/lowerbound1intervals.tex_t}
   \end{center}
   \caption{Illustration of the intervals $\I_j^\Delta$ in the proof of
-  \lemref{lowerbound1}.}
+  \lemref{lowerbound1}. The length of each $\I_j^\Delta$ is $\beta^{-(n-1)} -
+  \Delta$, and they are placed such that within an interval of length~$\ell$
+  there are approximately $\ell \beta^{n-1}$ of them.}
   \label{fig:lowerbound1intervals}
 \end{figure}
 
@@ -571,7 +573,7 @@ choose~$\e(\snr)$ optimally will be the subject of Theorem~\ref{thm:scalinglb}.
 
 \begin{figure}
   \centerline{%
-  \subfloat[$\Delta \in [0, \beta^{-(n-1)})$]%
+  \subfloat[$\Delta \in [0, \beta^{-(n-1)})$ and $s \in \I_j^\Delta$]%
   {\label{fig:sdrubproofa}\input{figures/sdrubproofa.tex_t}}%
   \hfil
   \subfloat[$\Delta =
