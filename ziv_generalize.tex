@@ -1,0 +1,73 @@
+%        File: thesis.tex
+%     Created: Tue Jan 12 11:00 AM 2010 C
+% Last Change: Tue Jan 12 11:00 AM 2010 C
+%
+\documentclass[review]{ipgthesis}
+%\documentclass[a4paper]{lcavthesis}
+
+% All external packages
+\input{packages}
+
+% Theorem-like definitions
+\input{theoremdefs}
+
+% All macros and definitions
+\input{thesismac}
+
+% Style definitions for TikZ
+\input{tikzstyles}
+
+% Various commands affecting the whole document
+\bibliographystyle{IEEEtranS}
+\frenchspacing
+
+\begin{document}
+\setcounter{chapter}{1}
+\section{Towards a General SDR Upper Bound}\label{sec:gensdrub}
+
+The preceding sections used a bounding technique due to Ziv
+that made it possible to lower bound the MSE for a given encoder regardless of
+the decoder. This technique works only if the encoding function fulfills certain
+criteria. For example, the proofs of the lower bounds in Section~2.2 worked
+because by a smart choice of~$\Delta$, the distance $\|f(s) - f(s+\Delta)\|$
+could be upper bounded for all~$s$ in the interval $[A,B-\Delta)$.
+
+More generally, suppose there exists a set $\Xi \subseteq \R$ and a
+differentiable function~$\xi$ such that $\pS(s) \ge \pmin > 0$ for all $s \in
+\Xi \cup \xi(\Xi)$.  Then the MSE can be bounded as
+\begin{equation*}
+  \mse \ge \pmin \int_\Xi \msecond ds
+\end{equation*}
+and
+\begin{align*}
+  \mse &\ge \pmin \int_{\xi(\Xi)} \msecond ds \\
+  &= \pmin \int_\Xi \msecondxi \xi'(s) ds.
+\end{align*}
+Combining the two bounds results in
+\begin{equation*}
+  \mse \ge \frac{\pmin}{2} \int_{\Xi} \left( \msecond + \msecondxi \xi'(s)
+  \right) ds.
+\end{equation*}
+For example, letting $\Xi = [A, B-\Delta)$ and $\xi(s) = s + \Delta$ implies
+$\xi'(s) = 1$ and thus
+\begin{equation*}
+  \mse \ge \frac{\pmin}{2} \intabd \left( \msecond + \msecondd \right) ds,
+\end{equation*}
+which is exactly the bound that occurs in the proof for Ziv's bound. 
+
+Unfortunately, it seems that if $\xi'(s) \ne 1$, then we cannot use the trick
+with Markov's inequality to lower bound this with the binary error probability.
+We would get something like
+\begin{multline*}
+  \mse \ge \frac c2 \int_\Xi (s - \xi(s))^2 \left(
+  \Pr\left[|\Sh - S| \ge \frac{s - \xi(s)}{2} \mid s \right] \right. + \\
+  \left. \Pr\left[|\Sh - S| \ge \frac{s - \xi(s)}{2} \mid \xi(s) \right] \xi'(s)
+  \right) ds.
+\end{multline*}
+The factor $\xi'(s)$ makes it difficult to lower bound this with binary error
+probability. 
+
+On the other hand, $\xi'(s) = 1$ implies $\xi(s) = s + c$, and we are back to
+the original case.
+
+\end{document}

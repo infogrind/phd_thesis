@@ -245,6 +245,11 @@ more fundamental limit? \secref{gensdrub} prepares the way towards answering
 this question by exploring possible avenues towards an SDR upper bound for more
 general transmission strategies. 
 
+\begin{notebox}
+  The latter paragraph implies we have something to say about more fundamental
+  SDR upper bounds. This might not be the case, unless we find something smart
+  to write in \secref{gensdrub}.
+\end{notebox}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1259,8 +1264,9 @@ them into a bounded interval; this problem is left as future work.
 
 \section{Towards a General SDR Upper Bound}\label{sec:gensdrub}
 
-
-
+\begin{notebox}
+  Not clear if we really have anything substantial to put here.
+\end{notebox}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1271,35 +1277,48 @@ them into a bounded interval; this problem is left as future work.
 
 Schemes similar to the ones proposed here have been considered before. Indeed,
 one of the first schemes to transmit an analog source across two uses of a
-Gaussian channel was suggested by Shannon~\cite{Shannon1949}. Notice its
-resemblance to the constellation studied here, shown in
-Figure~\ref{fig:shannoncomparison}.
+Gaussian channel was suggested by Shannon~\cite{Shannon1949}. In fact, such
+joint source-channel mappings are sometimes called Shannon mappings  or
+Shannon-Kotel'nikov mappings. \textbf{[Insert reference to Kotel'nikov after we
+have looked at his book. (I have ordered it.)]} Notice its resemblance to the
+constellation resulting from the communication scheme of \secref{scalarquant},
+shown in Figure~\ref{fig:shannoncomparison}. The important contribution of this
+work is to specify exactly how the distance between the segments must behave as
+the SNR increases in order to optimize the SDR scaling.
+
 \begin{figure}
   \centerline{\subfloat[Shannon's original proposition.]{\input{figures/shannonline.tex_t}}
   \hfil
-  \subfloat[Mapping proposed in this paper
+  \subfloat[Mapping proposed in \secref{scalarquant}
   (for~$n=2$).]{\input{figures/ourconstellation.tex_t}} }% end centerline
   \caption{A minimum-delay source-channel code for $n=2$ can be visualized as a
   curve in $\R^2$ parametrized by the source. Here the mapping
-  presented in this \secref{scalarquant} is compared to Shannon's original
+  presented in \secref{scalarquant} is compared to Shannon's original
   suggestion (left).} \label{fig:shannoncomparison}
 \end{figure}
 
 After Shannon, Wozencraft and Jacobs~\cite{WozencraftJ1965} were among the first
-to study source-channel mappings as curves in $n$-dimensional space.
-Ziv~\cite{Ziv1970} found important theoretical limitations of such mappings.
-Much of the later work is due to Ramstad and his coauthors
+to study source-channel mappings as curves in $n$-dimensional space. Sakrison's
+monograph~\cite{Sakrison1970} derived the optimal compander under the low noise
+assumption.  Ziv~\cite{Ziv1970} found important theoretical limitations of
+source-channel mappings and developed the proof technique of which this chapter
+makes heavy use.  Much of the later work is due to Ramstad and his coauthors
 (see~\cite{Ramstad2002}, \cite{FloorR2006}, \cite{CowardR2000,CowardR2000a},
-\cite{WernerssonSR2007}, \cite{HeklandFR2009}). A proof that the performance of
-minimal-delay codes is strictly smaller than that of codes with unrestricted
-delay when $n>1$ was given in 2008 by Ingber et al.~\cite{IngberLZF2008}.
+\cite{WernerssonSR2007}, \cite{HeklandFR2009}). 
+
+Ziv and Zakai developped generalized notions of capacity and rate distortion
+function which can lead to distortion bounds that are dependent on the
+blocklength~\cite{ZivZ1973}. Their technique was used by Ingber et al.\ to 
+prove that for a Gaussian source and channel, the performance of minimal-delay
+bandwidth expansion codes is strictly smaller than that of codes with
+unrestricted delay when $n>1$.
 
 For $n=2$, the presented scheme is almost identical to the HSQLC scheme by
 Coward~\cite{Coward2001}, which uses a numerically optimized quantizer,
 transmitter and receiver to minimize the mean-squared error (MSE) for finite
-values of the SNR. Coward correctly conjectured that the right strategy for $n >
-2$ would be to repeatedly quantize the quantization error from the previous
-step, which is exactly what we do here.
+values of the SNR. Coward conjectured that the right strategy for $n > 2$ would
+be to repeatedly quantize the quantization error from the previous step, which
+is exactly what we do here.
 
 Another closely related communication scheme is the \emph{shift-map} scheme due
 to Chen and Wornell~\cite{ChenW1998}.  Vaishampayan and
@@ -1325,10 +1344,6 @@ and their scheme includes Shamai et al.\ and Mittal \& Phamdo as extreme cases.
 All three schemes, however, use long block codes for the digital phase and incur
 correspondingly large delays, so they are not directly comparable with minimum
 delay schemes.
-
-
-
-
 
 
 
@@ -1404,8 +1419,7 @@ delay schemes.
   and
   \begin{equation}
     \label{eq:markov2}
-    \msecondd \\
-    \ge \dhsq \Pr[|\Sh - S - \Delta| \ge \Delta/2 \mid s+\Delta].
+    \msecondd \ge \dhsq \Pr[|\Sh - S| \ge \Delta/2 \mid s+\Delta].
   \end{equation}
 
   Now suppose that the communication system in question is used for binary
