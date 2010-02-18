@@ -97,7 +97,7 @@ $n-1$~channel uses be dominated by that of the last channel use as $\snr \goesto
 \infty$. 
 
 
-\subsection{The Geometric Point of View}
+\subsection{The Geometric Point of View}\label{sec:geomviewpoint}
 
 If $f(s)$ is an encoding function that maps a single source symbol into
 $n$~channel inputs, one can gain insights about its performance by studying the
@@ -293,12 +293,10 @@ for $i = 1$, \dots, $n-1$ where $\Int(x)$ is the unique integer~$i$ satisfying
 The equations~\ref{eq:QEdef} essentially define a \emph{hierarchical
 quantization} of the source.  The parameter $\beta \in \NN$ determines the
 quantization resolution; the larger~$\beta$ the finer the quantization.
-Note that \eqref{eq:QEdef}~implies a partition of the source space into
-intervals of length $1/\beta^{n-1}$, as is illustrated in
-\figref{sourcepartition}. The $Q_i$ determine the interval that contains~$S$,
-and $E_{n-1}$ determines the position of~$S$ within an interval. 
-
-The following result will be useful in the sequel.
+\eqref{eq:QEdef}~implies a partition of the source space into intervals of
+length $1/\beta^{n-1}$, as is illustrated in \figref{sourcepartition}. The $Q_i$
+determine the interval that contains~$S$, and $E_{n-1}$ determines the position
+of~$S$ within an interval. 
 
 \begin{figure}
   \begin{center}
@@ -310,6 +308,7 @@ The following result will be useful in the sequel.
 \end{figure}
 
 
+The following result will be useful in the sequel.
 
 \begin{lemma}
   \label{lem:Qvarbound}
@@ -361,8 +360,8 @@ The following result will be useful in the sequel.
   \end{enumerate}
 \end{proof}
 
-The channel input symbols $X_i$ are determined from the $Q_i$ and from $E_{n-1}$
-according to 
+Finally the $Q_i$ and $E_{n-1}$ are scaled to satisfy the power constraint,
+resulting in the channel inputs
 \begin{align}
   X_i &= (\sqrt{P}/\gamma) Q_i \quad
   \text{for $i = 1$, \dots, $n-1$ and} \nonumber\\
@@ -371,6 +370,15 @@ according to
 \end{align}
 Following Proposition~\ref{prop:qeproperties}, this ensures that $\E[X_i^2] \le
 P$ for all~$i$. 
+
+\begin{remark}
+  \label{rem:sqgeometry}
+  The signal locus resulting from this encoding scheme is precisely the one
+  illustrated on \figref{hybridlocus}. Each of the segments of length
+  $\beta^{-(n-1)}$ of the source (cf.~\figref{sourcepartition}) is mapped into a
+  line segment of length $\sqrt{P}/\gamma$; the stretch of the signal curve, as
+  defined in \secref{geomviewpoint}, is therefore $\beta^{n-1}/\gamma$.
+\end{remark}
 
 \begin{remark}
   \label{rem:betagrow}
@@ -386,31 +394,38 @@ P$ for all~$i$.
 \end{remark}
 
 
-\subsection{Lower Bound on the Squared Error}\label{sec:scalarlowerbound}
+\subsection{Lower Bound on the Mean Squared Error}\label{sec:scalarlowerbound}
 
-To obtain a lower bound on the MSE that holds for all possible decoders, the
-obvious thing to do is to assume a minimum mean squared error (MMSE) decoder. As
-mentioned in this chapter's introduction, though, the MMSE decoder is in general
-hard to evaluate mathematically. This is no different for the scheme at hand.
-Fortunately there is a way around the MMSE decoder, devised by Ziv and
-Zakai~\cite{ZivZ1969} and later used by Ziv to develop fundamental lower bounds
-for the communication of analog sources~\cite{Ziv1970}. By exploiting certain
-regularity properties of the encoder, it is in fact possible to lower bound the
-MSE by the error probability of binary signaling. In this section, this method
-is applied to upper bound the MSE of the transmission scheme introduced in the
-previous section regardless of the decoder used. 
+When an analog source is transmitted across a Gaussian channel using the scheme
+just presented, two types of decoding errors can occur. Either the decoded point
+is on the same line segment as the transmitted point (\ie, all the $Q_i$ are
+decoded correctly) or it is on a different segment. Which one of these errors
+dominates the overall error behavior depends on how the parameter~$\beta$ is
+chosen as a function of the SNR: if $\beta$ grows fast with the SNR the
+quantization resolution quickly becomes very fine, and the line segments of the
+constellation move close together fast, so the probability of decoding the wrong
+segment is high. On the other hand, since the stretch of the signal curve is
+proportional to~$\beta^{n-1}$ (\remref{sqgeometry}), the error decreases fast in
+case the correct segment is decoded. Vice versa, if $\beta$ grows only slowly
+with the SNR then decoding the wrong segment is unlikely. But because the
+stretch also only grows slowly, the error when the correct segment is decoded
+decreases only slowly.
+
+The following results make these reflections precise. They indicate how to
+choose $\beta$ as a function of the SNR to optimize the MSE scaling.
 
 \begin{remark}
   \label{rem:betaepswlog}
-  Throughout this section it is assumed that $\beta = \lceil \snr^{(1-\e)/2}\rceil$,
-  where $\e = \e(\snr)$ is a positive function of~$\snr$. This results in no
-  loss of generality, since for an arbitrary positive function~$f$ one can set
-  $\e(\snr) = 1-2 \log(f(\snr))/\log\snr$ to get $\beta(\snr) = \lceil f(\snr)
-  \rceil$.  Writing $\beta$ in this form will slightly simplify the mathematical
-  derivations to follow. Note that one can bound $\beta$ by $\snr^{(1-\e)/2} \le
-  \beta \le \snr^{(1-\e)/2} + 1$, which implies $\beta \in
-  \Theta(\snr^{(1-\e)/2})$ (the $\Theta$-notation is defined in
-  \appref{asymptotic}).
+  Throughout this section it is assumed that $\beta = \lceil
+  \snr^{(1-\e)/2}\rceil$, where $\e = \e(\snr)$ is a positive function
+  of~$\snr$. This results in no loss of generality, since for an arbitrary
+  positive function~$f$ one can set $\e(\snr) = 1-2 \log(f(\snr))/\log\snr$ to
+  get $\beta(\snr) = \lceil f(\snr) \rceil$.  Writing $\beta$ in this form will
+  slightly simplify the mathematical derivations to follow. Note that one can
+  bound $\beta$ by $\snr^{(1-\e)/2} \le \beta \le \snr^{(1-\e)/2} + 1$, which
+  implies $\beta \in \Theta(\snr^{(1-\e)/2})$ (the $\Theta$-notation is defined
+  in \appref{asymptotic}). Choosing an optimal $\beta(\snr)$ is therefore
+  equivalent to choosing an optimal~$\e(\snr)$.
 \end{remark}
 
 \begin{remark}
@@ -421,8 +436,14 @@ previous section regardless of the decoder used.
   an analogous manner. Furthermore, $\X(s) \deq (X_1(s), \dots, X_n(s))$.
 \end{remark}
 
-The following result, adapted from Ziv~\cite{Ziv1970}, is a key ingredient in
-the proofs of the lemmas that follow.
+
+To obtain a lower bound on the MSE that holds for all possible decoders, the
+obvious thing to do is to assume a minimum mean squared error (MMSE) decoder. As
+mentioned in this chapter's introduction, though, the MMSE decoder is in general
+hard to evaluate mathematically. This is no different for the scheme at hand.
+Fortunately the following lemma, due to Ziv~\cite{Ziv1970}, presents a way
+around the MMSE decoder.
+
 
 \begin{lemma}
   \label{lem:zivbound}
