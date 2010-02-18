@@ -1,0 +1,21 @@
+% vim:ft=tex
+
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+  \path[use as bounding box] (-1,0) rectangle (6,6);
+
+  \coordinate (s) at (4,3);
+  \coordinate (sd) at (5,3);
+
+  \foreach \x in {0,1,2,3,4,5}
+    \draw[thick] (\x,0) -- (\x,5);
+
+  \fill (s) circle (2pt);
+  \fill (sd) circle (2pt);
+
+  \node[left] at (s) {$f(s)$};
+  \node[right] at (sd) {$f(s+\Delta)$};
+
+  \draw[<->] (4,5.2) -- node[above,font=\scriptsize] {$\sqrt{P}/\gamma\beta$} 
+  (5,5.2);
+
+\end{tikzpicture}
