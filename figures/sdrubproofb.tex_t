@@ -1,7 +1,7 @@
 % vim:ft=tex
 
 \begin{tikzpicture}[every node/.style={font=\scriptsize}]
-  \path[use as bounding box] (-1,0) rectangle (6,6);
+  \path[use as bounding box] (-1,0) rectangle (6.5,6);
 
   \coordinate (s) at (4,3);
   \coordinate (sd) at (5,3);
