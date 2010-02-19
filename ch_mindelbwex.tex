@@ -936,9 +936,10 @@ With this choice of $\e$,
 \end{align*}
 hence the overall error is still dominated as in~\eqref{eq:overallO}.
 Inserting~\eqref{eq:esnrdecay} in~\eqref{eq:overallO},
-\begin{equation*}
-  \mse \in \snr^n (\log\snr)^{-(n-1)},
-\end{equation*}
+\begin{equation}
+  \label{eq:scalarachievablescaling}
+  \mse \in O(\snr^n (\log\snr)^{-(n-1)}),
+\end{equation}
 which coincides with the lower bound on the MSE scaling of \thmref{scalinglb}.
 
 
@@ -981,12 +982,12 @@ where $\beta \in \NN$. According to \lemref{latquantvar}, $\E[\|\Q_i\|^2]$~is
 upper bounded by a constant independent of~$\beta$. Moreover, $\Evc_i$
 is contained within the Voronoi region of~$\Lambda$ around the origin, so by
 \lemref{voronoivarbound} $\E[\|\Evc_i\|^2]$ is also upper bounded independent
-of~$\beta$. Let $\gamma$~denote the common upper bound on~$\E[\|\Q_i\|^2]$
-and~$\E[\|\Evc_i\|^2]$.  The channel inputs are then given by
+of~$\beta$. Let $\gamma$~denote the common upper bound on~$\E[\|\Q_i\|^2]/m$
+and~$\E[\|\Evc_i\|^2]/m$.  The channel inputs are then given by
 \begin{align*}
-  \X_i &= \frac{\sqrt{mP}}{\gamma} \Q_i \quad \text{for $i = 1$, \dots, $n-1$
+  \X_i &= \frac{\sqrt{P}}{\gamma} \Q_i \quad \text{for $i = 1$, \dots, $n-1$
   and} \\
-  \X_n &= \frac{\sqrt{mP}}{\gamma} \Evc_{n-1}.
+  \X_n &= \frac{\sqrt{P}}{\gamma} \Evc_{n-1}.
 \end{align*}
 By the above argument, this ensures that $\E[\|\X_i\|^2]/m \le P$ for all~$i$.
 
@@ -1083,13 +1084,86 @@ It is restated here for completeness.
 
 \subsection{Achievability}
 
-The scalar quantizer scheme of \secref{scalarquant} is nothing but a lattice
-scheme using a one-dimensional rectangular lattice. The achievability proof of
-that section therefore applies to general lattices as well, and the asymptotic
-bound of \thmref{scalinglbvec} is trivially achievable using a lattice
-quantizer.
+The MSE scaling lower bound of \thmref{scalinglbvec} is trivially achievable
+with a rectangular lattice: quantization with this lattice can be performed
+independently in each dimension and is equivalent to repeated application of the
+scalar scheme of \secref{scalarquant}. Hence \eqref{eq:scalarachievablescaling}
+applies to lattice quantizers as well. 
 
+\figref{sim_latticeperf} shows SDR curves achieved using lattices of various
+dimensions. While the scaling is indeed the same for all~$m$, confirming the
+results of this section, the SDR for a fixed SNR can be increased by using a
+lattice of higher dimension. The following calculations can be used to quantify
+the performance.
 
+\begin{figure}
+  \begin{center}
+    \figbox{sim_latticeperf}
+  \end{center}
+  \caption{Comparison of the performance of lattices of various dimensions.
+  \textbf{[I will add this figure after I have finalized the chapter on the
+  simulator.]}}
+  \label{fig:sim_latticeperf}
+\end{figure}
+
+Like in \secref{scalarquant}, a combination of ML decoder (for the lattice
+points) and LMMSE decoder (for the quantization error) may be used to
+estimate~$\S$.  Consider first the ML decoder. Since $\Q_i \in \Lambda/\beta$
+and $\X_i = \sqrt{P/\gamma^2} \Q_i$, the ML decoder divides $\Y_i$ by
+$\sqrt{P/\gamma^2}$ and then sets $\Qhv_i$ to be the closest point in
+$\Lambda/\beta$. The resulting error therefore satisfies $\Qhv_i - \Q_i = \p \in
+\Lambda/\beta$ if $\sqrt{\gamma^2/P} \Zv_i \in V(\p)$, where $V(\p)$ is the
+Voronoi region of $\p$ (with respect to $\Lambda/\beta$). Averaging over the
+noise, the average squared error is then
+\begin{align*}
+  \mseqiv &= \sum_{\p \in \Lambda/\beta \setminus \{\vz\}} \| \p \|^2
+  \int_{V(\p)} \xi(\z) d\z,
+\end{align*}
+where $\xi(\z)$ is the pdf of $\sqrt{\gamma^2/P} \Zv_i$.
+Since $\z \in V(\p)$ implies $\|\p\| \le \|\z\| + R/\beta$, where $R/\beta$ is
+the covering radius of $\Lambda/\beta$, $\mseqiv$ can be upper bounded by
+\begin{align*}
+  \mseqiv &\le \sum_{\p \in \Lambda/\beta \setminus \{\vz\}} \int_{V(\p)}
+  (\|\z\| + R/\beta)^2 \xi(\z) d\z \\
+  &\le \int_{\R^m \setminus B(0,\rho/\beta)} (\|\z\| + R/\beta)^2 \xi(\z) d\z,
+\end{align*}
+where $B(0,r)$ denotes a ball of radius~$r$ around the origin and $\rho/\beta$
+is the packing radius of~$\Lambda/\beta$. 
+
+Transforming the above integral to spherical coordinates, one obtains $\|\z\| =
+r$ and $d\z = r^{m-1} \Sm dr$, where $\Sm$~is the surface of a unit sphere
+in~$\R^m$.  With this, 
+\begin{equation}
+  \label{eq:mseqivbound}
+  \mseqiv \le \Sm \int_{\rho/\beta}^\infty (r + R/\beta)^2 r^{m-1} \phi(r) dr,
+\end{equation}
+where $\phi(r)$ is the pdf of a real Gaussian random variable of variance
+$(\gamma^2/P) \szq = \gamma^2/\snr$. To get explicit bounds that
+depend on $R$ and $\rho$ (and thus on the particular lattice used), this
+integral can be evaluated using the formula
+\begin{equation*}
+  \int_\mu^\infty r^n e^{-c r^2} = \frac12 c^{-(n+1)/2} \Gamma\left(
+  \frac{1+n}{2}, c \mu^2 \right),
+\end{equation*}
+where $\Gamma(s, x) = \int_x^\infty t^{s-1} e^{-t} dt$ is the upper incomplete
+gamma function.
+
+As $\snr \goesto \infty$, the bound~\eqref{eq:mseqivbound} behaves as
+\begin{align*}
+  \mseqiv &\in O\left( \frac{1}{\beta^2} \int_{\rho/\beta}^\infty \phi(r) dr 
+  \right) \\
+  &= O\left( \frac{1}{\beta^2} Q\left( \frac{\sqrt{\snr}\rho}{\beta\gamma}
+  \right) \right) \\
+  &= O\left( \frac{1}{\beta\sqrt{\snr}} \exp\left\{-\frac{\snr \rho^2}{2 \beta^2
+  \gamma^2} \right\} \right),
+\end{align*}
+where the last equality is because of the approximation $Q(x) \approx
+\exp\{-x^2/2\}/2\pi x$ (see~\cite[\Spg 26.2.12]{AbramowitzS1964}). Letting
+$\beta = \lceil \snr^{(1-\e)/2} \rceil$ yields
+\begin{equation*}
+  \mseqiv \in O(\snr^{-1 + \e/2} \exp\{-c \snr^\e\}),
+\end{equation*}
+which is the same scaling as the lower bound of~\lemref{lowerbound2vec}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

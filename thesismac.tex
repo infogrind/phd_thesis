@@ -1,5 +1,8 @@
 % Useful macros
 
+% Various shorthands
+\newcommand{\Sm}{S^{(m-1)}(1)}    % Unit sphere in m dimensions
+
 % Single letter abbreviations: matrices and vectors
 \newcommand{\vect}[1]{\mathbf{#1}}
 \newcommand{\mat}[1]{\mathbf{#1}}
@@ -105,6 +108,7 @@
 \newcommand{\pmin}{{p_{\min}}}
 \newcommand{\mse}{{\E[(\Sh - S)^2]}}
 \newcommand{\mseq}{{\E[(\Qh - Q)^2]}}
+\newcommand{\mseqiv}{{\E[\|\Qhv_i - \Q_i\|^2]}}
 \newcommand{\msee}{{\E[(\Eh - E)^2]}}
 \newcommand{\msev}{{\E[\|\Shv - \S\|^2]}}
 \newcommand{\msecond}{{\E[(\Sh - S)^2 | s]}}
@@ -193,7 +197,7 @@
 % To make a place holder for figures
 \newcommand{\figbox}[2][\textwidth]{%
 \begin{boxedminipage}[b]{#1}
-  \centering\strut\par\texttt{fig:#2}\par\strut
+  \centering\strut\par\path{fig:#2}\par\strut
 \end{boxedminipage}}
 
 % To make a ``note'' box
