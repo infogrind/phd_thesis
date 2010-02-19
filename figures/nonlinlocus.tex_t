@@ -7,6 +7,10 @@
       \pgfmathsetmacro{\smallrad}{0.8*\rad}
       \pgfmathsetmacro{\diffrad}{\rad - \smallrad}
 
+      % Coordinate arrows
+      \draw[->] (-1.1*\rad,0) -- (1.1*\rad,0) node[right] {$X_1$};
+      \draw[->] (0,-1.1*\rad) -- (0,1.1*\rad) node[above] {$X_2$};
+
       % The vertical resolution. There are in total 2*\np segments.
       \def\np{7}
 

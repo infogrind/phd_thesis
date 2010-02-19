@@ -388,7 +388,7 @@ P$ for all~$i$.
   $i = 1$, \ldots, $n$. As $\snr \goesto \infty$, the entropy of the $Y_i$
   converges to that of the $X_i$, and so for all $i = 1$, \ldots, $n-1$, the
   mutual information $I(X_i; Y_i)$ is upper bounded by a constant independent of
-  the SNR. Since the SDR scales at best as $2^{I(X^n;Y^n)}$ (see
+  the SNR. Since the SDR scales at best as $2^{2I(X^n;Y^n)}$ (see
   Chapter~\ref{ch:prelim}), this limits the SDR scaling to be at best linear in
   the SNR.
 \end{remark}
@@ -411,8 +411,11 @@ with the SNR then decoding the wrong segment is unlikely. But because the
 stretch also only grows slowly, the error when the correct segment is decoded
 decreases only slowly.
 
-The following results make these reflections precise. They indicate how to
-choose $\beta$ as a function of the SNR to optimize the MSE scaling.
+The following results make these reflections precise. They are independent of
+the source distribution; the only condition on the source is that there is an
+interval over which its density is strictly positive. Based on these results one
+can choose $\beta$ as a function of the SNR in order to optimize the MSE
+scaling. 
 
 \begin{remark}
   \label{rem:betaepswlog}
@@ -442,7 +445,8 @@ obvious thing to do is to assume a minimum mean squared error (MMSE) decoder. As
 mentioned in this chapter's introduction, though, the MMSE decoder is in general
 hard to evaluate mathematically. This is no different for the scheme at hand.
 Fortunately the following lemma, due to Ziv~\cite{Ziv1970}, presents a way
-around the MMSE decoder.
+around the MMSE decoder. Moreover, unlike the MMSE decoder, it does not depend
+on the source distribution.
 
 
 \begin{lemma}
@@ -935,12 +939,20 @@ With this choice of $\e$,
  &= O(\snr^{-n}),
 \end{align*}
 hence the overall error is still dominated as in~\eqref{eq:overallO}.
-Inserting~\eqref{eq:esnrdecay} in~\eqref{eq:overallO},
-\begin{equation}
-  \label{eq:scalarachievablescaling}
-  \mse \in O(\snr^n (\log\snr)^{-(n-1)}),
-\end{equation}
-which coincides with the lower bound on the MSE scaling of \thmref{scalinglb}.
+Inserting~\eqref{eq:esnrdecay} in~\eqref{eq:overallO} leads to the following
+achievability result, which coincides with the converse result of
+\thmref{scalinglb}, asserting that separately decoding the $Q_i$ and $E_{n-1}$
+is asymptotically optimal.
+\begin{theorem}
+  \label{thm:scalarachievability}
+  Setting $\beta = \lceil \snr^{(1-\e)/2} \rceil$ with $\e$~as
+  in~\eqref{eq:esnrdecay}, the decoder described by
+  \eqref{eq:mldecoder}--\eqref{eq:unwrapestim} achieves a mean squared error
+  that scales as
+  \begin{equation*}
+    \mse \in O(\snr^{-n} (\log\snr)^{n-1}).
+  \end{equation*}
+\end{theorem}
 
 
 
@@ -1087,7 +1099,7 @@ It is restated here for completeness.
 The MSE scaling lower bound of \thmref{scalinglbvec} is trivially achievable
 with a rectangular lattice: quantization with this lattice can be performed
 independently in each dimension and is equivalent to repeated application of the
-scalar scheme of \secref{scalarquant}. Hence \eqref{eq:scalarachievablescaling}
+scalar scheme of \secref{scalarquant}. Hence \thmref{scalarachievability}
 applies to lattice quantizers as well. 
 
 \figref{sim_latticeperf} shows SDR curves achieved using lattices of various
@@ -1138,7 +1150,7 @@ in~$\R^m$.  With this,
   \mseqiv \le \Sm \int_{\rho/\beta}^\infty (r + R/\beta)^2 r^{m-1} \phi(r) dr,
 \end{equation}
 where $\phi(r)$ is the pdf of a real Gaussian random variable of variance
-$(\gamma^2/P) \szq = \gamma^2/\snr$. To get explicit bounds that
+$(\gamma^2/P) \szq = \gamma^2/\snr$. To get explicit bounds for finite~SNR that
 depend on $R$ and $\rho$ (and thus on the particular lattice used), this
 integral can be evaluated using the formula
 \begin{equation*}
@@ -1164,6 +1176,11 @@ $\beta = \lceil \snr^{(1-\e)/2} \rceil$ yields
   \mseqiv \in O(\snr^{-1 + \e/2} \exp\{-c \snr^\e\}),
 \end{equation*}
 which is the same scaling as the lower bound of~\lemref{lowerbound2vec}.
+
+As for the LMMSE decoder, it is a straightforward consequence
+of~\eqref{eq:latticeQE} that $\E[\|\hat{\vect{E}}_{n-1} - \Evc_{n-1} \|] /
+\beta^{2(n-1)}$ scales as $\snr^{-n+(n-1)\e}$. Together, these two results again
+confirm that \thmref{scalinglb} applies to lattices as well.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
