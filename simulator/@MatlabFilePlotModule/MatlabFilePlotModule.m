@@ -49,7 +49,7 @@ classdef MatlabFilePlotModule < MatlabPlotModule
         % The destructor closes the figure handle.
         function delete(obj)
             if ishandle(obj.fh)
-                close(fh);
+                close(obj.fh);
             end
         end
     end

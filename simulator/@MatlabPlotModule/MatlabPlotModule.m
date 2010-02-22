@@ -6,6 +6,13 @@ classdef MatlabPlotModule < OutputModule
         ah = []    % Handle to the axis on which to create the plot.
     end
     
+    properties (Access = 'protected')
+        % This is the interpreter that MATLAB uses for labels. If any of the
+        % labels contains a dollar sign, the interpreter is set to 'latex'.
+        interpreter = 'tex'
+    end
+
+    
     methods (Access = 'protected')
         function do_actual_plot(obj)
             % At this point we can assume all the data is in correct format.
@@ -30,13 +37,15 @@ classdef MatlabPlotModule < OutputModule
         
         function set_plot_labels(obj)
             if ~isempty(obj.xlabel)
-                xlabel(obj.ah, obj.xlabel);
+                % If the label text contains a dollar sign, we use the latex
+                % interpreter.
+                xlabel(obj.ah, obj.xlabel, 'Interpreter', obj.interpreter);
             end
             if ~isempty(obj.ylabel)
-                ylabel(obj.ah, obj.ylabel);
+                ylabel(obj.ah, obj.ylabel, 'Interpreter', obj.interpreter);
             end
             if ~isempty(obj.plottitle)
-                title(obj.ah, obj.plottitle);
+                title(obj.ah, obj.plottitle, 'Interpreter', obj.interpreter);
             end
         end % set_plot_labels
         
@@ -52,7 +61,11 @@ classdef MatlabPlotModule < OutputModule
         
         function set_plot_legend(obj)
             if ~isempty(obj.legend)
-                legend(obj.ah, obj.legend);
+                if ~isempty(obj.legendpos)
+                    legend(obj.ah, obj.legend, 'Location', obj.legendpos);
+                else
+                    legend(obj.ah, obj.legend);
+                end
             end
         end
         
@@ -62,10 +75,26 @@ classdef MatlabPlotModule < OutputModule
         function check_parameters(obj)
             check_parameters@OutputModule(obj);
             
+            % Make sure the provided axis handle is avlid.
             if ~ishandle(obj.ah)
                 error('AH is not a valid axis handle.');
             end
+            
+            % Check label string for latex code.
+            check_latex(obj, obj.xlabel);
+            check_latex(obj, obj.ylabel);
+            check_latex(obj, obj.plottitle);
+            
         end % check_parameters
+        
+        
+        % This function sets the 'interpreter' property to 'latex' if the string
+        % s contains a dollar sign.
+        function check_latex(obj, s)
+            if ~isempty(strfind(s, '$'))
+                obj.interpreter = 'latex';
+            end
+        end
         
         
     end

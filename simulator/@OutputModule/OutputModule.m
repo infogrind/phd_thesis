@@ -14,7 +14,8 @@ classdef OutputModule < handle
         
         plottitle = '';  % Plot title label
         
-        legend = [];
+        legend = [];     % Legend entries
+        legendpos = '';  % Legend position
         
         grid = false;    % Grid status (true = on, false = off)
         
