@@ -45,6 +45,13 @@ classdef MatlabFilePlotModule < MatlabPlotModule
             obj.fh = figure('visible', 'off');
             obj.ah = gca();
         end
+        
+        % The destructor closes the figure handle.
+        function delete(obj)
+            if ishandle(obj.fh)
+                close(fh);
+            end
+        end
     end
     
     
