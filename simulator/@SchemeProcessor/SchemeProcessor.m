@@ -32,6 +32,9 @@ classdef SchemeProcessor < handle
         
         % Whether some extra output should be produced.
         verbose = false;
+
+        % The output module
+        om = [];
     end
     
     
@@ -62,6 +65,14 @@ classdef SchemeProcessor < handle
         function set.verbose(obj, v)
             obj.verbose = v;
         end
+        
+        function set.om(obj, om)
+            obj.om = om;
+        end
+        
+        function om = get.om(obj)
+            om = obj.om;
+        end
     end
     
 
@@ -71,6 +82,9 @@ classdef SchemeProcessor < handle
         function obj = SchemeProcessor()
             % Create random source samples.
             obj.s = create_source_samples(obj);
+            
+            % Initialize the output module to the default.
+            obj.om = MatlabPlotModule();
         end
         
         
@@ -193,22 +207,25 @@ classdef SchemeProcessor < handle
         
         % This function creates a plot with the given data for each of the
         % schemes and handles the labeling.
-        function plot_vs_csnr(obj, ah, m, varargin)
-            plot(ah, 10*log10(obj.snr), m, varargin{:});
-            grid(ah, 'on');
-            xlabel(ah, 'SNR [dB]');
+        function plot_vs_csnr(obj, m, varargin)
+            obj.om.x = 10*log10(obj.snr);
+            obj.om.y = m;
+            obj.om.xlabel = 'SNR [dB]';
+            obj.om.grid = true;
             
             % We only print a legend if there are several schemes.
             if length(obj.schemes) > 1
-                legend(ah, printify(obj.schemes, obj.parameters), ...
-                'Location', 'NorthWest');
+                obj.om.legend = printify(obj.schemes, obj.parameters);
+                obj.om.legendpos = 'NorthWest';
             end
+            
+            obj.om.do_plot();
         end
         
         
         % Same as above, but uses dB for the y axis.
-        function plot_vs_csnr_db(obj, ah, m, varargin)
-            plot_vs_csnr(obj, ah, 10*log10(m), varargin{:});
+        function plot_vs_csnr_db(obj, m, varargin)
+            plot_vs_csnr(obj, 10*log10(m), varargin{:});
         end
         
     end

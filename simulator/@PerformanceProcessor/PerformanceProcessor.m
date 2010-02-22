@@ -11,7 +11,7 @@ classdef PerformanceProcessor < SchemeProcessor
     end
     
     methods (Access = 'public')
-        function plot_performance(obj, ah, schemes, parameters)
+        function plot_performance(obj, schemes, parameters)
 %             % Reset random number generator.
 %             reset_rng(obj);
             
@@ -20,7 +20,7 @@ classdef PerformanceProcessor < SchemeProcessor
             
             process_schemes(obj);
             
-            perf_plot(obj, ah);
+            perf_plot(obj);
         end
         
 %         function c = get_snr(obj)
@@ -37,12 +37,10 @@ classdef PerformanceProcessor < SchemeProcessor
     end
     
     methods (Access = 'protected')
-        function perf_plot(obj, ah)
-            cla(ah);
-            hold(ah, 'off');
-            plot_vs_csnr_db(obj, ah, obj.sv ./ obj.mse);
-            ylabel(ah, 'SDR [dB]');
-            title('SDR vs. SNR');
+        function perf_plot(obj)
+            obj.om.ylabel = 'SDR [dB]';
+            obj.om.plottitle = 'SDR vs. SNR';
+            plot_vs_csnr_db(obj, obj.sv ./ obj.mse);
         end
     end
     
