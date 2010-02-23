@@ -217,6 +217,8 @@ classdef SchemeProcessor < handle
             if length(obj.schemes) > 1
                 obj.om.legend = printify(obj.schemes, obj.parameters);
                 obj.om.legendpos = 'NorthWest';
+            else
+                obj.om.legend = {};
             end
             
             obj.om.do_plot();

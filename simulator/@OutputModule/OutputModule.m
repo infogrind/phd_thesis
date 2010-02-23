@@ -22,12 +22,12 @@ classdef OutputModule < handle
     end
     
     methods
-        % Set-accessor method for the legend. It makes sure the legend is a cell
-        % array.
+        % Set-accessor method for the legend. The legend must be either an empty
+        % cell array (if no legend is required) or a cell array with one row.
         function set.legend(obj, l)
             if ~iscell(l)
                 error('Legend must be a cell array.');
-            elseif size(l, 1) ~= 1
+            elseif ~isempty(l) && size(l, 1) ~= 1
                 error('Legend must be a cell array with a single row.');
             end
             

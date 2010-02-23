@@ -12,6 +12,17 @@ classdef MatlabPlotModule < OutputModule
         interpreter = 'tex'
     end
 
+    methods
+        % Verify that the specified axis handle is valid if it is given
+        % explicitly.
+        function set.ah(obj, ah)
+            if ~isscalar(ah) || ~ishandle(ah)
+                error('The specified axis handle is not valid.');
+            else
+                obj.ah = ah;
+            end
+        end
+    end
     
     methods (Access = 'protected')
         function do_actual_plot(obj)
@@ -27,7 +38,7 @@ classdef MatlabPlotModule < OutputModule
         % If the ah property of the object is not set to a valid axis handle,
         % this function creates a new figure with a new axis.
         function verify_axis(obj)
-            if isempty(obj.ah)
+            if isempty(obj.ah) || ~ishandle(obj.ah)
                 fh = figure();
                 ah = axes();
                 obj.ah = ah;

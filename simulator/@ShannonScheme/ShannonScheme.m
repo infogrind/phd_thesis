@@ -19,7 +19,7 @@ classdef ShannonScheme < TheoreticalScheme
         end
         
         function mse = compute_mse(obj)
-            mse = obj.sv ./ (1 + obj.snr/obj.n).^obj.n;
+            mse = obj.sv ./ (1 + obj.snr).^obj.n;
         end
     end
     

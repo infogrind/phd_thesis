@@ -10,7 +10,7 @@ classdef Scheme < handle
         % Source variance
         sv
         
-        % Channel SNR (power per source sample divided by noise variance)
+        % Channel SNR (power per channel input divided by noise variance)
         snr
         
         % Should extra information be given?

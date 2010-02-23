@@ -56,8 +56,8 @@ classdef PracticalScheme < Scheme
     
     methods (Access = 'protected')
         
-        % This method returns the power constraint per channel symbol.
-        function p = power_per_symbol(obj)
+        % This method returns the power constraint per channel input.
+        function p = power_per_channel_input(obj)
             p = obj.P * obj.k / obj.n;
         end
         
@@ -125,7 +125,7 @@ classdef PracticalScheme < Scheme
             % If verbose mode is enabled, plot the measured empirical SNR.
             if (obj.verbose)
                 fprintf('Empirical SNR = %.3f dB\n', ...
-                    10*log10( empirical_P_per_source_symbol(obj, obj.x) ...
+                    10*log10( empirical_P_per_channel_input(obj, obj.x) ...
                     / obj.nv));
             end
             
@@ -151,10 +151,9 @@ classdef PracticalScheme < Scheme
         end
 
 
-        % This computes the empirical power per source symbol, using the formula
-        % power_per_source_symbol = power_per_channel_input * n / k.
-        function P = empirical_P_per_source_symbol(obj, x)
-            P = mean(mean(x.^2)) * obj.n / obj.k;
+        % This computes the empirical power per channel input symbol.
+        function P = empirical_P_per_channel_input(obj, x)
+            P = mean(mean(x.^2));
         end
         
         
