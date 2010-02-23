@@ -70,6 +70,13 @@ classdef PracticalScheme < Scheme
             init_P_nv(obj);
         end
         
+        % Method to initialize power and noise variance. Some schemes keep the
+        % noise variance fixed and set P as a function of CSNR and some keep P
+        % fixed and set nv as a function of CSNR. By default the power is fixed.
+        function init_P_nv(obj)
+            obj.P = 1;
+            obj.nv = obj.P / obj.snr;
+        end
     end
        
     methods (Access = 'protected', Static)
@@ -96,11 +103,6 @@ classdef PracticalScheme < Scheme
         
         % The decoder.
         sh = decode(obj, y)
-        
-        % Method to initialize power and noise variance. Some schemes keep the
-        % noise variance fixed and set P as a function of CSNR and some keep P
-        % fixed and set nv as a function of CSNR.
-        init_P_nv(obj)
     end
     
     
