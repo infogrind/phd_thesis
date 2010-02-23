@@ -10,6 +10,10 @@
 %          resolution of output pdf.  Note that 150 dpi is the Matlab
 %          default and this function's default, but 600 dpi is typical for
 %          production-quality.
+%   - crop: (optional) A number that determines how much (in inches) to crop
+%          extra from each side. Alternatively this can be a vector with 4
+%          elements, which denote, respectively, the amount to crop from left,
+%          right, top, and bottom.
 %
 %   Saves figure as a pdf with margins cropped to match the figure size.
 
@@ -17,11 +21,12 @@
 %   Written 8/30/2007
 %   Revised 9/22/2007
 %   Revised 1/14/2007
+%   Revised 2/23/2010 by Marius Kleiner - added crop option.
 
-function save2pdf(pdfFileName,handle,dpi)
+function save2pdf(pdfFileName,handle,dpi,crop)
 
 % Verify correct number of arguments
-error(nargchk(0,3,nargin));
+error(nargchk(0,4,nargin));
 
 % If no handle is provided, use the current figure as default
 if nargin<1
@@ -34,6 +39,16 @@ if nargin<2
 end
 if nargin<3
     dpi = 150;
+end
+if nargin<4
+  crop = 0;
+end
+
+% left/right/top/bottom
+if isscalar(crop)
+  crop = [crop, crop, crop, crop];
+elseif ~isvector(crop) || length(crop) ~= 4
+  error('CROP must be a vector with 4 elements.');
 end
 
 % Backup previous settings
@@ -53,8 +68,9 @@ set(handle,'Units','inches');
 % Set the page size and position to match the figure's dimensions
 paperPosition = get(handle,'PaperPosition');
 position = get(handle,'Position');
-set(handle,'PaperPosition',[0,0,position(3:4)]);
-set(handle,'PaperSize',position(3:4));
+set(handle,'PaperPosition',[-crop(1),-crop(3),position(3:4)]);
+set(handle,'PaperSize', ...
+  [position(3) - crop(1) - crop(2), position(4) - crop(3) - crop(4)]);
 
 % Save the pdf (this is the same method used by "saveas")
 print(handle,'-dpdf',pdfFileName,sprintf('-r%d',dpi))

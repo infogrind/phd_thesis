@@ -70,7 +70,8 @@ classdef MatlabFilePlotModule < MatlabPlotModule
             % everything else the MATLAB print() function with a '-d<type>'
             % argument.
             if strcmp(obj.type, 'pdf')
-                save2pdf(obj.fn, obj.fh, obj.pdfres);
+                crop = [.25, .4, 0, 0];   % Inches to crop extra from l/r/t/b
+                save2pdf(obj.fn, obj.fh, obj.pdfres, crop);
             else
                 t = sprintf('-d%s', obj.type);
                 print(t, obj.fn);
