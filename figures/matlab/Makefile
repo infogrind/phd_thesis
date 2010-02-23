@@ -1,8 +1,9 @@
 # List of .m files that create PDFs.
 MTOPDF += ex_shannonscheme.m
+MTOPDF += ex_uncoded.m
 
 # List of .m files that create .tex_t files.
-MTOTEXT +=
+MTOTEXT += ex_uncodedpgf.m
 
 # Program names
 LATEXMK = latexmk
@@ -15,7 +16,7 @@ TRIM = ./trimignore.pl
 MFILES = $(MTOPDF) $(MTOTEXT)
 MINC = $(patsubst %.m,%.minc,$(MFILES))
 MPDF = $(patsubst %.m,%.pdf,$(MTOPDF))
-MTEXT = $(patsubst %.m,%.eps,$(MTOTEXT))
+MTEXT = $(patsubst %.m,%.tex_t,$(MTOTEXT))
 
 # Targets to make.
 all : subdirs $(MINC) $(MPDF) $(MTEXT)

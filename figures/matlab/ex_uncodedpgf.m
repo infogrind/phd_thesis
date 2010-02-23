@@ -1,5 +1,4 @@
-% This example demonstrates how to use the performance processor to plot the
-% performance of an existing communication scheme. 
+% Performance of uncoded versus optimal transmission.
 addpath('../../simulator');
 
 % Set basic parameters
@@ -9,15 +8,15 @@ nv = 1;
 
 % Setup schemes and parameters.
 %%% MK:STARTSHOW
-schemes = {'ShannonScheme'};
-parameters = {[1 2 3]};
+schemes = {'UncodedScheme', 'ShannonScheme'};
+parameters = {[], [1 2]};
 %%% MK:ENDSHOW
 
 % Create a PGF plot output module, set the file name, and attach it to the
 % performance processor.
 pp = PerformanceProcessor(); % MK:SHOW
-om = MatlabFilePlotModule();
-om.fn = 'ex_shannonscheme.pdf';
+om = PGFPlotsOutputModule();
+om.fn = 'ex_uncodedpgf.tex_t';
 om.force = true;
 pp.om = om;
 

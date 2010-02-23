@@ -3,9 +3,15 @@
 \usepackage[utf8]{inputenc}
 \usepackage{microtype} % To enable pdftex-specific typographic features
 
+% etex extensions to use more registers.
+\usepackage{etex}
+
 % To enable links in PDF
 %\usepackage[colorlinks=true]{hyperref}
 \usepackage{hyperref}
+
+% To include PDFs.
+\usepackage{graphicx}
 
 % Permits per-chapter appendices
 \usepackage{appendix}
@@ -21,7 +27,21 @@
 \usepackage{amsfonts}
 \usepackage{amsthm}
 
+% Set up the fancyvrb package for framed code listing boxes with line numbers.
+\usepackage{fancyvrb}
+\DefineVerbatimEnvironment{Code}{Verbatim}{gobble=2,numbers=left,frame=single,%
+fontsize=\small,fontshape=n,commandchars=\\\{\},%
+codes={\catcode`$=3\catcode`&=7}}
+\newcommand\CodeInput[1]{\VerbatimInput[gobble=0,numbers=left,frame=single,fontsize=\small,fontshape=n]{#1}}
+
+% The float package allows to define a custom ``listing'' float type for code
+% listings.
+\usepackage{float}
+\newfloat{Listing}{tbp}{lst}[chapter]
+
+
 % Illustration-related packages
 \usepackage{tikz}
+\usepackage{pgfplots}
 \usepackage{boxedminipage}
 \usepackage[caption=false,font=footnotesize]{subfig}
