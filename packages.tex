@@ -10,6 +10,10 @@
 %\usepackage[colorlinks=true]{hyperref}
 \usepackage{hyperref}
 
+% Create a new float type for code listings. Due to some bug, this needs to be
+% put after the hyperref package is loaded.
+\newfloat[chapter]{listing}{lst}{Listing}
+
 % To include PDFs.
 \usepackage{graphicx}
 
@@ -33,12 +37,6 @@
 fontsize=\small,fontshape=n,commandchars=\\\{\},%
 codes={\catcode`$=3\catcode`&=7}}
 \newcommand\CodeInput[1]{\VerbatimInput[gobble=0,numbers=left,frame=single,fontsize=\small,fontshape=n]{#1}}
-
-% The float package allows to define a custom ``listing'' float type for code
-% listings.
-\usepackage{float}
-\newfloat{Listing}{tbp}{lst}[chapter]
-
 
 % Illustration-related packages
 \usepackage{tikz}
