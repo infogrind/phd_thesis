@@ -11,7 +11,8 @@ classdef PGFPlotsOutputModule < OutputModule
     properties (Access = 'protected')
         % Options that are added to the \begin{axis} command
         axisopts = {
-            'cycle list name=color list'
+            'cycle list name=color list',
+            'width=\textwidth'
             };
     end
     
