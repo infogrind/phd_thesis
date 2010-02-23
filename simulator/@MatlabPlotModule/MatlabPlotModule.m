@@ -27,22 +27,10 @@ classdef MatlabPlotModule < OutputModule
     methods (Access = 'protected')
         function do_actual_plot(obj)
             % At this point we can assume all the data is in correct format.
-            verify_axis(obj);
             plot(obj.ah, obj.x, obj.y);
             set_plot_labels(obj);
             set_plot_grid(obj);
             set_plot_legend(obj);
-        end
-        
-        
-        % If the ah property of the object is not set to a valid axis handle,
-        % this function creates a new figure with a new axis.
-        function verify_axis(obj)
-            if isempty(obj.ah) || ~ishandle(obj.ah)
-                fh = figure();
-                ah = axes();
-                obj.ah = ah;
-            end
         end
         
         
@@ -86,9 +74,10 @@ classdef MatlabPlotModule < OutputModule
         function check_parameters(obj)
             check_parameters@OutputModule(obj);
             
-            % Make sure the provided axis handle is avlid.
-            if ~ishandle(obj.ah)
-                error('AH is not a valid axis handle.');
+            % Create a new figure and axes if the specified handle is no longer
+            % valid. 
+            if isempty(obj.ah) || ~ishandle(obj.ah)
+                obj.ah = MatlabPlotModule.new_axis_handle();
             end
             
             % Check label string for latex code.
@@ -108,6 +97,14 @@ classdef MatlabPlotModule < OutputModule
         end
         
         
+    end
+    
+    
+    methods (Access = 'private', Static = true)
+        function ah = new_axis_handle()
+            fh = figure();
+            ah = axes();
+        end
     end
     
 end

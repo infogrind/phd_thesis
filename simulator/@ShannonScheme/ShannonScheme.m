@@ -1,4 +1,4 @@
-classdef ShannonScheme < TheoreticalScheme
+classdef ShannonScheme < Scheme
     %SHANNONSCHEME Theoretical limit using separation.
     %   This class doesn't implement a practical communication scheme. All it
     %   does is compute and return the best possible MSE corresponding to
@@ -14,12 +14,12 @@ classdef ShannonScheme < TheoreticalScheme
     methods
         function obj = ShannonScheme(sv, s, n)
             % Pass first two arguments to superclass constructor
-            obj = obj@TheoreticalScheme(sv, s);
+            obj = obj@Scheme(sv, s);
             obj.n = n;
         end
         
         function mse = compute_mse(obj)
-            mse = obj.sv ./ (1 + obj.snr).^obj.n;
+            mse = obj.sv / (1 + obj.snr)^obj.n;
         end
     end
     
