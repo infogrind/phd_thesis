@@ -16,6 +16,7 @@ parameters = {[], [1 2]};
 % performance processor.
 pp = PerformanceProcessor(); % MK:SHOW
 om = PGFPlotsOutputModule();
+om.set_color_mode('bw');
 om.fn = 'ex_uncodedpgf.tex_t';
 om.force = true;
 pp.om = om;

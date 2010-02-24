@@ -16,7 +16,7 @@ classdef MatlabPlotModule < OutputModule
         % cycling through this list. The styleidx variable points to the index
         % of the next plot. The function next_style() increases the index and
         % returns the next element from the style list.
-        stylelist = {'b-', 'g-', 'r-', 'c-', 'm-', 'y-', 'k-'};
+        stylelist
         styleidx = 0;
     end
 
@@ -79,8 +79,8 @@ classdef MatlabPlotModule < OutputModule
                 case 'color'
                     obj.stylelist = {'b-', 'g-', 'r-', 'c-', 'm-', 'y-', 'k-'};
                 case 'bw'
-                    obj.stylelist = {'o-', 'x-', '+-', '*-', 's-', 'd-', ...
-                        'v-', '^-', '<-', '>-', 'p-', 'h-'};
+                    obj.stylelist = {'ko-', 'kx-', 'k+-', 'k*-', 'ks-', ...
+                    'kd-', 'kv-', 'k^-', 'k<-', 'k>-', 'kp-', 'kh-'};
                 otherwise
                     % We should never reach here, error checking should be done
                     % before.

@@ -17,6 +17,7 @@ parameters = {[], [1]};
 % performance processor.
 pp = PerformanceProcessor(); % MK:SHOW
 om = MatlabFilePlotModule();
+om.set_color_mode('bw');
 om.fn = 'ex_shannonscheme.pdf';
 om.force = true;
 pp.om = om;
