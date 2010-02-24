@@ -8,8 +8,8 @@ nv = 1;
 
 % Setup schemes and parameters.
 %%% MK:STARTSHOW
-schemes = {'UncodedScheme', 'ShannonScheme'};
-parameters = {[], [1 2]};
+schemes = {'UncodedScheme'};
+parameters = {[]};
 %%% MK:ENDSHOW
 
 % Create a PGF plot output module, set the file name, and attach it to the

@@ -1,31 +1,252 @@
-\chapter{A Simulator for Joint Source-Channel Codes}%
+\chapter{JSCsim: A Joint Source--Channel Coding Simulator}
+\label{ch:simulator}
 
 \DefineShortVerb{\|}
 
-Just a citation so that \LaTeX\ doesn't complain~\cite{KleinerR2009}.
 
-\section{Introduction}
+\section[Object Oriented Programming for Simulations]{Object Oriented
+Programming and Simulation: A Great Match}\label{sec:ooforsim}
 
-This section introduces the simulator and explains why the object-oriented
-programming paradigm, especially inheritance, is particularly suited for the
-task of simulating many similar communication strategies.
+\subsection{The ``Traditional'' Way}
 
-There are two main advantages to the object-oriented approach. The first is the
-ability to quickly produce an alternative version of a scheme with only small
-changes, without the need to copy a complete file or modify the original. This
-is demonstrated by the many variations of a quantize/uncoded scheme. The second
-advantage is that the code to run and to evaluate the results of the many
-schemes need only be written one for a shared interface. 
+Imagine that you have written the code in \lstref{proceduralsim} to simulate
+your recently devised communication scheme. The function |run_simulation()|
+first defines a few relevant parameters and creates a vector of random source
+samples. Then, for each SNR value in the defined range, it calls |encode()| to
+encode the source symbols into the channel input~|x|, adds noise, decodes the
+result~|y|  to produce an estimate~|sh|.  Finally it computes the empirical MSE
+and stores it in the vector~|mse|.
+
+\begin{listing}
+\begin{Code}
+  function mse = run_simulation()
+    snr = 10.^(0:.1:5);   % SNR range: 0 to 50 dB
+    sv  = 1;              % Source variance
+    N   = 100000;         % Sample size
+    
+    s = get_source_samples(N, sv);
+    for k = 1:length(snr)
+      x  = encode(s);
+      y  = x + gaussian_noise(snr(k));
+      sh = decode(y);
+      
+      mse(k) = mean((s - sh).^2);
+    end
+  end
+\end{Code}
+\caption{A hypothetical simulation of a joint source-channel communication
+scheme.}
+\label{lst:proceduralsim}
+\end{listing}
+
+Suppose now that you want to test an alternative decoding method. For example,
+you want to see how a maximum likelihood decoder compares to an MMSE decoder. To
+this end you write the function |alt_decode()|. How do you test this function?
+You have essentially three possibilities:
+\begin{enumerate}
+  \item You replace the call to |decode()| in |run_simulation()| by a call to
+    |alt_decode()|. The change to the existing code is only minimal. In doing
+    so, however, you lose the old code, which is not very good since you
+    probably would like to compare the performance of the new decoder to that of
+    the old one. 
+
+  \item You copy the contents of |run_simulation()| into a new function called
+    |run_alt_simulation()|, replacing the call to |decode()| with a call to
+    |alt_decode()|. While
+    this approach leaves the old code unchanged and again only requires a small
+    programming effort, it results in a lot of duplicate code, which makes your
+    program error prone.
+
+  \item You do as in point~2, but then you eliminate duplicate code by putting
+    all the common code into separate functions that will be called by both
+    |run_simulation()| and |run_alt_simulation()|. This does indeed remove the
+    redundancies, but it also requires significant programming effort. Moreover,
+    if one day you decide to change the encoder as well, this will probably
+    again require a similar amount of effort. 
+\end{enumerate}
+
+As you can see, none of these options is quite satisfactory. You either lose old
+functionality, are left with a lot of duplicate code, or face a significant
+restructuring effort.
+
+
+\paragraph{The Power of Inheritance}
+
+Suppose now that your programming language supports object-oriented programming
+and that you have implemented |run_simulation()| as a \emph{method} (or
+\emph{member function}) of the class |Simulation|, as shown in
+\lstref{objectsim}. Creating a new simulation with an alternative |decode()|
+function now couldn't be easier: just create a \emph{derived class}\footnote{In
+many languages, derived classes are called \emph{subclasses} and base classes
+are called \emph{superclasses}. As pointed out by
+Stroustrup~\cite{Stroustrup1997}, this is somewhat confusing because the
+capabilities of a \emph{sub}class form a \emph{super}set of those of its
+superclass (and vice versa). Hence in this text we shall stick to the terms
+\emph{base class} and \emph{derived class}.} of |Simulation| and override the
+|decode()| method, as shown in \lstref{derivedclass}. 
+
+\begin{listing}
+\begin{Code}
+  classdef Simulation
+    methods
+      function mse = run_simulation()
+        ... % as before
+      end
+
+      function x = encode(s)
+        ...
+      end
+
+      function sh = decode(y)
+        ...
+      end
+    end
+  end
+\end{Code}
+  \caption{Object-oriented version of the simulator of \lstref{proceduralsim}.}
+  \label{lst:objectsim}
+\end{listing}
+
+\begin{listing}
+\begin{Code}
+  classdef AlternativeSimulation < Simulation
+    methods
+      function sh = decode(y)
+        % Alternative decoder implementation.
+      end
+    end 
+  end
+\end{Code}
+  \caption{A new simulation with an alternative decoder is easily implemented by
+  deriving a new class from \texttt{Simulation} and overriding the
+  \texttt{decode()} function.}
+  \label{lst:derivedclass}
+\end{listing}
+
+The object-oriented approach has none of the drawbacks of the previous example:
+\begin{itemize}
+  \item The original simulation remains completely unchanged.
+  \item There is no programming effort other than implementing the new method.
+  \item There is no redundant code whatsoever.
+\end{itemize}
+
+The concept we have exploited is called \emph{inheritance}, since
+|Alternative|\-|Simulation| \emph{inherits} all those functions from
+|Simulation| which it doesn't explicitly redefine.  The real power of
+inheritance (at least for writing
+simulations) is that it \emph{allows old code to call new code}: the
+``old'' function |run_simulation()| calls the new |decode()| function, without
+the need to make \emph{any} changes to the former. 
+
+In classical \emph{procedural programming}, it is only possible for
+\emph{new code to call old code}: a new function can call an existing one, but
+the opposite is not possible without changing the existing function.
+Furthermore, if you want two versions of an existing functions to coexist, such
+that one of them calls a new function, this either causes code duplication
+(which leads to bugs) or requires significant programming effort. 
+
+To summarize, the simple act of  embedding a set of functions in a class and
+then creating a derived class that overrides some of these functions created two
+simulations that are identical except in a single function. 
 
 
 \section{A Step-By-Step Tutorial}
 
+\paragraph{Implementing a Simple Communication Scheme}
+
+\exref{gausssingle} of \chapref{prelim} showed that uncoded transmission is
+optimal to transmit a Gaussian source across a Gaussian channel if the source
+and channel bandwidths are matched. To verify this claim experimentally, let us
+implement \exref{gausssingle} in \jscsim. 
+
+\begin{listing}
+  \caption{Implementation of uncoded transmission.}
+  \label{lst:uncoded}
+  \CodeInput{simulator/@UncodedScheme/UncodedScheme.m}
+\end{listing}
+
+The code for this is shown in \lstref{uncoded}.  One can make the following
+observations.
+\begin{enumerate}
+  \item The communication scheme is implemented as a \emph{class}, here called
+    |Uncoded|\-|Scheme|. It is derived from the class |PracticalScheme|. This is
+    the class that all ``practical'' communication schemes are derived from,
+    \ie,
+    communication schemes that can be implemented in practice as opposed to
+    merely ``theoretical'' schemes (of which we will soon see an example).
+
+  \item The constructor of |PracticalScheme| receives two parameters. |sv| is
+    the source variance and |s| is the sequence of source symbols that are to be
+    transmitted.\footnote{If you wonder why the constructor returns something
+    called \Verb+obj+: this is simply how \matlab's syntax specifies the
+    constructor.  The returned value stands for the object just created, and it
+    serves as a ``pointer'' to access the object's properties, similar to the
+    \Verb+this+ keyword in C++ or Java.}
+
+    The constructor of the base class |PracticalScheme| needs two additional
+    parameters. They are, respectively, the number~$k$ of source symbols encoded
+    at a time and the number~$n$ of channel inputs produced from every
+    $k$~source symbols. The scheme at hand is for the particular case when~$k =
+    n = 1$, which is why the last two parameters passed to |PracticalScheme()|
+    are both~$1$.
+
+  \item The actual work of the class is done by the functions |encode()| and
+    |decode()|. Any class derived from |PracticalScheme| \emph{must} implement
+    these functions. Here they simply compute $X = \sqrt{P/\ssq} S$ and $\Sh =
+    \sqrt{P \ssq} Y / (P + \szq)$.
+\end{enumerate}
+
+
+\paragraph{Performance Analysis}
+
+Having implemented the class |UncodedScheme|, the next thing one might like to
+do is to plot the resulting performance. This task is much simplified by the
+class |PerformanceProcessor|, which is used as follows.
+\CodeInput{figures/matlab/ex_uncoded.minc}
+The first two lines define two cell arrays with each a single entry.
+The first contains the class names of the schemes to plot, and
+the second contains a list of parameters for each scheme. Here we only have a
+single scheme, |UncodedScheme|. It does not have any parameters, so the
+corresponding entry in the parameter list is an empty vector. 
+
+The third line creates an instance of the class |PerformanceProcessor|, whose
+|plot_performance()| method is invoked in the fourth line, specifying the
+relevant schemes and parameters. The resulting plot is shown on
+\figref{uncoded}.
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=\textwidth]{figures/matlab/ex_uncoded.pdf}
+  \end{center}
+  \caption{Plot of the SDR resulting from the \texttt{UncodedScheme} class,
+  obtained using a \texttt{PerformanceProcessor}.}
+  \label{fig:uncoded}
+\end{figure}
+
+This looks like not much at all. Behind the scenes, however, a lot more was
+going on:
+\begin{enumerate}
+  \item A long sequence of random source symbols was generated.
+  \item For a range of SNR values and for each communication scheme, the source
+    sequence was encoded using the communication scheme, Gaussian noise of the
+    appropriate variance was added, and the result was decoded using the
+    scheme's |decode()| function.
+  \item The average difference between the source sequence and the estimate
+    sequence was computed, again for each scheme and for each value of SNR. 
+  \item The resulting performance curves were plotted by |plot_performance()|.
+\end{enumerate}
+All this work is done by |Performance|\-|Processor| and the base class
+|Practical|\-|Scheme|, leaving you free to focus on the essential stuff.
+
+
 \paragraph{Theoretical Performance}
-The first thing one might like to do when studying a new joint source-channel
-code is to compare its performance to the theoretical optimum. To this end,
-let us create a ``virtual'' or ``theoretical'' communication scheme, \ie, one
-that does not actually do any coding, but simply returns a theoretical error
-value given the SNR.
+
+At this point we have implemented uncoded communication, but we have not
+yet verified that it performs indeed optimally. From \chapref{prelim} we know
+that if there are $n$~channel uses per source symbol then the optimal SDR
+is $(1 + \snr)^n$. In \jscsim\ we can implement this as a ``theoretical''
+communication scheme: this is a communication scheme that doesn't actually do
+any encoding or decoding, but simply returns the achieved MSE for a given SNR.
 
 \begin{listing}
 \begin{Code}
@@ -52,7 +273,7 @@ value given the SNR.
     end
   end
 \end{Code}
-  \caption{A ``theoretical'' communication scheme that does not perform any
+  \caption{A ``theoretical'' communication scheme does not perform any
   actual encoding or decoding, but rather computes the theoretically optimal MSE
   for a given SNR.}
   \label{lst:shannonscheme}
@@ -61,141 +282,47 @@ value given the SNR.
 The resulting \matlab\ code is given in \lstref{shannonscheme}. We can make the
 following observations.
 \begin{enumerate}
-  \item The line |classdef ShannonScheme < Scheme| defines a new class
-    called |ShannonScheme| and specifies that it is derived from the
-    \emph{base class} |Scheme|. This is the class from which all communication
-    schemes must be derived; the only requirement it puts is that any derived
-    class must implement a function |compute_mse()| that returns the mean
-    squared error obtained for a given SNR.
+  \item The class |ShannonScheme| is derived from |Scheme| rather than from
+    |PracticalScheme| as in the previous example. This is because unlike
+    practical schemes, |ShannonScheme| does not implement |encode()| or
+    |decode()| functions. 
+    
+    |Scheme| is the class from which all communication schemes are derived. Each
+    class derived from |Scheme| must implement |compute_mse()|, which returns
+    the mean squared error obtained for a given SNR. In the previous example we
+    did not have to implement this function because it is implemented by
+    |PraticalScheme|, itself derived from |Scheme|.
+    
+  \item |ShannonScheme| has a single parameter, namely the number~|n| of channel
+    uses per source symbol.
 
-  \item The class |ShannonScheme| has a single parameter, namely the number~|n|
-    of channel uses per source symbol.
-
-  \item The first function in the |methods| block, called |ShannonScheme()|, is
-    the \emph{constructor} of the class. It is called automatically when a new
-    instance of the class is created. The main job of the constructor is to call
-    the constructor of the base class and save class-specific parameters that
-    are specified when the class is created, in this case the
-    parameter~|n|.\footnote{If you wonder why the constructor returns something
-    called \Verb+obj+: this is simply how \matlab's syntax specifies the
-    constructor.  The returned value stands for the object just created, and it
-    serves as a ``pointer'' to access the object's properties, similar to the
-    \Verb+this+ keyword in C++ or Java.}
-
-  \item The second function, |compute_mse(obj)|, is the heart of this class. It
-    computes the formula $\text{MSE} = \ssq / (1 + \snr)^n$. To access any of
-    the class properties, their name must be prefixed by `|obj.|'.
-    Note in particular how |obj.snr| is accessed, even though it was never
-    defined within this class. This is because it is handled by the base class. 
+  \item The function |compute_mse(obj)| is the heart of this class. It computes
+    the formula $\text{MSE} = \ssq / (1 + \snr)^n$. To access any of the class
+    properties, their name must be prefixed by `|obj.|'.  Note in particular how
+    |obj.snr| is accessed, even though it was never defined within this class.
+    This is because it is handled by the base class. 
 \end{enumerate}
 
-
-\paragraph{Performance Analysis}
-Having implemented the class |ShannonScheme|, the next thing one might like to
-do is to plot the resulting performance. This task is much simplified by the
-class |PerformanceProcessor|, which is used as follows.
+To plot the performance of both |UncodedScheme| and |ShannonScheme|, we use
+the |PerformanceProcessor| as before:
 \CodeInput{figures/matlab/ex_shannonscheme.minc}
-The first two lines define two \emph{cell arrays} with each a single entry.
-|schemes| contains the class names of the schemes to plot, and |parameters|
-contains a list of parameters for each scheme. Here we only have a single
-scheme, |ShannonScheme|, and we would like to plot its performance for $n = 1$,
-$2$, and~$3$. The third line creates an instance of the class
-|PerformanceProcessor|, whose |plot_performance()| method is invoked in the
-fourth line, specifying the relevant schemes and parameters. The resulting plot
-is shown on \figref{shannonschemeperf}.
+The only difference to the previous exampe is that the list of schemes now has
+an additional entry and we have to specify the parameter $n=1$ for
+|ShannonScheme|.
+
+The resulting plot is shown on \figref{shannonscheme}. Note that compared to
+\figref{uncoded} we are plotting the performance of more than one communication
+scheme here, so a legend was automatically added to the plot.
 
 \begin{figure}
   \begin{center}
     \includegraphics[width=\textwidth]{figures/matlab/ex_shannonscheme.pdf}
   \end{center}
-  \caption{Plot of the SDR resulting from the \texttt{ShannonScheme} class,
-  obtained using a \texttt{PerformanceProcessor}.}
-  \label{fig:shannonschemeperf}
+  \caption{Comparing the theoretically optimal performance and the performance
+  of uncoded transmission. The two curves coincide, experimentally confirming
+  \exref{gausssingle}.}
+  \label{fig:shannonscheme}
 \end{figure}
-
-
-\paragraph{Implementing a Practical Scheme}
-The communication scheme just implemented only computed theoretical performance
-results; nothing was actually simulated. Let us then move ahead and create an
-actual, practically implementable scheme. To start, \lstref{uncoded} shows an
-implementation of ``uncoded'' communication, which was shown in \chapref{prelim}
-to be optimal.
-
-\begin{listing}
-  \CodeInput{simulator/@UncodedScheme/UncodedScheme.m}
-  \caption{Implementation of uncoded transmission.}
-  \label{lst:uncoded}
-\end{listing}
-
-We can make the following observations.
-\begin{enumerate}
-  \item The class is derived from |PracticalScheme|, rather than |Scheme|.
-    |PracticalScheme| is the base class for all ``practical'' schemes, \ie,
-    actually implementable ones (as the name says).
-
-  \item The constructor receives two parameters. |sv| is the source variance and
-    |s| is the sequence of source symbols that are to be transmitted. These
-    two parameters are the same for all communication schemes involved in a
-    simulation; this ensures that a fair comparison can be made. 
-
-    The constructor of |PracticalScheme| needs two additional parameters. They
-    are, respectively, the number~$k$ of source symbols at a time and the
-    number~$n$ of channel inputs produced from every $k$~source symbols. The
-    scheme at hand works only for the particular case when~$k = n = 1$, which is
-    why the last two parameters passed to |PracticalScheme()| are both~$1$.
-
-  \item The actual work of the class is done by the functions |encode()| and
-    |decode()|. Any class derived from |PracticalScheme| \emph{must} implement
-    these functions. Here they simply compute $X = \sqrt{P/\ssq} S$ and $\Sh =
-    \sqrt{P \ssq} Y / (P + \szq)$.
-\end{enumerate}
-
-To verify the result from \chapref{prelim} that uncoded transmission is optimal
-for $k=n=1$, let us now plot the performance of the communication scheme just
-implemented, together with the theoretically optimal performance for $n = 1$ and
-$n=2$. 
-\CodeInput{figures/matlab/ex_uncoded.minc}
-The only difference to the previous example is that here the list of schemes is
-augmented by |UncodedScheme|, and an empty vector is added in the corresponding
-position of the parameter list (since |UncodedScheme| has no parameters). 
-The output is shown on \figref{uncoded}; indeed, the SDR curve of
-|UncodedScheme| coincides exactly with that of |ShannonScheme| for $n = 1$.
-
-\begin{figure}
-  \begin{center}
-    \includegraphics[width=\textwidth]{figures/matlab/ex_uncoded.pdf}
-  \end{center}
-  \caption{The performance of uncoded transmission for $n=1$. It is clearly
-  visible that the theoretical optimum is achieved.}
-  \label{fig:uncoded}
-\end{figure}
-
-Let us summarize what we have done so far:
-\begin{enumerate}
-  \item We have created a ``theoretical'' communication scheme that computes the
-    theoretically optimal MSE for a bandwidth expansion factor~$n$.
-
-  \item We have implemented uncoded transmission by essentially writing the
-    |encode()| and |decode()| functions of the class |UncodedScheme|.
-
-  \item To plot the performance, we have passed a list of communication schemes
-    along with the respective parameters to a |PerformanceProcessor| object.
-\end{enumerate}
-This looks like not much at all. Behind the scenes, however, a lot more was
-going on:
-\begin{enumerate}
-  \item A long sequence of random source symbols were generated.
-  \item For a range of SNR values and for each communication scheme, the source
-    sequence was encoded using the communication scheme, Gaussian noise of the
-    appropriate variance was added, and the result was decoded using the
-    scheme's |decode()| function.
-  \item The average difference between the source sequence and the estimate
-    sequence was computed, again for each scheme and for each value of SNR. 
-  \item The resulting performance curves were plotted by |plot_performance()|.
-\end{enumerate}
-All this work is encapsulated in the class structure, leaving you free to focus
-on the essential stuff.
-
 
 \paragraph{Alternative Output Formats}
 So far, the call to |plot_performance()| just created a standard \matlab\ figure
@@ -220,8 +347,9 @@ In the second line, a new output module of type |MatlabFilePlotModule| is
 created. Since it writes its output to a file, we have to specify a file name,
 which we do in the next line. Finally, in the fourth line, we replace the
 default output module of the performance processor with newly created
-one.\footnote{Unsurprisingly, Figures~\ref{fig:shannonschemeperf}
-and~\ref{fig:uncoded} have been created using \Verb+MatlabFilePlotModule+.}
+one.\footnote{Unsurprisingly, Figures~\ref{fig:uncoded}
+and~\ref{fig:shannonscheme} have been created using
+\Verb+MatlabFilePlotModule+.}
 
 Another output module is called |PGFPlotsOutputModule|. It produces a file
 containing \TeX\ code, to be used with the \pgfplots\ package. To use it, just
