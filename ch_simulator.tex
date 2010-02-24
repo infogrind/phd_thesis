@@ -201,7 +201,7 @@ observations.
 
 Having implemented the class |UncodedScheme|, the next thing one might like to
 do is to plot the resulting performance. This task is much simplified by the
-class |PerformanceProcessor|, which is used as follows.
+class |Performance|\-|Processor|, which is used as follows.
 \CodeInput{figures/matlab/ex_uncoded.minc}
 The first two lines define two cell arrays with each a single entry.
 The first contains the class names of the schemes to plot, and
@@ -209,7 +209,7 @@ the second contains a list of parameters for each scheme. Here we only have a
 single scheme, |UncodedScheme|. It does not have any parameters, so the
 corresponding entry in the parameter list is an empty vector. 
 
-The third line creates an instance of the class |PerformanceProcessor|, whose
+The third line creates an instance of the class |Performance|\-|Processor|, whose
 |plot_performance()| method is invoked in the fourth line, specifying the
 relevant schemes and parameters. The resulting plot is shown on
 \figref{uncoded}.
@@ -304,7 +304,7 @@ following observations.
 \end{enumerate}
 
 To plot the performance of both |UncodedScheme| and |ShannonScheme|, we use
-the |PerformanceProcessor| as before:
+the |Performance|\-|Processor| as before:
 \CodeInput{figures/matlab/ex_shannonscheme.minc}
 The only difference to the previous exampe is that the list of schemes now has
 an additional entry and we have to specify the parameter $n=1$ for
@@ -325,16 +325,18 @@ scheme here, so a legend was automatically added to the plot.
 \end{figure}
 
 \paragraph{Alternative Output Formats}
-So far, the call to |plot_performance()| just created a standard \matlab\ figure
-window containing the performance plot. Often, though, you may not only want to
-look at the plot on the screen but also use it in some other document, like a
-report or a paper. For this, there is the concept of \emph{output module}. An
-output module defines a rudimentary set of plot capabilities. The default output
-module uses \matlab's plot command to display a figure window. Alternatively,
-suppose you want to save the performance plot in a PDF file. For this you can
-use the default output module, which is called |MatlabPlotModule|, by one called
-|MatlabFilePlotModule|. Instead of displaying the plot in a window, it saves it
-in a file. Continuing our previous example, we would use it as follows.
+
+Up to now the call to |plot_performance()| just launched a standard \matlab\
+figure window with the performance plot. Often, though, you may not only want to
+look at the plot on the screen but also use it in a document such as a report or
+a paper. For this, \jscsim\ has the concept of an \emph{output module}. An
+output module implements a rudimentary set of plot capabilities. The default
+output module uses \matlab's plot command to display a figure window.
+
+Alternatively, to save the performance plot in a PDF file, for instance, the
+default output module can be replaced by a |MatlabFilePlotModule|. Instead of
+displaying the plot in a window, this module saves it in a file. Continuing our
+previous example, we would use it as follows.
 \begin{Code}
   ...  % Define list of schemes and parameters.
   pp = PerformanceProcessor();
@@ -343,7 +345,7 @@ in a file. Continuing our previous example, we would use it as follows.
   pp.om = om;
   pp.plot_performance(schemes, parameters);  % Saved to myplot.pdf.
 \end{Code}
-In the second line, a new output module of type |MatlabFilePlotModule| is
+In line~3 a new output module of type |MatlabFilePlotModule| is
 created. Since it writes its output to a file, we have to specify a file name,
 which we do in the next line. Finally, in the fourth line, we replace the
 default output module of the performance processor with newly created
@@ -358,30 +360,76 @@ and set \eg
 \begin{Code}
   om.fn = 'myplot.tex';
 \end{Code}
-The file |myplot.tex| can then be included in a \LaTeX\ file using the |\input|
+The resulting file can then be included in a \LaTeX\ file using the |\input|
 command, provided that the |pgfplots| package has been loaded.  The result is
 shown on \figref{uncodedpgf}. Admittedly, the plot created by \pgfplots\ fits in
-nicer with the \LaTeX\ layout.
+nicer with the \LaTeX\ layout, and its labels are more readable than those of
+Figures~\ref{fig:uncoded} and~\ref{fig:shannonscheme}.
 
 \begin{figure}
   \begin{center}
     \input{figures/matlab/ex_uncodedpgf.tex_t}
   \end{center}
-  \caption{The same plot as that in \figref{uncoded}, but here a
-  \texttt{PGFPlotsOutputModule} was used instead.}
+  \caption{Using the \texttt{PGFPlotsOutputModule}, one can save the simulation
+  output as \TeX\ commands for the \pgfplots\ package, which can then be
+  included in a \LaTeX\ source file.}
   \label{fig:uncodedpgf}
 \end{figure}
 
 
-\section{Class Hierarchy and Reference}
+\paragraph{Analysis Using Scheme Processors}
 
-\subsection{Communication Strategies}
+We have already seen one scheme processor in action. In the previous examples we
+used a |Performance|\-|Processor| to plot the SDR resulting from different
+communication schemes. |Performance|\-|Processor| is derived from the base class
+|SchemeProcessor|. In general, a scheme processor takes a list of schemes (along
+with the corresponding parameters), simulates these schemes for a range of SNR
+values, and gathers particular data from each simulation run.  To illustrate
+these principles, \lstref{perfproc} shows a simplified version of the
+implementation of |Performance|\-|Processor|. 
 
-\subsection{Processors}
+\begin{listing}
+\CodeInput{figures/matlab/PerformanceProcessor.minc}
+\caption{Simplified implementation of the \texttt{PerformanceProcessor} class.}
+\label{lst:perfproc}
+\end{listing}
 
-\subsection{Output}
+Each class derived from |SchemeProcessor| must do three things:
+\begin{enumerate}
+  \item Call |set_schemes()| to store the list of schemes and the associated
+    parameters.
 
-\subsection{Batch Processing and Makefile Inclusion}
+  \item Call |process_schemes()|, the function that does the actual job of
+    simulating each scheme for each SNR. |process_schemes()| is implemented in
+    |SchemeProcessor|. 
+
+  \item Implement |post_process()|. This function performs the ``data
+    gathering''. It is called from within |process_schemes()| after each time a
+    particular scheme has been simulated for a particular SNR. Its first
+    argument |scheme| is the instance of the scheme just simulated. From it,
+    |post_process()| can gather all required data.  In the case of
+    |Performance|\-|Processor|, it simply queries the MSE and saves it in the
+    |mse| matrix.
+\end{enumerate}
 
 
-\section{Implementation Notes}
+Consider another example. Suppose we have a class |HybridScheme| that implements
+the hybrid communication scheme from \textbf{[Insert reference to Ch.~2]}, and
+suppose we would like to compare the errors $\Eqi$ and~$\Ee$. To do this, we would have |HybridScheme| store all $Q_i$ and
+$\Qh_i$ as well as $E_{n-1}$ and $\Eh_{n-1}$. Then we could write a
+|HybridSchemeProcessor| whose |post_process()| function computes and saves
+$\Eqi$ and~$\Ee$. 
+
+
+%\section{Class Hierarchy and Reference}
+%
+%\subsection{Communication Strategies}
+%
+%\subsection{Processors}
+%
+%\subsection{Output}
+%
+%\subsection{Batch Processing and Makefile Inclusion}
+%
+%
+%\section{Implementation Notes}

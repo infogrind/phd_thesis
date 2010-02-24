@@ -5,6 +5,9 @@ MTOPDF += ex_uncoded.m
 # List of .m files that create .tex_t files.
 MTOTEXT += ex_uncodedpgf.m
 
+# List of .m files from which only a .minc file should be created.
+MINCONLY += PerformanceProcessor.m
+
 # Program names
 LATEXMK = latexmk
 EPSTOPDF = epstopdf
@@ -13,7 +16,7 @@ MATLAB = matlab
 TRIM = ./trimignore.pl
 
 # Create list of MINC, PDF and TEX_T file to be generated from MATLAB.
-MFILES = $(MTOPDF) $(MTOTEXT)
+MFILES = $(MTOPDF) $(MTOTEXT) $(MINCONLY)
 MINC = $(patsubst %.m,%.minc,$(MFILES))
 MPDF = $(patsubst %.m,%.pdf,$(MTOPDF))
 MTEXT = $(patsubst %.m,%.tex_t,$(MTOTEXT))
