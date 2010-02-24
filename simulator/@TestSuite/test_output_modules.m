@@ -23,6 +23,7 @@ xl = '$x$';
 yl = '$f(x)$';
 pt = 'Hello';
 g = true;       % Grid
+cm = 'bw';  % Color mode
 
 % The legend entries and the legend position.
 lg = {'squared', 'cubed', 'fourthigy'};
@@ -38,6 +39,7 @@ for k = 1:length(mods)
     m.ylabel = yl;
     m.plottitle = pt;
     m.grid = g;
+    m.set_color_mode(cm);
     
     m.legend = lg;
     m.legendpos = lpos;

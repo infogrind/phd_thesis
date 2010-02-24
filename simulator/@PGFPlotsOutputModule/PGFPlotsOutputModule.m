@@ -9,11 +9,23 @@ classdef PGFPlotsOutputModule < OutputModule
     end
     
     properties (Access = 'protected')
-        % Options that are added to the \begin{axis} command
-        axisopts = {
-            'cycle list name=color list',
-            'width=\textwidth'
-            };
+        colormode = 'color';
+    end
+
+    
+    methods (Access = 'public')
+        function set_color_mode(obj, c)
+            switch c
+                case 'color'
+                    obj.colormode = 'color';
+                case 'bw'
+                    obj.colormode = 'bw';
+                otherwise
+                    error('%s is not a valid color mode.', c);
+            end
+        end
+        
+        
     end
     
     methods (Access = 'protected')
@@ -37,20 +49,10 @@ classdef PGFPlotsOutputModule < OutputModule
             fprintf(fid, '%% THIS FILE WAS AUTOMATICALLY GENERATED.\n');
             fprintf(fid, '\\begin{tikzpicture}\n');
             
-            addaxisopt(obj, sprintf('xlabel={%s}', obj.xlabel));
-            addaxisopt(obj, sprintf('ylabel={%s}', obj.ylabel));
-            if (obj.grid)
-                addaxisopt(obj, 'grid=major');
-            end
-            
-            % Check if legend position is defined.
-            s = legendpos2str(obj);
-            if ~isempty(s)
-                addaxisopt(obj, sprintf('legend pos=%s', s));
-            end
 
             % Write axis command with options.
-            fprintf(fid, '\\begin{axis}[%s]\n', optstring(obj, obj.axisopts));
+            fprintf(fid, '\\begin{axis}[%s]\n', ...
+                optstring(obj, axisopts(obj)));
             
         end
         
@@ -66,6 +68,52 @@ classdef PGFPlotsOutputModule < OutputModule
             end
         end
         
+        
+        function o = axisopts(obj)
+            
+            % Create option string based on grid setting.
+            if obj.grid
+                gridstr = 'major';
+            else
+                gridstr = 'none';
+            end
+            
+            % Create the cycle list string.
+            clstr = cycle_list_string(obj);
+            
+            % Create the list of axis options.
+            o = {
+                sprintf('%s', clstr),
+                'width=\textwidth',
+                sprintf('xlabel={%s}', obj.xlabel),
+                sprintf('ylabel={%s}', obj.ylabel),
+                sprintf('grid=%s', gridstr)
+                };
+            
+            % If the legend position is set, add a corresponding option.
+            s = legendpos2str(obj);
+            if ~isempty(s)
+                o{length(o) + 1} = sprintf('legend pos=%s', s);
+            end
+        end
+        
+        
+        function s = cycle_list_string(obj)
+            switch obj.colormode
+                case 'color'
+                    s = 'cycle list name=color list';
+                case 'bw'
+                    s = ['cycle list={{mark=o},{mark=x},{mark=+},', ...
+                        '{mark=asterisk},mark={star},{mark=square},', ...
+                        '{mark=diamond},{mark=triangle},mark={pentagon},', ...
+                        '{mark=oplus},{mark=otimes}}'];
+                otherwise
+                    % We should never reach here, error checking should be done
+                    % before.
+                    assert(false);
+            end
+        end
+
         
         function s = legendpos2str(obj)
             switch (obj.legendpos)
@@ -86,12 +134,7 @@ classdef PGFPlotsOutputModule < OutputModule
                         'Invalid legend position');
             end
         end
-        
-        
-        function addaxisopt(obj, o)
-            obj.axisopts{length(obj.axisopts) + 1} = o;
-        end
-        
+
         
         function write_plots(obj, fid)
             % Write a separate plot command for each row of y.

@@ -48,11 +48,20 @@ classdef OutputModule < handle
     end
     
     
+    methods (Access = 'public', Abstract = true)
+        % Every derived class must implement the set_color_mode() function. The
+        % argument is either 'color' or 'bw'.
+        set_color_mode(obj, c)
+
+    end
+    
+    
     methods (Access = 'protected', Abstract = true)
         % This is the method that does the plotting (no error checking here,
         % that is all done in check_parameters). It must be implemented by the
         % derived classes.
         do_actual_plot(obj)
+        
     end
     
     
