@@ -6,7 +6,7 @@ MTOPDF += ex_uncoded.m
 MTOTEXT += ex_uncodedpgf.m
 
 # List of .m files from which only a .minc file should be created.
-MINCONLY += PerformanceProcessor.m
+MINCONLY += PerformanceProcessor_ex.m
 
 # Program names
 LATEXMK = latexmk

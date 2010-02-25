@@ -9,13 +9,13 @@ om2 = MatlabPlotModule();
 om3 = MatlabPlotModule();
 
 pp.om = om1;
-pp.plot_performance(allschemes, allparams);
+pp.process(allschemes, allparams);
 
 pp.om = om2;
-pp.plot_performance({'ShannonScheme', 'UncodedScheme'}, {[1 2 3 4], []});
+pp.process({'ShannonScheme', 'UncodedScheme'}, {[1 2 3 4], []});
 
 pp.om = om3;
-pp.plot_performance({'LinearScheme'}, {[5]});
+pp.process({'LinearScheme'}, {[5]});
 
 
 end

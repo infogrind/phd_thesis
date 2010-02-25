@@ -10,33 +10,30 @@ classdef PerformanceProcessor < SchemeProcessor
         mse
     end
     
-    methods (Access = 'public')
-        function plot_performance(obj, schemes, parameters)
-            
-            set_schemes(obj, schemes, parameters);
-            obj.mse = zeros(nb_schemes(obj), length(obj.snr));
-            
-            process_schemes(obj);
-            
-            perf_plot(obj);
-        end
-        
-    end
+
     
     methods (Access = 'protected')
+        
+        % To initialize the processing, clear the MSE matrix.
+        function initialize(obj)
+            obj.mse = zeros(nb_schemes(obj), length(obj.snr));
+        end
+        
+        
         % Implementation of the abstract method post_process().
-        function post_process(obj, scheme, j, k)
+        function save_scheme_data(obj, scheme, j, k)
             % Store MSE of scheme.
             obj.mse(k, j) = scheme.compute_mse();
         end
-    end
-    
-    methods (Access = 'protected')
-        function perf_plot(obj)
+        
+        
+        function post_process(obj)
             obj.om.ylabel = 'SDR [dB]';
             obj.om.plottitle = 'SDR vs. SNR';
             plot_vs_csnr_db(obj, obj.sv ./ obj.mse);
         end
+        
+        
     end
     
 end

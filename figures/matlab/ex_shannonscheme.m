@@ -23,4 +23,4 @@ om.force = true;
 pp.om = om;
 
 % Plot the performance for the Shannon scheme with three different parameters. 
-pp.plot_performance(schemes, parameters); % MK:SHOW
+pp.process(schemes, parameters); % MK:SHOW

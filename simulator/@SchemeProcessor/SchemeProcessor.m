@@ -3,7 +3,7 @@ classdef SchemeProcessor < handle
     %   SchemeProcessor is the base class on which to build if you want to run
     %   some schemes for multiple CSNR values and/or parameters. It takes care
     %   of creating the random source and runs all the scheme. Any derived class
-    %   can make use of the process_schemes() function and it must implement the
+    %   can make use of the do_processing() function and it must implement the
     %   post_process() method. 
     
     % $Id$
@@ -38,6 +38,21 @@ classdef SchemeProcessor < handle
     end
     
     
+    methods (Access = 'public')
+        % The process() method takes a list of schemes and parameters and
+        % processes them. (What else would it do, I ask you?)
+        function process(obj, schemes, parameters)
+            
+            set_schemes(obj, schemes, parameters);
+            initialize(obj);
+            do_processing(obj);
+            post_process(obj);
+
+        end
+    end
+    
+    
+    % Get/set methods
     methods
         function set.N(obj, N)
             if N < 1 || floor(N) ~= N
@@ -146,7 +161,7 @@ classdef SchemeProcessor < handle
         
         
         % Runs all schemes
-        function process_schemes(obj)
+        function do_processing(obj)
             for k = 1:length(obj.schemes)
                 scheme = create_scheme(obj, k);
                 
@@ -154,7 +169,7 @@ classdef SchemeProcessor < handle
                 % to gather statistics. 
                 for j = 1:length(obj.snr)
                     scheme.set_snr(obj.snr(j));
-                    post_process(obj, scheme, j, k);
+                    save_scheme_data(obj, scheme, j, k);
                 end
                 
                 % Display percentage of schemes complete if verbose mode is
@@ -233,10 +248,20 @@ classdef SchemeProcessor < handle
     end
     
     
+    
     methods (Access = 'protected', Abstract = true)
-        % Derived classes must implement the post_process method, which gathers
-        % data after every run. 
-        post_process(obj, scheme, j, k)
+        
+        % Before starting the actual processing, the initalize() method is
+        % called, which derived classes can use to initialize variables.
+        initialize(obj);
+        
+        % Derived classes must implement the save_scheme_data method, which
+        % gathers data after every run. 
+        save_scheme_data(obj, scheme, j, k)
+        
+        % The post_process function is called after all schemes have been
+        % processed.
+        post_process(obj)
     end
     
     methods (Access = 'private')
@@ -246,6 +271,13 @@ classdef SchemeProcessor < handle
     end
     
 end
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% HELPER FUNCTIONS 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 % This function rearranges an element of the parameter cell array as follows.
