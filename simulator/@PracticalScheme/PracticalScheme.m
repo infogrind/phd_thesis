@@ -33,22 +33,18 @@ classdef PracticalScheme < Scheme
                 
         % Access methods for simulation data.
         function mse = compute_mse(obj)
-            assert(obj.has_run);
             mse = obj.mse;
         end
         
         function x = compute_x(obj)
-            assert(obj.has_run);
             x = obj.x;
         end
         
         function y = compute_y(obj)
-            assert(obj.has_run);
             y = obj.y;
         end
         
         function sh = compute_sh(obj)
-            assert(obj.has_run);
             sh = obj.sh;
         end
         
@@ -108,13 +104,11 @@ classdef PracticalScheme < Scheme
     
     % We define the run method as sealed. If no derived class can override
     % it, this ensures uniformity of channel. 
-    methods (Access = 'public', Sealed = true)
+    methods (Access = 'protected', Sealed = true)
         
         % The main addition of PracticalScheme wrt. Scheme is that now we have a
-        % run() method, which does the main steps of the simulation.
-        function run(obj, snr)
-            run@Scheme(obj, snr);
-
+        % snr_updated() method that does the main steps of the simulation.
+        function snr_updated(obj)
             % This lets derived classes update parameters that depend on the
             % SNR. 
             update_variable_parameters(obj);

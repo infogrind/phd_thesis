@@ -153,7 +153,7 @@ classdef SchemeProcessor < handle
                 % Run the scheme for all SNR values and post process each time
                 % to gather statistics. 
                 for j = 1:length(obj.snr)
-                    run(scheme, obj.snr(j));
+                    scheme.set_snr(obj.snr(j));
                     post_process(obj, scheme, j, k);
                 end
                 

@@ -9,18 +9,38 @@ classdef ShannonScheme < Scheme
     properties
         % The number of channel uses corresponding to this theoretical limit.
         n
+        
+        % The MSE
+        mse
     end
+    
+    
     
     methods
         function obj = ShannonScheme(sv, s, n)
             % Pass first two arguments to superclass constructor
             obj = obj@Scheme(sv, s);
             obj.n = n;
+            
         end
         
+        
         function mse = compute_mse(obj)
-            mse = obj.sv / (1 + obj.snr)^obj.n;
+            mse = obj.mse;
         end
+        
+        
+    end
+
+    
+    
+    methods (Access = 'protected')
+        % When the SNR is updated, we need to recompute the MSE.
+        function snr_updated(obj)
+            obj.mse = obj.sv / (1 + obj.snr)^obj.n;
+        end
+        
+        
     end
     
 end

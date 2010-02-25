@@ -6,53 +6,62 @@ classdef Scheme < handle
     
     % $Id$
     
-    properties
+    properties (Access = 'public')
         % Source variance
         sv
-        
-        % Channel SNR (power per channel input divided by noise variance)
-        snr
         
         % Should extra information be given?
         verbose = false;
     end
     
+    
+    
     properties (Access = 'protected')
-        % A flag indicating whether the run() method has already been called.
-        has_run = false
+        % Channel SNR (power per channel input divided by noise variance)
+        snr
     end
     
-    methods
+    
+    
+    methods (Access = 'public')
         % The constructor takes two values: The source variance and the source
         % symbols. Note that this base class ignores the source symbols; only
         % classes derived from PracticalScheme will store s. 
-        function obj = Scheme(sv, s)
+        function obj = Scheme(sv, s) %#ok<INUSD>
             obj.sv = sv;
         end
-    end
-    
-    methods (Access = 'public')
-        % The run method first saves the SNR and sets the flag. The do_run()
-        % method is abstract and must be implemented by derived classes.
-        function run(obj, snr)
-            obj.snr = snr;
-            obj.has_run = true;
+        
+        
+        % When the SNR is changed to a different value, the abstract function
+        % snr_updated() is called so that derived classes can update the
+        % simulation results.
+        function set_snr(obj, snr)
+            % The isempty test is crucial here: Otherwise, if obj.snr is
+            % empty (to which it is initialized), the ~= test will always
+            % evaluate to false. 
+            if isempty(obj.snr) || (obj.snr ~= snr)
+                obj.snr = snr;
+                snr_updated(obj);
+            end
         end
         
-%         function set_snr(obj, snr)
-%             if snr <= 0
-%                 error('SNR must be positive.');
-%             else
-%                 obj.snr = snr;
-%             end
-%         end
         
     end
     
     
-   methods (Abstract = true)
+    
+    methods (Access = 'public', Abstract = true)
         % Every scheme must at least return the MSE.
         mse = compute_mse(obj)
+    end
+    
+    
+    
+    methods (Access = 'protected', Abstract = true)
+        % This function is called each time the SNR is changed to a different
+        % value.
+        snr_updated(obj)
+        
     end
     
 end
