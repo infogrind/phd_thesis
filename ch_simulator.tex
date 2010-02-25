@@ -583,6 +583,135 @@ You can implement your own scheme processor by creating a new class derived from
   \item[\texttt{post\_process(obj, scheme, j, k)}] This function is called after
     all the simulations have run. Here you can post process the data gathered by
     |save_scheme_data()|, for instance by plotting it.
+
+    |SchemeProcessor| provides the useful function |plot_vs_snr(obj, m)|, which
+    creates a plot of the data in the vector |m| against the SNR in dB, or
+    several plots if |m| is a matrix with several rows. (The SNR is in dB, not
+    the data; if you also want the data to be plotted in a dB scale you can use
+    |plot_vs_snr_db()| instead.)
+\end{description}
+
+
+\subsection{Output Modules}
+
+In some cases you might just want to see the results of a simulation on screen;
+in other cases you might want to save them in a file that you can include in a
+paper or report. In \jscsim\ it is easy to switch between the two options by
+changing output modules.
+
+Output modules provide an abstraction of basic plot functionalities. You can
+think of them as a kind of output ``plugins''. The functionality they offer is
+rather orthogonal to the task of simulating; you might use them in other
+programs as well. 
+
+In \jscsim, each class derived from |SchemeProcessor| has an output module
+associated to it. By default this is the |MatlabPlotModule|, which displays the
+plots in a regular \matlab\ figure window, but it is easy to change the plot
+module in order to save the plot in a PDF file rather than on screen, for
+instance:
+\begin{Code}
+  pp = PerformanceProcessor();
+  pp.om = MatlabFilePlotModule();
+  pp.om.fn = 'myplot.pdf';
+\end{Code}
+
+The behavior of output modules is controlled by a set of parameters. Some of
+these, such as the axis labels or the legend entries, apply to all
+output modules. Other parameters apply only to certain categories of output
+modules: the |fn| property, for instance, which determines the name of the file
+in which to save a plot, only applies to those output modules that can save
+plots in a file. 
+
+
+\subsubsection{General Parameters}
+
+All output modules support the following properties and methods.
+\begin{description}
+  \item[\texttt{x}] The range of |x|~values. This must be a row vector.
+  \item[\texttt{y}] The data to plot against the $x$~values. This must be either
+    a row vector or a matrix with the same number of columns as~|x|; each
+    row then corresponds to a separate data series to plot.
+
+  \item[\texttt{xlabel}] The label of the $x$-axis. This is a string; it can
+    also contain (limited) \LaTeX\ code depending on the actual output module
+    used. 
+  \item[\texttt{ylabel}] The label of the $y$-axis. This is a string; it can
+    also contain (limited) \LaTeX\ code depending on the actual output module
+    used.
+
+  \item[\texttt{plottitle}] The plot title. This is a string; it can also
+    contain (limited) \LaTeX\ code depending on the actual output module used.
+
+  \item[\texttt{legend}] The legend entries. This must be a cell array of
+    strings. If the number of legend entries is smaller than the number of data
+    series in~|y|, a warning is issued.
+
+  \item[\texttt{legendpos}] A string determining where in the plot the legend is
+    placed. The possible values are |NorthEast|, |NorthWest|, |SouthEast|,
+    |SouthWest|, and |NorthEastOutside|. In addition, if |legendpos| is set to
+    the empty string, no legend is created.
+
+  \item[\texttt{grid}] This boolean parameter determines whether a grid is drawn
+    (if set to |true|) or not (if set to |false|).
+
+  \item[\texttt{set\_color\_mode(obj, c)}] Set the color mode of the plot. The
+    parameter~|c| can either be |'color'|, in which case a line of a different
+    color is drawn for each data series, or |'bw'|, in which case the plot uses
+    black lines with a different marker for each data series.
+\end{description}
+
+
+\subsubsection{The \texttt{MatlabPlotModule} Output Module}
+
+This output module creates a standard \matlab\ plot. It is the default output
+module for scheme processors. It has no properties other than the ones given
+above.
+
+
+\subsubsection{The \texttt{MatlabFilePlotModule} Output Module}
+
+The |MatlabFilePlotModule| works just like the |MatlabPlotModule|, except that
+the plot is not displayed in a window but saved in a file. The result is the
+same as if you had selected |File|\texttt{\slash}|Save as...| in a figure
+window. 
+
+The behavior of |MatlabFilePlotModule| is controlled by the following
+properties.
+\begin{description}
+  \item[\texttt{fn}] The name of the file in which to save the figure. By
+    default an error occurs if a file of the given name already exist; this can
+    be changed using the |force| property (see below).
+
+  \item[\texttt{type}] A string denoting the file type. The set of valid file
+    types is the same as for the \matlab\ function |print|; see the help for
+    that function for a complete list. 
+
+  \item[\texttt{pdfres}] An integer denoting the resolution (in dpi) of the
+    created file if the file type is |pdf|. The default value is 600~dpi, which
+    is a typical value for production quality.
+
+  \item[\texttt{force}]  If this option is set to |true|, existing files are
+    overwritten; if it is set to |false| then an error occurs if a file of the
+    given name already exists.
+\end{description}
+
+
+\subsubsection{The \texttt{PGFPlotsOutputModule} Output Module}
+
+This output module writes the plot to a file in a format suitable for the
+\pgfplots\ package for \LaTeX. A file generated by |PGFPlotsOutputModule| can be
+included in a \LaTeX\ source file, provided that the \pgfplots\ package has been
+loaded. 
+
+The behavior of this module is controlled by the following properties.
+\begin{description}
+  \item[\texttt{fn}] The name of the file in which to save the figure. By
+    default an error occurs if a file of the given name already exist; this can
+    be changed using the |force| property (see below).
+
+  \item[\texttt{force}]  If this option is set to |true|, existing files are
+    overwritten; if it is set to |false| then an error occurs if a file of the
+    given name already exists.
 \end{description}
 
 
