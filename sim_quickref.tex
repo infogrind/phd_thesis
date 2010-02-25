@@ -1,0 +1,35 @@
+\subsection{Quick Reference and HowTos}
+
+This section contains HowTo guides for the most common tasks in \jscsim.
+
+\paragraph{How To Implement a Practical Communication Scheme}
+\begin{enumerate}
+  \item Create a new class derived from |PracticalScheme|. 
+  \item Write a constructor, passing the arguments |sv| and |s| as well as |k|
+    and~|n| to the base class constructor and storing any additional,
+    class-specific arguments in class properties.
+  \item Implement the |encode()| and |decode()| methods.
+\end{enumerate}
+
+
+\paragraph{How To Implement a Theoretical Communication Scheme}
+\begin{enumerate}
+  \item Create a new class derived from |TheoreticalScheme|.
+  \item Write a constructor, passing the arguments |sv| and |s| to the base
+    class constructor and storing any additional, class-specific arguments in
+    class properties.
+  \item Implement the abstract function |update_mse()|.
+\end{enumerate}
+
+
+\paragraph{How To Plot the SDR vs SNR Curve of One or Several Communication
+Schemes}
+
+\begin{enumerate}
+  \item Create a new PerformanceProcessor object.
+  \item If desired, set a custom output module.
+  \item Call its |plot_performance()| function, passing a list of schemes and
+    a list of the associated parameters.
+\end{enumerate}
+
+

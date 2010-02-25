@@ -389,7 +389,7 @@ these principles, \lstref{perfproc} shows a simplified version of the
 implementation of |Performance|\-|Processor|. 
 
 \begin{listing}
-\CodeInput{figures/matlab/PerformanceProcessor.minc}
+\CodeInput{figures/matlab/PerformanceProcessor_ex.minc}
 \caption{Simplified implementation of the \texttt{PerformanceProcessor} class.}
 \label{lst:perfproc}
 \end{listing}
@@ -421,11 +421,172 @@ $\Qh_i$ as well as $E_{n-1}$ and $\Eh_{n-1}$. Then we could write a
 $\Eqi$ and~$\Ee$. 
 
 
-%\section{Class Hierarchy and Reference}
-%
-%\subsection{Communication Strategies}
-%
-%\subsection{Processors}
+\section{Reference}
+
+\subsection{Communication Schemes}
+
+In \jscsim, there are two categories of communication schemes you can implement:
+\emph{theoretical} schemes and \emph{practical} schemes. Theoretical schemes
+merely compute the achievable MSE as a function of the SNR. Their purpose is to
+allow you to compare the performance of a particular communication scheme with a
+theoretical value, as for example the |ShannonScheme| in \lstref{shannonscheme}. 
+On the other hand, practical schemes (like the one in \lstref{uncoded}) are
+schemes that actually encode the source samples into a channel input sequence
+and compute source estimates from the channel output. 
+
+Theoretical and practical schemes, respectively, are implemented as classes
+derived from |TheoreticalScheme| and |PracticalScheme|. The latter are
+themselves derived from the common base class |Scheme|, which defines some of
+the characteristics of both theoretical and practical communication scheme. 
+
+
+\subsubsection{The \texttt{Scheme} Class}
+
+In the class hierarchy, the |Scheme| class is the common ancestor of all classes
+that implement communication schemes. It defines the characteristics shared by
+all communication schemes, whether theoretical or practical (see previous
+paragraphs). 
+
+|Scheme| is an abstract class: no objects of this class can exist. Moreover,
+there is usually no need to create a class derived directly from |Scheme| (other
+than the existing |TheoreticalScheme| and |PracticalScheme|). Should there
+nevertheless be a need for it, details about the implementation of |Scheme| are
+found in the implementation section. 
+
+
+\subsubsection{Theoretical Schemes}
+
+Theoretical communication schemes are implemented as classes derived from
+|TheoreticalScheme|. Any class derived from |TheoreticalScheme| must define the
+following methods.
+
+\begin{description}
+  \item[\texttt{ClassName(sv, s, param)}] The first two arguments of the
+    constructor are the source variance |sv| and the source sample sequence~|s|.
+    For implementation purposes, they are passed to both theoretical and
+    practical schemes. 
+
+    The arguments |sv| and |s| must be passed on to the base class constructor.
+    |param| is a parameter particular to the class to be implemented. It can be
+    stored in a class property or processed as desired.
+
+  \item[\texttt{update\_mse(obj)}] This function is called by the base class
+    whenever the SNR is changed. It must update the |mse| property, based on the
+    value of the |snr| property. For example, the |update_mse()| method of
+    |ShannonScheme| sets |mse| to be $\ssq / (1 + \snr)^n$.
+\end{description}
+
+
+\subsubsection{Practical Schemes}
+
+Practical communication schemes are implemented as classes derived from
+|PracticalScheme|. Any class derived from |PracticalScheme| must define the
+following methods.
+\begin{description}
+  \item[\texttt{Constructor(sv, s, param)}] The constructor of the class
+    receives the source variance~|sv|, the source sample sequence~|s| and
+    possibly a parameter |param|. The constructor must call the constructor of
+    |PracticalScheme|, passing |sv| and |s| as well as |k| and |n|, the number
+    of source symbols encoded at a time and the number of channel inputs per
+    |k|~source symbols, respectively. 
+
+    Depending on the scheme, |k| and |n| can be fixed values (as in
+    |UncodedScheme| in \lstref{uncoded}) or they can be passed to the class as
+    parameters.
+
+  \item[\texttt{x = encode(obj, s)}] This function receives |s|, a matrix of
+    source samples with |k|~rows, and must return a matrix~|x| with |n|~rows and
+    the same number of columns as~|s|.
+
+  \item[\texttt{sh = decode(obj, y)}] This function receives the channel
+    output~|y| as a matrix with |n|~rows and must return a matrix~|sh| with
+    |k|~rows of source estimates.
+\end{description}
+
+
+\subsection{Scheme Processors}
+
+Usually you don't handle communication scheme classes directly; rather, you use
+a \emph{scheme processor}. Scheme processors simulate a set of communication
+schemes for a range of SNR values and let you store and process the resulting
+data.  All scheme processors allow you to set the following properties, defined
+in the base class |SchemeProcessor|.
+\begin{description}
+  \item[\texttt{snr}] This is a vector that specifies the SNR range over which
+    to simulate the specified communication schemes. By default it is set to the
+    range from 0dB to 40dB, with an increase of 1dB. 
+
+  \item[\texttt{N}] This is the number of source samples generated. By default
+    it is set to $10^5$. 
+    
+  \item[\texttt{verbose}] This is a boolean parameter. When set to true, various
+    debugging and status messages are displayed during simulations. By default
+    it is set to false. 
+
+  \item[\texttt{om}] This is set to the output module used by the scheme
+    processor to display its results (see the section on output modules). The
+    default output module is |MatlabPlotModule|, which displays a standard
+    \matlab\ plot.
+\end{description}
+
+To process a communication scheme (or a set of schemes) you never directly use
+a |SchemeProcessor| object. Instead, you derive a new class from
+|SchemeProcessor| that collects and processes the data of interest. One scheme
+processor ``built into'' \jscsim\ is the |PerformanceProcessor|.
+
+Each class derived from |SchemeProcessor| inherits the |process()| method from
+|SchemeProcessor|. This is the only callable method; it is defined as follows. 
+\begin{description}
+  \item[\texttt{process(obj, schemes, parameters)}] Process the specified
+    schemes for the specified parameters. |schemes| is a cell array of strings,
+    each string being the name of a communication scheme class. Parameters is a
+    cell array containg a vector for each element of |schemes|. For schemes that
+    don't have any parameters, it must be an empty vector. Otherwise, the scheme
+    is simulated separately for each parameter. 
+\end{description}
+
+
+\subsubsection{The Performance Processor}
+
+This is the only scheme processor that is already implemented in \jscsim. It
+works for all communication schemes derived from |Scheme|. It simply plots the
+SDR vs SNR curve of the specified communication scheme. 
+
+
+\subsubsection{Custom Scheme Processors}
+
+You can implement your own scheme processor by creating a new class derived from
+|SchemeProcessor|. Every such class must implement the following functions.
+\begin{description}
+  \item[\texttt{initialize(obj)}] This function is called before the actual
+    processing of the schemes start. Most likely, you will use this function to
+    allocate the matrices in which you will save the simulation data. 
+
+    |SchemeProcessor| provides the useful helper function |nb_schemes()|, which
+    returns the number of schemes that have been passed to |process()|. In
+    addition, |length(obj.snr)| gives you the number of values in the SNR range.
+
+  \item[\texttt{save\_scheme\_data(obj, scheme, j, k)}] This function is called
+    each time a scheme has been simulated for a particular SNR and gives you the
+    opportunity to save data about the simulation run. |scheme| is the scheme
+    object that was just run; you can gather data about it by calling its public
+    functions. For example, the |post_process()| method of
+    |PerformanceProcessor| calls the |compute_mse()| method of the |scheme|
+    object to store the MSE.
+
+    To save a particular value for all schemes and all SNR values, you would
+    normally create a big matrix with one row per scheme and parameter and one
+    column for each SNR value. You can then use the indices |j| and |k| to know
+    where to save a particular value in this matrix: |j| is an index into the
+    list of all schemes processed and |k| is an index into the SNR range.
+
+  \item[\texttt{post\_process(obj, scheme, j, k)}] This function is called after
+    all the simulations have run. Here you can post process the data gathered by
+    |save_scheme_data()|, for instance by plotting it.
+\end{description}
+
+
+
 %
 %\subsection{Output}
 %
