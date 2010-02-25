@@ -1,0 +1,20 @@
+classdef TheoreticalScheme < Scheme
+    
+    methods (Access = 'public')
+        function obj = TheoreticalScheme(sv, s)
+            obj@Scheme(sv, s);
+        end
+    end
+    
+    methods (Access = 'protected')
+        function snr_updated(obj)
+            update_mse(obj);
+        end
+    end
+    
+    methods (Access = 'protected', Abstract = true)
+        update_mse(obj)
+    end
+    
+end
+
