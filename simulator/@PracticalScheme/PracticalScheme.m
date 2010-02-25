@@ -11,7 +11,6 @@ classdef PracticalScheme < Scheme
         y       % n x N matrix of channel output symbols.
         s       % k x N matrix of source symbols.
         sh      % k x N matrix of source estimates.
-        mse     % Resulting mean-squared error.
         P       % Avg. power per source symbol
         nv      % AWGN noise variance
         
@@ -31,11 +30,6 @@ classdef PracticalScheme < Scheme
             
         end
                 
-        % Access methods for simulation data.
-        function mse = compute_mse(obj)
-            mse = obj.mse;
-        end
-        
         function x = compute_x(obj)
             x = obj.x;
         end

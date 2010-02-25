@@ -7,18 +7,21 @@ classdef Scheme < handle
     % $Id$
     
     properties (Access = 'public')
-        % Source variance
-        sv
-        
         % Should extra information be given?
         verbose = false;
     end
-    
+
     
     
     properties (Access = 'protected')
+        % Source variance
+        sv
+        
         % Channel SNR (power per channel input divided by noise variance)
         snr
+        
+        % The MSE.
+        mse
     end
     
     
@@ -46,13 +49,10 @@ classdef Scheme < handle
         end
         
         
-    end
-    
-    
-    
-    methods (Access = 'public', Abstract = true)
         % Every scheme must at least return the MSE.
-        mse = compute_mse(obj)
+        function mse = compute_mse(obj)
+            mse = obj.mse;
+        end
     end
     
     

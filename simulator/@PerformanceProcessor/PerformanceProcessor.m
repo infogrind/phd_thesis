@@ -12,8 +12,6 @@ classdef PerformanceProcessor < SchemeProcessor
     
     methods (Access = 'public')
         function plot_performance(obj, schemes, parameters)
-%             % Reset random number generator.
-%             reset_rng(obj);
             
             set_schemes(obj, schemes, parameters);
             obj.mse = zeros(nb_schemes(obj), length(obj.snr));
@@ -23,9 +21,6 @@ classdef PerformanceProcessor < SchemeProcessor
             perf_plot(obj);
         end
         
-%         function c = get_snr(obj)
-%             c = obj.snr;
-%         end
     end
     
     methods (Access = 'protected')

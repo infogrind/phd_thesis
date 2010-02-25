@@ -6,6 +6,7 @@ classdef TestSuite
 
     methods (Access = 'public', Static = true)
         test_output_modules()
+        test_schemes()
     end
     
 end
