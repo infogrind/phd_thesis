@@ -222,7 +222,7 @@ classdef SchemeProcessor < handle
         
         % This function creates a plot with the given data for each of the
         % schemes and handles the labeling.
-        function plot_vs_csnr(obj, m, varargin)
+        function plot_vs_snr(obj, m)
             obj.om.x = 10*log10(obj.snr);
             obj.om.y = m;
             obj.om.xlabel = 'SNR [dB]';
@@ -241,8 +241,8 @@ classdef SchemeProcessor < handle
         
         
         % Same as above, but uses dB for the y axis.
-        function plot_vs_csnr_db(obj, m, varargin)
-            plot_vs_csnr(obj, 10*log10(m), varargin{:});
+        function plot_vs_snr_db(obj, m)
+            plot_vs_snr(obj, 10*log10(m));
         end
         
     end

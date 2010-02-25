@@ -30,7 +30,7 @@ classdef PerformanceProcessor < SchemeProcessor
         function post_process(obj)
             obj.om.ylabel = 'SDR [dB]';
             obj.om.plottitle = 'SDR vs. SNR';
-            plot_vs_csnr_db(obj, obj.sv ./ obj.mse);
+            plot_vs_snr_db(obj, obj.sv ./ obj.mse);
         end
         
         
