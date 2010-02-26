@@ -46,11 +46,6 @@ classdef PracticalScheme < Scheme
     
     methods (Access = 'protected')
         
-        % This method returns the power constraint per channel input.
-        function p = power_per_channel_input(obj)
-            p = obj.P * obj.k / obj.n;
-        end
-        
         % This function is called whenever a simulation run is started, in order
         % to update scheme parameters that depend on the SNR. It should be
         % extended as necessary by derived classes. ('extended' means that

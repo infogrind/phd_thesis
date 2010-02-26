@@ -39,6 +39,16 @@ classdef SchemeProcessor < handle
     
     
     methods (Access = 'public')
+        % Constructor
+        function obj = SchemeProcessor()
+            % Create random source samples.
+            obj.s = create_source_samples(obj);
+            
+            % Initialize the output module to the default.
+            obj.om = MatlabPlotModule();
+        end
+        
+        
         % The process() method takes a list of schemes and parameters and
         % processes them. (What else would it do, I ask you?)
         function process(obj, schemes, parameters)
@@ -92,16 +102,6 @@ classdef SchemeProcessor < handle
     
 
     methods (Access = 'protected')
-        
-        % Constructor
-        function obj = SchemeProcessor()
-            % Create random source samples.
-            obj.s = create_source_samples(obj);
-            
-            % Initialize the output module to the default.
-            obj.om = MatlabPlotModule();
-        end
-        
         
         % This function takes a cell array of scheme names and a cell array of
         % parameter vectors and stores it as illustrated by the following
