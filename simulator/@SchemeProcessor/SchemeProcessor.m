@@ -134,27 +134,25 @@ classdef SchemeProcessor < handle
                     obj.parameters{ctr} = [];
                 else                            % Scheme with parameters
                     
-                    % If the parameter is a cell array consisting only of
-                    % vectors, we rearrange the vectors in to a list of cell
-                    % arrays containing each exactly one element from each
-                    % vector.
-                    if iscell(p{j})
-                        c = rearrange_parameter_cell(p{j});
-                    else
-                        c = p{j};
+                    % Make sure the parameter is a scalar, vector, or
+                    % matrix.
+                    if ~isnumeric(p{j})
+                        error('Non-numeric parameters are not supported.');
                     end
                     
-                    for k = 1:length(c)
+                    % Each row of the parameter matrix corresponds to a
+                    % different parameter. We need to separate the matrix
+                    % into columns, and duplicate the scheme entry for each
+                    % column. 
+                    c = p{j};
+                    nruns = size(c, 2);
+                    
+                    for k = 1:nruns
                         ctr = ctr + 1;
                         obj.schemes{ctr} = s{j};
-                        % Different access depending on whether c is a vector
-                        % or a cell array
-                        if iscell(c)
-                            obj.parameters{ctr} = c{k};
-                        else
-                            obj.parameters{ctr} = c(k);
-                        end
+                        obj.parameters{ctr} = make_cell(c(:, k));
                     end
+
                 end
             end
         end
@@ -194,7 +192,7 @@ classdef SchemeProcessor < handle
             if isempty(p)
                 s = fh(obj.sv, obj.s);
             else
-                s = fh(obj.sv, obj.s, p);
+                s = fh(obj.sv, obj.s, p{:});
             end
             
             % Set verbose flag according to own verbose flag.
@@ -280,105 +278,16 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% This function rearranges an element of the parameter cell array as follows.
-% Suppose an element of the parameter list is
-%   p{j} = {[1 2 3 4], [0.2 0.3 0.5 0.5]}.
-% Then the output of the following function is
-%   c = { {1, 0.2}, {2, 0.3}, {3, 0.5}, {4, 0.5} }.
-% The idea is that the former version is easier to specify lists for various
-% parameters, but the actual parameters passed to the scheme will be of the
-% second form. 
-function c = rearrange_parameter_cell(p)
 
-% This function only does something if all elements of p are vectors.
-if ~all_numeric(p)
-    c = p;
-    return;
-end
+% This function converts a row or column vector into a 1 x n cell array
+% containing the elements of the vector.
+function c = make_cell(v)
 
-% All vectors in p of length > 1 must have the same length. 
-[b, l] = vector_length_correct(p);
-assert(b);
+assert(isvector(v));
 
-% Now we construct the new cell array c from p. 
-c = cell(1, l);
-for k = 1:l
-    c{k} = cell(1, length(p));
-    for j = 1:length(p)
-        % If the corresponding element of p is a scalar, we just add this
-        % scalar. Otherwise we add the k-th element. 
-        if isscalar(p{j})
-            c{k}{j} = p{j};
-        else
-            c{k}{j} = p{j}(k);
-        end
-    end
-
-end
-
-end
-
-
-% This function returns true if all elements of the cell array p are either
-% scalars or vectors of the same fixed length. 
-% In addition, if b is true then l is the length of the non-scalar elements of
-% p.
-function [b, l] = vector_length_correct(p)
-
-% Input must be a cell.
-assert(iscell(p));
-
-% Initially, we assume the assumption to be correct, this will assure that the
-% all-scalar case passes. 
-b = true;
-
-% Length of first non-scalar seen. Initialized to 1, since if all elements of p
-% are scalars, that's the right value to return.
-l = 1;
-
-for k = 1:length(p)
-    
-    % Scalars are OK.
-    if isscalar(p{k})
-        continue;
-    end
-    
-    % The contents must be vectors or scalars. 
-    if ~isvector(p{k})
-        b = false;
-        return
-    end
-    
-    % If this is the first non-scalar element, store its length. Otherwise
-    % compare the length to the stored value.
-    if l == 1
-        l = length(p{k});
-    elseif length(p{k}) ~= l
-        b = false;
-        return
-    end
-end
-
-end
-
-
-% This function returns true if all elements of the cell array p are numeric
-% (i.e., scalars, vectors, or matrices), and false otherwise. 
-function b = all_numeric(p)
-
-% Input must be a cell.
-assert(iscell(p));
-
-% If we find a non-numeric element, the assertion is false, and it is true
-% otherwise. 
-b = true;
-for k = 1:length(p)
-    if ~isnumeric(p{k})
-        b = false;
-        return;
-    end
-end
-
+% Convert to row vector. 
+v = v(:)';
+c = num2cell(v);
 end
 
 
