@@ -163,18 +163,19 @@ classdef SchemeProcessor < handle
             for k = 1:length(obj.schemes)
                 scheme = create_scheme(obj, k);
                 
+                verbmsg(obj, 'Processing scheme %s with parameters %s...\n', ...
+                    obj.schemes{k}, cell2str(obj.parameters{k}));
+                
+                
                 % Run the scheme for all SNR values and post process each time
                 % to gather statistics. 
                 for j = 1:length(obj.snr)
                     scheme.set_snr(obj.snr(j));
                     save_scheme_data(obj, scheme, j, k);
+                    
+                    print_progress(obj, j, length(obj.snr));
                 end
                 
-                % Display percentage of schemes complete if verbose mode is
-                % enabled.
-                if obj.verbose
-                    print_progress(obj, k);
-                end
             end
         end
         
@@ -263,8 +264,17 @@ classdef SchemeProcessor < handle
     end
     
     methods (Access = 'private')
-        function print_progress(obj, k)
-            fprintf('%d%% done.\n', floor(100 * k / length(obj.schemes)));
+        % This function generates a verbose progress message, as the
+        % percentage of k of t. 
+        function print_progress(obj, k, t)
+            verbmsg(obj, '%d%% done.\n', floor(100 * k / t));
+        end
+        
+        % Print a message if verbose mode is enabled.
+        function verbmsg(obj, varargin)
+            if obj.verbose
+                fprintf(varargin{:});
+            end
         end
     end
     
@@ -289,6 +299,32 @@ assert(isvector(v));
 v = v(:)';
 c = num2cell(v);
 end
+
+
+
+% Convert a cell of scalars into a string. This function works only for row
+% cell vectors.
+function s = cell2str(c)
+
+if isempty(c)
+    s = '{}';
+    return;
+end
+
+assert(size(c, 1) == 1);
+n = length(c);
+if n == 1
+    s = sprintf('{%s}', num2str(c{1}));
+else
+    s = '{';
+    for k = 1:length(c) - 1
+        s = strcat(s, sprintf('%s, ', num2str(c{k})));
+    end
+    s = strcat(s, sprintf('%s}', num2str(c{end})));
+end
+
+end
+
 
 
 % Function to convert cell array of strings such that it can be used for
