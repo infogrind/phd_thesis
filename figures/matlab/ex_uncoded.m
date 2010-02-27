@@ -19,7 +19,7 @@ om = MatlabFilePlotModule();
 om.set_color_mode('bw');
 om.fn = 'ex_uncoded.pdf';
 om.force = true;
-pp.om = om;
+pp.output_module = om;
 
 % Plot the performance for the Shannon scheme with three different parameters. 
 pp.process(schemes, parameters); % MK:SHOW

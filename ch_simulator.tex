@@ -121,7 +121,7 @@ the method |decode()|, it can be used just like the original simulation.
 \end{Code}
   \caption{A new simulation with an alternative decoder is easily implemented by
   deriving a new class from \texttt{Simulation} and overriding the
-  \texttt{decode()} function.}
+  \texttt{decode()} method.}
   \label{lst:derivedclass}
 \end{listing}
 
@@ -133,10 +133,10 @@ The object-oriented approach has none of the drawbacks of the previous example:
 \end{itemize}
 
 The concept we have exploited is called \emph{inheritance}, since
-|Alternative|\-|Simulation| \emph{inherits} all those functions from
+|Alternative|\-|Simulation| \emph{inherits} all those methods from
 |Simulation| which it doesn't explicitly redefine.  The power of
 inheritance is that it allows \emph{old code to call new code}: the
-``old'' function |run_simulation()| calls the new |decode()| function, without
+``old'' method |run_simulation()| calls the new |decode()| method, without
 the need to make \emph{any} changes to the former. 
 
 In \emph{procedural programming}\footnote{Procedural programming is programming
@@ -154,7 +154,7 @@ simulation in a class and creating a derived class that overrides one of these
 functions.
 
 
-\section{A Step-By-Step Tutorial}
+\section{A Step-By-Step Tutorial}\label{sec:tutorial}
 
 To demonstrate how \jscsim\ helps creating and analyzing simulatinos, this
 section presents a number of small hands-on examples.
@@ -198,10 +198,10 @@ observations.
     last two parameters passed to |PracticalScheme()| are both~$1$
     (\lineref{5}).
 
-  \item Actual computation is only performed in two functions: |encode()| and
+  \item Actual computation is only performed in two methods: |encode()| and
     |decode()|. This makes sense, since a communication scheme is completely
     specified by its encoder and decoder.  For the scheme at hand, these
-    functions simply compute $X = \sqrt{P/\ssq} S$ and $\Sh = \sqrt{P \ssq} Y /
+    methods simply compute $X = \sqrt{P/\ssq} S$ and $\Sh = \sqrt{P \ssq} Y /
     (P + \szq)$.%
     \footnote{Again, the reason why the first argument to both \Verb+encode()+
     and \Verb+decode()+ is \Verb+obj+ has to do with \matlab's syntax. All
@@ -248,9 +248,9 @@ This was much work at all. Behind the scenes, however, a lot more was going on:
 \begin{enumerate}
   \item A long sequence of random source symbols was generated.
   \item For a range of SNR values and for each communication scheme, the source
-    sequence was encoded using the |encode()| function of our new class,
+    sequence was encoded using the |encode()| method of our new class,
     Gaussian noise of the appropriate variance was added, and the result was
-    decoded using our new |decode()| function.
+    decoded using our new |decode()| method.
   \item The average difference between the source sequence and the estimate
     sequence was computed, again for each scheme and for each value of SNR. 
   \item The resulting performance curves were plotted by the
@@ -309,14 +309,14 @@ following observations.
   \item The class |ShannonScheme| is derived from |TheoreticalScheme| rather
     than from |PracticalScheme| as in the previous example (\lineref{1}). This
     is because unlike practical schemes, theoretical schemes do not have
-    |encode()| or |decode()| functions. 
+    |encode()| or |decode()| methods. 
     
   \item |ShannonScheme| has a single parameter~|n|, the number of channel uses
     per source symbol, which it receives as an argument of its constructor
     (\lineref{7}).
 
-  \item The function |update_mse(obj)| (\lineref{20}) is the heart of this
-    class. This function is called by the base class whenever the SNR is
+  \item The method |update_mse(obj)| (\lineref{20}) is the heart of this
+    class. This method is called by the base class whenever the SNR is
     changed. Here it computes $\ssq / (1
     + \snr)^n$, which is the theoretically optimal MSE for the given SNR
     (cf.~\chapref{prelim}).
@@ -366,8 +366,8 @@ follows.
 \begin{Code}
   ...  % Define list of schemes and parameters.
   pp = PerformanceProcessor();
-  pp.om = MatlabFilePlotModule();
-  pp.om.fn = 'myplot.pdf';
+  pp.output_module = MatlabFilePlotModule();
+  pp.output_module.fn = 'myplot.pdf';
   pp.process(schemes, parameters);  % Saved to myplot.pdf.
 \end{Code}
 In \lineref{3} a new output module of type |MatlabFilePlotModule| is
@@ -375,7 +375,7 @@ created and attached to the performance processor. Since this output module
 writes its output to a file, we have to specify a file name in \lineref{4}.
 Afterwards, we can call |process()| just as before.\footnote{Unsurprisingly,
 Figures~\ref{fig:uncoded} and~\ref{fig:shannonscheme} have in fact been created
-using \Verb+MatlabFilePlotModule+.}
+using \Verb+Matlab+\-\Verb+FilePlotModule+.}
 
 \urldef{\pgfplotsurl}\url{http://pgfplots.sourceforge.net/}
 There is another output module, called |PGFPlotsOutputModule|. It produces a
@@ -383,7 +383,7 @@ file containing \LaTeX\ code to be used with the \pgfplots\
 package\footnote{\pgfplotsurl}. To use it, just replace |MatlabFilePlotModule|
 in the above example by |PGFPlotsOutputModule| and set \eg
 \begin{Code}
-  pp.om.fn = 'myplot.tex';
+  pp.output_module.fn = 'myplot.tex';
 \end{Code}
 The resulting file can then be included in a \LaTeX\ file, provided that the
 |pgfplots| package has been loaded.  The result is shown on \figref{uncodedpgf}.
@@ -419,7 +419,7 @@ this, \lstref{perfproc} shows a simplified version of the implementation of
 \label{lst:perfproc}
 \end{listing}
 
-Each class derived from |SchemeProcessor| must implement three functions:
+Each class derived from |SchemeProcessor| must implement three methods:
 \begin{enumerate}
   \item |initialize()| is called before the first scheme is simulated. It allows
     the scheme processor to allocate space for variables in which data gathered
@@ -429,7 +429,7 @@ Each class derived from |SchemeProcessor| must implement three functions:
 
   \item |save_scheme_data()| is called after each scheme has been
     simulated for a particular SNR. The scheme just run is passed to
-    |save_scheme_data()| as the |scheme| argument, from which the function can
+    |save_scheme_data()| as the |scheme| argument, from which the method can
     then extract simulation data. In the example of the performance processor,
     the only data extracted is the MSE.
 
@@ -442,7 +442,12 @@ Each class derived from |SchemeProcessor| must implement three functions:
 \todo Implement hybrid scheme and put it as an example.
 
 
-\section{Reference}
+\section{Reference}\label{sec:reference}
+
+This reference section explains in detail how to use \jscsim\ to implement new
+communication schemes, how to analyze them, and how to build custom scheme
+processors. 
+
 
 \subsection{Communication Schemes}
 
@@ -461,23 +466,26 @@ Theoretical communication schemes are implemented as classes derived from
 |TheoreticalScheme|. Any class derived from |TheoreticalScheme| must define the
 following methods.
 
-\begin{method}{\meta{class name}(\oarg{sv}, \oarg{s}, \oarg{param}) (public)}
-  The first two arguments of the constructor are the source variance |sv| and
-  the source sample sequence~|s|.  For implementation purposes, they are passed
-  to both theoretical and practical schemes.  
+\begin{method}{\meta{class name}(\oarg{sv}, \oarg{s}
+  [, \oarg{parameters}]) (public)}
+  The first two arguments of the constructor are the source variance +sv+ and
+  the source sample sequence~+sv+, which must be passed on to the base class
+  constructor, \ie, by calling
+  \begin{Code}
+  obj@TheoreticalScheme(sv, s);
+  \end{Code}
 
-  The arguments |sv| and |s| must be passed on to the base class constructor.
-  |param| is a parameter particular to the class to be implemented. It can be
-  stored in a class property or processed as desired.
+  If a theoretical scheme has parameters, such as the bandwidth expansion
+  factor~|n| of |ShannonScheme| (cf.~\lstref{shannonscheme}), they must be
+  specified as additional arguments to the constructor.
 \end{method}
 
 \begin{method}{update_mse(\obj) (protected)}
-    This function is called by the base class whenever the SNR is changed. It
+    This method is called by the base class whenever the SNR is changed. It
     must update the |mse| property, based on the value of the |snr| property.
     For example, the |update_mse()| method of |ShannonScheme| sets |mse| to be
     $\ssq / (1 \normalplus \snr)^n$.
 \end{method}
-
 
 
 \subsubsection{Practical Schemes}
@@ -485,85 +493,98 @@ following methods.
 Practical communication schemes are implemented as classes derived from
 |PracticalScheme|. Any class derived from |PracticalScheme| must define the
 following methods.
-\begin{method}{\meta{class name}(\oarg{sv}, \oarg{s}
-  \opt{[, \oarg{parameters}]}) (public)}
-  The constructor of the class receives the source variance~+sv+, the source
-  sample sequence~+s+ and possibly additional parameters. The constructor must
-  call the constructor of |PracticalScheme|, passing +sv+ and +s+ as well as +k+
-  and +n+, the number of source symbols encoded at a time and the number of
-  channel inputs per +k+~source symbols, respectively. 
-
-  Depending on the scheme, +k+ and +n+ can be fixed values (as in
-  |UncodedScheme| in \lstref{uncoded}) or they can be passed to the class as
-  parameters.
+\begin{method}{\meta{class name}(\oarg{sv}, \oarg{s} [, \oarg{parameters}])
+  (public)}
+  The first two arguments of the constructor are the source variance +sv+ and
+  the source sample sequence +s+, which must be passed on to the class
+  constructor. There are two more arguments of the base class constructor, which
+  are the number $k$~of source symbols encoded at a time, and the number $n$~of
+  channel symbols produced for every $k$~source symbols. Depending on the
+  scheme, these can be fixed values (as in |UncodedScheme| in \lstref{uncoded})
+  or variable parameters of the scheme itself.
 \end{method}
 
 \begin{method}{\oarg{x} = encode(\obj, \oarg{s})}
-  This function receives +s+, a matrix of source samples with $k$~rows, and must
+  This method receives +s+, a matrix of source samples with $k$~rows, and must
   return a matrix~+x+ with $n$~rows and the same number of columns as~+s+.
 \end{method}
 
-\begin{method}{\oarg{sh} = decode(\obj, \oarg{y})}
-  This function receives the channel output~+y+ as a matrix with +n+~rows and
-  must return a matrix~+sh+ with +k+~rows of source estimates.
+\begin{method}{\oarg{$\sh$} = decode(\obj, \oarg{y})}
+  This method receives the channel output~+y+ as a matrix with $n$~rows and
+  must return a matrix~+$\sh$+ with $k$~rows of source estimates
 \end{method}
 
 
 \subsection{Scheme Processors}
 
-Usually you don't handle communication scheme classes directly; rather, you use
-a \emph{scheme processor}. Scheme processors simulate a set of communication
-schemes for a range of SNR values and let you store and process the resulting
-data.  All scheme processors allow you to set the following properties, defined
-in the base class |SchemeProcessor|.
+Scheme classes are usually not handled directly; rather, they are processed by
+a \emph{scheme processor}. Scheme processors evaluate a set of communication
+schemes for a range of SNR values and store and process the data gathered during
+the simulations.
+
+To process a communication scheme (or a set of schemes) you never directly use a
+|SchemeProcessor| object. Instead, you either use an existing derived class such
+as |PerformanceProcessor|, or you create a new derived class to implement a
+custom scheme processor. 
+
+
+\subsubsection{General Aspects}
+
+The behavior of all scheme processors can be controlled through the following
+properties, defined in the class |SchemeProcessor|.
 \begin{property}{snr (public; default |10.^(0:.1:4)|)}
-  This is a vector that specifies the SNR range over which to simulate the
-  specified communication schemes. By default it is set to the range 0dB to 40dB
-  with increments of 1dB. 
+  A vector that specifies the SNR range over which the specified
+  communication schemes are simulated. By default it is set to the range
+  0dB to 40dB with increments of 1dB. 
 \end{property}
 
 \begin{property}{N (public; default |100000|)}
-  This is the number of source samples generated.
+  The length of the random source sample sequence.
 \end{property}
   
 \begin{property}{verbose (public; default |false|)}
-  This is a boolean parameter. When set to true, various debugging and status
-  messages are displayed during simulations. By default it is set to false. 
+  If this parameter is set to true, various status and debugging messages are
+  displayed during the simulations.
 \end{property}
 
-\begin{property}{om (public; default |MatlabPlotModule|)}
+\begin{property}{output_module (public)}
   This is the output module used by the scheme processor to display its
   results (see the section on output modules). The default output module is
-  |MatlabPlotModule|, which displays a standard
-  \matlab\ plot.
+  |MatlabPlotModule|.
 \end{property}
 
-To process a communication scheme (or a set of schemes) you never directly use
-a |SchemeProcessor| object. Instead, you derive a new class from
-|SchemeProcessor| that collects and processes the data of interest. One scheme
-processor ``built into'' \jscsim\ is the |PerformanceProcessor|, which is
-discussed below.
-
-Each class derived from |SchemeProcessor| inherits the |process()| method from
-|SchemeProcessor|. This is the only public method; it is defined as follows. 
+All scheme processors are accessed using the |process()| method.
 \begin{method}{process(\obj, \oarg{schemes}, \oarg{parameters}) (public)}
   Process the specified schemes for the specified parameters. The cell array
-  +schemes+ lists the schemes to be processed: each of its elements is a string
-  equal to the name of a scheme class. The cell array +parameters+ has the same
-  number of elements as +schemes+. For a scheme that does not have any
-  parameters, the corresponding entry of +parameters+ must be an empty matrix.
-  For a scheme that accepts $m$~parameters, the corresponding entry of
-  +parameters+ must be an $m \times n$ matrix. Then the scheme is processed $n$
-  times, once for each column of the matrix.
+  +schemes+ lists the schemes to be processed; each of its elements is a string
+  equal to the name of a scheme class.
+
+  The cell array +parameters+ has the same number of elements as +schemes+. For
+  a scheme that does not have any parameters, the corresponding entry of
+  +parameters+ must be an empty matrix.  For a scheme that accepts
+  $m$~parameters (\ie, its constructor has $m$ arguments other than |sv| and
+  |s|), the corresponding entry of +parameters+ must be a matrix with
+  $m$~rows; the scheme is then processed once for each
+  column of the matrix, using the parameters from the respective column.
+  This makes it easy to use \matlab's colon operator (|:|) to specify a
+  \emph{range} of parameters.
   \codeexample Suppose |process()| is called as follows.
   \begin{Code}
   pp = PerformanceProcessor();
   pp.process({'MyScheme'}, {[1:4; 0.1:0.1:0.4]});
   \end{Code}
   Then |MyScheme| will be processed 4~times: once with the parameters $1$
-  and~$0.1$, once with the parameters $2$ and~$0.2$, etc.
+  and~$0.1$, once with the parameters $2$ and~$0.2$, and so on. \Ie, \lineref{2}
+  above has the same effect as
+  \begin{Code}
+  pp.process({'MyScheme', 'MyScheme', 'MyScheme', 'MyScheme'}, ...
+    {[1;0.1], [2;0.2], [3;0.3], [4;0.4]});
+  \end{Code}
 
-  The parameters are passed as arguments to the constructor of a scheme.
+  Internally, a scheme is counted as many number of times as its parameter
+  matrix has columns. This means that for the above example, |nb_schemes()|
+  (cf.~below) returns~$4$.
+
 \end{method}
 
 
@@ -571,17 +592,19 @@ Each class derived from |SchemeProcessor| inherits the |process()| method from
 
 This is the only scheme processor that is already implemented in \jscsim. It
 works for all communication schemes derived from |Scheme|. It simply plots the
-SDR vs SNR curve of the specified communication scheme. 
+SDR vs SNR curve of the specified communication scheme, as illustrated by the
+numerous examples in \secref{tutorial}.
 
 
 \subsubsection{Custom Scheme Processors}
 
-You can implement your own scheme processor by creating a new class derived from
-|SchemeProcessor|. Every such class must implement the following functions.
+Custom scheme processors are implemented by creating a new class derived from
+|SchemeProcessor|. Each such class \emph{must} implement the three following
+abstract methods.
+
 \begin{method}{initialize(\obj) (protected)}
-  This function is called before the actual
-  processing of the schemes start. Most likely, you will use this function to
-  allocate the matrices in which you will save the simulation data. 
+  This method is called before the actual processing of the schemes starts. It
+  can be used \eg\ to allocate data structures to save simulation data.
 
   |SchemeProcessor| provides the useful helper function |nb_schemes()|, which
   returns the number of schemes that have been passed to |process()|. In
@@ -590,30 +613,34 @@ You can implement your own scheme processor by creating a new class derived from
 
 \begin{method}{save_scheme_data(\obj, \oarg{scheme}, \oarg{j}, \oarg{k})
   (protected)}
-  This function is called each time a scheme has been simulated for a particular
+  This method is called each time a scheme has been simulated for a particular
   SNR and gives you the opportunity to save data about the simulation run.
   +scheme+ is the scheme object that was just run; you can gather data about it
-  by calling its public functions. For example, the |post_process()| method of
-  |PerformanceProcessor| calls the |compute_mse()| method of the +scheme+ object
-  to store the MSE.
+  by calling its public methods. For example, the |save_scheme_data()| method
+  of |PerformanceProcessor| calls the |compute_mse()| method of the +scheme+
+  object to store the MSE.
 
-  To save a particular value for all schemes and all SNR values, you would
-  normally create a big matrix with one row per scheme and parameter and one
-  column for each SNR value. You can then use the indices +j+ and +k+ to know
-  where to save a particular value in this matrix: +j+ is an index into the
-  list of all schemes processed and +k+ is an index into the SNR range.
+  +j+ is a number between~$1$ and |length(obj.snr)| and +k+ is a number
+  between~$1$ and |nb_schemes()|; they refer to the current SNR value and the
+  current scheme, respectively. \lstref{perfproc} shows a typical example of how
+  they can be used.
 \end{method}
 
 \begin{method}{post_process(\obj) (protected)}
-  This function is called after all the simulations have run. Here you can post
+  This method is called after all the simulations have run. Here you can post
   process the data gathered by |save_scheme_data()|, for instance by plotting
   it.
 
-  |SchemeProcessor| provides the useful function |plot_vs_snr(obj, m)|, which
-  creates a plot of the data in the vector |m| against the SNR in dB, or
-  several plots if |m| is a matrix with several rows. (The SNR is in dB, not
-  the data; if you also want the data to be plotted in a dB scale you can use
+  |SchemeProcessor| provides the helper function |plot_vs_snr(obj, m)|, which
+  plots the data in the vector |m| against the SNR in dB. (The SNR is in dB, not
+  the data; if you also want the data to be plotted on a dB scale, use
   |plot_vs_snr_db()| instead.)
+\end{method}
+
+To change the default output module, override the following method.
+\begin{method}{\oarg{om} = default_output_module(\obj) (protected)}
+  This method is called by the constructor of |SchemeProcessor| to install the
+  default output module. 
 \end{method}
 
 
@@ -626,7 +653,7 @@ changing output modules.
 
 Output modules provide an abstraction of basic plot functionalities. You can
 think of them as a kind of output ``plugins''. The functionality they offer is
-rather orthogonal to the task of simulating; you might use them in other
+rather orthogonal to the task of simulating; they may well be used in other
 programs as well. 
 
 In \jscsim, each class derived from |SchemeProcessor| has an output module
@@ -636,8 +663,8 @@ module in order to save the plot in a PDF file rather than on screen, for
 instance:
 \begin{Code}
   pp = PerformanceProcessor();
-  pp.om = MatlabFilePlotModule();
-  pp.om.fn = 'myplot.pdf';
+  pp.output_module = MatlabFilePlotModule();
+  pp.output_module.fn = 'myplot.pdf';
 \end{Code}
 
 The behavior of output modules is controlled by a set of parameters. Some of
@@ -651,38 +678,38 @@ plots in a file.
 \subsubsection{General Parameters}
 
 All output modules support the following properties and methods.
-\begin{property}{x (public; default |[]|)}
+\begin{property}{x (public)}
   The range of $x$~values. This must be a row vector.
 \end{property}
-\begin{property}{y (public; default |[]|)}
+\begin{property}{y (public)}
   The data to plot against the $x$~values. This must be either
   a row vector or a matrix with the same number of columns as~|x|; each
   row then corresponds to a separate data series to plot.
 \end{property}
 
-\begin{property}{xlabel (public; default |''|)}
+\begin{property}{xlabel (public)}
   The label of the $x$-axis. This is a string; it can
   also contain (limited) \LaTeX\ code depending on the actual output module
   used. 
 \end{property}
-\begin{property}{ylabel (public; default |''|)}
+\begin{property}{ylabel (public)}
   The label of the $y$-axis. This is a string; it can
   also contain (limited) \LaTeX\ code depending on the actual output module
   used.
 \end{property}
 
-\begin{property}{plottitle (public; default |''|)}
+\begin{property}{plottitle (public)}
   The plot title. This is a string; it can also
   contain (limited) \LaTeX\ code depending on the actual output module used.
 \end{property}
 
-\begin{property}{legend (public; default |[]|)}
+\begin{property}{legend (public)}
   The legend entries. This must be a cell array of
   strings. If the number of legend entries is smaller than the number of data
   series in~|y|, a warning is issued.
 \end{property}
 
-\begin{property}{legendpos (public; default |''|)}
+\begin{property}{legendpos (public)}
   A string determining where in the plot the legend is
   placed. The possible values are |NorthEast|, |NorthWest|, |SouthEast|,
   |SouthWest|, and |NorthEast|\-|Outside|. In addition, if |legendpos| is set to
@@ -694,14 +721,20 @@ All output modules support the following properties and methods.
   or not (if set to |false|).
 \end{property}
 
-\begin{method}{set_color_mode(\obj, \oarg{c})}
+\begin{method}{set_color_mode(\obj, \oarg{c}) (public)}
   Set the color mode of the plot. +c+ can either be |'color'|, in which case a
   line of a different color is drawn for each data series, or |'bw'|, in which
   case the plot uses black lines with a different marker for each data series.
 \end{method}
 
+To use an output module on its own, \ie, outside of a scheme processor, call the
+|do_plot()| method.
+\begin{method}{do_plot(\obj) (public)}
+  Plots the data set in the |x| and |y| properties.
+\end{method}
 
-\subsubsection{The \texttt{MatlabPlotModule} Output Module}
+
+\subsubsection{The MatlabPlotModule Output Module}
 
 This output module creates a standard \matlab\ plot. It is the default output
 module for scheme processors. It defines a single public property.
@@ -716,13 +749,13 @@ module for scheme processors. It defines a single public property.
   figure;
   ah1 = subplot(2,1,1);
   pp = PerformanceProcessor();
-  pp.om.ah = ah1;
+  pp.output_module.ah = ah1;
 \end{Code}
-  Subsequent plots now appear on the created subplot axes.
+  Subsequent plots now appear in the specified subplot.
 \end{property}
 
 
-\subsubsection{The \texttt{MatlabFilePlotModule} Output Module}
+\subsubsection{The MatlabFilePlotModule Output Module}
 
 The |MatlabFilePlotModule| works just like the |MatlabPlotModule|, except that
 the plot is not displayed in a window but saved in a file. The result is the
@@ -730,7 +763,7 @@ same as if you had selected ``File\slash Save~as...'' in a figure window.
 
 The behavior of |MatlabFilePlotModule| is controlled by the following
 properties.
-\begin{property}{fn (public; default |''|)}
+\begin{property}{fn (public)}
   The name of the file in which to save the figure. By
   default an error occurs if a file of the given name already exist; this can
   be changed using the |force| property (see below).
@@ -741,7 +774,7 @@ properties.
   is not necessary to set the |type| property manually.
 \end{property}
 
-\begin{property}{type (public; default |''|)}
+\begin{property}{type (public)}
   A string denoting the file type. The set of valid file
   types is the same as for the \matlab\ function |print|; see the help for
   that function for a complete list. 
@@ -759,7 +792,7 @@ properties.
 \end{property}
 
 
-\subsubsection{The \texttt{PGFPlotsOutputModule} Output Module}
+\subsubsection{The PGFPlotsOutputModule Output Module}
 
 This output module writes the plot to a file in a format suitable for the
 \pgfplots\ package for \LaTeX. A file generated by |PGFPlotsOutputModule| can be
@@ -767,7 +800,7 @@ included in a \LaTeX\ source file, provided that the \pgfplots\ package has been
 loaded. 
 
 The behavior of this module is controlled by the following properties.
-\begin{property}{fn (public; default |''|)}
+\begin{property}{fn (public)}
   The name of the file in which to save the figure. By
   default an error occurs if a file of the given name already exist; this can
   be changed using the |force| property (see below).
@@ -995,7 +1028,7 @@ regenerated whenever this is changed.
 A flag that controls the output of verbose messages. By default it is set
 to~|false|.
 \end{property}
-\begin{property}{om (public)}
+\begin{property}{output_module (public)}
 The output module. The constructor sets the default output module
 to~|MatlabPlotModule|.
 \end{property}
@@ -1015,7 +1048,7 @@ See the entry for |set_schemes()| for more details.
 The |SchemeProcessor| class has the following methods.
 \begin{method}{SchemeProcessor() (public)}
   The constructor stores a sequence of random source
-  symbols in the property~|s| and sets the property~|om| to an instance of
+  symbols in the property~|s| and sets the property~|output_module| to an instance of
   |MatlabPlotModule|. 
 \end{method}
 \begin{method}{process(obj, schemes, parameters) (public)}
