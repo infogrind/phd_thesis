@@ -34,7 +34,7 @@ classdef SchemeProcessor < handle
         verbose = false;
 
         % The output module
-        om = [];
+        output_module = [];
     end
     
     
@@ -45,7 +45,7 @@ classdef SchemeProcessor < handle
             obj.s = create_source_samples(obj);
             
             % Initialize the output module to the default.
-            obj.om = default_output_module(obj);
+            obj.output_module = default_output_module(obj);
         end
         
         
@@ -91,12 +91,12 @@ classdef SchemeProcessor < handle
             obj.verbose = v;
         end
         
-        function set.om(obj, om)
-            obj.om = om;
+        function set.output_module(obj, output_module)
+            obj.output_module = output_module;
         end
         
-        function om = get.om(obj)
-            om = obj.om;
+        function om = get.output_module(obj)
+            om = obj.output_module;
         end
     end
     
@@ -222,20 +222,20 @@ classdef SchemeProcessor < handle
         % This function creates a plot with the given data for each of the
         % schemes and handles the labeling.
         function plot_vs_snr(obj, m)
-            obj.om.x = 10*log10(obj.snr);
-            obj.om.y = m;
-            obj.om.xlabel = 'SNR [dB]';
-            obj.om.grid = true;
+            obj.output_module.x = 10*log10(obj.snr);
+            obj.output_module.y = m;
+            obj.output_module.xlabel = 'SNR [dB]';
+            obj.output_module.grid = true;
             
             % We only print a legend if there are several schemes.
             if length(obj.schemes) > 1
-                obj.om.legend = printify(obj.schemes, obj.parameters);
-                obj.om.legendpos = 'NorthWest';
+                obj.output_module.legend = printify(obj.schemes, obj.parameters);
+                obj.output_module.legendpos = 'NorthWest';
             else
-                obj.om.legend = {};
+                obj.output_module.legend = {};
             end
             
-            obj.om.do_plot();
+            obj.output_module.do_plot();
         end
         
         
