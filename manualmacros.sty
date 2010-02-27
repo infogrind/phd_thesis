@@ -1,0 +1,136 @@
+% Macros for the JSCsim manual section. 
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{manualmacros}[2010/02/27 manualmacros package created by Marius
+Kleiner]
+\RequirePackage{xcolor}
+
+% Note: the pgfmanual* environments/macros as well as the \declare and \opt
+% commands are taken from the PGF/TikZ manual.
+
+
+% Color definitions
+\colorlet{defcolor}{red!75!black}
+\colorlet{optcolor}{black!50!green}
+
+
+%%% MACROS for METHODS and PROPERTIES %%%
+
+% Set up a customized list format. The environments defined below use the
+% pgfmanualentry environments and the \pgfmanualentryheadline macro.
+\newenvironment{pgfmanualentry}{\list{}{\leftmargin=2em\itemindent-\leftmargin\def\makelabel##1{\hss##1}}}{\endlist}
+\newcommand\pgfmanualentryheadlinestart{\itemsep=0pt\parskip=0pt\item\strut%
+\begingroup}
+\newcommand\pgfmanualentryheadlineend{\endgroup\par\topsep=0pt}
+
+\newcommand\pgfmanualentryheadline[1]{\pgfmanualentryheadlinestart#1%
+\pgfmanualentryheadlineend}
+\newcommand\pgfmanualbody{\parskip3pt}
+
+\newenvironment{filedescription}[1]{
+  \begin{pgfmanualentry}
+    \pgfmanualentryheadline{File: {\ttfamily\declare{#1}}}%
+    \pgfmanualbody
+}
+{
+  \end{pgfmanualentry}
+}
+
+
+% To define LaTeX environments. This could be adapted e.g. for a class
+% definition. 
+\newenvironment{matlabblock}[1]{
+  \begin{pgfmanualentry}
+    \extractmatlabblock#1\@@
+    \pgfmanualbody
+}
+{
+  \end{pgfmanualentry}
+}
+
+\def\extractmatlabblock#1#2\@@{%
+  \pgfmanualentryheadline{{\ttfamily\declare{#1} (#2)}}%
+  \pgfmanualentryheadline{{\ttfamily\ \ }\meta{contents}}%
+  \pgfmanualentryheadline{{\ttfamily\declare{end}}}%
+}
+
+
+% Method environment and associated macros.
+\newenvironment{method}{\makespecialsother\methodheader}
+{
+  \disableargshortcut
+  \end{pgfmanualentry}
+}
+
+\def\methodheader#1{\begin{pgfmanualentry}
+  \pgfmanualentryheadline{\extractmethod#1}
+\makespecialsspecial\pgfmanualbody\enableargshortcut}
+
+\def\extractmethod#1(#2){\texttt{\declare{#1}(#2)}\hfill}
+
+
+% Property environment and associated macros.
+\newenvironment{property}{\UndefineShortVerb{\|}\makespecialsother\enablemyshortverb\propertyheader}
+{
+  \end{pgfmanualentry}
+}
+
+\def\propertyheader#1{\begin{pgfmanualentry}
+  \pgfmanualentryheadline{\extractproperty#1}
+\disablemyshortverb\makespecialsspecial\pgfmanualbody\DefineShortVerb{\|}}
+
+\def\extractproperty#1 (#2){\texttt{\declare{#1}}\hfill%
+(#2)}
+
+
+%%% HELPER FUNCTIONS %%%
+
+% The \declare and \opt commands set the color to defcolor and optcolor,
+% respectively. There is some extra trickery going on: if either command is
+% followed by a group, the color command is put inside the group; otherwise it
+% remains outside the group.
+\def\declare{\afterassignment\pgfmanualdeclare\let\next=}
+\def\pgfmanualdeclare{\ifx\next\bgroup\bgroup\color{defcolor}\else{\color{defcolor}\next}\fi}
+
+\def\opt{\afterassignment\pgfmanualopt\let\next=}
+\def\pgfmanualopt{\ifx\next\bgroup\bgroup\color{optcolor}\else{\color{optcolor}\next}\fi}
+
+% Typesetting of optional arguments.
+\def\oarg#1{\opt{\meta{#1}}}
+\def\obj{\meta{obj}}
+\def\meta#1{{\normalfont$\langle$\textit{#1}$\rangle$}}
+
+\def\codeexample{\par\smallskip\noindent\textit{Example: }}
+
+% These are used to switch the catcode of the underscore character and other
+% characters.
+\def\makeusother{\catcode`\_=12\relax}
+\def\makeussubscript{\catcode`\_=8\relax}
+\def\makespecialsother{\catcode`\_=12\relax\catcode`\^=12\relax}
+\def\makespecialsspecial{\catcode`\_=8\relax\catcode`\^=7\relax}
+
+% \enableargshortcut and \disableargshortcut are used to install and uninstall a
+% shortcut with which one can write +option+ instead of \oarg{option}.
+% The normal plus can always be accessed by the \normalplus macro.
+\let\normalplus=+\relax
+\begingroup
+\catcode`\+=\active
+\gdef\enableargshortcut{\catcode`\+=13\relax\def+##1+{\oarg{##1}}} 
+\endgroup
+\def\disableargshortcut{\catcode`\+=12\relax}
+
+
+% Here a mini-verbatim environment is defined, where only ^ and _ are freed from
+% their special meanings. It is started with \startmyverb and ended with
+% \endmyverb. Furthermore, \enablemyshortverb installs a shortcut, where it can
+% be started and ended with |. \disablemyshortverb uninstalls the shortcut.
+\begingroup
+\catcode`\|=\active\relax
+\gdef\startverbchar{\startmyverb\def|{\endverbchar}}
+\gdef\endverbchar{\endmyverb\def|{\startverbchar}}
+\gdef\enablemyshortverb{\catcode`\|=\active\relax\def|{\startverbchar}}
+\endgroup
+\def\disablemyshortverb{\catcode`\|=12}
+
+\def\startmyverb{\makespecialsother\begingroup\ttfamily}
+\def\endmyverb{\endgroup\makespecialsspecial}
+

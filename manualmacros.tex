@@ -1,0 +1,48 @@
+%        File: manualmacros.tex
+%      Author: Marius Kleiner <marius.kleiner@epfl.ch>
+%     Created: Sat Feb 27 10:00 AM 2010 C
+% Last Change: Sat Feb 27 10:00 AM 2010 C
+%
+% $Id$
+%
+\documentclass[a4paper]{article}
+\usepackage{manualmacros}
+
+\begin{document}
+The description of a file follows.
+\begin{filedescription}{hund.doc}
+    This file contains the dog definitions.
+\end{filedescription}
+
+\begin{matlabblock}{{classdef \oarg{class name}}\oarg{attributes}}
+  This defines a class.
+\end{matlabblock}
+
+\begin{matlabblock}{{methods}\oarg{attributes}}
+  This is a method block.
+\end{matlabblock}
+
+\begin{method}{set_long_stuff() (public)}
+  This method sets long stuff.
+\end{method}
+
+\begin{method}{do_other_stuff(\oarg{argument}, \oarg{schemes}) (private)}
+  This methods does other stuff. It takes +argument+ and turns it around.
+
+  Here we can use +plus+ normally. \enableargshortcut Now they mark an +option+.
+  \disableargshortcut  Not +anymore+.
+\end{method}
+
+\begin{method}{hund_wyler(\oarg{sack})}
+  This method has no extra description. The argument +sack+ is funny.
+\end{method}
+
+\begin{property}{hund (default |n_^|)}
+  This iss a property
+\end{property}
+
+
+
+
+\end{document}
+
