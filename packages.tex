@@ -34,8 +34,7 @@
 % Set up the fancyvrb package for framed code listing boxes with line numbers.
 \usepackage{fancyvrb}
 \DefineVerbatimEnvironment{Code}{Verbatim}{gobble=2,numbers=left,frame=single,%
-fontsize=\small,fontshape=n,commandchars=\\\{\},%
-codes={\catcode`$=3\catcode`&=7}}
+fontsize=\small,fontshape=n}
 \newcommand\CodeInput[1]{\VerbatimInput[gobble=0,numbers=left,frame=single,fontsize=\small,fontshape=n]{#1}}
 
 % Illustration-related packages
@@ -43,3 +42,6 @@ codes={\catcode`$=3\catcode`&=7}}
 \usepackage{pgfplots}
 \usepackage{boxedminipage}
 \usepackage[caption=false,font=footnotesize]{subfig}
+
+% For the formatting of the code reference section.
+\usepackage{manualmacros}

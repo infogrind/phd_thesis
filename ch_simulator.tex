@@ -10,7 +10,7 @@ Programming and Simulation: A Great Match}\label{sec:ooforsim}
 \subsection{The ``Traditional'' Way}
 
 Imagine that you have written the code in \lstref{proceduralsim} to simulate
-your recently devised communication scheme. The function |run_simulation()|
+your freshly devised communication scheme. The function |run_simulation()|
 first defines a few relevant parameters and creates a vector of random source
 samples. Then, for each SNR value in the defined range, it calls |encode()| to
 encode the source symbols into the channel input~|x|, adds noise, decodes the
@@ -46,9 +46,9 @@ You have essentially three possibilities:
 \begin{enumerate}
   \item You replace the call to |decode()| in |run_simulation()| by a call to
     |alt_decode()|. The change to the existing code is only minimal. In doing
-    so, however, you lose the old code, which is not very good since you
-    probably would like to compare the performance of the new decoder to that of
-    the old one. 
+    so, however, you give up the old version of your code; this is not very
+    good since you'll probably want to compare the performance of the new
+    decoder to that of the old one and thus keep both versions around.
 
   \item You copy the contents of |run_simulation()| into a new function called
     |run_alt_simulation()|, replacing the call to |decode()| with a call to
@@ -70,11 +70,11 @@ functionality, are left with a lot of duplicate code, or face a significant
 restructuring effort.
 
 
-\paragraph{The Power of Inheritance}
+\subsubsection{The Power of Inheritance}
 
 Suppose now that your programming language supports object-oriented programming
-and that you have implemented |run_simulation()| as a \emph{method} (or
-\emph{member function}) of the class |Simulation|, as shown in
+and that you have implemented |run_simulation()|, along with the functions it
+calls, as \emph{methods} of the class |Simulation|, as shown in
 \lstref{objectsim}. Creating a new simulation with an alternative |decode()|
 function now couldn't be easier: just create a \emph{derived class}\footnote{In
 many languages, derived classes are called \emph{subclasses} and base classes
@@ -83,7 +83,9 @@ Stroustrup~\cite{Stroustrup1997}, this is somewhat confusing because the
 capabilities of a \emph{sub}class form a \emph{super}set of those of its
 superclass (and vice versa). Hence in this text we shall stick to the terms
 \emph{base class} and \emph{derived class}.} of |Simulation| and override the
-|decode()| method, as shown in \lstref{derivedclass}. 
+|decode()| method, as shown in \lstref{derivedclass}. Because the new class
+|AlternativeSimulation| inherits everything from |Simulation| other than
+the method |decode()|, it can be used just like the original simulation.
 
 \begin{listing}
 \begin{Code}
@@ -132,27 +134,33 @@ The object-oriented approach has none of the drawbacks of the previous example:
 
 The concept we have exploited is called \emph{inheritance}, since
 |Alternative|\-|Simulation| \emph{inherits} all those functions from
-|Simulation| which it doesn't explicitly redefine.  The real power of
-inheritance (at least for writing
-simulations) is that it \emph{allows old code to call new code}: the
+|Simulation| which it doesn't explicitly redefine.  The power of
+inheritance is that it allows \emph{old code to call new code}: the
 ``old'' function |run_simulation()| calls the new |decode()| function, without
 the need to make \emph{any} changes to the former. 
 
-In classical \emph{procedural programming}, it is only possible for
-\emph{new code to call old code}: a new function can call an existing one, but
-the opposite is not possible without changing the existing function.
-Furthermore, if you want two versions of an existing functions to coexist, such
-that one of them calls a new function, this either causes code duplication
-(which leads to bugs) or requires significant programming effort. 
+In \emph{procedural programming}\footnote{Procedural programming is programming
+using functions or \emph{procedures}, as opposed to object-oriented
+programming.}, on the other hand, it is only possible for \emph{new code to call old code}: a new
+function can call an existing one, but the opposite is not possible without
+changing the existing function.  Furthermore, if you want two versions of an
+existing function to coexist such that one of them calls a new function (which
+is what we tried in our introductory example), this either requires code
+duplication (which leads to bugs) or a significant programming effort. 
 
-To summarize, the simple act of  embedding a set of functions in a class and
-then creating a derived class that overrides some of these functions created two
-simulations that are identical except in a single function. 
+To summarize: one can create two simulations that are identical except for a
+single function by the simple act of embedding the functions making up the
+simulation in a class and creating a derived class that overrides one of these
+functions.
 
 
 \section{A Step-By-Step Tutorial}
 
-\paragraph{Implementing a Simple Communication Scheme}
+To demonstrate how \jscsim\ helps creating and analyzing simulatinos, this
+section presents a number of small hands-on examples.
+
+
+\subsubsection{Implementing a Communication Scheme}
 
 \exref{gausssingle} of \chapref{prelim} showed that uncoded transmission is
 optimal to transmit a Gaussian source across a Gaussian channel if the source
@@ -160,59 +168,72 @@ and channel bandwidths are matched. To verify this claim experimentally, let us
 implement \exref{gausssingle} in \jscsim. 
 
 \begin{listing}
+  \CodeInput{simulator/@UncodedScheme/UncodedScheme.m}
   \caption{Implementation of uncoded transmission.}
   \label{lst:uncoded}
-  \CodeInput{simulator/@UncodedScheme/UncodedScheme.m}
 \end{listing}
 
 The code for this is shown in \lstref{uncoded}.  One can make the following
 observations.
 \begin{enumerate}
-  \item The communication scheme is implemented as a \emph{class}, here called
-    |Uncoded|\-|Scheme|. It is derived from the class |PracticalScheme|. This is
-    the class that all ``practical'' communication schemes are derived from,
-    \ie,
-    communication schemes that can be implemented in practice as opposed to
-    merely ``theoretical'' schemes (of which we will soon see an example).
+  \item The communication scheme is implemented as a \emph{class} called
+    |Uncoded|\-|Scheme| (\lineref{1}). It is derived from the class
+    |PracticalScheme|. This is the class that all ``practical'' communication
+    schemes are derived from, \ie, communication schemes that can be implemented
+    in practice as opposed to merely ``theoretical'' schemes (of which we will
+    soon see a specific example).
 
-  \item The constructor of |PracticalScheme| receives two parameters. |sv| is
-    the source variance and |s| is the sequence of source symbols that are to be
-    transmitted.\footnote{If you wonder why the constructor returns something
-    called \Verb+obj+: this is simply how \matlab's syntax specifies the
-    constructor.  The returned value stands for the object just created, and it
-    serves as a ``pointer'' to access the object's properties, similar to the
-    \Verb+this+ keyword in C++ or Java.}
+  \item The constructor of |UncodedScheme| receives two parameters
+    (\lineref{4}). |sv| is the source variance and |s| is the sequence of source
+    symbols that are to be transmitted.\footnote{If you wonder why the
+    constructor returns something called \Verb+obj+: this is simply how
+    \matlab's syntax specifies the constructor.  The returned value stands for
+    the object just created, and it serves as a ``pointer'' to access the
+    object's properties, similar to the \Verb+this+ keyword in C++ or Java.}
 
-    The constructor of the base class |PracticalScheme| needs two additional
-    parameters. They are, respectively, the number~$k$ of source symbols encoded
+    The constructor of the base class |PracticalScheme| has two additional
+    arguments. They are, respectively, the number~$k$ of source symbols encoded
     at a time and the number~$n$ of channel inputs produced from every
-    $k$~source symbols. The scheme at hand is for the particular case when~$k =
-    n = 1$, which is why the last two parameters passed to |PracticalScheme()|
-    are both~$1$.
+    $k$~source symbols. The scheme at hand is for $k = n = 1$, which is why the
+    last two parameters passed to |PracticalScheme()| are both~$1$
+    (\lineref{5}).
 
-  \item The actual work of the class is done by the functions |encode()| and
-    |decode()|. Any class derived from |PracticalScheme| \emph{must} implement
-    these functions. Here they simply compute $X = \sqrt{P/\ssq} S$ and $\Sh =
-    \sqrt{P \ssq} Y / (P + \szq)$.
+  \item Actual computation is only performed in two functions: |encode()| and
+    |decode()|. This makes sense, since a communication scheme is completely
+    specified by its encoder and decoder.  For the scheme at hand, these
+    functions simply compute $X = \sqrt{P/\ssq} S$ and $\Sh = \sqrt{P \ssq} Y /
+    (P + \szq)$.%
+    \footnote{Again, the reason why the first argument to both \Verb+encode()+
+    and \Verb+decode()+ is \Verb+obj+ has to do with \matlab's syntax. All
+    (non-static) methods of a class must have a first argument that refers to
+    the object instance. Here we call it \Verb+obj+ by convention, but it could
+    in principle be given any other name. An object's properties are accessed in
+    its methods by prefixing them with `\Verb+obj.+' (cf.  \lstref{uncoded}).
+    This is similar to the \Verb+this+ pointer in C++ or Java, except that the
+    latter doesn't have to be explicitly given as a method argument.}
 \end{enumerate}
 
 
-\paragraph{Performance Analysis}
+\subsubsection{Performance Analysis}
 
-Having implemented the class |UncodedScheme|, the next thing one might like to
-do is to plot the resulting performance. This task is much simplified by the
-class |Performance|\-|Processor|, which is used as follows.
+Having implemented the class |UncodedScheme|, we would now like to plot its
+performance. For this, \jscsim\ has a class called |Performance|\-|Processor|,
+which is used as follows.
 \CodeInput{figures/matlab/ex_uncoded.minc}
-The first two lines define two cell arrays with each a single entry.
+The first two lines define two cell arrays%
+\footnote{In \matlab, \emph{cell arrays} are special arrays whose elements can
+be of arbitrary types (scalars, vectors, matrices, strings, other cell
+arrays, etc.). Cell arrays are specified by listing their elements in curly
+braces, as in \texttt{\char`\{1, [2,3], 'foo'\char`\}}.}
+with a single entry each.
 The first contains the class names of the schemes to plot, and
 the second contains a list of parameters for each scheme. Here we only have a
 single scheme, |UncodedScheme|. It does not have any parameters, so the
 corresponding entry in the parameter list is an empty vector. 
 
-The third line creates an instance of the class |Performance|\-|Processor|, whose
-|plot_performance()| method is invoked in the fourth line, specifying the
-relevant schemes and parameters. The resulting plot is shown on
-\figref{uncoded}.
+The third line creates an instance of the class |Performance|\-|Processor|,
+whose |process()| method we invoke in the fourth line, passing the list of
+schemes and parameters. \figref{uncoded} contains the resulting plot.
 
 \begin{figure}
   \begin{center}
@@ -223,52 +244,55 @@ relevant schemes and parameters. The resulting plot is shown on
   \label{fig:uncoded}
 \end{figure}
 
-This looks like not much at all. Behind the scenes, however, a lot more was
-going on:
+This was much work at all. Behind the scenes, however, a lot more was going on:
 \begin{enumerate}
   \item A long sequence of random source symbols was generated.
   \item For a range of SNR values and for each communication scheme, the source
-    sequence was encoded using the communication scheme, Gaussian noise of the
-    appropriate variance was added, and the result was decoded using the
-    scheme's |decode()| function.
+    sequence was encoded using the |encode()| function of our new class,
+    Gaussian noise of the appropriate variance was added, and the result was
+    decoded using our new |decode()| function.
   \item The average difference between the source sequence and the estimate
     sequence was computed, again for each scheme and for each value of SNR. 
-  \item The resulting performance curves were plotted by |plot_performance()|.
+  \item The resulting performance curves were plotted by the
+    |Performance|\-|Processor|.
 \end{enumerate}
-All this work is done by |Performance|\-|Processor| and the base class
-|Practical|\-|Scheme|, leaving you free to focus on the essential stuff.
+All this work was done by |Performance|\-|Processor| and the base class
+|Practical|\-|Scheme|, leaving us free to focus on the essential stuff.
 
 
-\paragraph{Theoretical Performance}
+\subsubsection{Theoretical Performance}
 
 At this point we have implemented uncoded communication, but we have not
 yet verified that it performs indeed optimally. From \chapref{prelim} we know
 that if there are $n$~channel uses per source symbol then the optimal SDR
 is $(1 + \snr)^n$. In \jscsim\ we can implement this as a ``theoretical''
 communication scheme: this is a communication scheme that doesn't actually do
-any encoding or decoding, but simply returns the achieved MSE for a given SNR.
+any encoding or decoding, but simply computes a theoretical MSE for a 
+given SNR.
 
 \begin{listing}
 \begin{Code}
-  classdef ShannonScheme < Scheme
+  classdef ShannonScheme < TheoreticalScheme
     properties
       n         % The number of channel uses per source symbol.
     end
 
-    methods
+    methods (Access = 'public')
       function obj = ShannonScheme(sv, s, n)
         
         % Call base class constructor.
-        obj = obj@Scheme(sv, s);
+        obj = obj@TheoreticalScheme(sv, s);
 
         % Set class-specific parameters.
         obj.n = n;
       end
+    end
 
-      % This function simply returns the theoretically optimal MSE
-      % for the SNR.
-      function mse = compute_mse(obj)
-        mse = obj.sv / (1 + obj.snr)^obj.n;
+    methods (Access = 'protected')
+      % This function is called whenever the SNR is changed and so
+      % the MSE needs to be recomputed.
+      function update_mse(obj)
+          obj.mse = obj.sv / (1 + obj.snr)^obj.n;
       end
     end
   end
@@ -282,37 +306,37 @@ any encoding or decoding, but simply returns the achieved MSE for a given SNR.
 The resulting \matlab\ code is given in \lstref{shannonscheme}. We can make the
 following observations.
 \begin{enumerate}
-  \item The class |ShannonScheme| is derived from |Scheme| rather than from
-    |PracticalScheme| as in the previous example. This is because unlike
-    practical schemes, |ShannonScheme| does not implement |encode()| or
-    |decode()| functions. 
+  \item The class |ShannonScheme| is derived from |TheoreticalScheme| rather
+    than from |PracticalScheme| as in the previous example (\lineref{1}). This
+    is because unlike practical schemes, theoretical schemes do not have
+    |encode()| or |decode()| functions. 
     
-    |Scheme| is the class from which all communication schemes are derived. Each
-    class derived from |Scheme| must implement |compute_mse()|, which returns
-    the mean squared error obtained for a given SNR. In the previous example we
-    did not have to implement this function because it is implemented by
-    |PraticalScheme|, itself derived from |Scheme|.
-    
-  \item |ShannonScheme| has a single parameter, namely the number~|n| of channel
-    uses per source symbol.
+  \item |ShannonScheme| has a single parameter~|n|, the number of channel uses
+    per source symbol, which it receives as an argument of its constructor
+    (\lineref{7}).
 
-  \item The function |compute_mse(obj)| is the heart of this class. It computes
-    the formula $\text{MSE} = \ssq / (1 + \snr)^n$. To access any of the class
-    properties, their name must be prefixed by `|obj.|'.  Note in particular how
-    |obj.snr| is accessed, even though it was never defined within this class.
-    This is because it is handled by the base class. 
+  \item The function |update_mse(obj)| (\lineref{20}) is the heart of this
+    class. This function is called by the base class whenever the SNR is
+    changed. Here it computes $\ssq / (1
+    + \snr)^n$, which is the theoretically optimal MSE for the given SNR
+    (cf.~\chapref{prelim}).
+    
+  \item |update_mse()| accesses the |snr| property (\lineref{21}), even though
+    we never defined this property. This is because the property is set by the
+    base class, so that all derived classes have access to the SNR.
 \end{enumerate}
 
-To plot the performance of both |UncodedScheme| and |ShannonScheme|, we use
-the |Performance|\-|Processor| as before:
+To plot the performance of both |UncodedScheme| and |ShannonScheme| on the same
+plot, we can use the |Performance|\-|Processor| as before:
 \CodeInput{figures/matlab/ex_shannonscheme.minc}
-The only difference to the previous exampe is that the list of schemes now has
-an additional entry and we have to specify the parameter $n=1$ for
-|ShannonScheme|.
+The only difference to the previous example is that the schemes list now has two
+elements and that we need to specify the parameter $n=1$ for |ShannonScheme|.
+This parameter corresponds exactly to the third argument of |ShannonScheme|'s
+constructor.
 
-The resulting plot is shown on \figref{shannonscheme}. Note that compared to
-\figref{uncoded} we are plotting the performance of more than one communication
-scheme here, so a legend was automatically added to the plot.
+The resulting plot is shown on \figref{shannonscheme}. Note that a legend has
+automatically been added because we are plotting the performance of more than
+one communication scheme.
 
 \begin{figure}
   \begin{center}
@@ -324,47 +348,48 @@ scheme here, so a legend was automatically added to the plot.
   \label{fig:shannonscheme}
 \end{figure}
 
-\paragraph{Alternative Output Formats}
 
-Up to now the call to |plot_performance()| just launched a standard \matlab\
-figure window with the performance plot. Often, though, you may not only want to
-look at the plot on the screen but also use it in a document such as a report or
-a paper. For this, \jscsim\ has the concept of an \emph{output module}. An
-output module implements a rudimentary set of plot capabilities. The default
-output module uses \matlab's plot command to display a figure window.
+\subsubsection{Alternative Output Formats}
 
-Alternatively, to save the performance plot in a PDF file, for instance, the
-default output module can be replaced by a |MatlabFilePlotModule|. Instead of
-displaying the plot in a window, this module saves it in a file. Continuing our
-previous example, we would use it as follows.
+In the examples we saw so far, the performance processor just launched a
+standard \matlab\ figure window with the performance plot. Often, though, you
+may not only want to look at the plot on the screen but also use it in a report
+or in a paper. For this, \jscsim\ has the concept of \emph{output modules}. An
+output module is a class that implements a rudimentary set of plot capabilities.
+
+The default output module is called |MatlabPlotModule| and uses \matlab's plot
+command to display a figure window. Alternatively, to save the performance plot
+in a PDF file, for instance, the default output module can be replaced by a
+|MatlabFilePlotModule|. Instead of displaying the plot in a window, this output
+module saves it in a file.  Continuing our previous example, we can use it as
+follows.
 \begin{Code}
   ...  % Define list of schemes and parameters.
   pp = PerformanceProcessor();
-  om = MatlabFilePlotModule();
-  om.fn = 'myplot.pdf';
-  pp.om = om;
-  pp.plot_performance(schemes, parameters);  % Saved to myplot.pdf.
+  pp.om = MatlabFilePlotModule();
+  pp.om.fn = 'myplot.pdf';
+  pp.process(schemes, parameters);  % Saved to myplot.pdf.
 \end{Code}
-In line~3 a new output module of type |MatlabFilePlotModule| is
-created. Since it writes its output to a file, we have to specify a file name,
-which we do in the next line. Finally, in the fourth line, we replace the
-default output module of the performance processor with newly created
-one.\footnote{Unsurprisingly, Figures~\ref{fig:uncoded}
-and~\ref{fig:shannonscheme} have been created using
-\Verb+MatlabFilePlotModule+.}
+In \lineref{3} a new output module of type |MatlabFilePlotModule| is
+created and attached to the performance processor. Since this output module
+writes its output to a file, we have to specify a file name in \lineref{4}.
+Afterwards, we can call |process()| just as before.\footnote{Unsurprisingly,
+Figures~\ref{fig:uncoded} and~\ref{fig:shannonscheme} have in fact been created
+using \Verb+MatlabFilePlotModule+.}
 
-Another output module is called |PGFPlotsOutputModule|. It produces a file
-containing \TeX\ code, to be used with the \pgfplots\ package. To use it, just
-replace |MatlabFilePlotModule| in the above example by |PGFPlotsOutputModule|
-and set \eg
+\urldef{\pgfplotsurl}\url{http://pgfplots.sourceforge.net/}
+There is another output module, called |PGFPlotsOutputModule|. It produces a
+file containing \LaTeX\ code to be used with the \pgfplots\
+package\footnote{\pgfplotsurl}. To use it, just replace |MatlabFilePlotModule|
+in the above example by |PGFPlotsOutputModule| and set \eg
 \begin{Code}
-  om.fn = 'myplot.tex';
+  pp.om.fn = 'myplot.tex';
 \end{Code}
-The resulting file can then be included in a \LaTeX\ file using the |\input|
-command, provided that the |pgfplots| package has been loaded.  The result is
-shown on \figref{uncodedpgf}. Admittedly, the plot created by \pgfplots\ fits in
-nicer with the \LaTeX\ layout, and its labels are more readable than those of
-Figures~\ref{fig:uncoded} and~\ref{fig:shannonscheme}.
+The resulting file can then be included in a \LaTeX\ file, provided that the
+|pgfplots| package has been loaded.  The result is shown on \figref{uncodedpgf}.
+Admittedly, the plot created by \pgfplots\ fits in nicer with the \LaTeX\
+layout, and its labels are more readable than those of Figures~\ref{fig:uncoded}
+and~\ref{fig:shannonscheme}.
 
 \begin{figure}
   \begin{center}
@@ -377,16 +402,16 @@ Figures~\ref{fig:uncoded} and~\ref{fig:shannonscheme}.
 \end{figure}
 
 
-\paragraph{Analysis Using Scheme Processors}
+\subsubsection{Analysis Using Scheme Processors}
 
-We have already seen one scheme processor in action. In the previous examples we
-used a |Performance|\-|Processor| to plot the SDR resulting from different
-communication schemes. |Performance|\-|Processor| is derived from the base class
-|SchemeProcessor|. In general, a scheme processor takes a list of schemes (along
-with the corresponding parameters), simulates these schemes for a range of SNR
-values, and gathers particular data from each simulation run.  To illustrate
-these principles, \lstref{perfproc} shows a simplified version of the
-implementation of |Performance|\-|Processor|. 
+The performance processor we have used to plot the performance in the previous
+examples is a particular type of \emph{scheme processor}. The idea behind scheme
+processors is to separate the implementation and the analysis of communication
+schemes. A scheme processor takes a list of schemes along
+with the corresponding parameters, simulates these for a range of SNR
+values, and gathers data from each simulation run.  To illustrate
+this, \lstref{perfproc} shows a simplified version of the implementation of
+|Performance|\-|Processor|. 
 
 \begin{listing}
 \CodeInput{figures/matlab/PerformanceProcessor_ex.minc}
@@ -394,64 +419,40 @@ implementation of |Performance|\-|Processor|.
 \label{lst:perfproc}
 \end{listing}
 
-Each class derived from |SchemeProcessor| must do three things:
+Each class derived from |SchemeProcessor| must implement three functions:
 \begin{enumerate}
-  \item Call |set_schemes()| to store the list of schemes and the associated
-    parameters.
+  \item |initialize()| is called before the first scheme is simulated. It allows
+    the scheme processor to allocate space for variables in which data gathered
+    about the simulations is saved. The |initialize()| method of
+    |PerformanceProcessor| sets up a big matrix to store the MSE resulting from
+    each simulation. 
 
-  \item Call |process_schemes()|, the function that does the actual job of
-    simulating each scheme for each SNR. |process_schemes()| is implemented in
-    |SchemeProcessor|. 
+  \item |save_scheme_data()| is called after each scheme has been
+    simulated for a particular SNR. The scheme just run is passed to
+    |save_scheme_data()| as the |scheme| argument, from which the function can
+    then extract simulation data. In the example of the performance processor,
+    the only data extracted is the MSE.
 
-  \item Implement |post_process()|. This function performs the ``data
-    gathering''. It is called from within |process_schemes()| after each time a
-    particular scheme has been simulated for a particular SNR. Its first
-    argument |scheme| is the instance of the scheme just simulated. From it,
-    |post_process()| can gather all required data.  In the case of
-    |Performance|\-|Processor|, it simply queries the MSE and saves it in the
-    |mse| matrix.
+  \item |post_process()| is called after all schemes have been processed
+    for all SNR values. It is here that a scheme processor can post-process and
+    present the data gathered from the simulations.
 \end{enumerate}
 
 
-Consider another example. Suppose we have a class |HybridScheme| that implements
-the hybrid communication scheme from \textbf{[Insert reference to Ch.~2]}, and
-suppose we would like to compare the errors $\Eqi$ and~$\Ee$. To do this, we would have |HybridScheme| store all $Q_i$ and
-$\Qh_i$ as well as $E_{n-1}$ and $\Eh_{n-1}$. Then we could write a
-|HybridSchemeProcessor| whose |post_process()| function computes and saves
-$\Eqi$ and~$\Ee$. 
+\todo Implement hybrid scheme and put it as an example.
 
 
 \section{Reference}
 
 \subsection{Communication Schemes}
 
-In \jscsim, there are two categories of communication schemes you can implement:
-\emph{theoretical} schemes and \emph{practical} schemes. Theoretical schemes
-merely compute the achievable MSE as a function of the SNR. Their purpose is to
+There are two kinds of communication schemes in \jscsim: \emph{theoretical}
+schemes and \emph{practical} schemes. Theoretical schemes compute the MSE for a
+given SNR by computing some function of it without simulating anything. They
 allow you to compare the performance of a particular communication scheme with a
-theoretical value, as for example the |ShannonScheme| in \lstref{shannonscheme}. 
-On the other hand, practical schemes (like the one in \lstref{uncoded}) are
-schemes that actually encode the source samples into a channel input sequence
-and compute source estimates from the channel output. 
-
-Theoretical and practical schemes, respectively, are implemented as classes
-derived from |TheoreticalScheme| and |PracticalScheme|. The latter are
-themselves derived from the common base class |Scheme|, which defines some of
-the characteristics of both theoretical and practical communication scheme. 
-
-
-\subsubsection{The \texttt{Scheme} Class}
-
-In the class hierarchy, the |Scheme| class is the common ancestor of all classes
-that implement communication schemes. It defines the characteristics shared by
-all communication schemes, whether theoretical or practical (see previous
-paragraphs). 
-
-|Scheme| is an abstract class: no objects of this class can exist. Moreover,
-there is usually no need to create a class derived directly from |Scheme| (other
-than the existing |TheoreticalScheme| and |PracticalScheme|). Should there
-nevertheless be a need for it, details about the implementation of |Scheme| are
-found in the implementation section. 
+theoretical value, as for example the |ShannonScheme| in \lstref{shannonscheme}.
+On the other hand, practical schemes (like the one in \lstref{uncoded})
+determine the MSE by actually simulating communication.
 
 
 \subsubsection{Theoretical Schemes}
@@ -460,21 +461,23 @@ Theoretical communication schemes are implemented as classes derived from
 |TheoreticalScheme|. Any class derived from |TheoreticalScheme| must define the
 following methods.
 
-\begin{description}
-  \item[\texttt{ClassName(sv, s, param)}] The first two arguments of the
-    constructor are the source variance |sv| and the source sample sequence~|s|.
-    For implementation purposes, they are passed to both theoretical and
-    practical schemes. 
+\begin{method}{\meta{class name}(\oarg{sv}, \oarg{s}, \oarg{param}) (public)}
+  The first two arguments of the constructor are the source variance |sv| and
+  the source sample sequence~|s|.  For implementation purposes, they are passed
+  to both theoretical and practical schemes.  
 
-    The arguments |sv| and |s| must be passed on to the base class constructor.
-    |param| is a parameter particular to the class to be implemented. It can be
-    stored in a class property or processed as desired.
+  The arguments |sv| and |s| must be passed on to the base class constructor.
+  |param| is a parameter particular to the class to be implemented. It can be
+  stored in a class property or processed as desired.
+\end{method}
 
-  \item[\texttt{update\_mse(obj)}] This function is called by the base class
-    whenever the SNR is changed. It must update the |mse| property, based on the
-    value of the |snr| property. For example, the |update_mse()| method of
-    |ShannonScheme| sets |mse| to be $\ssq / (1 + \snr)^n$.
-\end{description}
+\begin{method}{update_mse(\obj) (protected)}
+    This function is called by the base class whenever the SNR is changed. It
+    must update the |mse| property, based on the value of the |snr| property.
+    For example, the |update_mse()| method of |ShannonScheme| sets |mse| to be
+    $\ssq / (1 \normalplus \snr)^n$.
+\end{method}
+
 
 
 \subsubsection{Practical Schemes}
@@ -482,26 +485,28 @@ following methods.
 Practical communication schemes are implemented as classes derived from
 |PracticalScheme|. Any class derived from |PracticalScheme| must define the
 following methods.
-\begin{description}
-  \item[\texttt{Constructor(sv, s, param)}] The constructor of the class
-    receives the source variance~|sv|, the source sample sequence~|s| and
-    possibly a parameter |param|. The constructor must call the constructor of
-    |PracticalScheme|, passing |sv| and |s| as well as |k| and |n|, the number
-    of source symbols encoded at a time and the number of channel inputs per
-    |k|~source symbols, respectively. 
+\begin{method}{\meta{class name}(\oarg{sv}, \oarg{s}
+  \opt{[, \oarg{parameters}]}) (public)}
+  The constructor of the class receives the source variance~+sv+, the source
+  sample sequence~+s+ and possibly additional parameters. The constructor must
+  call the constructor of |PracticalScheme|, passing +sv+ and +s+ as well as +k+
+  and +n+, the number of source symbols encoded at a time and the number of
+  channel inputs per +k+~source symbols, respectively. 
 
-    Depending on the scheme, |k| and |n| can be fixed values (as in
-    |UncodedScheme| in \lstref{uncoded}) or they can be passed to the class as
-    parameters.
+  Depending on the scheme, +k+ and +n+ can be fixed values (as in
+  |UncodedScheme| in \lstref{uncoded}) or they can be passed to the class as
+  parameters.
+\end{method}
 
-  \item[\texttt{x = encode(obj, s)}] This function receives |s|, a matrix of
-    source samples with |k|~rows, and must return a matrix~|x| with |n|~rows and
-    the same number of columns as~|s|.
+\begin{method}{\oarg{x} = encode(\obj, \oarg{s})}
+  This function receives +s+, a matrix of source samples with $k$~rows, and must
+  return a matrix~+x+ with $n$~rows and the same number of columns as~+s+.
+\end{method}
 
-  \item[\texttt{sh = decode(obj, y)}] This function receives the channel
-    output~|y| as a matrix with |n|~rows and must return a matrix~|sh| with
-    |k|~rows of source estimates.
-\end{description}
+\begin{method}{\oarg{sh} = decode(\obj, \oarg{y})}
+  This function receives the channel output~+y+ as a matrix with +n+~rows and
+  must return a matrix~+sh+ with +k+~rows of source estimates.
+\end{method}
 
 
 \subsection{Scheme Processors}
@@ -511,39 +516,55 @@ a \emph{scheme processor}. Scheme processors simulate a set of communication
 schemes for a range of SNR values and let you store and process the resulting
 data.  All scheme processors allow you to set the following properties, defined
 in the base class |SchemeProcessor|.
-\begin{description}
-  \item[\texttt{snr}] This is a vector that specifies the SNR range over which
-    to simulate the specified communication schemes. By default it is set to the
-    range from 0dB to 40dB, with an increase of 1dB. 
+\begin{property}{snr (public; default |10.^(0:.1:4)|)}
+  This is a vector that specifies the SNR range over which to simulate the
+  specified communication schemes. By default it is set to the range 0dB to 40dB
+  with increments of 1dB. 
+\end{property}
 
-  \item[\texttt{N}] This is the number of source samples generated. By default
-    it is set to $10^5$. 
-    
-  \item[\texttt{verbose}] This is a boolean parameter. When set to true, various
-    debugging and status messages are displayed during simulations. By default
-    it is set to false. 
+\begin{property}{N (public; default |100000|)}
+  This is the number of source samples generated.
+\end{property}
+  
+\begin{property}{verbose (public; default |false|)}
+  This is a boolean parameter. When set to true, various debugging and status
+  messages are displayed during simulations. By default it is set to false. 
+\end{property}
 
-  \item[\texttt{om}] This is set to the output module used by the scheme
-    processor to display its results (see the section on output modules). The
-    default output module is |MatlabPlotModule|, which displays a standard
-    \matlab\ plot.
-\end{description}
+\begin{property}{om (public; default |MatlabPlotModule|)}
+  This is the output module used by the scheme processor to display its
+  results (see the section on output modules). The default output module is
+  |MatlabPlotModule|, which displays a standard
+  \matlab\ plot.
+\end{property}
 
 To process a communication scheme (or a set of schemes) you never directly use
 a |SchemeProcessor| object. Instead, you derive a new class from
 |SchemeProcessor| that collects and processes the data of interest. One scheme
-processor ``built into'' \jscsim\ is the |PerformanceProcessor|.
+processor ``built into'' \jscsim\ is the |PerformanceProcessor|, which is
+discussed below.
 
 Each class derived from |SchemeProcessor| inherits the |process()| method from
-|SchemeProcessor|. This is the only callable method; it is defined as follows. 
-\begin{description}
-  \item[\texttt{process(obj, schemes, parameters)}] Process the specified
-    schemes for the specified parameters. |schemes| is a cell array of strings,
-    each string being the name of a communication scheme class. Parameters is a
-    cell array containg a vector for each element of |schemes|. For schemes that
-    don't have any parameters, it must be an empty vector. Otherwise, the scheme
-    is simulated separately for each parameter. 
-\end{description}
+|SchemeProcessor|. This is the only public method; it is defined as follows. 
+\begin{method}{process(\obj, \oarg{schemes}, \oarg{parameters}) (public)}
+  Process the specified schemes for the specified parameters. The cell array
+  +schemes+ lists the schemes to be processed: each of its elements is a string
+  equal to the name of a scheme class. The cell array +parameters+ has the same
+  number of elements as +schemes+. For a scheme that does not have any
+  parameters, the corresponding entry of +parameters+ must be an empty matrix.
+  For a scheme that accepts $m$~parameters, the corresponding entry of
+  +parameters+ must be an $m \times n$ matrix. Then the scheme is processed $n$
+  times, once for each column of the matrix.
+  \codeexample Suppose |process()| is called as follows.
+  \begin{Code}
+  pp = PerformanceProcessor();
+  pp.process({'MyScheme'}, {[1:4; 0.1:0.1:0.4]});
+  \end{Code}
+  Then |MyScheme| will be processed 4~times: once with the parameters $1$
+  and~$0.1$, once with the parameters $2$ and~$0.2$, etc.
+
+  The parameters are passed as arguments to the constructor of a scheme.
+\end{method}
 
 
 \subsubsection{The Performance Processor}
@@ -557,39 +578,43 @@ SDR vs SNR curve of the specified communication scheme.
 
 You can implement your own scheme processor by creating a new class derived from
 |SchemeProcessor|. Every such class must implement the following functions.
-\begin{description}
-  \item[\texttt{initialize(obj)}] This function is called before the actual
-    processing of the schemes start. Most likely, you will use this function to
-    allocate the matrices in which you will save the simulation data. 
+\begin{method}{initialize(\obj) (protected)}
+  This function is called before the actual
+  processing of the schemes start. Most likely, you will use this function to
+  allocate the matrices in which you will save the simulation data. 
 
-    |SchemeProcessor| provides the useful helper function |nb_schemes()|, which
-    returns the number of schemes that have been passed to |process()|. In
-    addition, |length(obj.snr)| gives you the number of values in the SNR range.
+  |SchemeProcessor| provides the useful helper function |nb_schemes()|, which
+  returns the number of schemes that have been passed to |process()|. In
+  addition, |length(obj.snr)| gives you the number of values in the SNR range.
+\end{method}
 
-  \item[\texttt{save\_scheme\_data(obj, scheme, j, k)}] This function is called
-    each time a scheme has been simulated for a particular SNR and gives you the
-    opportunity to save data about the simulation run. |scheme| is the scheme
-    object that was just run; you can gather data about it by calling its public
-    functions. For example, the |post_process()| method of
-    |PerformanceProcessor| calls the |compute_mse()| method of the |scheme|
-    object to store the MSE.
+\begin{method}{save_scheme_data(\obj, \oarg{scheme}, \oarg{j}, \oarg{k})
+  (protected)}
+  This function is called each time a scheme has been simulated for a particular
+  SNR and gives you the opportunity to save data about the simulation run.
+  +scheme+ is the scheme object that was just run; you can gather data about it
+  by calling its public functions. For example, the |post_process()| method of
+  |PerformanceProcessor| calls the |compute_mse()| method of the +scheme+ object
+  to store the MSE.
 
-    To save a particular value for all schemes and all SNR values, you would
-    normally create a big matrix with one row per scheme and parameter and one
-    column for each SNR value. You can then use the indices |j| and |k| to know
-    where to save a particular value in this matrix: |j| is an index into the
-    list of all schemes processed and |k| is an index into the SNR range.
+  To save a particular value for all schemes and all SNR values, you would
+  normally create a big matrix with one row per scheme and parameter and one
+  column for each SNR value. You can then use the indices +j+ and +k+ to know
+  where to save a particular value in this matrix: +j+ is an index into the
+  list of all schemes processed and +k+ is an index into the SNR range.
+\end{method}
 
-  \item[\texttt{post\_process(obj, scheme, j, k)}] This function is called after
-    all the simulations have run. Here you can post process the data gathered by
-    |save_scheme_data()|, for instance by plotting it.
+\begin{method}{post_process(\obj) (protected)}
+  This function is called after all the simulations have run. Here you can post
+  process the data gathered by |save_scheme_data()|, for instance by plotting
+  it.
 
-    |SchemeProcessor| provides the useful function |plot_vs_snr(obj, m)|, which
-    creates a plot of the data in the vector |m| against the SNR in dB, or
-    several plots if |m| is a matrix with several rows. (The SNR is in dB, not
-    the data; if you also want the data to be plotted in a dB scale you can use
-    |plot_vs_snr_db()| instead.)
-\end{description}
+  |SchemeProcessor| provides the useful function |plot_vs_snr(obj, m)|, which
+  creates a plot of the data in the vector |m| against the SNR in dB, or
+  several plots if |m| is a matrix with several rows. (The SNR is in dB, not
+  the data; if you also want the data to be plotted in a dB scale you can use
+  |plot_vs_snr_db()| instead.)
+\end{method}
 
 
 \subsection{Output Modules}
@@ -626,74 +651,112 @@ plots in a file.
 \subsubsection{General Parameters}
 
 All output modules support the following properties and methods.
-\begin{description}
-  \item[\texttt{x}] The range of |x|~values. This must be a row vector.
-  \item[\texttt{y}] The data to plot against the $x$~values. This must be either
-    a row vector or a matrix with the same number of columns as~|x|; each
-    row then corresponds to a separate data series to plot.
+\begin{property}{x (public; default |[]|)}
+  The range of $x$~values. This must be a row vector.
+\end{property}
+\begin{property}{y (public; default |[]|)}
+  The data to plot against the $x$~values. This must be either
+  a row vector or a matrix with the same number of columns as~|x|; each
+  row then corresponds to a separate data series to plot.
+\end{property}
 
-  \item[\texttt{xlabel}] The label of the $x$-axis. This is a string; it can
-    also contain (limited) \LaTeX\ code depending on the actual output module
-    used. 
-  \item[\texttt{ylabel}] The label of the $y$-axis. This is a string; it can
-    also contain (limited) \LaTeX\ code depending on the actual output module
-    used.
+\begin{property}{xlabel (public; default |''|)}
+  The label of the $x$-axis. This is a string; it can
+  also contain (limited) \LaTeX\ code depending on the actual output module
+  used. 
+\end{property}
+\begin{property}{ylabel (public; default |''|)}
+  The label of the $y$-axis. This is a string; it can
+  also contain (limited) \LaTeX\ code depending on the actual output module
+  used.
+\end{property}
 
-  \item[\texttt{plottitle}] The plot title. This is a string; it can also
-    contain (limited) \LaTeX\ code depending on the actual output module used.
+\begin{property}{plottitle (public; default |''|)}
+  The plot title. This is a string; it can also
+  contain (limited) \LaTeX\ code depending on the actual output module used.
+\end{property}
 
-  \item[\texttt{legend}] The legend entries. This must be a cell array of
-    strings. If the number of legend entries is smaller than the number of data
-    series in~|y|, a warning is issued.
+\begin{property}{legend (public; default |[]|)}
+  The legend entries. This must be a cell array of
+  strings. If the number of legend entries is smaller than the number of data
+  series in~|y|, a warning is issued.
+\end{property}
 
-  \item[\texttt{legendpos}] A string determining where in the plot the legend is
-    placed. The possible values are |NorthEast|, |NorthWest|, |SouthEast|,
-    |SouthWest|, and |NorthEastOutside|. In addition, if |legendpos| is set to
-    the empty string, no legend is created.
+\begin{property}{legendpos (public; default |''|)}
+  A string determining where in the plot the legend is
+  placed. The possible values are |NorthEast|, |NorthWest|, |SouthEast|,
+  |SouthWest|, and |NorthEast|\-|Outside|. In addition, if |legendpos| is set to
+  the empty string, no legend is created.
+\end{property}
 
-  \item[\texttt{grid}] This boolean parameter determines whether a grid is drawn
-    (if set to |true|) or not (if set to |false|).
+\begin{property}{grid (public; default |false|)}
+  This boolean parameter determines whether a grid is drawn (if set to |true|)
+  or not (if set to |false|).
+\end{property}
 
-  \item[\texttt{set\_color\_mode(obj, c)}] Set the color mode of the plot. The
-    parameter~|c| can either be |'color'|, in which case a line of a different
-    color is drawn for each data series, or |'bw'|, in which case the plot uses
-    black lines with a different marker for each data series.
-\end{description}
+\begin{method}{set_color_mode(\obj, \oarg{c})}
+  Set the color mode of the plot. +c+ can either be |'color'|, in which case a
+  line of a different color is drawn for each data series, or |'bw'|, in which
+  case the plot uses black lines with a different marker for each data series.
+\end{method}
 
 
 \subsubsection{The \texttt{MatlabPlotModule} Output Module}
 
 This output module creates a standard \matlab\ plot. It is the default output
-module for scheme processors. It has no properties other than the ones given
-above.
+module for scheme processors. It defines a single public property.
+\begin{property}{ah (public)}
+  A handle to the axes that will contain the plot. By default,
+  |MatlabPlotModule| creates a new figure window and sets |ah| to point to the
+  axes of the new windows. You can have |MatlabPlotModule| to plot on an
+  existing set of axes by changing the |ah| property. 
+    
+  \codeexample To create the plot in a subplot of an existing figure window:
+\begin{Code}
+  figure;
+  ah1 = subplot(2,1,1);
+  pp = PerformanceProcessor();
+  pp.om.ah = ah1;
+\end{Code}
+  Subsequent plots now appear on the created subplot axes.
+\end{property}
 
 
 \subsubsection{The \texttt{MatlabFilePlotModule} Output Module}
 
 The |MatlabFilePlotModule| works just like the |MatlabPlotModule|, except that
 the plot is not displayed in a window but saved in a file. The result is the
-same as if you had selected |File|\texttt{\slash}|Save as...| in a figure
-window. 
+same as if you had selected ``File\slash Save~as...'' in a figure window. 
 
 The behavior of |MatlabFilePlotModule| is controlled by the following
 properties.
-\begin{description}
-  \item[\texttt{fn}] The name of the file in which to save the figure. By
-    default an error occurs if a file of the given name already exist; this can
-    be changed using the |force| property (see below).
+\begin{property}{fn (public; default |''|)}
+  The name of the file in which to save the figure. By
+  default an error occurs if a file of the given name already exist; this can
+  be changed using the |force| property (see below).
 
-  \item[\texttt{type}] A string denoting the file type. The set of valid file
-    types is the same as for the \matlab\ function |print|; see the help for
-    that function for a complete list. 
+  When a file name is set, the class tries to determine the file type from the
+  extension. The following extensions are recognized: |ps|, |eps|, |jpg|,
+  |jpeg|, |png|, and |pdf|. If the file name has one of these extensions, it
+  is not necessary to set the |type| property manually.
+\end{property}
 
-  \item[\texttt{pdfres}] An integer denoting the resolution (in dpi) of the
-    created file if the file type is |pdf|. The default value is 600~dpi, which
-    is a typical value for production quality.
+\begin{property}{type (public; default |''|)}
+  A string denoting the file type. The set of valid file
+  types is the same as for the \matlab\ function |print|; see the help for
+  that function for a complete list. 
+\end{property}
 
-  \item[\texttt{force}]  If this option is set to |true|, existing files are
-    overwritten; if it is set to |false| then an error occurs if a file of the
-    given name already exists.
-\end{description}
+\begin{property}{pdfres (public; default |600|)}
+  An integer denoting the resolution (in dpi) of the
+  created file if the file type is |pdf|. The default value is 600~dpi, which
+  is a typical value for production quality.
+\end{property}
+
+\begin{property}{force (public; default |false|)}
+   If this option is set to |true|, existing files are overwritten; if it is set
+   to |false| then an error occurs if a file of the given name already exists.
+\end{property}
 
 
 \subsubsection{The \texttt{PGFPlotsOutputModule} Output Module}
@@ -704,22 +767,325 @@ included in a \LaTeX\ source file, provided that the \pgfplots\ package has been
 loaded. 
 
 The behavior of this module is controlled by the following properties.
-\begin{description}
-  \item[\texttt{fn}] The name of the file in which to save the figure. By
-    default an error occurs if a file of the given name already exist; this can
-    be changed using the |force| property (see below).
+\begin{property}{fn (public; default |''|)}
+  The name of the file in which to save the figure. By
+  default an error occurs if a file of the given name already exist; this can
+  be changed using the |force| property (see below).
+\end{property}
 
-  \item[\texttt{force}]  If this option is set to |true|, existing files are
-    overwritten; if it is set to |false| then an error occurs if a file of the
-    given name already exists.
-\end{description}
+\begin{property}{force (public; default |false|)}
+   If this option is set to |true|, existing files are
+  overwritten; if it is set to |false| then an error occurs if a file of the
+  given name already exists.
+\end{property}
 
 
-
-%
-%\subsection{Output}
 %
 %\subsection{Batch Processing and Makefile Inclusion}
 %
 %
-%\section{Implementation Notes}
+
+
+\section{Implementation Notes}
+
+\subsection{\texttt{Scheme} and Derived Classes}
+
+\subsubsection{The \texttt{Scheme} Class}
+
+|Scheme| is the common ancestor of all classes that implement communication
+schemes. In terms of implementation, it does very little. 
+
+The |Scheme| class has the following properties.
+\begin{property}{sv (protected; default |1|)}
+  The source variance. It is set through the constructor and then not
+  changed anymore.
+\end{property}
+\begin{property}{snr (protected; default |[]|)}
+  The SNR. It is set through |set_snr()|. Initially this property is an empty
+  vector; any object derived from |Scheme| is in an \emph{undefined} state
+  before |set_snr()| has been called for the first time.
+\end{property}
+\begin{property}{mse (protected; default |[]|)}
+  The MSE. This is updated by derived classes whenever the SNR is set
+  via |set_snr()|.
+\end{property}
+
+|Scheme| has the following methods.
+\begin{method}{Scheme(\oarg{sv}, \oarg{s}) (public)}
+  The arguments to the constructor are the source
+  variance~+sv+ and the source sample sequence~+s+. The argument +sv+ is
+  stored in the property~+sv+ of the class, while +s+ is ignored. This
+  is because not all schemes need to store the source samples: theoretical
+  schemes compute the MSE without needing to process any source
+  samples.\footnote{%
+  It might seem more logical if only classes derived from
+  \texttt{PracticalScheme} accepted~+s+ in their constructor, or even if
+  practical schemes generated the source symbols themselves. To guarantee a
+  fair comparison of different communication schemes, however, \jscsim\
+  generates the source symbols outside of the scheme classes, such that all
+  simulated communication schemes receive the same source sequence.
+  Moreover, scheme processors should not have to make a distinction between
+  theoretical and practical classes. Hence, all classes derived from
+  \texttt{Scheme} accept the source symbols in their constructor, whether they
+  use them or not.}
+\end{method}
+
+\begin{method}{set_snr(\obj, \oarg{snr}) (public)}
+  This function is called to set a new SNR.
+  Internally, it first checks whether the new value is the same as the
+  existing one; if yes, it does nothing. Otherwise, it stores the new value in
+  the |snr| property and calls the abstract function |snr_updated()|. In this
+  function, derived classes can react to the new SNR value. For example, the
+  |snr_updated()| method of |PracticalScheme| reruns the simulation for the
+  new SNR. 
+\end{method}
+  
+\begin{method}{\oarg{mse} = compute_mse(\obj) (public)}
+  The common feature of all communication schemes, whether theoretical or
+  practical, is that they can compute the achieved MSE for a given SNR.
+  |compute_mse()| does this by simply returning the value of the |mse| property;
+  derived classes must set this property in their implementation of
+  |snr_updated()|.
+\end{method}
+
+\begin{method}{snr_updated(\obj) (protected)}
+  This is an abstract function that is called by |set_snr()| if the new SNR is
+  different from the old one. In it, derived classes must at least update the
+  |mse| property. 
+\end{method}
+
+
+\subsubsection{The \texttt{TheoreticalScheme} Class}
+
+\begin{method}{TheoreticalScheme(\oarg{sv}, \oarg{s}) (public)}
+  By default, theoretical schemes have no parameters of their own. All the
+  constructor does, therefore, is pass its arguments to the base class
+  constructor.
+\end{method}
+
+\begin{method}{snr\_updated(\obj) (protected)}
+  Since the only thing theoretical schemes compute is the MSE, this function
+  just calls the abstract function |update_mse()|.
+\end{method}
+
+\begin{method}{update\_mse(\obj) (protected)}
+  In their implementation of this abstract function, derived classes must update
+  the |mse| property based on the |snr| property. 
+\end{method}
+
+
+\subsubsection{The \texttt{PracticalScheme} Class}
+
+The |PracticalScheme| class frees the derived classes from all work except
+defining the |encode()| and |decode()| function. When an object of a class
+derived from |PracticalScheme| is created, it receives a long sequence of source
+symbols~|s| through its constructor. Encoding and decoding is then done on the
+whole sequence simultaneously, \ie, the whole sequence~|s| is passed to
+|encode()| (as opposed to having a loop that calls |encode()| once for each
+element of~|s|). Similarly, |decode()| is passed the whole channel input
+sequence at once.
+
+A practical communication scheme is characterized by the parameters~$k$ and~$n$,
+which denote, respectively, the number of source symbols at a time and the
+number of channel uses into which a block of $k$~source symbols is encoded.
+Before passing the source sequence to |encode()|, |PracticalScheme| reorders it
+as a matrix with $k$~rows whose columns are blocks of $k$~source symbols,
+freeing the encoder from this work. In turn, the encoder is expected to return
+the channel input as a matrix with $n$~rows. The decoder works similarly.
+
+The |PracticalScheme| class has the following properties. They are all defined
+as \emph{protected}, so they can only be accessed from within the class (or one
+of its derived classes).
+\begin{property}{k (protected)}
+  The number of source symbols encoded at a time.
+\end{property}
+\begin{property}{n (protected)}
+  The number of channel input symbols per |k|~source symbols.
+\end{property}
+\begin{property}{s (protected)}
+  The source symbol sequence.
+\end{property}
+\begin{property}{x (protected)}
+  The $n \times N$ matrix of channel input symbols, where $N$
+  is the number of length-$k$ source symbol blocks. 
+\end{property}
+\begin{property}{y (protected)}
+  The $n \times N$ matrix of channel output symbols. 
+\end{property}
+\begin{property}{sh (protected)}
+  The sequence of source estimates corresponding to~|s|.
+\end{property}
+\begin{property}{P (protected)}
+  The average power constraint per channel input symbol.
+\end{property}
+\begin{property}{nv (protected)}
+  The noise variance.
+\end{property}
+
+The |PracticalScheme| class has the following methods.
+\begin{method}{PracticalScheme(\oarg{sv}, \oarg{s}, \oarg{k}, \oarg{n})
+  (public)}
+  The first two elements of the constructor are passed to the base class
+  constructor. In addition, +s+, +k+, and +n+ are saved in the properties of the
+  same name. 
+\end{method}
+
+\begin{method}{compute\_x(\obj) (public)}
+  This function returns the |x|~property.
+\end{method}
+\begin{method}{compute\_y(\obj) (public)}
+  This function returns the |y|~property.
+\end{method}
+\begin{method}{compute\_sh(\obj) (public)}
+  This function returns the |sh|~property.
+\end{method}
+
+\begin{method}{snr_updated(\obj) (protected)}
+  This function does the main work of the class. Whenever the SNR is updated,
+  |snr_updated()| encodes the source samples using |encode()| and saves the
+  result in the property~|x|. Then it adds Gaussian noise and saves the result
+  in the property~|y|. Next, it calls |decode()| to produce the source estimates
+  from~|y| and saves them in the property~|sh|. Finally it computes the average
+  squared error between~|s| and~|sh| and saves it in the property~|mse|. 
+
+  For given values of~|k| and~|n|, |snr_updated()| also takes care of arranging
+  the source sequence in a matrix with |k|~rows before passing it to |encode()|.
+  In return, |encode()| is expected to return a matrix with |n|~rows and the
+  same number of columns. Similarly, |decode()| receives the channel outputs as
+  a matrix with |n|~rows and is expected to return the source estimates in a
+  matrix with |k|~rows. 
+
+  The |Sealed| attribute of |snr_updated()| is set to |true|, meaning the
+  function cannot be overridden by a derived class. This guarantees that the
+  simulation procedure is the same for all communication schemes. 
+\end{method}
+
+\begin{method}{update_variable_parameters(\obj) (protected)}
+  This function is called by
+  |snr_updated()|. Derived classes can use it to set scheme parameters that
+  depend on the SNR. The default implementation just calls |init_P_nv()|.
+\end{method}
+
+\begin{method}{init_P_nv(\obj) (protected)}
+  This function updates the |P| and |nv| properties as a function of the SNR by
+  setting |P| to~$1$ and |nv| to |P|$ / \snr$.
+\end{method}
+
+
+\subsection{Scheme Processors}
+
+Scheme processors run one or more communication schemes for a range of SNR
+values and collect some data about them. Internally, the |SchemeProcessor| class
+works as follows.
+
+The |SchemeProcessor| class has the following properties.
+\begin{property}{sv (public)}
+The source variance. Whenever |sv| is changed, a new sequence of
+  random source symbols is generated. The default value of~|s| is~$1$.
+\end{property}
+\begin{property}{snr (public)}
+The SNR range over which the schemes are processed. The default range
+is~|10.^(0:0.1:4)|, \ie, from~$0$dB to~$40$dB in increments of~$1$dB.
+\end{property}
+\begin{property}{N (public)}
+The number of source samples to produce. The sequence of source symbols is
+regenerated whenever this is changed. 
+\end{property}
+\begin{property}{verbose (public)}
+A flag that controls the output of verbose messages. By default it is set
+to~|false|.
+\end{property}
+\begin{property}{om (public)}
+The output module. The constructor sets the default output module
+to~|MatlabPlotModule|.
+\end{property}
+\begin{property}{s (protected)}
+The sequence of source symbols. It is generated randomly when an object of this
+class is generated and remains unchanged afterwards. 
+\end{property}
+\begin{property}{schemes (protected)}
+A cell array of schemes to simulate. See the entry for |set_schemes()| for more
+details. 
+\end{property}
+\begin{property}{parameters (protected)}
+A cell array of parameters corresponding to the elements of the |schemes| array.
+See the entry for |set_schemes()| for more details.
+\end{property}
+
+The |SchemeProcessor| class has the following methods.
+\begin{method}{SchemeProcessor() (public)}
+  The constructor stores a sequence of random source
+  symbols in the property~|s| and sets the property~|om| to an instance of
+  |MatlabPlotModule|. 
+\end{method}
+\begin{method}{process(obj, schemes, parameters) (public)}
+  The only public method of this class,
+  |process()| performs the steps necessary to process a set of communication
+  schemes. It first calls |set_schemes()| to store the schemes and parameters
+  in the corresponding class properties. Then it calls in sequence the
+  methods |initialize()|, |do_processing()|, and |post_process()|.
+\end{method}
+
+\begin{method}{set_schemes(\obj, \oarg{schemes}, \oarg{parameters})
+  (protected)}
+  This method has two arguments.
+  Both +schemes+ and +parameters+ are cell arrays, as described in the
+  reference entry for the |process()| method. Internally, they are saved in
+  the cell array properties of the same names, |schemes| and |parameters|.
+  However, the format of these is slightly different than the way they are
+  received by |process()|. If an element of +parameters+ as passed to
+  |process()| is a matrix with $n$~columns, then the corresponding scheme name
+  will be stored $n$~times in the |schemes| property. Furthermore, the
+  |parameters| property will receive $n$~entries, where entry~$i$ is itself a
+  cell array whose elements are the entries of the $i\th$ column of the
+  parameter matrix. \todo: Example
+\end{method}
+
+\begin{method}{flatten_schemes(\obj, \oarg{s}, \oarg{p}) (protected)}
+  This method performs the conversion into the internal format of the |schemes|
+  and |parameters| array as described above.
+\end{method}
+  
+\begin{method}{do_processing(\obj) (protected)}
+  This method consists of two nested loop. The
+  outer loop is over the \emph{(scheme, parameter)} pairs. For each pair, the
+  inner loop goes through all SNR values in the |snr|~property.
+
+  For each \emph{(\meta{scheme}, \meta{parameter})} pair and for each SNR value,
+  |do_processing()| does only two things. First it calls the |set_snr()| method
+  of the scheme with the respective SNR value.     Then it calls
+  |save_scheme_data()|, which allows derived classes to gather data about the
+  simulation. 
+
+  For theoretical schemes, the call to |set_snr()| will just result in the |mse|
+  property being updated; for practical schemes it results in a complete
+  encode\slash transmit\slash cycle.
+\end{method}
+
+\begin{method}{\oarg{s} = create_scheme(\obj, \oarg{k}) (protected)}
+  This method creates an instance of the
+  $k\th$ scheme in the |schemes| property. If the scheme has parameters, these
+  are passed as additional arguments to the constructor of the scheme.
+\end{method}
+  
+\begin{method}{initialize(\obj) (protected; abstract)}
+  This abstract method is called before the schemes are
+  simulated. It allows derived classes to initialize any data structures
+  needed to store data about the simulations.
+\end{method}
+
+\begin{method}{save_scheme_data(\obj, \oarg{scheme}, \oarg{j}, \oarg{k})
+  (protected; abstract)}
+  This abstract method is called by
+  |do_processing()| after a (\meta{scheme}, \meta{parameter}) pair has been run
+  for a particular SNR. This is where derived classes gather data.
+\end{method}
+
+\begin{method}{post_process(\obj) (protected; abstract)}
+  This abstract method is called after all schemes
+  have been processed. Derived classes can use it to process and/or display
+  the collected information.
+\end{method}
+
+
+\subsection{Output Modules}
