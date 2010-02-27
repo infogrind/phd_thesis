@@ -17,4 +17,3 @@ classdef UncodedScheme < PracticalScheme
     end
     
 end
-

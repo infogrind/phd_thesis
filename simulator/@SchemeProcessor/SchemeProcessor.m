@@ -45,7 +45,7 @@ classdef SchemeProcessor < handle
             obj.s = create_source_samples(obj);
             
             % Initialize the output module to the default.
-            obj.om = MatlabPlotModule();
+            obj.om = default_output_module(obj);
         end
         
         
@@ -242,6 +242,12 @@ classdef SchemeProcessor < handle
         % Same as above, but uses dB for the y axis.
         function plot_vs_snr_db(obj, m)
             plot_vs_snr(obj, 10*log10(m));
+        end
+
+        % Returns the default output module. This is in a separate function so
+        % that derived classes can change the default behavior.
+        function om = default_output_module(obj)
+            om = MatlabPlotModule();
         end
         
     end
