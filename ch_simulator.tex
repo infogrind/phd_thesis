@@ -2,14 +2,43 @@
 \label{ch:simulator}
 \label{ch:mindelbwex}
 
+For a communication engineer, simulations are an invaluable tool. They can not
+only help to verify the correctness of a theoretical result, they can also
+ produce results about systems far too complex to be modeled mathematically.
+
+Simulations are often seen as not more than ad-hoc tools. They are
+quick-and-dirty programming jobs that have served their purpose once the desired
+result has been obtained. According to the rule that the more a program is
+likely to change the better it should be structured, however, simulations should
+actually be among the most well-structured and thought through pieces of
+software. It takes time to plan and write well-structured code, though, but
+if the simulation is seen merely as a means to an end, communication engineers
+rarely take this time.  As a result, most simulation code will eventually become
+so ugly that it is easier to rewrite a new simulation from scratch rather than
+to modify the existing one. 
+
+This chapter presents \jscsim, an object-oriented simulator for joint
+source-channel coding schemes. Its main design goal was to allow rapid testing
+of new ideas while simultaneously keeping the code clean and free of
+redundancies. 
+
+\jscsim\ is implemented in \matlab\ but could easily be translated to other
+languages that support object-oriented programming. Its power lies in its
+structure, which relies heavily on the twin paradigms of inheritance and
+polymorphism. Moreover, this structure could easily be translated to
+communication problems other than joint source-channel coding. 
+
+This chapter is organized as follows. \secref{tutorial} makes the reader
+familiar with \jscsim\ by leading him through a series of hands-on examples.
+Thereafter, \secref{reference} provides a detailed reference manual. 
+
+Before introducing \jscsim, though, the chapter starts with a short example that
+illustrates why object oriented programming is indispensable for writing good
+simulations.
+
+% Install a verbatim shortcut for all the function and variable names that occur
+% in the sequel.
 \DefineShortVerb{\|}
-
-\emph{Introductory paragraphs go here\ldots}
-
-
-Before introducing \jscsim, though, this chapter starts with a short section
-that explains why object oriented programming is fundamentally suitable for
-writing simulations.
 
 \section[Object Oriented Programming for Simulations]{Object Oriented
 Programming and Simulation: A Great Match}\label{sec:ooforsim}
