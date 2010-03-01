@@ -102,6 +102,14 @@ classdef PracticalScheme < Scheme
             % SNR. 
             update_variable_parameters(obj);
             
+            % And now, run the actual simulation.
+            run_simulation(obj);
+        end
+
+
+        % This function actually simulates the encoding, transmission, and
+        % decoding.
+        function run_simulation(obj)
             % Convert source symbols to matrix, encode, and verify dimensions of
             % encoder output. 
             obj.x = encode(obj, row_to_block(obj, obj.s));
