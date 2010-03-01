@@ -160,20 +160,20 @@ classdef SchemeProcessor < handle
         
         % Runs all schemes
         function do_processing(obj)
-            for k = 1:length(obj.schemes)
-                scheme = create_scheme(obj, k);
+            for j = 1:length(obj.schemes)
+                scheme = create_scheme(obj, j);
                 
                 verbmsg(obj, 'Processing scheme %s with parameters %s...\n', ...
-                    obj.schemes{k}, cell2str(obj.parameters{k}));
+                    obj.schemes{j}, cell2str(obj.parameters{j}));
                 
                 
                 % Run the scheme for all SNR values and post process each time
                 % to gather statistics. 
-                for j = 1:length(obj.snr)
-                    scheme.set_snr(obj.snr(j));
+                for k = 1:length(obj.snr)
+                    scheme.set_snr(obj.snr(k));
                     save_scheme_data(obj, scheme, j, k);
                     
-                    print_progress(obj, j, length(obj.snr));
+                    print_progress(obj, k, length(obj.snr));
                 end
                 
             end

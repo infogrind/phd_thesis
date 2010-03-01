@@ -23,7 +23,7 @@ classdef PerformanceProcessor < SchemeProcessor
         % Implementation of the abstract method post_process().
         function save_scheme_data(obj, scheme, j, k)
             % Store MSE of scheme.
-            obj.mse(k, j) = scheme.compute_mse();
+            obj.mse(j, k) = scheme.compute_mse();
         end
         
         

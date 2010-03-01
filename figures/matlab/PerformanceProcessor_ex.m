@@ -11,7 +11,7 @@ classdef PerformanceProcessor < SchemeProcessor
         end
         
         function save_scheme_data(obj, scheme, j, k)
-            obj.mse(k, j) = scheme.compute_mse();
+            obj.mse(j, k) = scheme.compute_mse();
         end
         
         function post_process(obj)

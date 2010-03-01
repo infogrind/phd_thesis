@@ -553,7 +553,7 @@ these and compute the corresponding error.
           end
           
           function save_scheme_data(obj, scheme, j, k)
-              obj.qe(k, j) = mean((scheme.compute_q() - ...
+              obj.qe(j, k) = mean((scheme.compute_q() - ...
                 scheme.compute_qh()).^2);
           end
           
@@ -800,10 +800,10 @@ Custom scheme processors are implemented by creating a new class derived from
   of |PerformanceProcessor| calls the |compute_mse()| method of +scheme+ to
   store the MSE.
 
-  +j+ is a number between~$1$ and |length(obj.snr)| and +k+ is a number
-  between~$1$ and |nb_schemes()|; they refer to the current SNR value and the
-  current scheme, respectively. \lstref{perfproc} shows a typical example of how
-  they are used.
+  +j+ is a number between~$1$ and |nb_schemes()| and +k+ is a number between~$1$
+  and |length(obj.snr)|; they refer to the current scheme and the current SNR
+  value, respectively. \lstref{perfproc} shows a typical example of how they are
+  used.
 \end{method}
 
 \begin{method}{post_process(\obj) (protected)}
