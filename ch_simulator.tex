@@ -413,37 +413,122 @@ examples is a particular type of \emph{scheme processor}. The idea behind scheme
 processors is to separate the implementation and the analysis of communication
 schemes. A scheme processor takes a list of schemes along
 with the corresponding parameters, simulates these for a range of SNR
-values, and gathers data from each simulation run.  To illustrate
-this, \lstref{perfproc} shows a simplified version of the implementation of
-|Performance|\-|Processor|. 
+values, and gathers data from each simulation run. 
+
+Each scheme processor is derived from the class |SchemeProcessor|. It must
+implement three methods:
+\begin{itemize}
+  \item |initialize()| to allocate space for the data gathered;
+  \item |save_scheme_data()| to collect data after each simulation run; and
+  \item |post_process()| to post-process the gathered data, which usually means
+    plotting it.
+\end{itemize}
+This is illustrated by the simplified implementation of |PerformanceProcessor|
+in \lstref{perfproc}. This class has a single properthy, |mse| (\lineref{4}),
+where it stores the mean squared errors gathered in each simulation run. In its
+|initialize()| method, |mse| is initialized to a big all-zero matrix of the
+right size. In the method |save_scheme_data()|, the communication scheme just
+simulated (passed as the argument |scheme|) is queried by calling its
+|compute_mse()| method (\lineref{13}) and the result is stored in the matrix
+|mse|. Finally, |post_process()| plots the MSE of all processed schemes.
 
 \begin{listing}
-\CodeInput{figures/matlab/PerformanceProcessor_ex.minc}
-\caption{Simplified implementation of the \texttt{PerformanceProcessor} class.}
-\label{lst:perfproc}
+  \CodeInput{figures/matlab/PerformanceProcessor_ex.minc}
+  \caption{Simplified implementation of the \texttt{PerformaceProcessor} class.}
+  \label{lst:perfproc}
 \end{listing}
 
-Each class derived from |SchemeProcessor| must implement three methods:
-\begin{enumerate}
-  \item |initialize()| is called before the first scheme is simulated. It allows
-    the scheme processor to allocate space for variables in which data gathered
-    about the simulations is saved. The |initialize()| method of
-    |PerformanceProcessor| sets up a big matrix to store the MSE resulting from
-    each simulation. 
+For another example of how to use a performance processor, consider the hybrid
+communication scheme implemented as |Hybrid2DScheme| in \lstref{hybridscheme}.
+In this communication scheme, each source symbol~$S$ is split into a discrete
+part~$Q$ and a continuous part~$E$, which are then transmitted across two
+channel uses.  The decoder computes the source estimate~$\Sh$ from the separate
+estimates~$\Qh$ and~$\Eh$. (This is similar to the communication schemes
+introduced in \chapref{mindelbwex}.)
 
-  \item |save_scheme_data()| is called after each scheme has been
-    simulated for a particular SNR. The scheme just run is passed to
-    |save_scheme_data()| as the |scheme| argument, from which the method can
-    then extract simulation data. In the example of the performance processor,
-    the only data extracted is the MSE.
+\begin{listing}
+\begin{Code}
+  classdef Hybrid2DScheme < PracticalScheme
+      
+      properties (Access = 'protected')
+          q
+          qh
+      end
+      
+      methods (Access = 'protected')
+          function x = encode(obj, s)
+              obj.q = discrete_part(s);
+              obj.e = continuous_part(s);
+              
+              x(1, :) = scale_to_power_constraint(obj.q);
+              x(2, :) = scale_to_power_constraint(obj.e);
+          end
+          
+          function sh = decode(obj, y)
+              obj.qh = estimate_qh(y);
+              obj.eh = estimate_eh(y);
+              sh = combine_estimates(obj.qh, obj.yh);
+          end
 
-  \item |post_process()| is called after all schemes have been processed
-    for all SNR values. It is here that a scheme processor can post-process and
-    present the data gathered from the simulations.
-\end{enumerate}
+          % Other methods here ...
+      end
 
+      methods (Access = 'public')
+          function q = compute_q(obj)
+              q = obj.q;
+          end
+          
+          function qh = compute_qh(obj)
+              qh = obj.qh;
+          end
+      end
+  end
+\end{Code}
+\caption{Simplified implementation of a hybrid communication scheme. Note how
+\texttt{qh} and \texttt{eh} are saved as class properties, so that they can be
+accessed by a scheme processor through the respective \texttt{compute\_*}
+methods.}
+\label{lst:hybridscheme}
+\end{listing}
 
-\todo Implement hybrid scheme and put it as an example.
+A question of interest is the behavior of the average error $(Q - \Qh)^2$ as a
+function of the SNR. The scheme processor |Hybrid2DProcessor| in
+\lstref{hybridprocessor} solves this task in a few small steps. It is very
+similar to the |PerformanceProcessor| of \lstref{perfproc}, except that
+different variables are accessed in \lineref{13}. Since the corresponding
+communication scheme class, |Hybrid2DScheme|, saves |q| and~|qh| as class
+properties and implements public |compute_*| methods for these properties,
+the |save_scheme_data()| method of the new scheme processor can easily access
+these and compute the corresponding error.
+
+\begin{listing}
+\begin{Code}
+  classdef Hybrid2DProcessor < SchemeProcessor
+      
+      properties (Access = 'protected')
+          qe
+      end
+      
+      methods (Access = 'protected')
+          function initialize(obj)
+              obj.qe = zeros(obj.nb_schemes(), length(obj.snr));
+          end
+          
+          function save_scheme_data(obj, scheme, j, k)
+              obj.qe(k, j) = mean((scheme.compute_q() - ...
+                scheme.compute_qh()).^2);
+          end
+          
+          function post_process(obj)
+              % Plot qe vs. SNR ...
+          end
+      end
+  end
+\end{Code}
+\caption{A scheme processor to plot the estimation error of the discrete part in
+a hybrid communication scheme.}
+\label{lst:hybridprocessor}
+\end{listing}
 
 
 \section{Reference}\label{sec:reference}
@@ -508,12 +593,12 @@ following methods.
   \lstref{uncoded}) or variable parameters of the scheme itself.
 \end{method}
 
-\begin{method}{\oarg{x} = encode(\obj, \oarg{s})}
+\begin{method}{\oarg{x} = encode(\obj, \oarg{s}) (protected)}
   This method receives +s+, a matrix of source samples with $k$~rows, and must
   return a matrix~+x+ with $n$~rows and the same number of columns as~+s+.
 \end{method}
 
-\begin{method}{\oarg{sh} = decode(\obj, \oarg{y})}
+\begin{method}{\oarg{sh} = decode(\obj, \oarg{y}) (protected)}
   This method receives the channel output~+y+ as a matrix with $n$~rows and
   must return a matrix~+sh+ with $k$~rows of source estimates
 \end{method}
