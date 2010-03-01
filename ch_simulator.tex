@@ -1038,5 +1038,32 @@ plotting is done then it can override |check_parameters()|.
 %
 %
 
+\section{Implementation Notes}
 
+\subsection{Schemes and Scheme Processors}
 
+To implement new communication schemes and to analyze them using scheme
+processors, it is not necessary to know anything about how scheme classes and
+scheme processor classes actually interact. For the curious, this section
+explains what is going on behind the scenes.
+
+All objects based on the |Scheme| class have the method |set_snr()|, whose
+definition is
+\begin{method}{set_snr(\obj, \oarg{snr}) (public)}
+\end{method}
+To ``process'' a scheme for a given SNR, all that scheme processors in fact do
+is call the scheme's |set_snr()| method with the given SNR. This method first
+checks if the specified SNR value differs from the one currently set. If so, it
+calls the abstract method |snr_updated()|, in which derived classes must put the
+code to update the object's state based on the new SNR. 
+
+The two classes derived from |Scheme|, which are |TheoreticalScheme| and
+|PracticalScheme|, implement |snr_updated()| in different ways. In
+|TheoreticalScheme|, it just calls |update_mse()|, which classes derived from
+it (such as |ShannonScheme|) must implement. 
+
+In classes based on |PracticalScheme|, |snr_updated()| does slightly more work.
+To update an objects state, a whole round of communication must be simulated.
+Thus, |snr_updated()| as implemented in |PracticalScheme| calls
+|run_simulation()|, which is the method that actually calls  |encode()| and
+|decode()|.
