@@ -864,6 +864,37 @@ The behavior of this module is controlled by the following properties.
 \end{property}
 
 
+\subsubsection{Implementing Custom Output Modules}
+
+A new output module is created by creating a class derived from |OutputModule|
+(or from one of its derived classes). Any class derived from |OutputModule| must
+implement the following two methods.
+
+\begin{method}{do_actual_plot(\obj) (protected)}
+  This method creates the actual plot using the data set in the class
+  properties. Before this method is called, it has already been verified by the
+  base class that the data properties |x| and |y| have been set, that they have
+  the right format, etc. 
+\end{method}
+
+\begin{method}{set_color_mode(\obj, \oarg{c}) (public)}
+  This method is called with the parameter +c+ being either |'color'| or |'bw'|.
+  Its task is to set up the state of the class such that the plot created by
+  |do_actual_plot()| is in color or readable on black/white, respectively.
+\end{method}
+
+If an output module has other properties whose validity should be checked before
+plotting is done then it can override |check_parameters()|.
+
+\begin{method}{check_parameters(\obj) (protected)}
+  This method is called just before |do_actual_plot()|. If it is overriden by a
+  derived class, the overriding function \emph{must} call the base class version
+  of method, since otherwise important checking is not done. 
+
+  \codeexample |MatlabFilePlotModule| and |PGFPlotsOutputModule| both override
+  this method to check whether the file to write the plot to already exists.
+\end{method}
+
 %
 %\subsection{Batch Processing and Makefile Inclusion}
 %
