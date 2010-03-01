@@ -18,12 +18,10 @@ Kleiner]
 % Set up a customized list format. The environments defined below use the
 % pgfmanualentry environments and the \pgfmanualentryheadline macro.
 \newenvironment{pgfmanualentry}{\list{}{\leftmargin=2em\itemindent-\leftmargin\def\makelabel##1{\hss##1}}}{\endlist}
-\newcommand\pgfmanualentryheadlinestart{\itemsep=0pt\parskip=0pt\item\strut%
-\begingroup}
-\newcommand\pgfmanualentryheadlineend{\endgroup\par\topsep=0pt}
 
-\newcommand\pgfmanualentryheadline[1]{\pgfmanualentryheadlinestart#1%
-\pgfmanualentryheadlineend}
+\newcommand\pgfmanualentryheadline[1]{\itemsep=0pt\parskip=0pt\item\strut%
+\begingroup#1%
+\endgroup\par\penalty10000\topsep=0pt}
 \newcommand\pgfmanualbody{\parskip3pt}
 
 \newenvironment{filedescription}[1]{
@@ -69,14 +67,15 @@ Kleiner]
 
 
 % Property environment and associated macros.
-\newenvironment{property}{\UndefineShortVerb{\|}\makespecialsother\enablemyshortverb\propertyheader}
+\newenvironment{property}{\makespecialsother\enablemyshortverb\propertyheader}
 {
+  \disablemyshortverb
   \end{pgfmanualentry}
 }
 
 \def\propertyheader#1{\begin{pgfmanualentry}
   \pgfmanualentryheadline{\extractproperty#1}
-\disablemyshortverb\makespecialsspecial\pgfmanualbody\DefineShortVerb{\|}}
+\makespecialsspecial\pgfmanualbody}
 
 \def\extractproperty#1 (#2){\texttt{\declare{#1}}\hfill%
 (#2)}
@@ -95,7 +94,7 @@ Kleiner]
 \def\pgfmanualopt{\ifx\next\bgroup\bgroup\color{optcolor}\else{\color{optcolor}\next}\fi}
 
 % Typesetting of optional arguments.
-\def\oarg#1{\opt{\meta{#1}}}
+\def\oarg#1{\opt{\texttt{#1}}}
 \def\obj{\meta{obj}}
 \def\meta#1{{\normalfont$\langle$\textit{#1}$\rangle$}}
 
@@ -124,12 +123,12 @@ Kleiner]
 % \endmyverb. Furthermore, \enablemyshortverb installs a shortcut, where it can
 % be started and ended with |. \disablemyshortverb uninstalls the shortcut.
 \begingroup
-\catcode`\|=\active\relax
-\gdef\startverbchar{\startmyverb\def|{\endverbchar}}
-\gdef\endverbchar{\endmyverb\def|{\startverbchar}}
-\gdef\enablemyshortverb{\catcode`\|=\active\relax\def|{\startverbchar}}
+\catcode`\?=\active\relax
+\gdef\startverbchar{\startmyverb\def?{\endverbchar}}
+\gdef\endverbchar{\endmyverb\def?{\startverbchar}}
+\gdef\enablemyshortverb{\catcode`\?=\active\relax\def?{\startverbchar}}
 \endgroup
-\def\disablemyshortverb{\catcode`\|=12}
+\def\disablemyshortverb{\catcode`\?=12}
 
 \def\startmyverb{\makespecialsother\begingroup\ttfamily}
 \def\endmyverb{\endgroup\makespecialsspecial}

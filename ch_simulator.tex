@@ -3,11 +3,15 @@
 
 \DefineShortVerb{\|}
 
+\emph{Introductory paragraphs go here\ldots}
+
+
+Before introducing \jscsim, though, this chapter starts with a short section
+explaining why object oriented programming is fundamentally suitable to write
+simulations.
 
 \section[Object Oriented Programming for Simulations]{Object Oriented
 Programming and Simulation: A Great Match}\label{sec:ooforsim}
-
-\subsection{The ``Traditional'' Way}
 
 Imagine that you have written the code in \lstref{proceduralsim} to simulate
 your freshly devised communication scheme. The function |run_simulation()|
@@ -463,14 +467,14 @@ determine the MSE by actually simulating communication.
 \subsubsection{Theoretical Schemes}
 
 Theoretical communication schemes are implemented as classes derived from
-|TheoreticalScheme|. Any class derived from |TheoreticalScheme| must define the
-following methods.
+|TheoreticalScheme|. Any class derived from |TheoreticalScheme| must implement
+the following methods.
 
 \begin{method}{\meta{class name}(\oarg{sv}, \oarg{s}
-  [, \oarg{parameters}]) (public)}
-  The first two arguments of the constructor are the source variance +sv+ and
-  the source sample sequence~+sv+, which must be passed on to the base class
-  constructor, \ie, by calling
+  [, \opt{\meta{parameters}}]) (public)}
+  This is the constructor of the class. The first two arguments are the source
+  variance +sv+ and the source sample sequence~+sv+, which must be passed on to
+  the base class constructor, \ie, by calling
   \begin{Code}
   obj@TheoreticalScheme(sv, s);
   \end{Code}
@@ -491,17 +495,17 @@ following methods.
 \subsubsection{Practical Schemes}
 
 Practical communication schemes are implemented as classes derived from
-|PracticalScheme|. Any class derived from |PracticalScheme| must define the
+|PracticalScheme|. Any class derived from |PracticalScheme| must implement the
 following methods.
-\begin{method}{\meta{class name}(\oarg{sv}, \oarg{s} [, \oarg{parameters}])
-  (public)}
-  The first two arguments of the constructor are the source variance +sv+ and
-  the source sample sequence +s+, which must be passed on to the class
-  constructor. There are two more arguments of the base class constructor, which
-  are the number $k$~of source symbols encoded at a time, and the number $n$~of
-  channel symbols produced for every $k$~source symbols. Depending on the
-  scheme, these can be fixed values (as in |UncodedScheme| in \lstref{uncoded})
-  or variable parameters of the scheme itself.
+\begin{method}{\meta{class name}(\oarg{sv}, \oarg{s}
+  [, \opt{\meta{parameters}}]) (public)}
+  This is the constructor of the class. The first two arguments are the source
+  variance +sv+ and the source sample sequence +s+, which must be passed on to
+  the class constructor. There are two more arguments of the base class
+  constructor, which are the number $k$~of source symbols encoded at a time, and
+  the number $n$~of channel symbols produced for every $k$~source symbols.
+  Depending on the scheme, these can be fixed values (as in |UncodedScheme| in
+  \lstref{uncoded}) or variable parameters of the scheme itself.
 \end{method}
 
 \begin{method}{\oarg{x} = encode(\obj, \oarg{s})}
@@ -509,10 +513,48 @@ following methods.
   return a matrix~+x+ with $n$~rows and the same number of columns as~+s+.
 \end{method}
 
-\begin{method}{\oarg{$\sh$} = decode(\obj, \oarg{y})}
+\begin{method}{\oarg{sh} = decode(\obj, \oarg{y})}
   This method receives the channel output~+y+ as a matrix with $n$~rows and
-  must return a matrix~+$\sh$+ with $k$~rows of source estimates
+  must return a matrix~+sh+ with $k$~rows of source estimates
 \end{method}
+
+In addition, derived classes may want to override
+|update_variable_parameters()|.
+\begin{method}{update_variable_parameters(\obj) (protected)}
+  In this method, which is called whenever the SNR changes, derived classes can
+  update any of their own properties that depend on the SNR, if they are not
+  explicitly computed as a function of |obj.snr| in |encode()| or |decode()|. It
+  is important that if a derived class overrides this method, it must first
+  call the base class method, \ie,
+  \begin{Code}
+  function update_variable_parameters_(obj)
+    % Call base class version.
+    update_variable_parameters@PracticalScheme(obj); 
+    % Your code here ...
+  end
+  \end{Code}
+\end{method}
+
+To allow a scheme processor to track a particular property of a communication
+scheme, the property must be made accessible. This is normally done by  writing
+a |compute_| method to access it. We have already seen the example of the
+|compute_mse()| function, which is defined in |Scheme|. |PracticalScheme| in
+addition implements the following methods.
+
+\begin{method}{x = compute_x(\obj) (public)}
+  Returns the channel input sequence.
+\end{method}
+
+\begin{method}{y = compute_y(\obj) (public)}
+  Returns the channel output sequence.
+\end{method}
+
+\begin{method}{sh = compute_sh(\obj) (public)}
+  Returns the sequence of source estimates.
+\end{method}
+
+Any derived class should thus implement a |compute_| function for each
+property it wants to make accessible to a scheme processor.
 
 
 \subsection{Scheme Processors}
@@ -532,17 +574,17 @@ custom scheme processor.
 
 The behavior of all scheme processors can be controlled through the following
 properties, defined in the class |SchemeProcessor|.
-\begin{property}{snr (public; default |10.^(0:.1:4)|)}
+\begin{property}{snr (public; default ?10.^(0:.1:4)?)}
   A vector that specifies the SNR range over which the specified
   communication schemes are simulated. By default it is set to the range
   0dB to 40dB with increments of 1dB. 
 \end{property}
 
-\begin{property}{N (public; default |100000|)}
+\begin{property}{N (public; default ?100000?)}
   The length of the random source sample sequence.
 \end{property}
   
-\begin{property}{verbose (public; default |false|)}
+\begin{property}{verbose (public; default ?false?)}
   If this parameter is set to true, various status and debugging messages are
   displayed during the simulations.
 \end{property}
@@ -553,7 +595,7 @@ properties, defined in the class |SchemeProcessor|.
   |MatlabPlotModule|.
 \end{property}
 
-All scheme processors are accessed using the |process()| method.
+All scheme processors are launched using the |process()| method.
 \begin{method}{process(\obj, \oarg{schemes}, \oarg{parameters}) (public)}
   Process the specified schemes for the specified parameters. The cell array
   +schemes+ lists the schemes to be processed; each of its elements is a string
@@ -596,10 +638,10 @@ SDR vs SNR curve of the specified communication scheme, as illustrated by the
 numerous examples in \secref{tutorial}.
 
 
-\subsubsection{Custom Scheme Processors}
+\subsubsection{Implementing a New Scheme Processor}
 
 Custom scheme processors are implemented by creating a new class derived from
-|SchemeProcessor|. Each such class \emph{must} implement the three following
+|SchemeProcessor|. Each such class must implement the three following
 abstract methods.
 
 \begin{method}{initialize(\obj) (protected)}
@@ -613,7 +655,7 @@ abstract methods.
 
 \begin{method}{save_scheme_data(\obj, \oarg{scheme}, \oarg{j}, \oarg{k})
   (protected)}
-  This method is called each time a scheme has been simulated for a particular
+  This method is called each time a scheme has been processed for a particular
   SNR and gives you the opportunity to save data about the simulation run.
   +scheme+ is the scheme object that was just run; you can gather data about it
   by calling its public methods. For example, the |save_scheme_data()| method
@@ -641,6 +683,15 @@ To change the default output module, override the following method.
 \begin{method}{\oarg{om} = default_output_module(\obj) (protected)}
   This method is called by the constructor of |SchemeProcessor| to install the
   default output module. 
+\end{method}
+
+In addition, a custom scheme processor can override |create_source_samples()| to
+change the source distribution.
+
+\begin{method}{s = create_source_samples(\obj) (protected)}
+  This method must return a sequence of |N| independent random source samples of
+  variance~|sv|. The default implementation in |SchemeProcessor| creates
+  Gaussian source samples.
 \end{method}
 
 
@@ -716,7 +767,7 @@ All output modules support the following properties and methods.
   the empty string, no legend is created.
 \end{property}
 
-\begin{property}{grid (public; default |false|)}
+\begin{property}{grid (public; default ?false?)}
   This boolean parameter determines whether a grid is drawn (if set to |true|)
   or not (if set to |false|).
 \end{property}
@@ -780,13 +831,13 @@ properties.
   that function for a complete list. 
 \end{property}
 
-\begin{property}{pdfres (public; default |600|)}
+\begin{property}{pdfres (public; default ?600?)}
   An integer denoting the resolution (in dpi) of the
   created file if the file type is |pdf|. The default value is 600~dpi, which
   is a typical value for production quality.
 \end{property}
 
-\begin{property}{force (public; default |false|)}
+\begin{property}{force (public; default ?false?)}
    If this option is set to |true|, existing files are overwritten; if it is set
    to |false| then an error occurs if a file of the given name already exists.
 \end{property}
@@ -806,7 +857,7 @@ The behavior of this module is controlled by the following properties.
   be changed using the |force| property (see below).
 \end{property}
 
-\begin{property}{force (public; default |false|)}
+\begin{property}{force (public; default ?false?)}
    If this option is set to |true|, existing files are
   overwritten; if it is set to |false| then an error occurs if a file of the
   given name already exists.
@@ -821,304 +872,4 @@ The behavior of this module is controlled by the following properties.
 
 \section{Implementation Notes}
 
-\subsection{\texttt{Scheme} and Derived Classes}
-
-\subsubsection{The \texttt{Scheme} Class}
-
-|Scheme| is the common ancestor of all classes that implement communication
-schemes. In terms of implementation, it does very little. 
-
-The |Scheme| class has the following properties.
-\begin{property}{sv (protected; default |1|)}
-  The source variance. It is set through the constructor and then not
-  changed anymore.
-\end{property}
-\begin{property}{snr (protected; default |[]|)}
-  The SNR. It is set through |set_snr()|. Initially this property is an empty
-  vector; any object derived from |Scheme| is in an \emph{undefined} state
-  before |set_snr()| has been called for the first time.
-\end{property}
-\begin{property}{mse (protected; default |[]|)}
-  The MSE. This is updated by derived classes whenever the SNR is set
-  via |set_snr()|.
-\end{property}
-
-|Scheme| has the following methods.
-\begin{method}{Scheme(\oarg{sv}, \oarg{s}) (public)}
-  The arguments to the constructor are the source
-  variance~+sv+ and the source sample sequence~+s+. The argument +sv+ is
-  stored in the property~+sv+ of the class, while +s+ is ignored. This
-  is because not all schemes need to store the source samples: theoretical
-  schemes compute the MSE without needing to process any source
-  samples.\footnote{%
-  It might seem more logical if only classes derived from
-  \texttt{PracticalScheme} accepted~+s+ in their constructor, or even if
-  practical schemes generated the source symbols themselves. To guarantee a
-  fair comparison of different communication schemes, however, \jscsim\
-  generates the source symbols outside of the scheme classes, such that all
-  simulated communication schemes receive the same source sequence.
-  Moreover, scheme processors should not have to make a distinction between
-  theoretical and practical classes. Hence, all classes derived from
-  \texttt{Scheme} accept the source symbols in their constructor, whether they
-  use them or not.}
-\end{method}
-
-\begin{method}{set_snr(\obj, \oarg{snr}) (public)}
-  This function is called to set a new SNR.
-  Internally, it first checks whether the new value is the same as the
-  existing one; if yes, it does nothing. Otherwise, it stores the new value in
-  the |snr| property and calls the abstract function |snr_updated()|. In this
-  function, derived classes can react to the new SNR value. For example, the
-  |snr_updated()| method of |PracticalScheme| reruns the simulation for the
-  new SNR. 
-\end{method}
-  
-\begin{method}{\oarg{mse} = compute_mse(\obj) (public)}
-  The common feature of all communication schemes, whether theoretical or
-  practical, is that they can compute the achieved MSE for a given SNR.
-  |compute_mse()| does this by simply returning the value of the |mse| property;
-  derived classes must set this property in their implementation of
-  |snr_updated()|.
-\end{method}
-
-\begin{method}{snr_updated(\obj) (protected)}
-  This is an abstract function that is called by |set_snr()| if the new SNR is
-  different from the old one. In it, derived classes must at least update the
-  |mse| property. 
-\end{method}
-
-
-\subsubsection{The \texttt{TheoreticalScheme} Class}
-
-\begin{method}{TheoreticalScheme(\oarg{sv}, \oarg{s}) (public)}
-  By default, theoretical schemes have no parameters of their own. All the
-  constructor does, therefore, is pass its arguments to the base class
-  constructor.
-\end{method}
-
-\begin{method}{snr\_updated(\obj) (protected)}
-  Since the only thing theoretical schemes compute is the MSE, this function
-  just calls the abstract function |update_mse()|.
-\end{method}
-
-\begin{method}{update\_mse(\obj) (protected)}
-  In their implementation of this abstract function, derived classes must update
-  the |mse| property based on the |snr| property. 
-\end{method}
-
-
-\subsubsection{The \texttt{PracticalScheme} Class}
-
-The |PracticalScheme| class frees the derived classes from all work except
-defining the |encode()| and |decode()| function. When an object of a class
-derived from |PracticalScheme| is created, it receives a long sequence of source
-symbols~|s| through its constructor. Encoding and decoding is then done on the
-whole sequence simultaneously, \ie, the whole sequence~|s| is passed to
-|encode()| (as opposed to having a loop that calls |encode()| once for each
-element of~|s|). Similarly, |decode()| is passed the whole channel input
-sequence at once.
-
-A practical communication scheme is characterized by the parameters~$k$ and~$n$,
-which denote, respectively, the number of source symbols at a time and the
-number of channel uses into which a block of $k$~source symbols is encoded.
-Before passing the source sequence to |encode()|, |PracticalScheme| reorders it
-as a matrix with $k$~rows whose columns are blocks of $k$~source symbols,
-freeing the encoder from this work. In turn, the encoder is expected to return
-the channel input as a matrix with $n$~rows. The decoder works similarly.
-
-The |PracticalScheme| class has the following properties. They are all defined
-as \emph{protected}, so they can only be accessed from within the class (or one
-of its derived classes).
-\begin{property}{k (protected)}
-  The number of source symbols encoded at a time.
-\end{property}
-\begin{property}{n (protected)}
-  The number of channel input symbols per |k|~source symbols.
-\end{property}
-\begin{property}{s (protected)}
-  The source symbol sequence.
-\end{property}
-\begin{property}{x (protected)}
-  The $n \times N$ matrix of channel input symbols, where $N$
-  is the number of length-$k$ source symbol blocks. 
-\end{property}
-\begin{property}{y (protected)}
-  The $n \times N$ matrix of channel output symbols. 
-\end{property}
-\begin{property}{sh (protected)}
-  The sequence of source estimates corresponding to~|s|.
-\end{property}
-\begin{property}{P (protected)}
-  The average power constraint per channel input symbol.
-\end{property}
-\begin{property}{nv (protected)}
-  The noise variance.
-\end{property}
-
-The |PracticalScheme| class has the following methods.
-\begin{method}{PracticalScheme(\oarg{sv}, \oarg{s}, \oarg{k}, \oarg{n})
-  (public)}
-  The first two elements of the constructor are passed to the base class
-  constructor. In addition, +s+, +k+, and +n+ are saved in the properties of the
-  same name. 
-\end{method}
-
-\begin{method}{compute\_x(\obj) (public)}
-  This function returns the |x|~property.
-\end{method}
-\begin{method}{compute\_y(\obj) (public)}
-  This function returns the |y|~property.
-\end{method}
-\begin{method}{compute\_sh(\obj) (public)}
-  This function returns the |sh|~property.
-\end{method}
-
-\begin{method}{snr_updated(\obj) (protected)}
-  This function does the main work of the class. Whenever the SNR is updated,
-  |snr_updated()| encodes the source samples using |encode()| and saves the
-  result in the property~|x|. Then it adds Gaussian noise and saves the result
-  in the property~|y|. Next, it calls |decode()| to produce the source estimates
-  from~|y| and saves them in the property~|sh|. Finally it computes the average
-  squared error between~|s| and~|sh| and saves it in the property~|mse|. 
-
-  For given values of~|k| and~|n|, |snr_updated()| also takes care of arranging
-  the source sequence in a matrix with |k|~rows before passing it to |encode()|.
-  In return, |encode()| is expected to return a matrix with |n|~rows and the
-  same number of columns. Similarly, |decode()| receives the channel outputs as
-  a matrix with |n|~rows and is expected to return the source estimates in a
-  matrix with |k|~rows. 
-
-  The |Sealed| attribute of |snr_updated()| is set to |true|, meaning the
-  function cannot be overridden by a derived class. This guarantees that the
-  simulation procedure is the same for all communication schemes. 
-\end{method}
-
-\begin{method}{update_variable_parameters(\obj) (protected)}
-  This function is called by
-  |snr_updated()|. Derived classes can use it to set scheme parameters that
-  depend on the SNR. The default implementation just calls |init_P_nv()|.
-\end{method}
-
-\begin{method}{init_P_nv(\obj) (protected)}
-  This function updates the |P| and |nv| properties as a function of the SNR by
-  setting |P| to~$1$ and |nv| to |P|$ / \snr$.
-\end{method}
-
-
-\subsection{Scheme Processors}
-
-Scheme processors run one or more communication schemes for a range of SNR
-values and collect some data about them. Internally, the |SchemeProcessor| class
-works as follows.
-
-The |SchemeProcessor| class has the following properties.
-\begin{property}{sv (public)}
-The source variance. Whenever |sv| is changed, a new sequence of
-  random source symbols is generated. The default value of~|s| is~$1$.
-\end{property}
-\begin{property}{snr (public)}
-The SNR range over which the schemes are processed. The default range
-is~|10.^(0:0.1:4)|, \ie, from~$0$dB to~$40$dB in increments of~$1$dB.
-\end{property}
-\begin{property}{N (public)}
-The number of source samples to produce. The sequence of source symbols is
-regenerated whenever this is changed. 
-\end{property}
-\begin{property}{verbose (public)}
-A flag that controls the output of verbose messages. By default it is set
-to~|false|.
-\end{property}
-\begin{property}{output_module (public)}
-The output module. The constructor sets the default output module
-to~|MatlabPlotModule|.
-\end{property}
-\begin{property}{s (protected)}
-The sequence of source symbols. It is generated randomly when an object of this
-class is generated and remains unchanged afterwards. 
-\end{property}
-\begin{property}{schemes (protected)}
-A cell array of schemes to simulate. See the entry for |set_schemes()| for more
-details. 
-\end{property}
-\begin{property}{parameters (protected)}
-A cell array of parameters corresponding to the elements of the |schemes| array.
-See the entry for |set_schemes()| for more details.
-\end{property}
-
-The |SchemeProcessor| class has the following methods.
-\begin{method}{SchemeProcessor() (public)}
-  The constructor stores a sequence of random source
-  symbols in the property~|s| and sets the property~|output_module| to an instance of
-  |MatlabPlotModule|. 
-\end{method}
-\begin{method}{process(obj, schemes, parameters) (public)}
-  The only public method of this class,
-  |process()| performs the steps necessary to process a set of communication
-  schemes. It first calls |set_schemes()| to store the schemes and parameters
-  in the corresponding class properties. Then it calls in sequence the
-  methods |initialize()|, |do_processing()|, and |post_process()|.
-\end{method}
-
-\begin{method}{set_schemes(\obj, \oarg{schemes}, \oarg{parameters})
-  (protected)}
-  This method has two arguments.
-  Both +schemes+ and +parameters+ are cell arrays, as described in the
-  reference entry for the |process()| method. Internally, they are saved in
-  the cell array properties of the same names, |schemes| and |parameters|.
-  However, the format of these is slightly different than the way they are
-  received by |process()|. If an element of +parameters+ as passed to
-  |process()| is a matrix with $n$~columns, then the corresponding scheme name
-  will be stored $n$~times in the |schemes| property. Furthermore, the
-  |parameters| property will receive $n$~entries, where entry~$i$ is itself a
-  cell array whose elements are the entries of the $i\th$ column of the
-  parameter matrix. \todo: Example
-\end{method}
-
-\begin{method}{flatten_schemes(\obj, \oarg{s}, \oarg{p}) (protected)}
-  This method performs the conversion into the internal format of the |schemes|
-  and |parameters| array as described above.
-\end{method}
-  
-\begin{method}{do_processing(\obj) (protected)}
-  This method consists of two nested loop. The
-  outer loop is over the \emph{(scheme, parameter)} pairs. For each pair, the
-  inner loop goes through all SNR values in the |snr|~property.
-
-  For each \emph{(\meta{scheme}, \meta{parameter})} pair and for each SNR value,
-  |do_processing()| does only two things. First it calls the |set_snr()| method
-  of the scheme with the respective SNR value.     Then it calls
-  |save_scheme_data()|, which allows derived classes to gather data about the
-  simulation. 
-
-  For theoretical schemes, the call to |set_snr()| will just result in the |mse|
-  property being updated; for practical schemes it results in a complete
-  encode\slash transmit\slash cycle.
-\end{method}
-
-\begin{method}{\oarg{s} = create_scheme(\obj, \oarg{k}) (protected)}
-  This method creates an instance of the
-  $k\th$ scheme in the |schemes| property. If the scheme has parameters, these
-  are passed as additional arguments to the constructor of the scheme.
-\end{method}
-  
-\begin{method}{initialize(\obj) (protected; abstract)}
-  This abstract method is called before the schemes are
-  simulated. It allows derived classes to initialize any data structures
-  needed to store data about the simulations.
-\end{method}
-
-\begin{method}{save_scheme_data(\obj, \oarg{scheme}, \oarg{j}, \oarg{k})
-  (protected; abstract)}
-  This abstract method is called by
-  |do_processing()| after a (\meta{scheme}, \meta{parameter}) pair has been run
-  for a particular SNR. This is where derived classes gather data.
-\end{method}
-
-\begin{method}{post_process(\obj) (protected; abstract)}
-  This abstract method is called after all schemes
-  have been processed. Derived classes can use it to process and/or display
-  the collected information.
-\end{method}
-
-
-\subsection{Output Modules}
+\subsubsection{Interaction Between Schemes and Scheme Processors}
