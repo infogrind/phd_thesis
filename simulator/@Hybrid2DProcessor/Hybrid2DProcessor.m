@@ -26,10 +26,16 @@ classdef Hybrid2DProcessor < SchemeProcessor
         end
         
         function save_scheme_data(obj, scheme, j, k)
-            obj.qe(j, k) = mean((scheme.compute_q() - scheme.compute_qh()).^2);
-            obj.ee(j, k) = ...
-                mean((scheme.compute_e() - scheme.compute_eh()).^2) / ...
-                scheme.compute_beta()^2;
+            % Get all needed data from scheme object.
+            q  = scheme.compute_q();
+            qh = scheme.compute_qh();
+            e  = scheme.compute_e();
+            eh = scheme.compute_eh();
+            b  = scheme.compute_beta();
+            m  = scheme.compute_m();
+            
+            obj.qe(j, k) = sum(mean((q - qh).^2, 2)) / m;
+            obj.ee(j, k) = sum(mean((e - eh).^2, 2)) / m / b^2;
         end
         
         function post_process(obj)

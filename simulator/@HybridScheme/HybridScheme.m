@@ -2,7 +2,7 @@ classdef HybridScheme < PracticalScheme
     %HYBRIDSCHEME Summary of this class goes here
     %   Detailed explanation goes here
     
-    properties
+    properties (Access = 'protected')
         % m and p mean that m source symbols are encoded into mp channel inputs.
         m
         p
@@ -39,6 +39,34 @@ classdef HybridScheme < PracticalScheme
             obj.p = p;
             obj.epsilon = e;
         end
+        
+        
+        function q = compute_q(obj)
+            q = obj.q;
+        end
+        
+        function qh = compute_qh(obj)
+            qh = obj.qh;
+        end
+        
+        function e = compute_e(obj)
+            e = obj.e;
+        end
+        
+        function eh = compute_eh(obj)
+            eh = obj.eh;
+        end
+        
+        function m = compute_m(obj)
+            m = obj.m;
+        end
+        
+        
+        function b = compute_beta(obj)
+            % The standard beta definition from the thesis.
+            b = ceil(obj.snr ^ ((1 - obj.epsilon)/2));
+        end
+        
     end
     
     
@@ -93,8 +121,8 @@ classdef HybridScheme < PracticalScheme
         
         function sh = decode(obj, y)
             obj.qh = decode_q(obj, y(1:obj.m*(obj.p-1), :));
-            obj.e = decode_e(obj, y(end - obj.m + 1 : end, :));
-            sh = combine_estimates(obj, obj.qh, obj.e);
+            obj.eh = decode_e(obj, y(end - obj.m + 1 : end, :));
+            sh = combine_estimates(obj, obj.qh, obj.eh);
         end
         
         
@@ -150,11 +178,6 @@ classdef HybridScheme < PracticalScheme
             sh = sh + e / b^(obj.p - 1);
         end
         
-        
-        function b = compute_beta(obj)
-            % The standard beta definition from the thesis.
-            b = ceil(obj.snr ^ ((1 - obj.epsilon)/2));
-        end
         
         function y = quantize(obj, x)
             % The quantization is done using the supplied lattice function.

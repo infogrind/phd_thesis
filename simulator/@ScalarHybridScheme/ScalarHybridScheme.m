@@ -6,9 +6,9 @@ classdef ScalarHybridScheme < HybridScheme
     end
     
     methods (Access = 'public')
-        function obj = ScalarHybridScheme(sv, s, n, e)
-            % For this scheme, m = 1 and n is arbitrary.
-            obj@HybridScheme(sv, s, 1, n, e);
+        function obj = ScalarHybridScheme(sv, s, p, e)
+            % For this scheme, m = 1 and p is arbitrary.
+            obj@HybridScheme(sv, s, 1, p, e);
         end
     end
     
