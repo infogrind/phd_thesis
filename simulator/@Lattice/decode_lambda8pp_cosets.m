@@ -69,7 +69,7 @@ function p = decode_lambda8pp_block(rho_m, d, z, s)
 
 % The trick is to use rho_m as index into d, z, and s, respectively. First,
 % we use it as index into d and apply the Reed-Muller decoder.
-p = rm_decode(extract_rho(rho_m, d));
+p = Lattice.rm_decode(extract_rho(rho_m, d));
 
 % Next, we have to flip the entries of p back around 1 if they have been
 % flipped in the precomputation phase.
