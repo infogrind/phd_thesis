@@ -4,6 +4,7 @@ MTOPDF += ex_uncoded.m
 
 # List of .m files that create .tex_t files.
 MTOTEXT += ex_uncodedpgf.m
+MTOTEXT += fig_scalar_comparison.m
 
 # List of .m files from which only a .minc file should be created.
 MINCONLY += PerformanceProcessor_ex.m

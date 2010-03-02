@@ -141,7 +141,7 @@ the projection of the received point onto the tangent through~$f(s_0)$ (see
 \sh - s_0$ is then
 \begin{equation*}
   \| \Delta \|^2 = \frac{\| f(s_0 + \Delta) - f(s_0) \|^2}
-  {\left\| \left. \frac{d f(s)}{ds} \right|_{s = s_0} \right|^2}.
+  {\left\| \left. \frac{d f(s)}{ds} \right|_{s = s_0} \right\|^2}.
 \end{equation*}
 The term $\| f(s_0 + \Delta) - f(s_0) \|$ is the length of the noise
 vector~$\Zv$ projected onto the tangent through $f(s_0)$
@@ -954,6 +954,19 @@ is asymptotically optimal.
   \end{equation*}
 \end{theorem}
 
+The simulation results on \figref{escalingsim} illustrate the tradeoff due to
+the choice of~$\e$ and the performance when $\e$~is chosen optimally as a
+function of the~$\snr$.
+\begin{figure}
+  \begin{center}
+    \input{figures/matlab/fig_scalar_comparison.tex_t}
+  \end{center}
+  \caption{Simulation results illustrating the tradeoff represented by the
+  choice of~$\e$ for $n = 4$. For larger~$\e$, the error from decoding the
+  discrete signal part decays quickly but the final scaling is less good, while
+  for smaller~$\e$ the opposite holds.}
+  \label{fig:escalingsim}
+\end{figure}
 
 
 
