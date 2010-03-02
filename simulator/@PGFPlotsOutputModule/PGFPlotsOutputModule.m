@@ -20,6 +20,8 @@ classdef PGFPlotsOutputModule < OutputModule
                     obj.colormode = 'color';
                 case 'bw'
                     obj.colormode = 'bw';
+                case 'black white'
+                    obj.colormode = 'black white';
                 otherwise
                     error('%s is not a valid color mode.', c);
             end
@@ -107,6 +109,8 @@ classdef PGFPlotsOutputModule < OutputModule
                         '{mark=asterisk},mark={star},{mark=square},', ...
                         '{mark=diamond},{mark=triangle},mark={pentagon},', ...
                         '{mark=oplus},{mark=otimes}}'];
+                case 'black white'
+                    s = 'cycle list name=black white';
                 otherwise
                     % We should never reach here, error checking should be done
                     % before.
