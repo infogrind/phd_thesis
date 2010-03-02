@@ -89,6 +89,9 @@ end
 for k = 1:size(x, 1)
     if verbose
         fprintf('.');
+        if mod(k, 60) == 0
+            fprintf('%.2f%% done\n', 100*k / size(x, 1));
+        end
     end
     y(k, :) = leech_decode_single_vector(x(k, :), rho_m, chi_m);
 end
