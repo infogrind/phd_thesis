@@ -1,9 +1,11 @@
 function test_schemes()
 
-allschemes = {'ShannonScheme', 'UncodedScheme', 'LinearScheme'};
-allparams = {[1 2 3], [], [1 2 3]};
+allschemes = {'ShannonScheme', 'UncodedScheme', 'LinearScheme', ...
+    'ScalarHybridScheme', 'OptScalarHybridScheme'};
+allparams = {[1 2 3], [], [1 2 3], [3 4; 0.7 0.6], [3 4]};
 
 pp = PerformanceProcessor();
+pp.verbose = true;
 om1 = MatlabPlotModule();
 om2 = MatlabPlotModule();
 om3 = MatlabPlotModule();
