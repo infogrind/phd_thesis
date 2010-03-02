@@ -128,7 +128,14 @@ classdef PracticalScheme < Scheme
             
             % Decode, verify dimensions of decoder output, and convert back to
             % row vector. 
+            
+            %%%%%%%%% ATTENTION: THE LINE BELOW IS THE CORRECT VERSION %%%%%%
             sh_block = decode(obj, obj.y);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            %%%%%%%%% WHEREAS THE FOLLOWING LINE SHOULD BE REMOVED. %%%%%%%%%
+            %sh_block = decode(obj, obj.x);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            
             assert(size(sh_block, 1) == obj.k);
             obj.sh = block_to_row(obj, sh_block);
             

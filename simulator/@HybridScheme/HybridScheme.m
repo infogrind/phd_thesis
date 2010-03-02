@@ -146,7 +146,8 @@ classdef HybridScheme < PracticalScheme
                         quantize(obj, yq(ind, :) * b * sqrt(obj.sv/obj.P)) / b;
                 else
                     qh(ind, :) = ...
-                        quantize(obj, yq(ind, :) * b * R / sqrt(obj.P)) / b;
+                        quantize(obj, yq(ind, :) * b * R / sqrt(obj.m*obj.P)) ...
+                        / b;
                 end
             end
                 
