@@ -1,5 +1,5 @@
 classdef AltOptScalarHybridScheme < OptScalarHybridScheme
-    %ALTOPTSCALARHYBRIDSCHEME Summary of this class goes here
+    %ALTOPTSCALARHYBRIDSCHEME Like optimal scheme, but lets you vary a constant.
     %   Detailed explanation goes here
     
     properties

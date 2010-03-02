@@ -136,7 +136,7 @@ classdef HybridScheme < PracticalScheme
             Ke = obj.Ke;
             nv = obj.nv;
             
-            eh = sqrt(P*m) / R * Ke * inv(m*P/R^2 * Ke + nv*eye(m)) * ye;
+            eh = sqrt(P*m) / R * Ke / (m*P/R^2 * Ke + nv*eye(m)) * ye;
         end
         
         
