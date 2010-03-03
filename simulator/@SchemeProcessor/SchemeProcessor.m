@@ -16,13 +16,10 @@ classdef SchemeProcessor < handle
         % Cell-arrays of schemes and parameter lists
         schemes
         parameters
-        
-        % A legend if it has been set manually.
-        legend
     end
     
     
-    properties (SetAccess = 'public')
+    properties (Access = 'public')
         
         % Source variance
         sv = 1;
@@ -62,15 +59,6 @@ classdef SchemeProcessor < handle
             do_processing(obj);
             post_process(obj);
 
-        end
-        
-        function set_legend(obj, l)
-            % l must be either empty (in which case the manual legend is
-            % disabled) or it must be a row cell.
-            if ~isempty(l) && (~iscell(l) || ~isvector(l))
-                error('The argument l must either be empty or a cell row vector.');
-            end
-            obj.legend = l;
         end
     end
     
@@ -241,17 +229,10 @@ classdef SchemeProcessor < handle
             obj.output_module.grid = true;
             
             % We only print a legend if there are several schemes.
-            % If a manual legend has been set, we use that one.
-            if length(obj.schemes) > 1 || ~isempty(obj.legend)
+            if length(obj.schemes) > 1
                 obj.output_module.legendpos = 'NorthWest';
-                if ~isempty(obj.legend)
-                    obj.output_module.legend = obj.legend;
-                else
-                    obj.output_module.legend = ...
-                        printify(obj.schemes, obj.parameters);
-                end
-            else
-                obj.output_module.legend = {};
+                obj.output_module.legend = ...
+                    printify(obj.schemes, obj.parameters);
             end
             
             obj.output_module.do_plot();

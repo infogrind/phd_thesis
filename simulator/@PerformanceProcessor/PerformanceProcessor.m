@@ -28,9 +28,12 @@ classdef PerformanceProcessor < SchemeProcessor
         
         
         function post_process(obj)
-            obj.output_module.ylabel = 'SDR [dB]';
-            obj.output_module.plottitle = 'SDR vs. SNR';
-            plot_vs_snr_db(obj, obj.sv ./ obj.mse);
+            % Plot only if output module is not set to empty.
+            if ~isempty(obj.output_module)
+                obj.output_module.ylabel = 'SDR [dB]';
+                obj.output_module.plottitle = 'SDR vs. SNR';
+                plot_vs_snr_db(obj, obj.sv ./ obj.mse);
+            end
         end
         
         

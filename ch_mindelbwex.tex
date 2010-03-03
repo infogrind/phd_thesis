@@ -922,9 +922,21 @@ where $\e' = (n-1)\e$ can be made as small as desired.
 As already mentioned in \remref{geomlb}, the choice of $\e$ represents a
 tradeoff: for small $\e$ the error due to the ``discrete'' part vanishes only
 slowly, but the scaling exponent in the limit is larger. For larger $\e$, $\Eq$
-vanishes quickly but the resulting exponent is smaller. The remainder of this
+vanishes quickly but the resulting exponent is smaller. This is illustrated by
+the simulation results on \figref{scalarcomparison}.  The remainder of this
 section shows how to choose $\e$ as a function of~$\snr$ in order to achieve the
 SDR scaling upper bound of \thmref{scalinglb}.
+
+\begin{figure}
+  \begin{center}
+    \input{figures/matlab/fig_scalar_comparison.tex_t}
+  \end{center}
+  \caption{Simulation results illustrating the tradeoff represented by the
+  choice of~$\e$ for $n = 4$. For larger~$\e$, the error from decoding the
+  discrete signal part decays quickly but the final scaling is less good, while
+  for smaller~$\e$ the opposite holds.}
+  \label{fig:scalarcomparison}
+\end{figure}
 
 Let
 \begin{equation}
@@ -953,20 +965,6 @@ is asymptotically optimal.
     \mse \in O(\snr^{-n} (\log\snr)^{n-1}).
   \end{equation*}
 \end{theorem}
-
-The simulation results on \figref{escalingsim} illustrate the tradeoff due to
-the choice of~$\e$ and the performance when $\e$~is chosen optimally as a
-function of the~$\snr$.
-\begin{figure}
-  \begin{center}
-    \input{figures/matlab/fig_scalar_comparison.tex_t}
-  \end{center}
-  \caption{Simulation results illustrating the tradeoff represented by the
-  choice of~$\e$ for $n = 4$. For larger~$\e$, the error from decoding the
-  discrete signal part decays quickly but the final scaling is less good, while
-  for smaller~$\e$ the opposite holds.}
-  \label{fig:escalingsim}
-\end{figure}
 
 
 
@@ -1115,19 +1113,20 @@ independently in each dimension and is equivalent to repeated application of the
 scalar scheme of \secref{scalarquant}. Hence \thmref{scalarachievability}
 applies to lattice quantizers as well. 
 
-\figref{sim_latticeperf} shows SDR curves achieved using lattices of various
-dimensions. While the scaling is indeed the same for all~$m$, confirming the
-results of this section, the SDR for a fixed SNR can be increased by using a
-lattice of higher dimension. The following calculations can be used to quantify
-the performance.
+\figref{sim_latticeperf} compares SDR curves achieved with a scalar quantizer
+with those achieved using the 24-dimensional Leech lattice for quantization.
+While the scaling at high SNR is indeed the same, confirming the results of this
+section, the error due to decoding the discrete part of the signal decreases
+faster if the quantizing lattice has higher dimension. The following
+calculations can be used to quantify the performance.
 
 \begin{figure}
   \begin{center}
-    \figbox{sim_latticeperf}
+    \input{figures/scalarvsleech.tex_t}
   \end{center}
-  \caption{Comparison of the performance of lattices of various dimensions.
-  \textbf{[I will add this figure after I have finalized the chapter on the
-  simulator.]}}
+  \caption{If the 24-dimensional Leech lattice is used for quantization, the
+  scaling at large SNR remains the same but the MSE decreases quicker. (Here $n
+  = 3$.)}
   \label{fig:sim_latticeperf}
 \end{figure}
 
