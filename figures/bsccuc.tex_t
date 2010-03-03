@@ -1,0 +1,28 @@
+% vim:ft=tex
+% Illustration for the BSC example in the Fidelity per Unit Cost chapter.
+  \begin{tikzpicture}[scale=5]
+    % Compute the x and y coordinate (same) of the point where the tangent
+    % touches. This is equal to the average cost. Here, the cost function was
+    % computed such that (Pr(X=0) = 0.3, Pr(X=1) = 0.7) achieves the capacity
+    % per unit cost, and 0.23 and 0.99 is the resulting input cost of 0 and 1,
+    % respectively.
+    \pgfmathsetmacro{\tgtpoint}{0.7*0.23 + 0.3*0.99}
+    \def\axisstart{-0.05}
+    \def\xaxisend{0.8}
+    \def\yaxisend{0.6}
+    % The C(P) curve, computed by gnuplot.
+    \draw plot[smooth] file {figures/bsccuc_curve.table};
+
+    % The tangent, also computed by gnuplot.
+    \draw[red] plot[smooth] file {figures/bsccuc_tangent.table};
+
+    % Axes
+    \draw[->] (\axisstart,0) -- (\xaxisend,0) node[right] {$C(P)$};
+    \draw[->] (0,\axisstart) -- (0,\yaxisend) node[above] {$P$};
+
+    % Dashed lines
+    \draw[dashed] (0,\tgtpoint) node[left] {$I(X;Y)$} -- 
+      (1.1*\tgtpoint,\tgtpoint);
+    \draw[dashed] (\tgtpoint,0) node[below] {$\E[\rho(X)]$} --
+      (\tgtpoint,1.1*\tgtpoint);
+  \end{tikzpicture}

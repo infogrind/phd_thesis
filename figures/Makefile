@@ -3,6 +3,7 @@ LATEXMK = latexmk
 EPSTOPDF = epstopdf
 FIG2DEV = fig2dev
 MATLAB = matlab
+GNUPLOT = gnuplot
 
 # Extensions of temporary files used by latex; these will be removed when
 # 'make clean' is called
@@ -33,6 +34,11 @@ EPSPDF=$(patsubst %.eps,%.pdf,$(EPSFILES))
 PDFTARGETS += $(TEXPDF)
 PSTARGETS += $(TEXPS)
 
+# .table files that need to be generated
+TABLEFILES += bsccuc_curve.table
+TABLEFILES += bsccuc_tangent.table
+
+
 # The default behavior is to create PDF files for each TEX file found. If you
 # want PS files to be generated, use the variable $(PSTARGETS) instead; or use
 # both. 
@@ -53,7 +59,7 @@ PSTARGETS += $(TEXPS)
 #
 # PS files for all .tex files in the directory
 #   all : $(PSTARGETS)
-all : subdirs $(MTEXT)
+all : subdirs $(MTEXT) $(TABLEFILES)
 	
 # The following line allows you to type 'make force'; forcing a rebuild of
 # anything regardless of existing files/timestamps
@@ -68,6 +74,8 @@ force : clean all
 #
 # etc...
 #
+bsccuc_curve.table bsccuc_tangent.table : bsccuc.gnuplot
+	$(GNUPLOT) $<
 
 
 # Add here subdirectories where you would like 'make' to run recursively. 
@@ -128,6 +136,10 @@ $(SUBDIRS) :
 # Convert MATLAB to tex_t
 %.tex_t : %.m
 	$(MATLAB) -nodisplay -nojvm < $<
+
+# Convert .gnuplot to .table
+%.table : %.gnuplot
+	$(GNUPLOT) $<
 
 # Phony targets
 .PHONY : all clean subdirs $(SUBDIRS)
