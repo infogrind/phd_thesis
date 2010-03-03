@@ -1,0 +1,25 @@
+  \begin{tikzpicture}[scale=2]
+    \def\axisstart{-0.05}
+    \def\xaxisend{1.5}
+    \def\yaxisend{1.5}
+
+    % For the example at hand, we have a = b = 1, which means that the point
+    % where the tangent touches is (1,1).
+    \def\tgtpoint{1}
+
+    % The C(P) curve, computed by gnuplot.
+    \draw plot[smooth] file {figures/expchannel_curve.table};
+
+    % The tangent, also computed by gnuplot.
+    \draw[red] plot[smooth] file {figures/expchannel_tangent.table};
+
+    % Axes
+    \draw[->] (\axisstart,0) -- (\xaxisend,0) node[right] {$P$};
+    \draw[->] (0,\axisstart) -- (0,\yaxisend) node[above] {$C(P)$};
+
+    % Dashed lines
+    \draw[dashed] (0,\tgtpoint) node[left] {$I(X;Y)$} -- 
+      (1.1*\tgtpoint,\tgtpoint);
+    \draw[dashed] (\tgtpoint,0) node[below] {$\E[\rho(X)]$} --
+      (\tgtpoint,1.1*\tgtpoint);
+  \end{tikzpicture}

@@ -17,8 +17,8 @@
     \draw[red] plot[smooth] file {figures/bsccuc_tangent.table};
 
     % Axes
-    \draw[->] (\axisstart,0) -- (\xaxisend,0) node[right] {$C(P)$};
-    \draw[->] (0,\axisstart) -- (0,\yaxisend) node[above] {$P$};
+    \draw[->] (\axisstart,0) -- (\xaxisend,0) node[right] {$P$};
+    \draw[->] (0,\axisstart) -- (0,\yaxisend) node[above] {$C(P)$};
 
     % Dashed lines
     \draw[dashed] (0,\tgtpoint) node[left] {$I(X;Y)$} -- 

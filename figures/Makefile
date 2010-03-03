@@ -37,6 +37,8 @@ PSTARGETS += $(TEXPS)
 # .table files that need to be generated
 TABLEFILES += bsccuc_curve.table
 TABLEFILES += bsccuc_tangent.table
+TABLEFILES += expchannel_curve.table
+TABLEFILES += expchannel_tangent.table
 
 
 # The default behavior is to create PDF files for each TEX file found. If you
@@ -75,6 +77,9 @@ force : clean all
 # etc...
 #
 bsccuc_curve.table bsccuc_tangent.table : bsccuc.gnuplot
+	$(GNUPLOT) $<
+
+expchannel_curve.table expchannel_tangent.table : expchannel.gnuplot
 	$(GNUPLOT) $<
 
 

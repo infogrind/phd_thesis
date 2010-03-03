@@ -121,7 +121,7 @@ capacity per unit cost.
   follows directly if the sums in the proof are replaced by integrals.
 \end{remark}
 
-\begin{example}
+\begin{example}[BSC]
   \label{ex:bsccap}
   Consider a binary symmetric channel (BSC) with crossover
   probability~$\epsilon=0.1$. Let the input distribution be such that $\px(0) =
@@ -145,7 +145,7 @@ capacity per unit cost.
   \label{fig:bsccap}
 \end{figure}
 
-\begin{example}
+\begin{example}[Gaussian]
   Consider the AWGN channel $Y=X+Z$, where $X \sim \N(0,\sxq)$ and $Z \sim
   \N(0,1)$. Evaluating $\ro(x)$, we obtain
   \[ \ro(x) = \DD = ax^2 + b, \]
@@ -154,8 +154,11 @@ capacity per unit cost.
   and
   \[ b = \frac12 \left( \log_2(1+\sxq) - \frac{1}{\ln2} +
   \frac{1}{\ln 2 (1+\sxq)} \right). \]
-  The corresponding capacity-cost function is plotted on
-  Figure~\ref{fig:gausscap}.
+  The cost constraint $\E[\ro(x)] \le P$ can be written as $\E[X^2] \le
+  \frac{P-b}{a}$, so the corresponding capacity-cost function is
+  \[ C(P) = \frac12 \log_2 (1 + \frac{P-b}{a}), \quad P \ge b. \]
+  It is plotted in Figure~\ref{fig:gausscap}.
+
   \begin{figure}
     \begin{center}
       \begin{tikzpicture}
@@ -183,14 +186,8 @@ capacity per unit cost.
   \end{figure}
 \end{example}
 
-%In~\cite{Verdu90} it was shown that if the cost measure is such that there
-%exists a symbol of zero cost, then the capacity per unit cost is achieved by an
-%input distribution such that $I(X;Y) \rightarrow 0$. The above examples
-%are counterexamples: in both, there is a minimum cost and hence an input
-%distribution with nonzero $I(X;Y)$ can achieve the capacity per unit cost. 
-%
-When does a cost measure of the form $\rho(x) = x^2 + b$ make sense? The following
-example gives an answer to this question. 
+When does a cost measure of the form $\rho(x) = x^2 + b$ make sense? The
+following example gives an answer to this question. 
 
 \begin{example}
 Consider the problem of designing a communication system that maximizes the 
@@ -212,6 +209,69 @@ that   $\frac{C(AT)}{AT}$ achieves the maximum. This implies the optimal
 power--bandwidth tradeoff.
 \end{example}
 
+\begin{example}[Exponential]\label{ex:expchannel}
+  Consider an additive exponential noise channel with nonnegative input
+  alphabet $Y = X + N$, where $N$ is exponential with mean $b$. Let the input
+  distribution $\px$ be equal to $0$ with probability $\frac{b}{a+b}$ and
+  exponentially distributed with mean $a + b$ conditioned on it being positive,
+  i.e.,
+  \begin{equation}
+    \label{eq:extexpinp1}
+    \Pr[X = 0] = \frac{b}{a+b}
+  \end{equation}
+  and
+  \begin{equation}
+    \label{eq:extexpinp2}
+    \Pr[X > x | X > 0] = e^{-x / (a+b)} \;.
+  \end{equation}
+  Then the input $X$ has mean $a$, and the output $Y$ is exponential with mean
+  $a+b$, as has been shown in \cite{Verdu1996}. 
+
+  Drawing further on results from \cite{Verdu1996} we have
+  \begin{eqnarray*}
+    \ro(x) &=&  \DD \nonumber\\
+    &=& \log_2(1 + \frac{a}{b}) + \frac{x - a}{a + b} \log_2 e
+  \end{eqnarray*}
+  and
+  \begin{eqnarray}
+    \label{eq:expi}
+    I(X;Y) &=& \E[ \DDX] \nonumber\\
+    &=& \log_2(1 + \frac{a}{b}) \;.
+  \end{eqnarray}
+  Solving the cost constraint $\E[\ro(X)] \le P$ for $\E[X]$ then yields
+  \begin{equation}
+    \label{eq:expconstr}
+    \E[X] \le \frac{a + b}{\log_2 e} (P - \log_2 (1 + \frac{a}{b})) + a \;.
+  \end{equation}
+
+  For a constraint on the mean, an input distribution in the form of
+  \eqref{eq:extexpinp1} and \eqref{eq:extexpinp2} (with corresponding mean $a$)
+  achieves capacity on the exponential channel. We can thus replace $a$
+  in \eqref{eq:expi} by the right hand side of \eqref{eq:expconstr} to obtain
+  the cost-constrained capacity
+  \begin{equation}
+    \label{eq:ccapexp}
+    C(P) = \log_2 \left(1 + \frac{\frac{a+b}{\log_2 e}(P - \log_2(1 +
+    a/b)) + a}{b}
+    \right).
+  \end{equation}
+  The corresponding capacity curve is displayed in \figref{expchannel}.
+\end{example}
+
+\begin{figure}
+  \begin{center}
+    \input{figures/expchannel.tex_t}
+  \end{center}
+  \caption{Capacity curve for the exponential channel of \exref{expchannel}.}
+  \label{fig:expchannel}
+\end{figure}
+
+%In~\cite{Verdu90} it was shown that if the cost measure is such that there
+%exists a symbol of zero cost, then the capacity per unit cost is achieved by an
+%input distribution such that $I(X;Y) \rightarrow 0$. The above examples
+%are counterexamples: in both, there is a minimum cost and hence an input
+%distribution with nonzero $I(X;Y)$ can achieve the capacity per unit cost. 
+%
 
 In the next proposition we show that under a minor technical condition, the cost
 function for which an input distribution achieves capacity per unit cost is
@@ -279,7 +339,8 @@ achieved is not unique.
 
 \begin{example}
   \label{ex:nondiffcapacity}
-  Consider the ternary-input channel shown in \figref{ternaryinputch}. The input
+  Consider the ternary-input channel shown in \figref{ternaryinputchannel}. The
+  input
   alphabet is $\{0,1,?\}$ and the output alphabet is~$\{0,1\}$. Let the cost be
   given by $\rho(0) = \rho(1) = 2$ and $\rho(?) = 1$. If the average cost
   constraint~$P$ is between~$1$ and~$2$, the capacity achieving distribution is
@@ -292,20 +353,26 @@ achieved is not unique.
   operating point will still achieve the capacity per unit cost.
   \begin{figure}
     \centerline{%
-    \subfloat{
-    \begin{tikzpicture}[every node/.style={font=\footnotesize}]
+    \subfloat[Ternary input channel.]{\label{fig:ternaryinputchannel}
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}]
         \foreach \ya in {0,1,2} {
+          \coordinate (x\ya) at (0,\ya);
+          \fill (0,\ya) circle (2pt);
+        }
         \foreach \yb in {0,2} {
-        \fill (0,\ya) circle (2pt);
-        \fill (2.5,\yb) circle (2pt);
-        \draw (0,\ya) -- (2.5,\yb);
+          \coordinate (y\yb) at (2.5,\yb);
+          \fill (2.5,\yb) circle (2pt);
         }
-        }
-        \path (0,1) -- node[above,very near start] {$0.5$} (2.5,2);
-        \path (0,1) -- node[below,very near start] {$0.5$} (2.5,0);
-      \end{tikzpicture}}
+        \draw (x0) -- node[below] {$1-\e$} (y0);
+        \draw (x2) -- node[above] {$1-\e$} (y2);
+        \draw (x0) -- node[below,near start] {$\e$} (y2);
+        \draw (x2) -- node[above,near start] {$\e$} (y0);
+        \draw (x1) -- node[above,sloped,very near start] {$0.5$} (y2);
+        \draw (x1) -- node[below,sloped,very near start] {$0.5$} (y0);
+      \end{tikzpicture}
+      }% end subfloat
       \hfil
-      \subfloat{\label{fig:edgecapacity}
+      \subfloat[Capacity curve.]{\label{fig:edgecapacity}
       \begin{tikzpicture}[scale=1.5]
         \coordinate (o) at (0,0);
         \draw[l] (-0.2,0) -- (3.2,0) node[right] {$P$};
@@ -315,13 +382,16 @@ achieved is not unique.
         %\coordinate (p1) at (1.5,1);
         \coordinate (p2) at (2,1);
         %\draw[dashed] (0,0) -- ($ (0,0)!1.5!(p1) $);
-        \draw[dashed] (0,0) -- ($ (0,0)!1.5!(p2) $);
+        \draw[red] (0,0) -- ($ (0,0)!1.5!(p2) $);
         \draw[dashed] (p2) -- (o -| p2);
       \end{tikzpicture}}
       }%end centerline
     \caption{Ternary input channel and corresponding capacity function for
-    \exref{nondiffcapacity}.}
-    \label{fig:ternaryinputch}
+    \exref{nondiffcapacity}. If a constant is added to the cost function, the
+    capacity curve in~(b) shifts horizontally but a tangent through the origin
+    still touches the curve in the same point. Hence the cost function for which
+    capacity per unit cost is achieved is not unique in this case.}
+%    \label{fig:ternaryinputch}
   \end{figure}
 \end{example}
 
@@ -651,24 +721,103 @@ rate} of a discrete memoryless source as
 In light of the previous observations, this quantity is to the source what the
 capacity per unit cost is to the channel. 
 
-\begin{remark}
+\begin{remark}\label{rem:verduphi}
   To establish a connection with the perspective offered in Section~IV of
-  Verd\'u's paper~\cite{Verdu1990}, let $\Phi_0$ be the maximum fidelity that can
-  be achieved when representing the source by a fixed symbol, \ie, $\Phi_0 =
+  Verd\'u's paper~\cite{Verdu1990}, let $\Phi_0$ be the maximum fidelity that
+  can be achieved when representing the source by a fixed symbol, \ie, $\Phi_0 =
   \max_{\sh} \E[\phi(S, \sh)]$. The following applies:
 \begin{itemize}
   \item If $\Phi_0 > 0$ then $\Phih = \infty$. Indeed, the positive
     fidelity~$\Phi_0$ is achieved at zero rate.
-  \item If $\Phi_0 < 0$ then $0 < \Phih < \infty$
-    (cf.~Fig.~\ref{fig:ratefidplot}). 
+  \item If $\Phi_0 < 0$ then $0 < \Phih < \infty$. 
   \item If $\Phi_0 = 0$ then $\Phih = \lim_{\Phi \searrow 0} \Phi /
     R(\Phi)$. 
 \end{itemize}
+The three cases are illustrated in \figref{verduphi}.
+
 This differs from Verd\'u's approach in that the latter -- if stated in terms of
 fidelity -- defines the counterpart to the capacity per unit cost to be
 $\lim_{\Phi \searrow \Phi_0} \Phi / R(\Phi)$ regardless of the value
 of~$\Phi_0$. 
 \end{remark}
+
+\begin{figure}
+  {
+\newcommand{\clipcmd}{\path[clip] (-1.25,-1) rectangle (3.2,3.5);}
+\newcommand{\myaxes}{
+        \draw[->] (-0.1,0) -- (2.2,0) node[right] {$R(\Phi)$};
+        \draw[->] (0,-2.8) -- (0, 2.8) node[above] {$\Phi$};
+}
+
+\subfloat[$\Phi_0 > 0$]{
+      \begin{tikzpicture}[baseline=0pt,font=\scriptsize]
+        \clipcmd
+
+        % Axes
+        \myaxes
+
+        % The function to plot
+        %%%% First version, \Phi > 0 %%%%%
+        \begin{scope}[yshift=3.5cm]
+          \draw[color=black,domain=0:.75] plot[id=rfid2_short] 
+          function{19*(0.1 + 0.01 - 2**(-2*(x+1)))};
+          \draw[dashed] (0,-2.66) -- (-.5,-2.66) node [left] {$\Phi_0$};
+        \end{scope}
+
+        \draw[red] (0,0) -- (0,0.84);
+
+        %%%% END \Phi > 0 %%%%%%
+
+        \end{tikzpicture}}
+      \hfil
+      \subfloat[$\Phi_0 < 0$]{
+      \begin{tikzpicture}[baseline=0pt,font=\scriptsize]
+        \clipcmd
+
+        % Axes
+        \myaxes
+
+        % The function to plot
+        %%%% Second version, \Phi < 0 %%%%
+          \draw[color=black,domain=0:3] plot[id=rfid2] 
+          function{19*(0.1 + 0.01 - 2**(-2*(x+1)))};
+          \draw[color=red,domain=0:2.5] plot[id=tangent2]
+          function{x};
+
+          \draw[dashed] (0,-2.66) -- (-.5,-2.66) node [left] {$\Phi_0$};
+        %%%% END \Phi < 0 %%%%
+        
+        % A label with an arrow for \Phi_0.
+        \node (phizlabel) at (-0.75,-0.25) {$\Phi_0$};
+        \draw[->] (phizlabel) -- +(.25,-.5);
+
+      \end{tikzpicture}}
+      \hfil
+      \subfloat[$\Phi_0 = 0$]{
+      \begin{tikzpicture}[baseline=0pt,font=\scriptsize]
+        \clipcmd
+
+        % Axes
+        \myaxes
+
+        % The function to plot
+        %%%% Third version, \Phi = 0 %%%%
+        \begin{scope}[yshift=2.66cm]
+          \draw[color=black,domain=0:1] plot[id=rfid2_short2] 
+          function{19*(0.1 + 0.01 - 2**(-2*(x+1)))};
+          \draw[dashed] (0,-2.66) -- (-.5,-2.66) node [left] {$\Phi_0$};
+        \end{scope}
+
+        \draw[red] (0,0) -- (.5,3);
+
+        %%%% End Third version
+
+      \end{tikzpicture}
+      }
+      }
+      \caption{The three possible cases for $\Phi_0$ of \remref{verduphi}.}
+  \label{fig:verduphi}
+\end{figure}
 
 
 \section{Fidelity Per Unit Cost}
