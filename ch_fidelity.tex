@@ -1,10 +1,12 @@
 \chapter{On Fidelity per Unit Cost}
 
-In this chapter we consider three standard communication problems, namely source
+While the previous chapter was about concrete communication schemes for the
+Gaussian channel, we return in this chapter to more general sources and
+channels.  We consider three standard communication problems, namely source
 coding with a fidelity criterion, channel coding  with a channel input
 constraint, and the combined problem of reproducing a source across a noisy
-channel. Our focus is on discrete memoryless sources and channels, but the
-essence of our results extends to continous alphabets.
+channel. Our focus here is on discrete memoryless sources and channels, but the
+essence of our results extends to continous alphabets. 
 
 We begin by addressing the channel coding problem in Section~\ref{sec:cuc}. We
 consider the capacity per unit cost, a concept that is traceable in various
@@ -39,7 +41,6 @@ be traded against bandwidth.  Furthermore, the tradeoff that maximizes the rate
 operating point at which the discrete-time channel achieves the capacity per
 unit cost.
 
-
 For the rate-distortion problem a similar result exists, which we explore in
 Section~\ref{sec:rddual}. For reasons that will become apparent, it is more
 convenient to study this result in terms of a fidelity measure, defined as the
@@ -56,9 +57,15 @@ reproducing a source across a noisy channel. Drawing on the results of
 Sections~\ref{sec:cuc} and~\ref{sec:rddual}, we show that the capacity per unit
 cost and the fidelity per unit rate can be combined to give the \emph{fidelity
 per unit cost}, \ie, the maximum ratio of fidelity per cost at which a
-source-channel coding system can operate. Lastly we provide necessary and
-sufficient conditions under which a given system achieves the fidelity per unit
-cost.
+source-channel coding system can operate.
+
+The set of communication systems that operate at fidelity per unit cost is a
+subset of the set of communication systems that are optimal in the sense of
+\defref{optimalcode} of \chapref{prelim}. In the last result of the present
+chapter we give necessary and sufficient conditions under which a given
+communication  system operates at fidelity per unit cost. This can be seen in
+analogy to \thmref{tcntc1n}, which gave necessary and sufficient conditions for
+a communication system to be optimal according to \defref{optimalcode}.
 
 
 \section{Achieving Capacity per Unit Cost}
@@ -877,4 +884,9 @@ conditions are stated in the following theorem.
   \label{fig:scmodel}
 \end{figure}
 
-
+This result is a refinement of \thmref{tcntc1n}, which gave necessary and
+sufficient conditions for the cost~$P$ and distortion~$D$ of a point-to-point
+communication system to satisfy $k R(D) = n C(P)$. According
+to~\eqref{eq:extineq}, a communication system that operates at fidelity per unit
+cost also satisfies $k R(D) = n C(P)$, so it is also optimal in the sense of
+\defref{optimalcode}.
