@@ -1,0 +1,18 @@
+% vim:ft=tex
+    \begin{tikzpicture}[every node/.style={font=\scriptsize}]
+        \foreach \ya in {0,1,2} {
+          \coordinate (x\ya) at (0,\ya);
+          \fill (0,\ya) circle (2pt);
+        }
+        \foreach \yb in {0,2} {
+          \coordinate (y\yb) at (2.5,\yb);
+          \fill (2.5,\yb) circle (2pt);
+        }
+        \draw (x0) node[left] {$0$} -- (y0) node[right]
+        {$0$};
+        \draw (x2) node[left] {$1$} -- (y2) node[right]
+        {$1$};
+        \draw (x1) node[left] {$\?$} -- node[above,sloped,very near start]
+        {$0.5$} (y2);
+        \draw (x1) -- node[below,sloped,very near start] {$0.5$} (y0);
+      \end{tikzpicture}

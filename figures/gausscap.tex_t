@@ -1,0 +1,21 @@
+% vim:ft=tex
+    \begin{tikzpicture}
+
+      % Axes
+      \draw[->] (-.2,0) -- (3.5,0) node[right] {$P$};
+      \draw[->] (0,-.2) -- (0,2.5) node[above] {$C(P)$};
+
+      % Function
+      \draw[color=black,domain=0.57:3.5] plot[id=gausscap] function{0.5 *
+      log(1 + (x - 0.57) / 0.15) / log(2)};
+
+      \draw[color=red,domain=0:2.6] plot[id=tan] function{x};
+      
+      % Draw dashed line, but ignore the horizontal one for bounding box
+      % computations. (The I(X;Y) label may come ``out'' of the picture.)
+      \draw[dashed] (1.1,0) node[below] {$\E[\rho(X)]$} -- (1.1,1.5);
+    \path[use as bounding box,red,dashed] (current bounding box.south west)
+    rectangle (current bounding box.north east);
+      \draw[dashed] (0,1.1) node[left] {$I(X;Y)$} -- (1.5,1.1);
+
+    \end{tikzpicture}

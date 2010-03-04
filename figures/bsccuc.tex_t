@@ -20,9 +20,13 @@
     \draw[->] (\axisstart,0) -- (\xaxisend,0) node[right] {$P$};
     \draw[->] (0,\axisstart) -- (0,\yaxisend) node[above] {$C(P)$};
 
-    % Dashed lines
-    \draw[dashed] (0,\tgtpoint) node[left] {$I(X;Y)$} -- 
-      (1.1*\tgtpoint,\tgtpoint);
+    % Dashed lines. Ignore the second one for the bounding box computation.
     \draw[dashed] (\tgtpoint,0) node[below] {$\E[\rho(X)]$} --
       (\tgtpoint,1.1*\tgtpoint);
+
+    \path[use as bounding box,red,dashed] (current bounding box.south west)
+    rectangle (current bounding box.north east);
+    \draw[dashed] (0,\tgtpoint) node[left] {$I(X;Y)$} -- 
+      (1.1*\tgtpoint,\tgtpoint);
+
   \end{tikzpicture}
