@@ -18,23 +18,39 @@ so ugly that it is easier to rewrite a new simulation from scratch rather than
 to modify the existing one. 
 
 This chapter presents \jscsim, an object-oriented simulator for joint
-source-channel coding schemes. Its main design goal was to allow rapid testing
+source-channel coding schemes. Its main design goal is to allow rapid testing
 of new ideas while simultaneously keeping the code clean and free of
 redundancies. 
 
 \jscsim\ is implemented in \matlab\ but could easily be translated to other
 languages that support object-oriented programming. Its power lies in its
 structure, which relies heavily on the twin paradigms of inheritance and
-polymorphism. Moreover, this structure could easily be translated to
+polymorphism\footnote{\emph{Inheritance} is the capability of a class to
+``inherit'' the properties and methods of another class while adding its own
+functionality. \emph{Polymorphism} is the capability of a class to appear as and
+be used like another class.}. Moreover, this structure can be translated to
 communication problems other than joint source-channel coding. 
 
 This chapter is organized as follows. \secref{tutorial} makes the reader
 familiar with \jscsim\ by leading him through a series of hands-on examples.
-Thereafter, \secref{reference} provides a detailed reference manual. 
+Thereafter, \secref{reference} provides a detailed reference and usage manual.
+Lastly, \secref{implementation} contains a few remarks on the implementation.
 
 Before introducing \jscsim, though, the chapter starts with a short example that
 illustrates why object oriented programming is indispensable for writing good
 simulations.
+
+\begin{remark}
+  \label{rem:oofundamentals}
+  The reader is assumed to be familiar with the fundamentals of object-oriented
+  programming (classes, methods, encapsulation, etc.). For those unfamiliar with
+  the subject, the Wikipedia article on object-oriented
+  programming~\cite{wiki:ooprogramming} provides a good introduction; otherwise
+  there are numerous good language-specific introductions around. The examples
+  throughout this chapter are in \matlab's programming language; \matlab's
+  particular syntax for objects should be easily grasped by someone already
+  familiar with object-oriented programming.
+\end{remark}
 
 % Install a verbatim shortcut for all the function and variable names that occur
 % in the sequel.
@@ -776,6 +792,47 @@ works for all communication schemes derived from |Scheme|. It simply plots the
 SDR vs SNR curve of the specified communication scheme, as illustrated by the
 examples in \secref{tutorial}.
 
+To have fine grained control over the plot of the simulation results, the plot
+functionality of a performance processor can be disabled by setting its
+|output_module| property to the empty matrix\footnote{or
+any other value for which \matlab's \texttt{isempty()} function returns
+\texttt{true}, such as the empty string~\texttt{''}, the empty
+cell~\texttt{\char`\{\char`\}}, etc.}. The simulation results can then be read
+from the performance processor's |mse| property, which is declared |public|, and
+plotted with a custom output module. This is the recommended strategy if you
+want to manually specify say the plot legend or the axis labels, as illustrated
+by the example in \lstref{customppplot}. For this reason, it is also recommended
+that custom scheme processors (see the following paragraph) declare their
+simulation results data as |public|. 
+
+\secref{outputmodules} has a detailed description of output modules.
+
+\begin{listing}
+\begin{Code}
+  pp = PerformanceProcessor();
+  pp.output_module = [];  % Disable built-in output module.
+  pp.process({'ShannonScheme', 'UncodedScheme'}, {1, []});
+
+  % Create own output module.
+  om = MatlabPlotModule();
+
+  % Access SNR and simulation result from PerformanceProcessor object.
+  om.x = 10*log10(pp.snr);  % converted to dB
+  om.y = 10*log10(pp.sv ./ pp.mse);  % SDR = source variance / mse
+
+  % Set custom labels, legend, etc.
+  om.legend = {'theoretical limit', 'uncoded communication'};
+  % ...
+
+  % Display plot.
+  om.do_plot();
+\end{Code}
+\caption{This example shows how the internal output module of a performance
+processor can be disabled and the simulation results can be plotted on a custom
+plot.}
+\label{lst:customppplot}
+\end{listing}
+
 
 \subsubsection{Implementing a New Scheme Processor}
 
@@ -823,8 +880,8 @@ To change the default output module, override the following method.
   default output module. 
 \end{method}
 
-In addition, a custom scheme processor can override |create_source_samples()| to
-change the source distribution.
+In addition, a custom scheme processor can override
+|create_|\-|source_|\-|samples()| to change the source distribution.
 
 \begin{method}{s = create_source_samples(\obj) (protected)}
   This method must return a sequence of |N| independent random source samples of
@@ -833,7 +890,7 @@ change the source distribution.
 \end{method}
 
 
-\subsection{Output Modules}
+\subsection{Output Modules}\label{sec:outputmodules}
 
 In some cases you might just want to see the results of a simulation on screen;
 in other cases you might want to save them in a file that you can include in a
@@ -929,9 +986,9 @@ This output module creates a standard \matlab\ plot. It is the default output
 module for scheme processors. It has a single public property.
 \begin{property}{ah (public)}
   A handle to the axes that will contain the plot. By default,
-  |MatlabPlotModule| creates a new figure window and sets |ah| to point to the
-  axes of the new windows. You can have |MatlabPlotModule| to plot on an
-  existing set of axes by changing the |ah| property. 
+  |Mat|\-|lab|\-|Plot|\-|Mod|\-|ule| creates a new figure window and sets |ah|
+  to point to the axes of the new windows. You can have |MatlabPlotModule| to
+  plot on an existing set of axes by changing the |ah| property. 
     
   \codeexample To create the plot in a subplot of an existing figure window:
 \begin{Code}
@@ -1005,8 +1062,8 @@ The behavior of this module is controlled by the following properties.
 \subsubsection{Implementing Custom Output Modules}
 
 A new output module is implemented by creating a class derived from
-|OutputModule| (or from one of its derived classes). Any class derived from
-|OutputModule| must implement the following two methods.
+|Out|\-|put|\-|Mod|\-|ule| (or from one of its derived classes). Any class
+derived from |Out|\-|put|\-|Mod|\-|ule| must implement the following two methods.
 
 \begin{method}{do_actual_plot(\obj) (protected)}
   This method creates the actual plot using the data set in the class
@@ -1038,7 +1095,7 @@ plotting is done then it can override |check_parameters()|.
 %
 %
 
-\section{Implementation Notes}
+\section{Implementation Notes}\label{sec:implementation}
 
 \subsection{Schemes and Scheme Processors}
 
@@ -1059,8 +1116,8 @@ code to update the object's state based on the new SNR.
 
 The two classes derived from |Scheme|, which are |TheoreticalScheme| and
 |PracticalScheme|, implement |snr_updated()| in different ways. In
-|TheoreticalScheme|, it just calls |update_mse()|, which classes derived from
-it (such as |ShannonScheme|) must implement. 
+|The|\-|o|\-|ret|\-|i|\-|cal|\-|Scheme|, it just calls |update_mse()|, which
+classes derived from it (such as |ShannonScheme|) must implement. 
 
 In classes based on |PracticalScheme|, |snr_updated()| does slightly more work.
 To update an objects state, a whole round of communication must be simulated.
