@@ -750,6 +750,14 @@ properties, defined in the class |SchemeProcessor|.
   |MatlabPlotModule|.
 \end{property}
 
+\begin{property}{legendmode (public, default \texttt{'auto'})}
+  This property determines the behavior of the |plot_vs_csnr()| and
+  |plot_|\-|vs_|\-|csnr_|\-|db()| functions (cf.~the definition of |post_process()| below).
+  If |legendmode| is set to |'on'|, a legend is always displayed. If it is set
+  to |'off'|, a legend is never displayed. If it is set to |'auto'|, a legend is
+  only displayed if more than one scheme is plotted.
+\end{property}
+
 All scheme processors are launched using the |process()| method.
 \begin{method}{process(\obj, \oarg{schemes}, \oarg{parameters}) (public)}
   Process the specified schemes for the specified parameters. The cell array
