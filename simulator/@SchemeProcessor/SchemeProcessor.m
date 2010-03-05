@@ -32,6 +32,10 @@ classdef SchemeProcessor < handle
         
         % Whether some extra output should be produced.
         verbose = false;
+        
+        % The legend mode: If 'off', never show legend. If 'on', always show
+        % legend. If 'auto', only show legend when > 1 scheme. 
+        legendmode = 'auto';
 
         % The output module
         output_module = [];
@@ -90,6 +94,15 @@ classdef SchemeProcessor < handle
         
         function set.verbose(obj, v)
             obj.verbose = v;
+        end
+        
+        function set.legendmode(obj, lm)
+            switch lower(lm)
+                case {'on', 'off', 'auto'}
+                    obj.legendmode = lower(lm);
+                otherwise
+                    error('Invalid legend mode.');
+            end
         end
         
         function set.output_module(obj, output_module)
@@ -228,11 +241,15 @@ classdef SchemeProcessor < handle
             obj.output_module.xlabel = 'SNR [dB]';
             obj.output_module.grid = true;
             
-            % We only print a legend if there are several schemes.
-            if length(obj.schemes) > 1
+            % We only print a legend if there are several schemes or if the
+            % legend mode is 'on'.
+            if strcmp(obj.legendmode, 'on') || ...
+                    (length(obj.schemes) > 1 && strcmp(obj.legendmode, 'auto'))
                 obj.output_module.legendpos = 'NorthWest';
                 obj.output_module.legend = ...
                     printify(obj.schemes, obj.parameters);
+            else
+                obj.output_module.legend = {};
             end
             
             obj.output_module.do_plot();
