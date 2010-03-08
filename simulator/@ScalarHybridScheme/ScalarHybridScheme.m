@@ -25,7 +25,14 @@ classdef ScalarHybridScheme < HybridScheme
         
         function r = covering_radius(obj)
             % The covering radius of the scalar quantizer is 0.5.
-            r = 0.5;
+            %r = 0.5;
+            % Alternatively, however, we can set this to sqrt(1/12), since the
+            % covering radius is used as upper bound on the standard deviation
+            % of the quantization error. In general, a more accurate value would
+            % be the square root of the second moment of a Voronoi cell of the
+            % quantizing lattice. For the 1-dimensional integer lattice this is
+            % sqrt(1/12).
+            r = sqrt(1/12);
         end
     end
     
