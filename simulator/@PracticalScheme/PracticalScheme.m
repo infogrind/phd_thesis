@@ -13,6 +13,8 @@ classdef PracticalScheme < Scheme
         sh      % k x N matrix of source estimates.
         P       % Avg. power per source symbol
         nv      % AWGN noise variance
+        nvemp   % Empirical noise variance.
+        z       % Noise matrix.
         
         pad     % Number of padding bits added to s to make it a multiple of k.
     end
@@ -40,6 +42,10 @@ classdef PracticalScheme < Scheme
         
         function sh = compute_sh(obj)
             sh = obj.sh;
+        end
+        
+        function nvemp = compute_nvemp(obj)
+            nvemp = obj.nvemp;
         end
         
     end
@@ -124,6 +130,8 @@ classdef PracticalScheme < Scheme
                     '(difference %.2fdB)\n'], ...
                     snrthdb, ...
                     snremdb, snrthdb - snremdb);
+                fprintf('Empirical input power: %.2fdB\n', ...
+                    10*log10( empirical_P_per_channel_input(obj, obj.x)));
             end
             
             % Transmit across AWGN channel.
@@ -151,7 +159,15 @@ classdef PracticalScheme < Scheme
         
         % The AWGN channel simulator.
         function y = transmit(obj, x)
-            y = awgn_channel(x, obj.nv);
+            % Create noise (by passing the all-zero signal though the AWGN
+            % channel.
+            obj.z = awgn_channel(zeros(size(x)), obj.nv);
+            
+            % Save empirical noise variance.
+            obj.nvemp = mean(mean(obj.z.^2));
+            
+            % Add noise to input.
+            y = x + obj.z;
         end
 
 
