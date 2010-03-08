@@ -8,6 +8,7 @@ classdef PerformanceProcessor < SchemeProcessor
     
     properties
         mse
+        nvemp  % Empirical noise variance
     end
     
 
@@ -17,6 +18,7 @@ classdef PerformanceProcessor < SchemeProcessor
         % To initialize the processing, clear the MSE matrix.
         function initialize(obj)
             obj.mse = zeros(nb_schemes(obj), length(obj.snr));
+            obj.nvemp = zeros(nb_schemes(obj), length(obj.snr));
         end
         
         
@@ -24,6 +26,7 @@ classdef PerformanceProcessor < SchemeProcessor
         function save_scheme_data(obj, scheme, j, k)
             % Store MSE of scheme.
             obj.mse(j, k) = scheme.compute_mse();
+            obj.nvemp(j, k) = scheme.compute_nvemp();
         end
         
         
