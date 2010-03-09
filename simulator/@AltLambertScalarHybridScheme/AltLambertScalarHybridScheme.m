@@ -13,14 +13,19 @@ classdef AltLambertScalarHybridScheme < ScalarHybridScheme
             % We can pass an arbitrary value for e (here 1) since this class
             % will compute it dynamically as a function of the SNR.
             obj@ScalarHybridScheme(sv, s, p, 1);
-            obj.c1 = c1;
+            
+            % Default value for c1: 8
+            if nargin < 4
+                c1 = 8;
+            end
             
             % Default value for c2: 8
             if nargin < 5
-                obj.c2 = 8;
-            else
-                obj.c2 = c2;
+                c2 = 8;
             end
+            
+            obj.c1 = c1;
+            obj.c2 = c2;
         end
         
         

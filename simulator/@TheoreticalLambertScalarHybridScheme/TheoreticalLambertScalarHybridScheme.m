@@ -9,6 +9,13 @@ classdef TheoreticalLambertScalarHybridScheme < TheoreticalEpsilonScalarHybridSc
     methods (Access = 'public')
         function obj = TheoreticalLambertScalarHybridScheme(sv, s, n, c1)
             obj@TheoreticalEpsilonScalarHybridScheme(sv, s, n, 1);
+            
+            % By default: set c1 to the optimal value of 8 (theoretically
+            % determined).
+            if nargin < 4
+                c1 = 8;
+            end
+            
             obj.c1 = c1;
         end
     end
