@@ -13,6 +13,7 @@ classdef PracticalScheme < Scheme
         sh      % k x N matrix of source estimates.
         P       % Avg. power per source symbol
         nv      % AWGN noise variance
+        Pemp    % Empirical channel input power (per input symbol).
         nvemp   % Empirical noise variance.
         z       % Noise matrix.
         
@@ -42,6 +43,10 @@ classdef PracticalScheme < Scheme
         
         function sh = compute_sh(obj)
             sh = obj.sh;
+        end
+        
+        function Pemp = compute_Pemp(obj)
+            Pemp = obj.Pemp;
         end
         
         function nvemp = compute_nvemp(obj)
@@ -121,11 +126,16 @@ classdef PracticalScheme < Scheme
             obj.x = encode(obj, row_to_block(obj, obj.s));
             assert(size(obj.x, 1) == obj.n);
             
+            % Save the empirical input power.
+            obj.Pemp = empirical_P_per_channel_input(obj, obj.x);
+            
+            % Transmit across AWGN channel.
+            obj.y = transmit(obj, obj.x);
+            
             % If verbose mode is enabled, plot the measured empirical SNR.
             if (obj.verbose)
                 snrthdb = 10*log10(obj.snr);
-                snremdb = 10*log10( empirical_P_per_channel_input(obj, obj.x) ...
-                    / obj.nv);
+                snremdb = 10*log10(obj.Pemp / obj.nvemp);
                 fprintf(['Theoretical/empirical SNR = %.3fdB / %.3fdB ', ...
                     '(difference %.2fdB)\n'], ...
                     snrthdb, ...
@@ -133,9 +143,6 @@ classdef PracticalScheme < Scheme
                 fprintf('Empirical input power: %.2fdB\n', ...
                     10*log10( empirical_P_per_channel_input(obj, obj.x)));
             end
-            
-            % Transmit across AWGN channel.
-            obj.y = transmit(obj, obj.x);
             
             % Decode, verify dimensions of decoder output, and convert back to
             % row vector. 
