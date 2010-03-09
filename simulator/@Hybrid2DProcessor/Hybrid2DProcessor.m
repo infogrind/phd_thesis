@@ -39,15 +39,19 @@ classdef Hybrid2DProcessor < SchemeProcessor
         end
         
         function post_process(obj)
-            obj.output_module = obj.om1;
-            obj.output_module.ylabel = '$(Q - Qh)^2$';
-            obj.output_module.plottitle = 'Error in Q';
-            plot_vs_snr_db(obj, obj.qe);
+            if ~isempty(obj.om1)
+                obj.output_module = obj.om1;
+                obj.output_module.ylabel = '$(Q - Qh)^2$';
+                obj.output_module.plottitle = 'Error in Q';
+                plot_vs_snr_db(obj, obj.qe);
+            end
             
-            obj.output_module = obj.om2;
-            obj.output_module.ylabel = '$(E - Eh)^2 / \beta^2$';
-            obj.output_module.plottitle = 'Error in E';
-            plot_vs_snr_db(obj, obj.ee);
+            if ~isempty(obj.om2)
+                obj.output_module = obj.om2;
+                obj.output_module.ylabel = '$(E - Eh)^2 / \beta^2$';
+                obj.output_module.plottitle = 'Error in E';
+                plot_vs_snr_db(obj, obj.ee);
+            end
         end
     end
     
