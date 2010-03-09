@@ -35,17 +35,11 @@ classdef Scheme < handle
         end
         
         
-        % When the SNR is changed to a different value, the abstract function
-        % snr_updated() is called so that derived classes can update the
-        % simulation results.
+        % When the SNR is changed, the abstract function snr_updated() is called
+        % so that derived classes can update the simulation results.
         function set_snr(obj, snr)
-            % The isempty test is crucial here: Otherwise, if obj.snr is
-            % empty (to which it is initialized), the ~= test will always
-            % evaluate to false. 
-            if isempty(obj.snr) || (obj.snr ~= snr)
-                obj.snr = snr;
-                snr_updated(obj);
-            end
+            obj.snr = snr;
+            snr_updated(obj);
         end
         
         

@@ -7,6 +7,8 @@ classdef TestSuite
     methods (Access = 'public', Static = true)
         test_output_modules()
         test_schemes()
+        test_jumps()
+        test_lambert_constant()
     end
     
 end
