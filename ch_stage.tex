@@ -33,13 +33,14 @@ significance of the bound. In many practical situations, however, the delays
 implied by large blocklengths are punitive; imagine for example a telephone or
 video call.
 
-If the encoder is restricted to encode a \emph{single} source symbol at a time,
-separate coding for the source and the channel may no longer be
-optimal~\cite{ViterbiO2009}. A more promising approach under this constraint,
-then, is to perform \emph{joint source-channel coding}, where the encoder
-directly produces the channel input from the source symbols, without making a
-detour through a representation of the source symbols resp.\ channel inputs in
-bits, as done in separation-based coding.
+In this chapter and the next one, we focus thus on \emph{minimal-delay} codes,
+\ie, codes that encode a \emph{single} source symbol at a time and so incur the
+smallest possible delay.  Under this constraint, separate coding for the source
+and the channel may no longer be optimal. A more promising approach, then, is to
+perform \emph{joint source-channel coding}, where the encoder directly produces
+the channel input from the source symbols without making a detour through a
+representation of the source symbols resp.\ channel inputs in bits, as done in
+separation-based coding.
 
 When $n=1$, a joint source-channel code is said to be \emph{bandwidth matched}.
 In this case, it is well known that a Gaussian source directly plugged into a
@@ -117,7 +118,7 @@ $n=1$) under which a code achieves equality in~\eqref{eq:shannonlimit}.
     \item The code is information lossless in the sense that~$I(S;\Sh) =
       I(X;Y)$.
   \end{enumerate}
-  If the source and channel alphabets are continuous, the conditions are
+  If the source and channel alphabets are continuous then the conditions are
   sufficient but not necessary.
 \end{theorem}
 
@@ -243,3 +244,426 @@ the answer is negative. Indeed, Ingber et al.~\cite{IngberLZF2008} used a result
 by Ziv and Zakai~\cite{ZivZ1973} to show that if $n>1$, the smallest distortion
 achievable using a minimal-delay code is strictly greater than the smallest
 distortion implied by~\eqref{eq:shannonlimitgaussian}.
+
+
+\section{Bandwidth Expansion with Feedback}\label{sec:feedback}
+
+In the previous section we saw that if $n > 1$, no minimal-delay code can
+achieve equality in~\eqref{eq:shannonlimit} in the Gaussian case. 
+Suppose now that the encoder has access to causal noiseless feedback from the
+receiver, \ie, the $i\th$ channel input $X_i$ can depend on the past channel
+ouptuts $Y_1$, \ldots, $Y_{i-1}$ as well as on~$S$. Since feedback does not
+increase the capacity of memoryless channels, the bound~\eqref{eq:shannonlimit}
+also applies to systems with feedback. It turns out that by making use of the
+feedback, however, equality in~\eqref{eq:shannonlimit} is in fact possible, as
+the following example shows.
+
+\begin{example}
+  \label{ex:gaussfb}
+  In this example, a memoryless Gaussian source of variance~$\ssq$ is
+  transmitted across a memoryless Gaussian channel with power constraint~$P$ and
+  noise variance~$\ssq$.  Define $E_0 = S$. In the $i\th$ channel use, the
+  encoder produces
+  \begin{equation}
+    \label{eq:gaussfbxi}
+    X_i = \sqrt{\frac{P}{\Var E_{i-1}}} E_{i-1}.
+  \end{equation}
+  Both the receiver and the sender now compute the minimum mean-squared
+  error (MMSE) estimator $\Eh_{i-1}$ of $E_{i-1}$ given $Y_i$. The sender then
+  computes $E_i = \Eh_{i-1} - E_{i-1}$ and proceeds to the next round.
+
+  After $n$~rounds of transmission, the receiver has $n$~estimates $\Eh_0$
+  to~$\Eh_{n-1}$. Using these, it computes the final estimate~$\Sh$ as
+  \begin{equation}
+    \label{eq:shdecom1}
+    \Sh = \Eh_0 - \Eh_1 + \Eh_2 - \cdots \pm \Eh_{n-1}.
+  \end{equation}
+  (The sign of the last term is $+$ if $n$~is even and $-$ if $n$~is odd.)
+
+  To compute the overall distortion $\mse$, note that $\Eh_{i-1} = E_{i-1} +
+  E_i$ by definition, so \eqref{eq:shdecom1}~can be written as
+  \begin{align*}
+    \Sh &= (E_0 + E_1) - (E_1 + E_2) + (E_2 + E_3) - \cdots \pm (E_{n-1} + E_n)
+    \\
+    &= E_0 \pm E_n,
+  \end{align*}
+  and since we have defined $E_0 = S$, we have $\mse = \E[E_n^2]$, where $E_n$
+  is the remaining error after the last round of transmission.
+
+  To compute $\E[E_n^2]$, note that since $\Eh_i$ is the MMSE estimator of
+  $E_i$, the estimation error variance is given by (see
+  \eg~\cite[Section~8.3]{Scharf1990})
+  \begin{equation}
+    \label{eq:gaussvardec}
+    \E[E_{i+1}^2] = \E[(\Eh_i - E_i)^2] = \frac{\E[E_i^2]}{1 + P/\szq}.
+  \end{equation}
+  Using $\E[E_0^2] = \E[S^2] = \ssq$ and recursively applying the above, we find
+  that
+  \begin{align*}
+    \frac{\ssq}{\E[E_n^2]} &= \frac{\ssq (1 + P/\szq)}{\E[E_{n-1}^2]} \\
+    &= \frac{\ssq(1 + P/\szq)^2}{\E[E_{n-2}^2]} = \dots \\
+    &= \frac{\ssq(1 + P/\szq)^n}{\E[E_0^2]} = (1 + P/\szq)^n,
+  \end{align*}
+  which is indeed the largest possible SDR according
+  to~\eqref{eq:shannonlimitsdr}.
+\end{example}
+
+To see why this example works, let us restate \thmref{tcntc1n} for the case with
+feedback. 
+\begin{theorem}
+  \label{thm:tcntcfb}
+  Consider a discrete memoryless source with distortion measure $d(s,\sh)$  and
+  a discrete memoryless channel with input cost measure~$\rho(x)$. Let the
+  encoder $f(\cdot)$ compute the channel input $X_i$ from $S$ and $Y_1$, \dots,
+  $Y_{i-1}$ for $i = 1$, \dots, $n$, and let the decoder $g(\cdot)$ map a block
+  of $n$~channel output symbols into a single source estimate~$\Sh$, as
+  illustrated in \figvref{scgenfeedback}.  If the resulting joint distribution
+  of~$S$, $X$, $Y$, and~$\Sh$ satisfies $I(S;\Sh) > 0$ and $I(X;Y) < C_0$ (where
+  $C_0$ is as in \thmref{tcntcbwmatch}), then the communication system achieves
+  equality in~\eqref{eq:shannonlimit} if and only if
+  \begin{enumerate}[(i)]
+    \item The conditional distribution $p(s|\sh)$ of the source given the
+          estimate achieves the rate distortion function of the source.
+
+    \item The estimate $\Sh$ forms a sufficient statistic for $S$ given the
+      outputs~$Y^n$.
+
+    \item The encoder is information lossless in the sense that $I(S; Y^n) =
+      I(X^n \ra Y^n)$. 
+
+    \item The channel outputs $Y_1$, \ldots, $Y_n$ are mutually independent.
+
+    \item The marginal distributions $p(x_i)$ of the channel inputs all achieve
+      the capacity at the same average cost.
+  \end{enumerate}
+\end{theorem}
+
+\begin{figure}
+  \begin{center}
+    \input{figures/sc_gen_feedback.tex_t}
+  \end{center}
+  \caption{A source-channel communication system that maps a single source
+  symbol into $n$~channel inputs, where the $i\th$ channel input can depend on
+  the first $i-1$ channel ouputs through the causal, noiseless feedback link.}
+  \label{fig:scgenfeedback}
+\end{figure}
+
+\begin{proof}
+  The proof is essentially the same as that of \thmref{tcntc1n}, except that the
+  inequality $I(X^n;Y^n) \le \sn I(X_i; Y_i)$ is replaced by $I(X^n \ra Y^n) \le
+  \sn I(X_i; Y_i)$, where $I(X^n \ra Y^n)$ is the \emph{directed information}
+  from~$X^n$ to~$Y^n$ (see~\cite{Massey1990}). A necessary and sufficient
+  condition for equality is condition~(iv) of the
+  theorem~\cite[Theorem~2]{Massey1990}.
+\end{proof}
+
+Let us now revisit Example~\ref{ex:gaussfb} and see why it achieves the optimal
+distortion. We will go through the conditions of \thmref{tcntcfb}
+in reverse order, starting at condition~(v). Since the source and the noise are
+jointly Gaussian and the encoder and decoder are linear, all channel inputs
+$X_i$ are Gaussian; since they are scaled to have variance~$P$ they all achieve
+the capacity at the same average cost. Next, because the estimation error of an
+MMSE estimator is uncorrelated with the observation and because in the Gaussian
+case uncorrelated implies independent, $E_i$ is independent of $Y_{i-1}$ and
+thus so are~$X_i$ and~$Y_i$, satisfying condition~(iv). Condition~(iii) is
+satisfied because the encoder is deterministic. For conditions~(i) and~(ii),
+observe that the final estimate $\Sh$ is such that $S = \Sh + E_n$, where $E_n$
+is independent of $\Sh$ and of $Y^n$. Given $\Sh$, $S$ is therefore independent
+of~$Y^n$, which makes $\Sh$ a sufficient statistic, satisfying condition~(ii).
+Moreover, the relationship between $S$ and $\Sh$ is exactly the one leading to
+the distribution that achieves the rate distortion function (see
+\eg~\cite[Theorem~10.3.2]{CoverT1991}), fulfilling condition~(i).
+
+It appears as though this example works only because of the particular
+properties of the Gaussian distribution: preservation of distribution under
+linear transformation, linear MMSE decoder, equivalence of uncorrelatedness and
+independence, and so on. As we will see next, though, at least
+conditions~(iii)--(v) of \thmref{tcntcfb} can be achieved with a minimal delay
+code for arbitrary discrete-time, continuous-valued sources and arbitrary
+channels with arbitrary cost and distortion measures if perfect feedback is
+available (condition~(i) is achieved whenever the distortion measure is matched
+to the joint distribution of~$S$ and~$\Sh$, as seen in \thmref{tcntcbwmatch}.)
+
+
+\subsection{Posterior Matching}
+
+Example~\ref{ex:gaussfb} showed how a simple transmission scheme can achieve the
+optimal distortion for a Gaussian source and channel if noiseless feedback is
+available. The discussion in the previous section showed how the particular
+properties of the Gaussian distribution helped in achieving this. In the sequel
+we show that conditions~(iii) to~(v) of
+\thmref{tcntcfb} can be satisfied for arbitrary memoryless sources and channels,
+at least if the source is continuous-valued.  The underlying idea is well known
+and was used by Gastpar and Rimoldi~\cite{GastparR2003} to develop various
+examples of optimal uncoded transmission with feedback.
+Later, it was studied in depth by Shayevitz and Feder
+in~2007~\cite{ShayevitzF2007,ShayevitzF2008} (who baptized it \emph{posterior
+matching}) to generalize the capacity achieving channel coding schemes of
+Schalkwijk and Kailath~\cite{SchalkwijkK1966} and Horstein~\cite{Horstein1963}
+to arbitrary channels with feedback.
+
+Before continuing we prove some properties of cumulative distribution functions
+(\cdf s).
+
+\begin{lemma}
+  \label{lem:cdfunif}
+  Let $X$ be a continuous random variable with density $f(x)$ and \cdf\ $F_X$,
+  \ie,
+  \begin{equation*}
+    F_X(x) = \Pr[X \le x].
+  \end{equation*}
+  Then the random variable $Y = F_X(X)$ is uniformly distributed on~$[0,1]$.
+\end{lemma}
+
+\begin{proof}
+  Let $Y = F_X(X)$. Then $\Pr[Y \le y] = \Pr[F_X(X) \le y]$.
+  Hence if $y < 0$ then $\Pr[Y \le y] = 0$, and if $y > 1$ then $\Pr[Y \le y] =
+  1$.  If $y \in [0,1]$ then
+  \begin{align*}
+    \Pr[F_X(X) \le y] &= \Pr[X \le F_X^{-1}(y)] \\
+    &= \int_{-\infty}^{F_X^{-1}(y)} f(x) dx \\
+    &= F_X(F_X^{-1}(y)) = y.
+  \end{align*}
+  The \cdf\ of~$Y$ is therefore that of a uniform random variable on $[0,1]$.
+\end{proof}
+
+
+\begin{lemma}
+  \label{lem:invcdf}
+  Let $Y$ be a uniform random variable on~$[0,1]$ and let $F_X$ be the \cdf\ of
+  an arbitrary random variable~$X$. If $F_X$~is not invertible, define
+  $F_X^{-1}$ with a slight abuse of notation as
+  \begin{equation}
+    \label{eq:invcdf}
+    F_X^{-1}(y) = \sup \{x : F_X(x) \le y\}.
+  \end{equation}
+  Then the random variable $X' = F_X^{-1}(Y)$ has the same distribution as~$X$.
+\end{lemma}
+
+\begin{proof}
+  The definition of $F_X^{-1}$ according to~\eqref{eq:invcdf} is such
+  that $\Pr[F_X^{-1}(Y) \le x] = \Pr[Y \le F_X(x)]$. Thus,
+  \begin{align*}
+    \Pr[F_X^{-1}(Y) \le x] &= \Pr[Y \le F_X(x)] \\
+    &= \int_0^{F_X(x)} d\xi = F_X(x).
+  \end{align*}
+\end{proof}
+
+Consider now a channel~$\pyx$ and let $\pi(x)$ be the capacity achieving
+distribution at average cost~$P$, \ie, 
+\begin{equation*}
+  \pi(x) = \arg\max_{p(x): \E[\rho(X)] \le P} I(X;Y).
+\end{equation*}
+The problem is to encode one source symbol of a continuous-valued source
+into~$n$ channel inputs, making use of the feedback.
+
+Let $\Fpi$ be the \cdf\ of the distribution $\pi(x)$, and let $F_S$ be the \cdf\
+of the source. In the first channel use, the encoder produces
+\begin{equation}
+  \label{eq:posteriorx1}
+  X_1 = \Fpi^{-1}(F_S(S)),
+\end{equation}
+where $\Fpi^{-1}$ is the inverse of $\Fpi$ according to~\eqref{eq:invcdf}. By
+Lemma~\ref{lem:cdfunif}, if $S$ is continuous then $F_S(S)$ has uniform
+distribution on $[0,1]$, and so by Lemma~\ref{lem:invcdf}, $\Fpi^{-1}(F_S(S))$
+is a random variable with \cdf\ $\Fpi$.
+
+After $i-1$ rounds of transmission, the encoder knows $y_1$, \ldots, $y_{i-1}$
+and can compute the conditional \cdf\ $F_{S|y_1, \ldots, y_{i-1}}$. It then
+sends
+\begin{equation}
+  \label{eq:posteriorxi}
+  X_i = \Fpi^{-1}(F_{S|y_1,\dots,y_{i-1}}(S)).
+\end{equation}
+Again, since $S$ is continuous, $F_{S|y_1, \dots, y_{i-1}}(S)$ is uniform. For
+any $y_1$, \ldots, $y_{i-1}$, therefore, \begin{equation*}
+  p(x_i|s, y_1, \dots, y_{i-1}) = \pi(x)
+\end{equation*}
+and so $X_i$ is independent of $Y_1$, \ldots, $Y_{i-1}$. 
+
+Using this strategy the encoder produces an \iid\ sequence of inputs $X_i$
+with the capacity achieving distribution~$\pi(x)$, satisfying conditions~(iv)
+and~(v) of \thmref{tcntcfb}; condition~(iii) of the theorem is
+trivially satisfied because the encoder is deterministic.
+
+Let us now derive the posterior matching encoder for the communication system of
+\exref{gaussfb}.
+
+\begin{example}
+  \label{ex:gaussfbpost}
+  First, a few properties of Gaussian \cdf s are given. Let $F_{\N(\mu, \sq)}$
+  be the \cdf\ of a Gaussian random variable of mean~$\mu$ and variance~$\sq$
+  and let $F_\N \deq F_{\N(0,1)}$. Then $F_{\N(\mu,\sq)}(x) =
+  F_\N((x-\mu)/\sigma)$. Furthermore, the inverse \cdf\ is 
+  \begin{equation*}
+    F_{\N(\mu,\sq)}^{-1}(y) = \sigma F_\N^{-1}(y) + \mu.
+  \end{equation*}
+
+  Let $\pi(x) = \N(0,P)$. According to~\eqref{eq:posteriorx1}, the first channel
+  input is
+  \begin{equation*}
+    X_1 = \sqrt{P} F_{\N}^{-1}(F_{\N}(S/\sigma_S)) = \sqrt{\frac{P}{\ssq}} S,
+  \end{equation*}
+  which coincides with~\eqref{eq:gaussfbxi} in \exref{gaussfb} when~$i=1$.
+
+  Given $Y_1$, $S$ is Gaussian with mean $\E[S|Y_1]$ and variance $\Var(S -
+  \E[S|Y_1])$. Following~\eqref{eq:posteriorxi}, the second channel input is
+  thus
+  \begin{align*}
+    X_2 &= \sqrt P F_{\N}^{-1} \left( F_{\N} \left( \frac{S - \E[S|Y_1]}
+    {\sqrt{\Var(S-\E[S|Y_1])}} \right) \right) \\
+    &= \sqrt{P} \frac{S - \E[S|Y_1]}{\sqrt{\Var(S-\E[S|Y_1])}}.
+  \end{align*}
+  Continuing this way, the $i\th$ channel input is found to be
+  \begin{equation}
+    \label{eq:gausspmenc}
+    X_i = \sqrt{P} \frac{S - \E[S|Y_1^{i-1}]}{\sqrt{\Var(S-\E[S|Y_1^{i-1}])}}.
+  \end{equation}
+  That this is equal to~\eqref{eq:gaussfbxi} can be seen as follows. In
+  \exref{gaussfb}, write
+  \begin{align*}
+    S &= E_0 + (E_1 - E_1) - (E_2 - E_2) + \dots \pm (E_{i-2} -
+    E_{i-2}) \\
+    &= (E_0 + E_1) - (E_1 + E_2) + (E_2 + E_3) - \dots - E_{i-2} \\
+    &= \Eh_0 - \Eh_1 + \Eh_2 - \dots - E_{i-2}.
+  \end{align*}
+  Since $\E[\Eh_j | Y_1^{i-1}] = \Eh_j$ for $j = 1$, \dots,~$i-2$, and
+  $\E[E_{i-2}|Y_1^{i-1}] = \Eh_{i-2}$, 
+  \begin{equation*}
+    \E[S|Y_1^{i-1}] = \Eh_0 - \Eh_1 + \dots  - \Eh_{i-2}
+  \end{equation*}
+  and so $S - \E[S|Y_1^{i-1}] = \Eh_{i-2} - E_{i-2} = E_{i-1}$. Plugging this
+  into~\eqref{eq:gausspmenc} yields exactly the encoder~\eqref{eq:gaussfbxi} of
+  Example~\ref{ex:gaussfb}.
+\end{example}
+
+\begin{remark}
+  \label{rem:alwaysdistmatch}
+  A question of interest is whether the encoder of \emph{any} optimal
+  source/channel communication system can be expressed as a posterior matching
+  encoder. The answer is in fact negative. Since by definition cumulative
+  distribution functions are increasing, the posterior matching
+  encoders~\eqref{eq:posteriorx1} and~\eqref{eq:posteriorxi} are always
+  increasing functions. Yet, using measure matching it is straightforward to
+  come up with an optimal communication system (for $n = 1$) that has a
+  nonincreasing encoder: just take the encoder to be an arbitrary nonincreasing
+  function and select the cost and distortion measures accordingly, following
+  \thmref{tcntcbwmatch}. Such an encoder is clearly not of the
+  form~\eqref{eq:posteriorx1}.
+
+  With a slight modification, however, any capacity achieving encoder can be
+  seen as a posterior matching encoder. First note that if $\xi(x)$ is an
+  arbitrary function defined on $[0,1]$ that maps a uniform distribution to
+  another uniform distribution (for example, $\xi(x) = 1 - x$). Then the random
+  variable $X = F_{\pi}^{-1}(\xi(F_S(S)))$ has distribution~$\pi(x)$. 
+\end{remark}
+
+
+\subsection{Achieving $R(D)$ using Posterior Matching?}
+
+The previous section showed how one can turn an arbitrary distribution into the
+capacity achieving distribution. Can the same trick be used to make the
+conditional distribution of~$\Sh$ given~$S$ achieve the rate distortion
+function? 
+
+For simplicity assume $n = 1$ (whether there is feedback or not is irrelevant).
+For a fixed~$D$, let
+\begin{equation*}
+  \Phi_s(\sh) = \arg\min_{p(\sh|s): \E[d(S,\Sh)] \le D} I(S;\Sh),
+\end{equation*}
+\ie, $\Phi_s(\sh)$ is the conditional distribution of~$\Sh$ given~$S$ that
+achieves the rate distortion function at expected distortion~$D$. Let the
+decoder be
+\begin{equation}
+  \label{eq:distmatchdec}
+  g(y) = F_{\Phi_s}^{-1}(F_{Y|S=s}(y)).
+\end{equation}
+According to the previous section, the resulting joint distribution of $\Sh =
+g(Y)$ and~$S$ satisfies thus $I(S;\Sh) = R(D)$. 
+
+It is immediately clear, however, that this approach cannot work -- both \cdf s
+needed to implement this decoder depend on the actual value of~$s$, which is
+obviously not known at the decoder (there would not really be a communication
+problem otherise). Interestingly, though, in the Gaussian case the dependence
+on~$s$ of $F_{\Phi_s}$ and of $F_{Y|S=s}$ cancel each other out, and the
+decoder~\eqref{eq:distmatchdec} yields again the MMSE decoder, as the following
+example shows.
+
+\begin{example}
+  Let the source $S$ be distributed as $\N(0,1)$ and let the channel be AWGN
+  with noise variance~$1$ and input constraint $\E[X^2] \le P$.
+  The distortion is the squared error. The smallest achievable distortion is
+  \begin{equation}
+    \label{eq:exmindist}
+    D_{\min} = \frac{1}{1 + P}.
+  \end{equation}
+  The capacity-achieving input distribution is $\N(0,P)$, and the conditional
+  distribution of $\Sh$ given $S=s$ that achieves the rate distortion function
+  at distortion~$D$ is $\N((1-D)s, D(1-D))$.
+  Let $X = \sqrt{P}S$.  The decoder from~\eqref{eq:distmatchdec} is
+  \begin{align*}
+    g(y) &= F_{\Phi_s}^{-1} (F_{Y|S=s}(y)) \\
+    &= \sqrt{D(1-D)} F_{\N}^{-1} \left( F_{\N}\left( y-\sqrt{P}s
+    \right) \right) + (1-D)s \\
+    &= \sqrt{D(1-D)} \left( y-\sqrt{P}s \right) + (1-D)s.
+  \end{align*}
+  This expression still depends on~$s$. If we plug in the optimal distortion
+  $D_{\min}$ from~\eqref{eq:exmindist}, however, the decoder becomes
+  \begin{align*}
+    g(y) &= \frac{\sqrt{P}}{P+1} (y - \sqrt{P}s) + \frac{P}{P +
+    1}s \\ 
+    &= \frac{\sqrt{P}y}{P + 1},
+  \end{align*}
+  which no longer depends on~$s$. Furthermore, this decoder is the MMSE decoder.
+\end{example}
+
+
+\section{Lessons from the Case With Feedback}
+
+In the previous sections we have seen that if more than one channel use is
+available per source symbol, then a Gaussian source can be transmitted optimally
+over a Gaussian channel only when the encoder has feedback from the receiver.
+What lessons can we draw from the feedback case that help us in the case without
+feedback?
+
+The first observation is that if the encoder knows the state of the receiver
+then it can transmit the receiver's current estimation error uncoded, as done in
+\exref{gaussfb}. Feedback, however, is not the only way for the encoder to know
+the receiver's state. Indeed, assume that the encoder uses a perfect source code
+followed by a perfect channel code to communicate the source across the first
+$n-1$ channel uses (ignoring delay constraints). Because a perfect channel code
+turns the channel into an essentially error-free link, the encoder knows (with
+high probability) the decoder's estimate after $n-1$ channel uses, just like
+when there is feedback.
+
+Let $\Sh'$ be the receiver's estimate after $n-1$ channel uses. According to the
+source and channel coding theorems and because we have assumed perfect codes,
+the estimation error satisfies $\E[(\Sh' - S)^2] = \ssq / (1 + \snr)^{n-1}$ (up
+to an arbitrary $\e > 0$). If the encoder transmits the error $E = \Sh' - S$
+uncoded in the $n\th$ channel use and the receiver estimates it as~$\Eh$, the
+resulting estimation error satisfies
+\begin{align*}
+  \E[(\Eh - E)^2] &= \frac{\E[E^2]}{ 1 + \snr } \\
+  &= \frac{\ssq}{(1 + \snr)^n}
+\end{align*}
+(cf.~\exref{gausssingle}).
+Letting $\Sh = \Sh' - \Eh$, the overall estimation error is then 
+\begin{align*}
+  \E[(\Sh - S)^2] &= \E[(\Sh' - (E + (\Eh - E)) - S)^2] \\
+  &= \E[(\Eh - E)^2] \\
+  &= \frac{\ssq}{(1 + \snr)^n},
+\end{align*}
+which is the optimal distortion. 
+
+Naturally, if the encoder is only allowed to encode one source symbol at a time
+then it is impossible to use a perfect source and channel code in the first
+$n-1$ channel uses, since this would require infinite delay. As we will see in
+the next chapter, however, if some ``mild'' coding is used for the first $n-1$
+transmissions such that the estimation error after the first $n-1$ channel uses
+is negligible with respect to that from the $n\th$~channel use (in a sense to be
+made precise) then we can always increase the SDR that would be obtained after
+$n-1$ channel uses by a factor $\snr$ using uncoded transmission in the $n\th$
+channel use. One way to achieve this is by transmitting a quantized version of
+the source in the first $n-1$ channel uses and then sending the resulting
+quantization error uncoded in the last channel use. This idea is at the heart of
+the communication schemes studied in the next chapter.
