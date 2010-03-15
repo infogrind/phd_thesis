@@ -1,0 +1,245 @@
+\chapter{Setting the Stage}
+
+Consider the transmission of a discrete-time memoryless Gaussian source across a
+discrete-time memoryless Gaussian channel, where the channel accepts $n$~input
+symbols for every source symbol ($n = 1$, $2$, \ldots). Shannon's separation
+theorem says that if the source has variance~$\ssq$ and the channel noise has
+variance~$\szq$, then the mean squared error~$D$ and the average input power~$P$
+for this case are related by
+\begin{equation}
+  \label{eq:shannonlimit}
+  R(D) \le n C(P),
+\end{equation}
+where $R(D) = 0.5 \log(\ssq/D)$ is the \emph{rate-distortion function} of the
+source and $C(P) = 0.5 \log(1 + P/\szq)$ is the \emph{capacity-cost} function of
+the channel (see \eg~\cite{CoverT1991}). Inserting into~\eqref{eq:shannonlimit}
+yields
+\begin{equation}
+  \label{eq:shannonlimitgaussian}
+  \frac{\ssq}{D} \le \left( 1 + \frac{P}{\szq} \right)^n,
+\end{equation}
+or equivalently
+\begin{equation}
+  \label{eq:shannonlimitsdr}
+  \sdr \le (1 + \snr)^n,
+\end{equation}
+where we have defined the \emph{source-to-distortion ratio} $\sdr = \ssq /D$ and
+the \emph{signal-to-noise ratio} $\snr = P/\szq$.
+
+Shannon also showed that there exists a sequence of source and channel codes of
+increasing blocklength that, when put together, can come arbitrarily close to
+equality in~\eqref{eq:shannonlimit}, thus establishing the operational
+significance of the bound. In many practical situations, however, the delays
+implied by large blocklengths are punitive; imagine for example a telephone or
+video call.
+
+If the encoder is restricted to encode a \emph{single} source symbol at a time,
+separate coding for the source and the channel may no longer be
+optimal~\cite{ViterbiO2009}. A more promising approach under this constraint,
+then, is to perform \emph{joint source-channel coding}, where the encoder
+directly produces the channel input from the source symbols, without making a
+detour through a representation of the source symbols resp.\ channel inputs in
+bits, as done in separation-based coding.
+
+When $n=1$, a joint source-channel code is said to be \emph{bandwidth matched}.
+In this case, it is well known that a Gaussian source directly plugged into a
+Gaussian channel (without coding) results in an optimal mean squared error for a
+fixed power constraint in the sense of~\eqref{eq:shannonlimitgaussian}. As we
+will see in \secref{bwmatch}, this is because the squared error distortion and
+the squared channel input cost are \emph{matched} to the Gaussian source and
+channel in a particular way. 
+
+With the goal of getting inspiration on how to design a good joint
+source-channel code, this chapter revisits the conditions for codes to achieve
+equality in~\eqref{eq:shannonlimit}.
+
+
+\section{When Uncoded Transmission is Optimal}\label{sec:bwmatch}
+
+When $n=1$, simple scaling at the transmitter and at the receiver is enough to
+achieve optimal performance, as the following example shows.
+
+\begin{example}
+  \label{ex:gausssingle}
+  Let the source be memoryless zero-mean Gaussian with variance~$\ssq$ and let
+  the channel be memoryless Gaussian with power constraint~$P$ and noise
+  variance~$\szq$. If the channel input is $X = \sqrt{P/\ssq} S$ and the source
+  estimate is $\Sh = \sqrt{P} \ssq Y / (P + \szq)$ then it is quickly verified
+  that 
+  \begin{equation*}
+    D = \E[(S - \Sh)^2] = \ssq / (1 + P/\szq),
+  \end{equation*}
+  which is indeed the optimal distortion according
+  to~\eqref{eq:shannonlimitgaussian}.
+\end{example}
+
+\exref{gausssingle} is a particular instance of a more general paradigm called
+\emph{measure matching}. Measure matching provides conditions under which a code
+of finite blocklength achieves equality in~\eqref{eq:shannonlimit}.
+For an excellent treatment of measure matching, the reader is referred to
+Gastpar~\cite{GastparRV2003,GastparThesis}.
+
+The first relevant result from~\cite{GastparRV2003} gives the conditions (for
+$n=1$) under which a code achieves equality in~\eqref{eq:shannonlimit}.
+
+\begin{theorem}
+  \label{thm:tcntcbwmatch}
+  Consider a discrete memoryless source and a discrete memoryless channel
+  accompanied by a \emph{distortion measure}~$d(s,\sh)$ and a \emph{channel
+  input cost measure} $\rho(x)$. Consider an encoder function~$f$ that maps a
+  single source symbol~$S$ into a channel input symbol~$X$ and a decoder
+  function~$g$ that maps each channel output~$Y$ into a source estimate~$\Sh$,
+  as illustrated in \figvref{scgensingle}.  Such a code implies a joint
+  distribution on~$S$, $X$, $Y$, and~$\Sh$.
+
+  Let $C_0 = \max_{p_X} I(X;Y)$ be the \emph{unconstrained capacity} of the
+  channel.  If $I(X;Y) < C_0$ and $I(S;\Sh) > 0$, then this communication system
+  achieves equality in~\eqref{eq:shannonlimit} if and only if
+  \begin{enumerate}[(i)]
+    \item The cost measure~$\rho(x)$ satisfies
+      \begin{equation}
+        \label{eq:optcost}
+        \rho(x)
+        \begin{cases}
+          = c_1 D(p_{Y|X=x} \| p_Y) + \beta & \text{if $p_X(x) > 0$} \\
+          \ge c_1 D(p_{Y|X=x} \| p_Y) + \beta & \text{if $p_X(x) = 0$},
+        \end{cases}
+      \end{equation}
+      where $c_1 > 0$ and $\beta$ are arbitrary real constants.
+
+    \item The distortion measure~$d(s,\sh)$ satisfies
+      \begin{equation}
+        \label{eq:optdist}
+        d(s,\sh) = - c_2 \log_2 \frac{p(\sh|s)}{p(\sh)} + d_0(s),
+      \end{equation}
+      where $c_2 > 0$ and $d_0(\cdot)$ is an arbitrary function.
+
+    \item The code is information lossless in the sense that~$I(S;\Sh) =
+      I(X;Y)$.
+  \end{enumerate}
+  If the source and channel alphabets are continuous, the conditions are
+  sufficient but not necessary.
+\end{theorem}
+
+\begin{figure}
+  \begin{center}
+    \input{figures/sc_gen_single.tex_t}
+  \end{center}
+  \caption{A general point-to-point source-channel communication system using a
+  single-letter code, \ie, a code that maps a single source symbol~$S$ to a
+  single channel input~$X$, and a single channel output~$Y$ to a single
+  estimate~$\Sh$.}
+  \label{fig:scgensingle}
+\end{figure}
+
+\begin{proof}
+  The proof hinges on the inequality chain
+  \begin{equation*}
+    R(D) \le I(S;\Sh) \le I(X;Y) \le C(P).
+  \end{equation*}
+  The complete proof, found in~\cite{GastparRV2003}, shows that $I(X;Y) = C(P)$
+  if and only if condition~(i) is satisfied and that $R(D) = I(S;\Sh)$ if and
+  only if condition~(ii) is satisfied. It is then clear that condition~(iii) is
+  the third condition needed for $R(D) = C(P)$.
+\end{proof}
+
+The single letter code of \exref{gausssingle} is optimal precisely because
+$\rho(x) = x^2$ satisfies condition~(i) and $d(s,\sh) = (s - \sh)^2$ satisfies
+condition~(ii). Moreover, since the encoder and decoder are both one-to-one
+maps, condition~(iii) is trivially satisfied.
+
+The problem of transmitting a Gaussian source across a Gaussian channel with
+minimal delay is therefore completely solved for $n = 1$. For $n > 1$, this is
+not the case, as the next section argues.
+
+
+\section{Bandwidth Expansion}
+
+When $n > 1$, optimality is no longer only a matter of measure matching in the
+sense of \thmref{tcntcbwmatch}; additional conditions need to be fulfilled. The
+following theorem lists these conditions. It is essentially Theorem~3.9
+from~\cite{GastparThesis}, adapted to the case without feedback and with a
+slightly expanded definition of the ``information lossless'' property of the
+code. 
+
+\begin{theorem}
+  \label{thm:tcntc1n}
+  Consider a discrete memoryless source with distortion measure $d(s,\sh)$  and
+  a discrete memoryless channel with input cost measure~$\rho(x)$. Let the
+  encoder $f(\cdot)$ map a single source symbol into $n$~channel input symbols,
+  and let the decoder $g(\cdot)$ map a block of $n$~channel output symbols into
+  a single source estimate~$\Sh$, as illustrated in \figvref{scgen}.  If the
+  resulting joint distribution of~$S$, $X$, $Y$, and~$\Sh$ satisfies $I(S;\Sh) >
+  0$ and $I(X;Y) < C_0$ (where $C_0$ is as in \thmref{tcntcbwmatch}), then the
+  communication system achieves equality in~\eqref{eq:shannonlimit} if and only
+  if
+  \begin{enumerate}[(i)]
+    \item The conditional distribution of the source given the estimates
+      $p(s|\sh)$ achieves the rate distortion function at average
+      distortion~$D$.
+
+    \item The estimate~$\Sh$ forms a sufficient statistic for~$S$ given the
+      outputs~$Y^n$.
+
+    \item The encoder is information lossless, \ie,  $I(S; Y^n) = I(X^n; Y^n)$. 
+
+    \item The channel outputs $Y_1$, \ldots, $Y_n$ are independent and
+      identically distributed.
+
+    \item The marginal distributions $p(x_i)$ of the channel inputs all achieve
+      the capacity at the same average cost~$P$.
+  \end{enumerate}
+  Again, if the source and channel alphabets are continuous then the conditions
+  are sufficient but not necessary.
+\end{theorem}
+
+\begin{figure}
+  \begin{center}
+    \input{figures/sc_gen.tex_t}
+  \end{center}
+  \caption{A joint source-channel communication that maps a single source symbol
+  into $n$~channel inputs.}
+  \label{fig:scgen}
+\end{figure}
+
+\begin{discussion}
+  By \thmref{tcntcbwmatch}, condition~(i) is only a matter of matching the
+  distortion measure to the joint distribution of~$S$ and~$\Sh$. If
+  condition~(iv) is satisfied, then condition~(v) is similarly only a matter of
+  matching the cost measure to the marginal distribution of the~$X_i$. Moreover,
+  condition~(iii) is automatically satisfied by a deterministic encoder.
+\end{discussion}
+
+\begin{proof}[Proof of \thmref{tcntc1n}]
+  The proof is based on the following chain of inequalities.
+  \begin{align}
+    \label{eq:14step1}
+    R(D) &\le I(S; \Sh) \\
+    \label{eq:14step2}
+    &\le I(S; Y^n) \\
+    \label{eq:14step3}
+    &\le I(X^n; Y^n) \\
+    \label{eq:14step4}
+    &\le \sn I(X_i; Y_i)  \\
+    \label{eq:14step5}
+    &\le n C(P).
+  \end{align}
+  Inequality \eqref{eq:14step1} follows from the definition of~$R(D)$; it
+  becomes an equality if and only if condition~(i) is satisfied.
+  \eqref{eq:14step2} is the data processing inequality, it becomes an inequality
+  if and only if condition~(ii) is satisfied. Next, \eqref{eq:14step3} is again
+  the data processing inequality and it is satisfied with equality if and only
+  if condition~(iii) is satisfied.  Inequality~\eqref{eq:14step4} follows
+  because the channel is memoryless and because conditioning can only decrease
+  the entropy. It becomes an inequality if and only if condition~(iv) is
+  satisfied. Inequality~\eqref{eq:14step5}, finally, follows from the definition
+  of~$C(P)$ and becomes an equality if and only if condition~(v) is satisfied.
+\end{proof}
+
+If the source is Gaussian with squared error distortion measure, and if the
+channel is Gaussian with an average input power constraint, can we find a code
+$(f,g)$ that satisfies all the conditions of \thmref{tcntc1n}? It turns out that
+the answer is negative. Indeed, Ingber et al.~\cite{IngberLZF2008} used a result
+by Ziv and Zakai~\cite{ZivZ1973} to show that if $n>1$, the smallest distortion
+achievable using a minimal-delay code is strictly greater than the smallest
+distortion implied by~\eqref{eq:shannonlimitgaussian}.
