@@ -1,0 +1,28 @@
+\chapter{Fundamentals of Source-Channel Communication}
+
+This thesis is about point-to-point communication of a memoryless source across
+a memoryless channel. In its most general form, this problem is made up of six
+elements:
+\begin{itemize}
+  \item A memoryless source with distribution~$\pS$, producing a symbol every
+    $\ts$~seconds.
+  \item A memoryless channel with transition distribution~$\pyx$, accepting an
+    input symbol for transmission every $\tc$~seconds.
+  \item An encoder function~$f$ that maps a block of~$k$ source symbols $S^k
+    \deq S_1$, \dots, $S_k$ into $n$~channel input symbols $X^n \deq X_1$,
+    \dots, $X_n$.
+  \item A decoder function~$g$ that maps a block of $n$~channel output symbols
+    $Y^n \deq Y_1$, \dots, $Y_n$ to $k$~source estimates $\Sh^k \deq \Sh_1$,
+    \dots, $\Sh_k$.
+  \item A \emph{distortion measure} $d(s,\sh)$ that assigns a distortion to
+    every (source symbol, estimate) pair, 
+\end{itemize}
+
+
+\begin{figure}
+  \begin{center}
+    \input{figures/sc_gen.tex_t}
+  \end{center}
+  \caption{A general point-to-point }
+  \label{fig:<+label+>}
+\end{figure}<++>
