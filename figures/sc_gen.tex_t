@@ -1,16 +1,17 @@
 % vim:ft=tex
-    \begin{tikzpicture}[node distance=2.5cm]
-      \node[sc] (source) at (0,0)  {source};
-      \node[c] (enc) [right of=source] {encoder};
-      \node[sc] (channel) [right of=enc] {channel};
-      \node[c] (dec) [right of=channel] {decoder};
+\begin{tikzpicture}[node distance=2.5cm,
+  every node/.style={{align=center}}]
+      \node[sc,align=center] (source) at (0,0)  {source\\$\ps$};
+      \node[c] (enc) [right of=source] {$f(\cdot)$};
+      \node[sc] (channel) [right of=enc] {channel\\$\pyx$};
+      \node[c] (dec) [right of=channel] {$g(\cdot)$};
       \node[sc] (rec) [right of=dec] {receiver};
       
       % Connections between source, channel, etc.
       \draw[l] (source) -- node[above] {$S^k$} (enc);
       \draw[l] (enc) -- node[above] {$X^n$} (channel);
       \draw[l] (channel) -- node [above] {$Y^n$} (dec);
-      \draw[l] (dec) -- node[above] {$\hat S^k$} (rec);
+      \draw[l] (dec) -- node[above] {$\Sh^k$} (rec);
 
 
     \end{tikzpicture}

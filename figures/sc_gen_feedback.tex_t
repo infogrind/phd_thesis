@@ -1,16 +1,16 @@
 % vim:ft=tex
     \begin{tikzpicture}[node distance=2.5cm]
       \node[sc] (source) at (0,0)  {source};
-      \node[c] (enc) [right of=source] {encoder};
+      \node[c] (enc) [right of=source] {$f(\cdot)$};
       \node[sc] (channel) [right of=enc] {channel};
-      \node[c] (dec) [right of=channel] {decoder};
+      \node[c] (dec) [right of=channel] {$g(\cdot)$};
       \node[sc] (rec) [right of=dec] {receiver};
       
       % Connections between source, channel, etc.
-      \draw[l] (source) -- node[above] {$S^k$} (enc);
+      \draw[l] (source) -- node[above] {$S$} (enc);
       \draw[l] (enc) -- node[above] {$X^n$} (channel);
       \draw[l] (channel) -- node [above] {$Y^n$} (dec);
-      \draw[l] (dec) -- node[above] {$\hat S^k$} (rec);
+      \draw[l] (dec) -- node[above] {$\hat S$} (rec);
 
       % The feedback link
       \begin{scope}[node distance=1cm]

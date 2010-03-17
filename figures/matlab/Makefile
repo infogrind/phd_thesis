@@ -7,7 +7,7 @@ MTOTEXT += ex_uncodedpgf.m
 MTOTEXT += fig_scalar_comparison.m
 
 # List of .m files from which only a .minc file should be created.
-MINCONLY += PerformanceProcessor_ex.m
+MINCONLY += PerformanceProcessor_ex.m Scheme.m
 
 # Program names
 LATEXMK = latexmk

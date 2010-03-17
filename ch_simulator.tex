@@ -31,14 +31,15 @@ functionality. \emph{Polymorphism} is the capability of a class to appear as and
 be used like another class.}. Moreover, this structure can be translated to
 communication problems other than joint source-channel coding. 
 
-This chapter is organized as follows. \secref{tutorial} makes the reader
-familiar with \jscsim\ by leading him through a series of hands-on examples.
-Thereafter, \secref{reference} provides a detailed reference and usage manual.
-Lastly, \secref{implementation} contains a few remarks on the implementation.
+This chapter is organized as follows. \secref{overview} makes the reader
+familiar with \jscsim\ by leading him through a series of hands-on examples and
+giving an overview of the implementation.  Thereafter, \secref{reference}
+provides a detailed reference and usage manual.  Lastly, \secref{implementation}
+contains a few more remarks on the implementation.
 
 Before introducing \jscsim, though, the chapter starts with a short example that
-illustrates why object oriented programming is indispensable for writing good
-simulations.
+illustrates why object oriented programming is almost indispensable for writing
+good simulations.
 
 \begin{remark}
   \label{rem:oofundamentals}
@@ -93,7 +94,7 @@ scheme.}
 Suppose now that you want to test an alternative decoding method. For example,
 you want to see how a maximum likelihood decoder compares to an MMSE decoder. To
 this end you write the function |alt_decode()|. How do you test this function?
-You have essentially three possibilities:
+You have essentially four possibilities:
 \begin{enumerate}
   \item You replace the call to |decode()| in |run_simulation()| by a call to
     |alt_decode()|. The change to the existing code is only minimal. In doing
@@ -114,6 +115,34 @@ You have essentially three possibilities:
     redundancies, but it also requires significant programming effort. Moreover,
     if one day you decide to change the encoder as well, this will probably
     again require a similar amount of effort. 
+
+  \item You add an argument to |run_simulation()| that specifies whether the old
+    or the new decoding function should be used, and then you add a test as in
+\begin{Code}
+  if decode_mode == 0
+    sh = decode(y);
+  elseif decode_mode == 1
+    sh = decode_alt(y);
+  end
+\end{Code}
+    In the example given, |decode()| is called directly from |run_simulation()|,
+    so the changes to the code are small (and no redundant code is created).
+    However, in a practical simulator the decoding function may be under many
+    layers of nested functions, and then all these functions would have to be
+    modified to pass on the new parameter. 
+
+    A similar but more sophisticated way would be to set up a way for the
+    simulator to read in configuration files and then add a configuration option
+    for the decoding method used. This would require a (one-time) programming
+    effort but it eliminates the need for options to be passed down from
+    function to function. 
+
+    While this fourth method may be better than the first three, it still has
+    the drawback that existing simulator code needs to be rewritten.  After
+    adding many such options and corresponding conditionals, the code may well
+    become difficult to read. Moreover, if someone else is the author of the
+    original simulator and he or she releases a new version, all your changes
+    will have to be merged into the new version. 
 \end{enumerate}
 
 As you can see, none of these options is quite satisfactory. You either lose old
@@ -135,9 +164,18 @@ Stroustrup~\cite[\Spg12.2]{Stroustrup1997}, this is somewhat confusing because
 the capabilities of a \emph{sub}class form a \emph{super}set of those of its
 superclass (and vice versa). Hence in this text we shall stick to the terms
 \emph{base class} and \emph{derived class}.} of |Simulation| and override the
-|decode()| method, as shown in \lstref{derivedclass}. Because the new class
-|AlternativeSimulation| inherits everything from |Simulation| other than the
-method |decode()|, it can be used just like the original simulation.
+|decode()| method, as shown in \lstref{derivedclass}. 
+
+The two versions of the simulation can then be run as follows.
+\begin{Code}
+  s = Simulation();              % Create class instance
+  mse1 = s.run_simulation();     % Call class method
+  as = AlternativeSimulation();  % Create class instance
+  mse2 = as.run_simulation();    % Call class method
+\end{Code}
+Because the new class |AlternativeSimulation| inherits everything from
+|Simulation| except the overridden method |decode()|, it can be used just like
+the original simulation.
 
 \begin{listing}
 \begin{Code}
@@ -166,7 +204,7 @@ method |decode()|, it can be used just like the original simulation.
   classdef AlternativeSimulation < Simulation
     methods
       function sh = decode(y)
-        % Alternative decoder implementation.
+        % Alternative decoder implementation goes here ...
       end
     end 
   end
@@ -206,16 +244,28 @@ simulation in a class and creating a derived class that overrides one of these
 functions.
 
 
-\section{A Step-By-Step Tutorial}\label{sec:tutorial}
+\section{A Short Overview of JSCsim}\label{sec:overview}
+
+This section has two subsections. The first one is for those readers who just
+want to see how to \emph{use} JSCsim and care less about what goes on behind the
+scenes. The second subsection, starting on page~\pageref{sec:impoverview},
+presents \jscsim\ from the developer's point of view by presenting the
+architecture in a top-down manner. Depending on the reader's interests, she may
+safely skip one or the other subsection. 
+
+The best way to read this section may be to read both parts in parallel. Start
+by going through the first example of the tutorial, then switch to reading about
+the implementation, and continue alternating between the two parts.
+
+\subsection{A Step-By-Step Tutorial}\label{sec:tutorial}
 
 To demonstrate how \jscsim\ helps creating and analyzing simulations, this
-section presents a number of small hands-on examples.
-
+section presents a number of small hands-on examples. 
 
 \subsubsection{Implementing a Communication Scheme}
 
-\exref{gausssingle} of \chapref{prelim} showed that uncoded transmission is
-optimal to transmit a Gaussian source across a Gaussian channel if the source
+\exref{gausssingle} of \chapref{fundamentals} showed that uncoded transmission
+is optimal to transmit a Gaussian source across a Gaussian channel if the source
 and channel bandwidths are matched. To verify this claim experimentally, let us
 implement uncoded transmission in \jscsim. 
 
@@ -266,7 +316,7 @@ observations.
 \end{enumerate}
 
 
-\subsubsection{Performance Analysis}
+\subsubsection{Performance Analysis}\label{sec:perfanalysis}
 
 Having implemented the class |UncodedScheme|, we would now like to plot its
 performance. For this, \jscsim\ has a class called |Performance|\-|Processor|,
@@ -316,7 +366,7 @@ All this work was done by |Performance|\-|Processor| and the base class
 \subsubsection{Theoretical Performance}
 
 At this point we have implemented uncoded communication, but we have not
-yet verified that it performs indeed optimally. From \chapref{prelim} we know
+yet verified that it performs indeed optimally. From \chapref{fundamentals} we know
 that if there are $n$~channel uses per source symbol then the optimal SDR
 is $(1 + \snr)^n$. In \jscsim\ we can implement this as a ``theoretical''
 communication scheme: this is a communication scheme that doesn't actually do
@@ -372,7 +422,7 @@ following observations.
     class. This method is called by the base class whenever the SNR is
     changed. Here it computes $\ssq / (1
     + \snr)^n$, which is the theoretically optimal MSE for the given SNR
-    (cf.~\chapref{prelim}).
+    (cf.~\chapref{fundamentals}).
     
   \item |update_mse()| accesses the |snr| property (\lineref{21}), even though
     we never defined this property. This is because the property is set by the
@@ -582,6 +632,86 @@ these and compute the corresponding error.
 \caption{A scheme processor to plot the estimation error of the discrete part in
 a hybrid communication scheme.}
 \label{lst:hybridprocessor}
+\end{listing}
+
+
+\subsection{Implementation Overview}\label{sec:impoverview}
+
+\subsubsection{Design Philosophy}
+
+The design philosophy behind \jscsim\ is to separate the implementation of a
+communication strategy and the analysis thereof. The end user should be able to
+concentrate either on implementing the communication scheme or writing the code
+that analyzes its performance, but shouldn't have to think about both at the
+same time.
+For this reason, the core classes that make up \jscsim\ are divided into two
+categories: \emph{scheme classes} (or simply called 'schemes'), which are
+classes that implement communication systems and have the class |Scheme| as
+their common ancestor, and \emph{scheme processors}, which are classes that
+implement the analysis of a particular aspect of a single or of a family of
+communication schemes. Scheme processors derive from the common ancestor class
+|SchemeProcessor|. 
+
+Based on the reasonable assumption that you implement a particular
+communication scheme in \jscsim\ because you eventually want to analyze it, you never directly instantiate a scheme class. Rather, you create a
+particular scheme processor (by instantiating a class derived -- directly or
+indirectly -- from |SchemeProcessor|) and call its |process()| method. Note that
+you cannot create an instance of the base class |SchemeProcessor| since the
+latter contains abstract methods\footnote{An \emph{abstract method} is a
+method that is declared in a class but not implemented. For instance, a class
+\texttt{Shape} may declare an abstract method \texttt{compute\_area()}, which
+must be implemented by the derived classes \texttt{Circle}, \texttt{Square}, and
+\texttt{Triangle}. A class that has abstract methods cannot be instantiated.}
+and serves only as a template for implementations of scheme processors. The
+example on page~\pageref{sec:perfanalysis} shows how a performance processor,
+which is a particular type of scheme processor, is used to plot the achieved
+SDR.
+
+Scheme classes and scheme processors interact in the following way. When you
+first create an instance of a scheme processor it generates a random source
+sequence of a default variance.\footnote{By default, the source samples are
+normally distributed but this behavior may easily be changed by a derived
+class.} Next you call the |process()| method of the scheme processor, passing a
+list of schemes (\ie, names of scheme classes) and a list of parameters for each
+scheme (cf.~the example on page~\pageref{sec:perfanalysis}). (A scheme can have
+any number of parameters, like for instance the number of channel input symbols
+produced per source symbol.) Internally, the scheme processor then creates an
+instance of each specified scheme, passing the source sample sequence to the
+constructor of each scheme. Because all schemes operate on the same source
+sequence, a fair comparison is guaranteed. 
+
+A scheme processor has a list of SNR values for which each scheme is to be
+evaluated. By default, it runs from 0dB to 40dB, with increments of~1dB. For
+each SNR value and for each scheme, the scheme processor calls the scheme's
+|set_snr()| method, passing the SNR value as an argument (cf.~\lineref{13} in
+\lstvref{schemeclass}). 
+
+When a scheme's |set_snr()| method is called, it stores the new SNR in its |snr|
+property and calls the |snr_updated()| method. The job of this method is to
+update the state of the scheme object to reflect the new SNR. For example, after
+a call to a scheme object's |set_snr()| method, its |mse| property should be set
+to the mean square error that the scheme achieves with the given SNR.
+
+
+\subsubsection{Scheme Classes}
+
+The common ancestor of all scheme classes is called |Scheme| and is given in
+\lstvref{schemeclass}. It defines the most rudimentary features that all
+communication scheme implementations must have. 
+
+The class definition starts in \lineref{1}. It is a \matlab\ convention that any
+class whose instances need to keep a persistent state (through the class
+\emph{properties}\footnote{In other object oriented languages, \emph{properties}
+are also calles \emph{member variables.}}) must derive from the |handle| class. 
+
+Every communication scheme has access to the three properties defined in
+lines~2 to~6: the source variance, the SNR, and the incurred mean squared error. 
+
+\begin{listing}
+\CodeInput{figures/matlab/Scheme.minc}
+\caption{The \texttt{Scheme} class is the base class from which all
+communication scheme classes are derived.}
+\label{lst:schemeclass}
 \end{listing}
 
 
