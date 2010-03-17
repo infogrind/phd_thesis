@@ -536,7 +536,8 @@ simulated (passed as the argument |scheme|) is queried by calling its
 
 \begin{listing}
   \CodeInput{figures/matlab/PerformanceProcessor_ex.minc}
-  \caption{Simplified implementation of the \texttt{PerformaceProcessor} class.}
+  \caption{Simplified implementation of the \texttt{PerformanceProcessor}
+  class.}
   \label{lst:perfproc}
 \end{listing}
 
@@ -645,12 +646,12 @@ concentrate either on implementing the communication scheme or writing the code
 that analyzes its performance, but shouldn't have to think about both at the
 same time.
 For this reason, the core classes that make up \jscsim\ are divided into two
-categories: \emph{scheme classes} (or simply called 'schemes'), which are
-classes that implement communication systems and have the class |Scheme| as
-their common ancestor, and \emph{scheme processors}, which are classes that
-implement the analysis of a particular aspect of a single or of a family of
-communication schemes. Scheme processors derive from the common ancestor class
-|SchemeProcessor|. 
+categories. In the first category are the \emph{scheme classes} (or simply
+called 'schemes'), which are classes that implement communication systems and
+have the class |Scheme| as their common ancestor. The second category consists
+of  \emph{scheme processors}, which are classes that implement the analysis of a
+particular aspect of a single or of a family of communication schemes. Scheme
+processors derive from the common ancestor class |SchemeProcessor|. 
 
 Based on the reasonable assumption that you implement a particular
 communication scheme in \jscsim\ because you eventually want to analyze it, you never directly instantiate a scheme class. Rather, you create a
@@ -668,7 +669,7 @@ which is a particular type of scheme processor, is used to plot the achieved
 SDR.
 
 Scheme classes and scheme processors interact in the following way. When you
-first create an instance of a scheme processor it generates a random source
+first create an instance of a scheme processor, it generates a random source
 sequence of a default variance.\footnote{By default, the source samples are
 normally distributed but this behavior may easily be changed by a derived
 class.} Next you call the |process()| method of the scheme processor, passing a
@@ -681,7 +682,7 @@ constructor of each scheme. Because all schemes operate on the same source
 sequence, a fair comparison is guaranteed. 
 
 A scheme processor has a list of SNR values for which each scheme is to be
-evaluated. By default, it runs from 0dB to 40dB, with increments of~1dB. For
+evaluated. By default, it runs from 0dB to 40dB with increments of~1dB. For
 each SNR value and for each scheme, the scheme processor calls the scheme's
 |set_snr()| method, passing the SNR value as an argument (cf.~\lineref{13} in
 \lstvref{schemeclass}). 
@@ -690,7 +691,25 @@ When a scheme's |set_snr()| method is called, it stores the new SNR in its |snr|
 property and calls the |snr_updated()| method. The job of this method is to
 update the state of the scheme object to reflect the new SNR. For example, after
 a call to a scheme object's |set_snr()| method, its |mse| property should be set
-to the mean square error that the scheme achieves with the given SNR.
+to the mean square error that the scheme achieves with the given SNR. How
+exactly a scheme updates its state when |snr_updated()| is called is up to the
+implementation. As we will see below, though, the procedure is very similar for
+a large class of schemes, of which \jscsim\ takes advantage. 
+
+After calling a schemes |set_snr()| method, a scheme processor can thus access
+the scheme's |mse| property (for instance) via the scheme's |compute_mse()|
+method (which we will see shortly). A scheme processor whose purpose it is to
+analyze the MSE achieved by a particular scheme thus alternatingly calls
+|set_snr()| and |compute_mse()| and can thus store the MSE for each SNR. This is
+precisely what the class |PerformanceProcessor| does. 
+
+Other scheme processors collect different data. For instance, the
+|Hybrid2DProcessor| in \lstvref{hybridprocessor} separately computes the errors
+due to discrete transmissions and due to continuous transmission for the
+hybrid scheme in \lstref{hybridscheme}.
+
+The remainder of this section looks in detail at the implementation of the
+scheme classes and of the performance processors.
 
 
 \subsubsection{Scheme Classes}
@@ -699,20 +718,185 @@ The common ancestor of all scheme classes is called |Scheme| and is given in
 \lstvref{schemeclass}. It defines the most rudimentary features that all
 communication scheme implementations must have. 
 
-The class definition starts in \lineref{1}. It is a \matlab\ convention that any
-class whose instances need to keep a persistent state (through the class
-\emph{properties}\footnote{In other object oriented languages, \emph{properties}
-are also calles \emph{member variables.}}) must derive from the |handle| class. 
-
-Every communication scheme has access to the three properties defined in
-lines~2 to~6: the source variance, the SNR, and the incurred mean squared error. 
-
 \begin{listing}
 \CodeInput{figures/matlab/Scheme.minc}
 \caption{The \texttt{Scheme} class is the base class from which all
 communication scheme classes are derived.}
 \label{lst:schemeclass}
 \end{listing}
+
+The class definition starts in \lineref{1}. It is a \matlab\ convention that any
+class whose instances need to keep a persistent state (through the class
+\emph{properties}\footnote{In other object oriented languages, \emph{properties}
+are also calles \emph{member variables.}}) must be derived from the |handle|
+class. 
+
+As we will shortly see in detail, \jscsim\ divides communication schemes into
+two categories: theoretical schemes and practical schemes. Schemes of both
+categories are (indirectly) derived from |Scheme|, so |Scheme| defines only the
+properties and methods common to both categories.
+
+Every communication scheme has access to the three properties defined in
+lines~2 to~6: the source variance, the SNR, and the incurred mean squared error.
+The source variance is passed via the constructor whenever a class derived from
+|Scheme| is instantiated (\lineref{9}). The SNR is set by |set_snr()|
+(\lineref{13}). The MSE property is not set by any of the class' methods; it
+will be the job of the derived classes to update this property in their
+|snr_updated()| method. 
+
+You may wonder why the constructor in \lineref{9} receives an argument~|s| but
+ignores it. The reason is that a scheme processor always passes the list of
+source symbols to a scheme it processes, even if it is a theoretical scheme that
+does not use the source symbols. More about this is explained further below.
+
+We have already mentioned the method |set_snr()| (\lineref{13}). It is called
+from outside the class whenever the communication scheme should be simulated for
+a new SNR. It first saves the new SNR in its |snr| property (\lineref{14}) and
+then calls the abstract method |snr_updated()|. 
+
+The method |compute_mse()| is what allows scheme processors to access a scheme's
+|mse| property. Because the property is declared as \emph{protected} (cf.
+\lineref{2}), it cannot be directly accessed from outside the class, only
+through a methods. 
+
+Line~24 declares the abstract method |snr_updated()|. Because |Scheme| itself
+does not implement this method, it cannot be instantiated directly. Instead, any
+class derived from |Scheme| must implement |snr_updated()|.\footnote{It is not
+quite true to say that any class derived from \texttt{Scheme} \emph{must}
+implement the abstract method \texttt{snr\_updated()}. A derived class is free
+not to implement the method; if it does not implement it, however, it remains
+itself an abstract class and cannot be instantiated either. A class can only be
+instantiated if it implements all abstract methods defined by any of its
+ancestors. Of course, if a base class \texttt{X} has already implemented an
+abstract class, then other classes derived from~\texttt{X} no longer need to
+implement the abstract method themselves, since they inherit the implementation
+from~\texttt{X}.}
+
+
+\subsubsection{Theoretical Schemes}
+
+Theoretical schemes could also be called ``virtual'' schemes. They are not
+actual communication strategies, but rather compute theoretical values for a
+given SNR. The purpose of theoretical scheme is to compare the behavior of a
+communication scheme to a theoretically expected behavior. For an example, see
+the class |ShannonScheme| in \lstvref{shannonscheme}.
+
+The implementation of |TheoreticalScheme| is given in
+\lstvref{theoreticalscheme}. The class directly derives from |Scheme|
+(\lineref{1}); its constructor does nothing except call the base class
+constructor, passing on the arguments (\lineref{4}). 
+
+\begin{listing}
+  \CodeInput{figures/matlab/TheoreticalScheme.minc}
+  \caption{Simplified implementation of the class \texttt{TheoreticalScheme}.}
+  \label{lst:theoreticalscheme}
+\end{listing}
+
+As mentioned before, classes derived from |Scheme| must implement the method
+|snr_updated()|. The implementation in |TheoreticalScheme| is quite simple:
+|snr_updated()| just calls |update_mse()|. However, the latter method is itself
+an abstract method of |TheoreticalScheme|. This is simply the statement that
+``the only thing a theoretical scheme needs to do is to compute the MSE as a
+function of the SNR'', expressed programatically.
+Listing~\ref{lst:shannonscheme} provides an example implementation of
+|compute_mse()|. 
+
+
+\subsubsection{Practical Schemes}
+
+Practical schemes are classes that actually \emph{implement} a practical
+communication scheme (as opposed to theoretical schemes). When the SNR is
+updated, a practical scheme must simulate encoding, transmission, and decoding
+of the source symbols. Since this procedure (except the particularities of
+encoding and decoding) is the same for all practical schemes, it is implemented
+in the class |PracticalScheme|. The actual encoding and decoding functions are
+declared abstract in |PracticalScheme|, so that classes that implement practical
+communication strategies only need to implement these two methods. 
+
+A simplified version of |PracticalScheme| is shown in \lstvref{practicalscheme}.
+Its |snr_updated()| method does one thing: call the |run_simulation()| method.
+The latter (\lineref{7}) performs exactly the steps mentioned above: the source
+is encoded into a channel input sequence (\lineref{9}), transmission is
+simulated by adding Gaussian noise to~|x| (\lineref{12}), and the channel
+output~|y| is decoded to yield the estimate sequence~|sh| (\lineref{15}).
+Finally, the MSE is computed and stored in the |mse|~property (\lineref{18}).
+This is the precisely the data that a performance processor accesses when it
+calls the scheme's |compute_mse()| method (which, as we have seen, is defined in
+the base class |Scheme|). 
+
+\begin{listing}
+  \CodeInput{figures/matlab/PracticalScheme.minc}
+  \caption{A simplified implementation of \texttt{PracticalScheme}. The methods
+  \texttt{encode()} and \texttt{decode()} are declared abstract and must be
+  implemented by derived classes.}
+  \label{lst:practicalscheme}
+\end{listing}
+
+The methods |encode()| and |decode()| are the defining feature of a
+communication scheme. There is no ``default'' encoder and decoder, hence
+|PracticalScheme| declares them as abstract. They must be implemented by derived
+classes such as |UncodedScheme| in \lstvref{uncoded}.
+
+
+\subsubsection{Scheme Processors}
+
+Scheme processors instantiate a list of scheme classes and process them for a
+range of SNR values. All scheme processors derive from |SchemeProcessor|, a
+simplified implementation of which is given in \lstvref{schemeprocessor}. 
+
+\begin{listing}
+  \CodeInput{figures/matlab/SchemeProcessor.m}
+  \caption{Simplified implementation of the \texttt{SchemeProcessor} class.}
+  \label{lst:schemeprocessor}
+\end{listing}
+
+All scheme processors have at the three properties defined in lines~3--5. |s|
+stores the source sequence, which is created in the constructor upon
+instantiation (\lineref{16}). The other two properties, |schemes| and
+|parameters|, hold the list of schemes to process and the corresponding
+parameters, respectively. 
+
+|SchemeProcessor| also has three \emph{public} properties. Because they are
+declared \emph{public}, they can be changed from outside the class; they allow
+the user of a scheme processor to control the latter's behavior. The meaning of
+these three properties should be self-evident from the code. 
+
+A scheme processor is launched by calling its |process()| method. This method
+has two parameters, |schemes| and |parameters|. Both are cell arrays that
+specify the schemes to be processed (\ie, the names of the respective classes)
+and the parameters for each scheme, respectively. See
+page~\pageref{sec:perfanalysis} for an example of how to call |process()|.
+
+|process()| first saves the schemes and parameters in the respective class
+properties (\lineref{20} resp.~lines~4--5). Then it calls the |initialize()|
+method. This abstract method allows scheme processor implementations to do
+things before the actual processing starts. The most common use of this function
+is to allocate a data structure that will hold the data gathered from the
+schemes (for an example, see the implementation of |PerformanceProcessor| in
+\lstvref{perfproc}).  The |do_processing()| method then performs the actual
+processing of the schemes, we will look at it in detail shortly. Finally, the
+abstract method |post_process()| is called. In this method, derived classes can
+\eg\ display the data gathered from the schemes, save it in a file, etc.
+
+The function |do_processing()|, which starts in \lineref{29}, is at the core of
+|SchemeProcessor|. In two nested \emph{for} loops it traverses the list of
+schemes and the range of SNR values. For each scheme and for each SNR it first
+calls |set_snr()| (we have already seen above what this method does), and then
+it calls the abstract method |save_scheme_data()|. In their implementation of
+this important method, derived classes determine which data to save about the
+scheme. For example, the performance processor on
+page~\pageref{sec:perfanalysis} uses it to store the MSE. 
+
+
+\subsubsection{Summary}
+
+The preceding paragraphs have hopefully given the reader a good overview of how
+\jscsim\ is implemented. Naturally, some details have been swept under the rug.
+For instance, |PracticalScheme| also helps in arranging the source sequence in
+blocks of $k$~source symbols if a scheme encodes more than one source symbol at
+once, and scheme processors use a slightly involved method to store schemes and
+their parameters internally. For these details, the reader so inclined is
+invited to peruse the source code.
 
 
 \section{Reference}\label{sec:reference}
