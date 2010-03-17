@@ -4,25 +4,498 @@ This thesis is about point-to-point communication of a memoryless source across
 a memoryless channel. In its most general form, this problem is made up of six
 elements:
 \begin{itemize}
-  \item A memoryless source with distribution~$\pS$, producing a symbol every
-    $\ts$~seconds.
+  \item A memoryless source with distribution~$\pS$, producing a source symbol
+    every $\ts$~seconds.
   \item A memoryless channel with transition distribution~$\pyx$, accepting an
     input symbol for transmission every $\tc$~seconds.
   \item An encoder function~$f$ that maps a block of~$k$ source symbols $S^k
-    \deq S_1$, \dots, $S_k$ into $n$~channel input symbols $X^n \deq X_1$,
-    \dots, $X_n$.
+    = (S_1, \dots, S_k)$ into $n$~channel input symbols $X^n = (X_1,
+    \dots, X_n)$.
   \item A decoder function~$g$ that maps a block of $n$~channel output symbols
-    $Y^n \deq Y_1$, \dots, $Y_n$ to $k$~source estimates $\Sh^k \deq \Sh_1$,
-    \dots, $\Sh_k$.
+    $Y^n = (Y_1, \dots, Y_n)$ to $k$~source estimates $\Sh^k = (\Sh_1,
+    \dots, \Sh_k)$.
   \item A \emph{distortion measure} $d(s,\sh)$ that assigns a distortion to
-    every (source symbol, estimate) pair, 
+    every pair of source symbol and estimate, and a \emph{cost measure}
+    $\rho(x)$ that assigns a transmission cost to each channel input symbol. 
 \end{itemize}
+These are the elements that make up a general point-to-point communication
+system;  they are displayed schematically in \figref{scgen}. The parameters
+$\ts$, $\tc$, $n$, and $k$ are given as part of the problem setting. To match
+the number of channel inputs produced by the encoder to the rate at which the
+channel accepts them, they must satisfy $n/k = \ts / \tc$. 
 
+If the discrete-time source and channel model an underlying continuous
+bandlimited source and channel, respectively, $\ts$ and $\tc$ relate directly to
+the respective bandwidths. If $\ts = \tc$, one therefore says that the source
+and channel are \emph{bandwidth matched}. Correspondingly, a code is said to be
+\emph{bandwidth matched} if $k=n$, to be a \emph{bandwidth expansion} code if $k
+< n$, and to be a bandwidth compression code if $k > n$.
 
 \begin{figure}
   \begin{center}
     \input{figures/sc_gen.tex_t}
   \end{center}
-  \caption{A general point-to-point }
-  \label{fig:<+label+>}
-\end{figure}<++>
+  \caption{A general memoryless point-to-point communication system.}
+  \label{fig:scgen}
+\end{figure}
+
+The source and the channel, together with the encoder and decoder, imply a joint
+distribution of the tuple $(S^k, X^n, Y^n, \Sh^k)$.  Depending on the encoder,
+the sequence $X^n$ of channel inputs may not be identically distributed; the
+average cost can therefore only be defined as the empirical average of the
+expected cost of each channel input.
+
+\begin{definition}
+  \label{def:avgcost}
+  The \emph{average channel input cost} incurred by a memoryless point-to-point
+  communication system is
+  \begin{equation*}
+    P = \sum_{i=1}^n \E[\rho(X_i)].
+  \end{equation*}
+\end{definition}
+
+Similarly, depending on the encoder and the decoder the sequence $\Sh^k$ of
+estimates may not be identically distributed, so that the average distortion
+must be defined as the average of the expected distortion of each pair $(S_i,
+\Sh_i)$. 
+
+\begin{definition}
+  \label{def:avgdist}
+  The \emph{average distortion} incurred by a memoryless point-to-point
+  communication system is
+  \begin{equation*}
+    D = \sum_{i=1}^k \E[d(S_i, \Sh_i)],
+  \end{equation*}
+  where the expectation is taken over the joint distribution of $S_i$
+  and~$\Sh_i$.
+\end{definition}
+
+
+\section{Fundamental Limits of Performance}
+
+The most fundamental boundary on the performance of a memoryless point-to-point
+communication system as described above is given by the converse part of
+Shannon's separation theorem~\cite{Gallager1968}. It is formulated in terms of
+the rate-distortion function of the source and the capacity-cost function of the
+channel, whose definitions are given first. 
+
+\begin{definition}
+  \label{def:capacity}
+  The \emph{capacity-cost function} of a channel $\pyx$ with cost
+  function~$\rho(x)$ is
+  \begin{equation*}
+    C(P) = \max_{\px: \E[\rho(X)] \le P} I(X;Y).
+  \end{equation*}
+\end{definition}
+
+\begin{definition}
+  \label{def:ratedistortion}
+  The \emph{rate-distortion function} of a source~$\ps$ with distortion
+  measure~$d(s,\sh)$ is 
+  \begin{equation*}
+    R(D) = \min_{\pshs: \E[d(S,\Sh)] \le D} I(S;\Sh).
+  \end{equation*}
+\end{definition}
+
+The converse part of the separation theorem is then stated as follows.
+
+\begin{theorem}
+  \label{thm:separationconverse}
+  In any memoryless point-to-point source-channel communication system, the
+  average cost~$P$ and the average distortion~$D$ are related by
+  \begin{equation}
+    \label{eq:separation}
+    kR(D) \le nC(P).
+  \end{equation}
+\end{theorem}
+
+A complete proof of this result is given in \appref{separationproof}. 
+
+This theorem has its name because its forward part (discussed in the next
+section) establishes that one can come arbitrarily close to equality in the
+bound~\eqref{eq:separation} by performing source coding and channel coding
+separately, thus giving an operational meaning to the bound.
+
+The converse part of the separation completely characterizes the region of
+achievable $(D,P)$ pairs of a point-to-point source-channel communication
+system, regardless of whether separate or joint coding for the source and
+channel is used. As its proof in the appendix of this chapter shows, it does not
+use the operational meanings of $R(D)$ and $C(P)$.
+
+
+\section{Optimality Conditions}\label{sec:optimality}
+
+For the purpose of this thesis, the optimality of a communication system is
+defined as follows.
+
+\begin{definition}
+  \label{def:optimality}
+  A \emph{optimal communication system} is either a communication system whose
+  average cost and distortion satisfy~\eqref{eq:separation} with equality, or
+  the limit of a sequence of systems (with increasing 0) whose
+  performance approach equality in~\eqref{eq:separation}.
+\end{definition}
+
+This is not the strictest form of optimality and it precludes the existence of
+optimal communication systems in some situations, for example when $\max_D R(D)
+< \min_P C(P)$. See Gastpar~\cite{GastparThesis} for a more in-depth treatment
+of alternative definitions of optimal communication systems.
+
+By going step by step through the inequalities in the proof of
+\thmref{separationconverse}, one finds that the following are necessary and
+sufficient conditions for a communication
+system to achieve equality in~\eqref{eq:separation}.
+\begin{enumerate}
+  \item For each $i = 1$, \dots, $k$, the joint distribution $p(s_i,\sh_i)$
+    achieves the rate-distortion function of the source at the same average
+    distortion~$D$.
+  \item The \emph{reverse test channel} $p(s^k|\sh^k)$ factors as $\prod_{i=1}^k
+    p(s_i | \sh_i)$. 
+  \item The encoder is information lossless in the sense that $I(S^k;Y^n) =
+    I(X^k; Y^n)$. 
+  \item The estimate sequence $\Sh^k$ is a sufficient statistic for $S^k$ given
+    $Y^n$. (Equivalently, we can say that the decoder must be memoryless in the
+    sense that $I(X^n;Y^n) = I(X^n;\Sh^k)$.
+  \item The channel output sequence $Y^n$ is \iid.
+  \item The marginal distributions $p(x_i)$ all achieve the capacity at the same
+    average cost~$P$.
+\end{enumerate}
+
+
+\subsection{Achieving Optimality Through Separation}
+
+\thmref{separationconverse} applies to all communication systems, regardless of
+whether they perform source and channel coding separately or jointly. The
+forward part of the theorem, on the other hand, uses separate source and channel
+coding to proof the achievability of $(D,P)$ pairs (thus giving the theorem its
+name).
+
+\begin{theorem}[Separation theorem, forward part]
+  \label{thm:separationforward}
+  Consider a memoryless source with rate-distortion function~$R(D)$ and
+  capacity-cost function~$C(P)$. Then for any $(D,P)$ pair satisfying
+  \begin{equation*}
+    kR(D) \le n C(P) - \e,
+  \end{equation*}
+  where $\e > 0$, there exists a source code and a channel code that, when
+  combined to transmit the source across the channel, result in an average
+  distortion~$D$ and an average cost~$P$.
+\end{theorem}
+
+\begin{proof}
+
+\end{proof}
+
+
+
+Show why separation codes achieve optimality. According to Verd\'u and Shamai,
+the marginal distribution of the output converges to the capacity achieving
+distribution. Also, input sequence becomes ``approximately'' independent. Same
+analysis could be made for an optimal source code. (Do they mention this in
+their paper?)
+
+
+\subsection{Achieving Optimality Through Measure Matching}
+
+Separation is not the only way to achieve optimality. Conditions
+(rate-distortion function achieved) and (capacity) can be achieved by arbitrary
+codes (with possibly short 0), as long as the cost and distortion
+measures are suitably matched. This is the subject of Gastpar's thesis.
+
+Other conditions are more difficult to achieve, such as the condition of
+independent inputs. It seems difficult to deterministically encode an arbitrary
+length~$k$ block of source symbol into $n$~independent channel uses. 
+It is possible in some cases, e.g. mapping a uniformly distributed $4$~ary
+source into 2 independent binary inputs. But this can perhaps be seen as another
+kind of matching. Think about this.
+
+
+\section{Codes With a Delay Constraint}
+
+The forward part of the separation theorem relies on the source coding theorem
+and the channel coding theorem, which assume unrestricted block lengths and
+ignore the delay thus caused. This section looks at the consequences that arise
+when a constraint is put on the delay incurred by a point-to-point communication
+system.
+
+\begin{definition}
+  \label{def:delay}
+  The \emph{delay} incurred by a point-to-point source-channel communication
+  system is the time between the instant a source symbol is produced and the
+  instant the receiver has gathered enough channel output symbols to decode that
+  symbol. 
+\end{definition}
+
+What is the delay of a code that encodes $k$~source symbols into $n$~channel
+input symbols? Since the source produces a symbol every $\ts$~seconds it takes
+$k\ts$ seconds to gather $k$~source symbols. Assuming that the encoding process
+takes place instantaneously, it takes an additional $n\tc$ seconds to transmit
+the encoded source sequence across the channel. Neglecting the transmission time
+of the channel, the receiver can thus decode the first source symbol after $k\ts
++ n \tc$ seconds, or $2k\ts$ seconds.
+
+\begin{remark}
+  \label{rem:blocklength}
+  In conventional source coding and channel coding, the term ``large block
+  length'' is often used to imply a large delay. What is the block length of a
+  joint source-channel code? On one hand, the block length of a source code is
+  understood to be the number~$k$ of source symbols encoded at a time. On the
+  other hand, the block length of a channel code is the length $n$ of each
+  channel input codeword. Rather than attempting to define the block length of a
+  joint source-channel code one way or the other, we prefer to avoid the term
+  block length altogether in the context of such codes. 
+\end{remark}
+
+If we put a limit on the delay a communication system may incur, the forward
+part of the separation theorem no longer applies because the assumptions of the
+source and channel coding theorems are no longer satisfied. As a consequence it
+is not clear whether a communication system can still achieve (or approach) any
+$(D,P)$ pair that satisfies $k R(D) \le n C(P)$. 
+In fact, the region of achievable cost/distortion pairs is not known under a
+delay constraint, not even for the canonical case of a Gaussian source
+transmitted across a Gaussian channel -- with the notable exception of the case
+$k=n=1$, as we shall see presently.
+
+
+\section{The Gaussian Case}
+
+The Gaussian source and channel are well liked not only because of the
+significance of the Gaussian distribution as a mathematical model for thermal
+noise, but also because the Gaussian case allows for analytical solutions of
+many information theoretic quantities, most notably the rate-distortion function
+(under squared error distortion) and the capacity (under an average power
+constraint). On the search for the achievable cost and distortion pairs under a
+delay constraint, it is therefore only natural to start by looking at the
+Gaussian source and channel. 
+
+\begin{definition}[Gaussian source and channel]
+  \label{def:gaussiansc}
+  A discrete-time memoryless \emph{Gaussian source} of variance~$\ssq$ is a
+  source whose distribution is zero-mean Gaussian with variance~$\ssq$.
+
+  A discrete-time memoryless \emph{Gaussian channel} (also called discrete-time
+  additive white Gaussian noise channel, AWGN) with noise variance~$\szq$ is a
+  channel whose transition distribution satisfies $p(y|x) \sim \cN(x, \szq)$,
+  \ie, given the input~$x$, the output is Gaussian with mean~$x$ and
+  variance~$\szq$.
+\end{definition}
+
+The distortion measure considered in the sequel is the squared error distortion
+$d(s,\sh) = (s - \sh)^2$, and the cost measure is the channel input power
+$\rho(x) = x^2$, such that $D = \frac1k \sum_{i=1}^k \E[(S_i - \Sh_i)^2]$ and $P
+= \frac1n \sum_{i=1}^n \E[X_i^2]$.
+
+Plugging in the formulas for the rate-distortion function and the capacity-cost
+function for the Gaussian source and channel, the bound~\eqref{eq:separation}
+can be written as
+\begin{equation}
+  \label{eq:gausssep}
+  \frac{\ssq}{D} \le \left( 1 + \frac{P}{\szq} \right)^{n/k}
+\end{equation}
+or equivalently
+\begin{equation}
+  \label{eq:gausssepsdr}
+  \sdr \le (1 + \snr)^{n/k},
+\end{equation}
+where we have defined the \emph{source-to-distortion ratio} $\sdr = \ssq/D$ and
+the \emph{signal-to-noise ratio} $\snr = P/\szq$. 
+
+
+\subsection{When Uncoded Transmission is Optimal}
+
+It is a well known fact that plugging a Gaussian source directly into a Gaussian
+channel results in an optimal communication system.
+
+\begin{example}
+  \label{ex:gausssingle}
+  Let the source be zero-mean Gaussian with variance~$\ssq$ and let the channel
+  be AWGN with noise variance~$\szq$. The encoder is given by $X = f(S) =
+  \sqrt{P/\ssq} S$ and the decoder is given by $\Sh = g(Y) = \sqrt{P} \ssq Y /
+  (P + \szq)$. Using $Y = X + Z$ it is quickly verified that 
+  \begin{equation*}
+    D = \E[(S - \Sh)^2] = \ssq / (1 + P/\szq),
+  \end{equation*}
+  which is indeed the optimal distortion according to~\eqref{eq:gausssep}.
+\end{example}
+
+The achievable $(D,P)$ region for a Gaussian source and channel with squared
+error distortion and input power constraint is thus still completely
+characterized by~\eqref{eq:gausssep}.
+
+As observed by Gastpar et al.~\cite{GastparRV2003}, \exref{gausssingle} is a
+particular instance of a more general paradigm called \emph{measure matching}. 
+
+
+Let us first revisit the optimality conditions in \secref{optimality} and see
+how they are satisfied by \exref{gausssingle}. First, since $k = n = 1$,
+conditions~1 and~5 are trivially satisfied. Because the encoder and decoder are
+invertible functions, conditions~3 and~4 are satisfied. Lastly, conditions~1
+(achieving the rate-distortion function) and condition~6 (achieving capacity)
+are satisfied because the source and the channel are matched for the given cost
+and distortion measures. 
+
+
+\subsection{Bandwidth Expansion}
+
+Consider now the case when $k = 1$ and $n > 1$, \ie, the channel accepts several
+inputs for each source symbol. As the conditions in \secref{optimality} show,
+optimality is now no longer a matter of matching the source distribution to the
+channel. 
+
+\begin{itemize}
+  \item Review optimality conditions. 
+  \item Mention Ingber et al.\ result
+\end{itemize}
+
+\subsubsection{Optimality Through Feedback}
+
+\begin{itemize}
+  \item Converse to Separation Theorem Still Holds
+  \item Conditions for optimality change slightly; give them
+\end{itemize}
+
+\begin{example}
+  \label{ex:gaussfb}
+  In this example, a memoryless Gaussian source of variance~$\ssq$ is
+  transmitted across a memoryless Gaussian channel with power constraint~$P$ and
+  noise variance~$\ssq$.  Define $E_0 = S$. In the $i\th$ channel use, the
+  encoder produces
+  \begin{equation}
+    \label{eq:gaussfbxi}
+    X_i = \sqrt{\frac{P}{\Var E_{i-1}}} E_{i-1}.
+  \end{equation}
+  Both the receiver and the sender now compute the minimum mean-squared
+  error (MMSE) estimator $\Eh_{i-1}$ of $E_{i-1}$ given $Y_i$. The sender then
+  computes $E_i = \Eh_{i-1} - E_{i-1}$ and proceeds to the next round.
+
+  After $n$~rounds of transmission, the receiver has $n$~estimates $\Eh_0$
+  to~$\Eh_{n-1}$. Using these, it computes the final estimate~$\Sh$ as
+  \begin{equation}
+    \label{eq:shdecom1}
+    \Sh = \Eh_0 - \Eh_1 + \Eh_2 - \cdots \pm \Eh_{n-1}.
+  \end{equation}
+  (The sign of the last term is $+$ if $n$~is even and $-$ if $n$~is odd.)
+
+  To compute the overall distortion $\mse$, note that $\Eh_{i-1} = E_{i-1} +
+  E_i$ by definition, so \eqref{eq:shdecom1}~can be written as
+  \begin{align*}
+    \Sh &= (E_0 + E_1) - (E_1 + E_2) + (E_2 + E_3) - \cdots \pm (E_{n-1} + E_n)
+    \\
+    &= E_0 \pm E_n,
+  \end{align*}
+  and since we have defined $E_0 = S$, we have $\mse = \E[E_n^2]$, where $E_n$
+  is the remaining error after the last round of transmission.
+
+  To compute $\E[E_n^2]$, note that since $\Eh_i$ is the MMSE estimator of
+  $E_i$, the estimation error variance is given by (see
+  \eg~\cite[Section~8.3]{Scharf1990})
+  \begin{equation}
+    \label{eq:gaussvardec}
+    \E[E_{i+1}^2] = \E[(\Eh_i - E_i)^2] = \frac{\E[E_i^2]}{1 + P/\szq}.
+  \end{equation}
+  Using $\E[E_0^2] = \E[S^2] = \ssq$ and recursively applying the above, we find
+  that
+  \begin{align*}
+    \frac{\ssq}{\E[E_n^2]} &= \frac{\ssq (1 + P/\szq)}{\E[E_{n-1}^2]} \\
+    &= \frac{\ssq(1 + P/\szq)^2}{\E[E_{n-2}^2]} = \dots \\
+    &= \frac{\ssq(1 + P/\szq)^n}{\E[E_0^2]} = (1 + P/\szq)^n,
+  \end{align*}
+  which is indeed the largest possible SDR according to~\eqref{eq:gausssepsdr}.
+\end{example}
+
+
+\subsubsection{Exploiting Feedback Via Posterior Matching}
+
+
+\subsection{Lessons from the Case With Feedback}
+
+In the previous sections we have seen that if more than one channel use is
+available per source symbol, then a Gaussian source can be transmitted optimally
+over a Gaussian channel only when the encoder has feedback from the receiver.
+What lessons can we draw from the feedback case that help us in the case without
+feedback?
+
+The first observation is that if the encoder knows the state of the receiver
+then it can transmit the receiver's current estimation error uncoded, as done in
+\exref{gaussfb}. Feedback, however, is not the only way for the encoder to know
+the receiver's state. Indeed, assume that the encoder uses a perfect source code
+followed by a perfect channel code to communicate the source across the first
+$n-1$ channel uses (ignoring delay constraints). Because a perfect channel code
+turns the channel into an essentially error-free link, the encoder knows (with
+high probability) the decoder's estimate after $n-1$ channel uses, just like
+when there is feedback.
+
+Let $\Sh'$ be the receiver's estimate after $n-1$ channel uses. According to the
+source and channel coding theorems and because we have assumed perfect codes,
+the estimation error satisfies $\E[(\Sh' - S)^2] = \ssq / (1 + \snr)^{n-1}$ (up
+to an arbitrary $\e > 0$). If the encoder transmits the error $E = \Sh' - S$
+uncoded in the $n\th$ channel use and the receiver estimates it as~$\Eh$, the
+resulting estimation error satisfies
+\begin{align*}
+  \E[(\Eh - E)^2] &= \frac{\E[E^2]}{ 1 + \snr } \\
+  &= \frac{\ssq}{(1 + \snr)^n}
+\end{align*}
+(cf.~\exref{gausssingle}).
+Letting $\Sh = \Sh' - \Eh$, the overall estimation error is then 
+\begin{align*}
+  \E[(\Sh - S)^2] &= \E[(\Sh' - (E + (\Eh - E)) - S)^2] \\
+  &= \E[(\Eh - E)^2] \\
+  &= \frac{\ssq}{(1 + \snr)^n},
+\end{align*}
+which is the optimal distortion. 
+
+Naturally, if the encoder is only allowed to encode one source symbol at a time
+then it is impossible to use a perfect source and channel code in the first
+$n-1$ channel uses, since this would require infinite delay. As we will see in
+the next chapter, however, if some ``mild'' coding is used for the first $n-1$
+transmissions such that the estimation error after the first $n-1$ channel uses
+is negligible with respect to that from the $n\th$~channel use (in a sense to be
+made precise) then we can always increase the SDR that would be obtained after
+$n-1$ channel uses by a factor $\snr$ using uncoded transmission in the $n\th$
+channel use. One way to achieve this is by transmitting a quantized version of
+the source in the first $n-1$ channel uses and then sending the resulting
+quantization error uncoded in the last channel use. This idea is at the heart of
+the communication schemes studied in the next chapter.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                              %
+% CHAPTER APPENDICES                                                           %
+%                                                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{subappendices}
+
+\section{Proof of the Converse Part of the Separation Theorem}
+\label{app:separationproof}
+
+The proof follows from the following chain of inequalities.
+{\allowdisplaybreaks
+\begin{align*}
+  kR(D) &= k R(\frac1k \sk \E[d(S_i, \Sh_i))] \\
+  &\stackrel{(a)}{\le} \sk R(\E[d(S_i, \Sh_i))] \\
+  &\stackrel{(b)}{\le} \sk I(S_i; \Sh_i) \\
+  &= \sk H(S_i) - H(S_i|\Sh_i) \\
+  &= H(S^k) - \sk H(S_i|\Sh_i) \\
+  &\stackrel{(c)}{\le} H(S^k) - \sk H(S_i|S^{i-1} \Sh^k) \\
+  &=H(S^k) - H(S^k|\Sh^k) \\
+  &=I(S^k;\Sh^k) \\
+  &\stackrel{(d)}{\le} I(S^k; Y^n) \\
+  &= H(Y^n) - H(Y^n|S^k) \\
+  &= \sn H(Y_i|Y^{i-1}) - H(Y_i|Y^{i-1} S^k)  \\
+  &\stackrel{(e)}{\le} \sn H(Y_i) - H(Y_i|Y^{i-1} S^k) \\
+  &\stackrel{(f)}{\le} \sn H(Y_i) - H(Y_i|Y^{i-1} S^k X_i) \\
+  &= \sn H(Y_i) - H(Y_i|X_i) \\
+  &= \sn I(X_i; Y_i) \\
+  &\stackrel{(g)}{\le} \sn C(\E \rho(X_i)) \\
+  &\stackrel{(h)}{\le} n C(\frac1n \E \rho(X_i)) \\
+  &= n C(P).
+\end{align*}}%
+The inequalities are justified as follows. (a) follows from the convexity$_\cup$
+of~$R(D)$ and (b) from its definition. (c), (e), and (f) are because
+conditioning can only decrease the entropy. (d) is the data processing
+inequality. Finally, (g) applies by definition and (h) is due to the
+convexity$_\cap$ of~$C(P)$.  \hfil\qed
+
+\end{subappendices}
