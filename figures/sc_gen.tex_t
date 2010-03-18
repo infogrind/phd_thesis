@@ -2,10 +2,10 @@
 \begin{tikzpicture}[node distance=2.5cm,
   every node/.style={{align=center}}]
       \node[sc,align=center] (source) at (0,0)  {source\\$\ps$};
-      \node[c] (enc) [right of=source] {$f(\cdot)$};
+      \node[c] (enc) [right of=source] {encoder\\$f(\cdot)$};
       \node[sc] (channel) [right of=enc] {channel\\$\pyx$};
-      \node[c] (dec) [right of=channel] {$g(\cdot)$};
-      \node[sc] (rec) [right of=dec] {receiver};
+      \node[c] (dec) [right of=channel] {decoder\\$g(\cdot)$};
+      \node[sc] (rec) [right of=dec] {destination};
       
       % Connections between source, channel, etc.
       \draw[l] (source) -- node[above] {$S^k$} (enc);
