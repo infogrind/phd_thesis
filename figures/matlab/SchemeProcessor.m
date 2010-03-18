@@ -28,7 +28,6 @@ classdef SchemeProcessor < handle
         function do_processing(obj)
             for j = 1:length(obj.schemes)
                 scheme = create_scheme(obj, j);
-                
                 % Run the scheme for all SNR values and save data for
                 % each run.
                 for k = 1:length(obj.snr)

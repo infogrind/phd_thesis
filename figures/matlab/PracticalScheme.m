@@ -2,10 +2,6 @@
 classdef PracticalScheme < Scheme
     methods (Access = 'protected', Sealed = true) 
         function snr_updated(obj) 
-            run_simulation(obj); 
-        end 
-        
-        function run_simulation(obj)
             % Encode the source.
             obj.x = encode(obj, obj.s);
 
