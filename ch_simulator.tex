@@ -669,25 +669,27 @@ which is a particular type of scheme processor, is used to plot the
 SDR achieved by a communication scheme.
 
 The interaction between scheme processors and scheme classes is illustrated in
-\figref{schemeprocinteraction}.
-When you
-first create an instance of a scheme processor, it generates and saves a random
-source sequence of a default variance.\footnote{By default, the source samples
-are normally distributed, but this behavior may easily be changed by a derived
-class.} Next you call the |process()| method of the scheme processor, passing a
-list of schemes (\ie, names of scheme classes) and a list of parameters for each
-scheme (cf.~the example on page~\pageref{sec:perfanalysis}). (A scheme can have
-any number of parameters, like for instance the number of channel input symbols
-produced per source symbol.) Internally, the scheme processor then creates an
-instance of each specified scheme, passing the source sample sequence to each
-one's constructor. Because all schemes operate on the same source sequence, a
-fair comparison is guaranteed. 
+\figvref{schemeprocinteraction}.  When you first create an instance of a scheme
+processor, it generates and saves a random source sequence of a default
+variance.\footnote{By default, the source samples are normally distributed, but
+this behavior may easily be changed by a derived class.} Next you call the
+|process()| method of the scheme processor, passing a list of schemes (\ie,
+names of scheme classes) and a list of parameters for each scheme (cf.~the
+example on page~\pageref{sec:perfanalysis}). (A scheme can have any number of
+parameters, like for instance the number of channel input symbols produced per
+source symbol.) Internally, the scheme processor then creates an instance of
+each specified scheme, passing the source sample sequence to each one's
+constructor. Because all schemes operate on the same source sequence, a fair
+comparison is guaranteed. 
 
 \begin{figure}
   \begin{center}
     \input{figures/schemeprocessor.tex_t}
   \end{center}
-  \caption{Interaction between a generic scheme processor and a scheme class.}
+  \caption{Interaction between a scheme processor and scheme classes. For each
+  scheme, the scheme processor repeatedly calls the scheme's \texttt{set\_snr()}
+  method with different SNR values and then gathers the resulting simulation
+  data.}
   \label{fig:schemeprocinteraction}
 \end{figure}
 
