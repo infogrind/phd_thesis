@@ -68,15 +68,6 @@ blocks of channel inputs and source symbols, respectively.
   and~$\Sh_i$.
 \end{definition}
 
-
-\section{Fundamental Limits of Performance}
-
-The most fundamental boundary on the performance of a memoryless point-to-point
-communication system as described above is given by the converse part of
-Shannon's separation theorem~\cite{Gallager1968}. It is formulated in terms of
-the rate-distortion function of the source and the capacity-cost function of the
-channel. 
-
 \begin{definition}
   \label{def:capacity}
   The \emph{capacity-cost function} of a channel $\pyx$ with cost
@@ -95,7 +86,26 @@ channel.
   \end{equation*}
 \end{definition}
 
-The converse part of the separation theorem is then stated as follows.
+
+\section{Fundamental Limits of Performance}
+
+The goal of source-channel communication is to transmit a source at a low cost
+of transmission and with a reconstruction at the receiver that has little
+distortion from the original. The region of achievable cost and distortion pairs
+is thus fundamental in establishing the best possible performance of a given
+communication problem.
+
+\begin{definition}
+  \label{def:achievableregion}
+  For a given source~$\ps$, channel~$\pyx$, cost measure~$\rho(x)$ and
+  distortion measure~$d(s,\sh)$, the \emph{achievable cost\slash distortion
+  region} is the set of all pairs $(D,P)$ for which there exists either a code
+  $(f,g)$ that incurs average distortion~$D$ and average cost~$P$, or a sequence
+  of codes that approach the distortion~$D$ and the cost~$P$ in the limit.
+\end{definition}
+
+The most fundamental bound on the achievable cost/distortion region is given by
+the following result~\cite[Theorem~21]{Shannon1948}.
 
 \begin{theorem}
   \label{thm:separationconverse}
@@ -107,18 +117,27 @@ The converse part of the separation theorem is then stated as follows.
   \end{equation}
 \end{theorem}
 
-A complete proof of this result is given in \appref{separationproof}. 
+\begin{proof}
+  See \appref{separationproof}.
+\end{proof}
 
-The separation theorem has its name because its forward part (discussed in the
-next section) establishes that one can come arbitrarily close to equality in the
-bound~\eqref{eq:separation} by performing source coding and channel coding
-separately, thus giving an operational meaning to the bound.
+\thmref{separationconverse} provides an \emph{outer bound} to the achievable
+cost/distortion region. It says that regardless how powerful an encoder and
+decoder are, the incurred cost and distortion always lie in the region
+specified by~\eqref{eq:separation}. Note also that~\eqref{eq:separation} only
+depends on the ratio $k/n$, so that the same bound applies to a code that
+encodes $1000k$ source symbols into $1000n$ channel inputs. 
 
-The converse part of the separation completely characterizes the region of
-achievable $(D,P)$ pairs of a point-to-point source-channel communication
-system, regardless of whether separate or joint coding for the source and
-channel is used. As its proof in the appendix of this chapter shows, it does not
-use the operational meanings of $R(D)$ and $C(P)$.
+This theorem is often referred to as the converse part of the separation
+theorem, because it establishes that a $(D,P)$ pair which cannot be achieved (or
+approached) using separately performed source and channel coding cannot be
+achieved at all.  The theorem should not only be seen in relation to
+separation-based coding, though.  In fact, while the forward part of the
+separation theorem (given for reference in \appref{separationforward}) is only
+valid if one allows for codes of unrestricted delay (and complexity),
+\thmref{separationconverse} applies to \emph{all} codes and is thus in a way
+more general than the forward part. In particular, it also applies to codes with
+limited delay, which are the subject of this thesis.
 
 
 \section{Optimality Conditions}\label{sec:optimality}
@@ -131,13 +150,12 @@ defined as follows.
   An \emph{optimal communication system} is either a communication system whose
   average cost and distortion satisfy~\eqref{eq:separation} with equality, or
   the limit of a sequence of systems whose performance approach equality
-  in~\eqref{eq:separation}.
+  in~\eqref{eq:separation}.\footnote{This is not the strictest form of
+  optimality and it precludes the existence of optimal communication systems in
+  some situations, for example when $\max_D R(D) < \min_P C(P)$. See
+  Gastpar~\cite{GastparThesis} for a more in-depth treatment of alternative
+  definitions of optimal communication systems.}
 \end{definition}
-
-This is not the strictest form of optimality and it precludes the existence of
-optimal communication systems in some situations, for example when $\max_D R(D)
-< \min_P C(P)$. See Gastpar~\cite{GastparThesis} for a more in-depth treatment
-of alternative definitions of optimal communication systems.
 
 By going step by step through the inequalities in the proof of
 \thmref{separationconverse}, the following result can be established. 
@@ -163,81 +181,29 @@ By going step by step through the inequalities in the proof of
   \end{enumerate}
 \end{theorem}
 
+The separation theorem~\cite[Theorem~21]{Shannon1948} states that under the
+conditions of the source coding theorem and the channel coding theorem, there
+exist for any source, channel, distortion measure and cost measure, a sequence
+of codes that approach $k R(D) = nC(P)$ and thus lead to an optimal
+communication system. In the limit, this sequence of codes thus fulfills all the
+conditions of \thmref{optimalityconditions}.
 
-\subsection{Achieving Optimality Through Separation}
-
-\thmref{separationconverse} applies to all communication systems, regardless of
-whether they perform source and channel coding separately or jointly. The
-forward part of the theorem, on the other hand, uses separate source and channel
-coding to proof the achievability of $(D,P)$ pairs (thus giving the theorem its
-name).
-
-\begin{theorem}[Separation theorem, forward part]
-  \label{thm:separationforward}
-  Consider a memoryless source with rate-distortion function~$R(D)$ and
-  capacity-cost function~$C(P)$. Then for any $(D,P)$ pair satisfying
-  \begin{equation}
-    \label{eq:separationforward}
-    R(D)/\ts \le C(P)/\tc - \e,
-  \end{equation}
-  where $\e > 0$, there exists a source code and a channel code that, when
-  combined to transmit the source across the channel, result in an average
-  distortion of at most~$D$ and an average cost of at most~$P$.
-\end{theorem}
-
-\begin{proof}
-  Assume $R(D)/\ts \le C(P)/\tc - \e$. According to the source coding theorem
-  there exists, for an arbitrary $\e' > 0$, a source code that achieves
-  distortion at most~$D$ and produces $R(D) + \e'$ bits per source symbol, or
-  $(R(D) + \e')/\ts$ bits per second. According to the channel coding theorem,
-  for any $\e' > 0$ there exists a channel code that uses average input
-  cost at most~$P$ and can reliably transmit $C(P) - \e'$ bits per channel use
-  or $(C(P) - \e')/\tc$ bits per second.
-
-  The output of the source code can be mapped to the input of the channel code
-  provided that $(R(D) + \e')/\ts \le (C(P) - \e')/\tc$, 
-  or equivalently
-  \[ R(D)/\ts \le C(P)/\tc - \e'\left(\frac{1}{\ts} + \frac{1}{\tc} \right). \]
-  By choosing $\e'$ small enough, it follows from the assumption on~$D$ and~$P$
-  that this inequality holds.
-\end{proof}
-
-\thmref{separationforward} states that under the conditions of the source coding
-theorem and the channel coding theorem, there exist for any source, channel,
-distortion measure and cost measure, a sequence of codes that approach $k R(D) =
-nC(P)$ and thus lead to an optimal communication system. In the limit, this
-sequence of codes thus fulfills all the conditions of
-\thmref{optimalityconditions}.
-
-Good channel codes achieve (or rather, approach) conditions~5 and~6 of this
-theorem by mapping a long bit sequence to a long sequence of channel input
-symbols whose empirical distribution approaches the \iid\ capacity achieving
-distribution, in a sense made precise in an interesting paper by Shamai and
-Verd\'u~\cite{ShamaiV1997}. Similar arguments to those in that paper probably
-apply to how good source codes achieve conditions~1 and~2. Since by design a
-separation based code has a deterministic encoder, condition~3 is always
-satisfied.  How a separation based code achieves condition~4 is not immediately
-clear. It might have to do with the fact that the empirical input distribution
-of a good channel code does not actually convert (in divergence) to the capacity
-achieving distribution (cf.~\cite{ShamaiV1997}); this question certainly merits
-further investigation.
-
-
-\subsection{Alternatives to Separation-Based Codes}
-
-The separation theorem uses separate source and channel codes to prove the
-achievability of all cost and distortion pairs that
-satisfy~\eqref{eq:separationforward}. It does not say, though, that such codes
-are the \emph{only} way to achieve those cost/distortion pairs. Codes designed
-according to the separation principle are just one way to do this.
+Can only codes based on the separation principle achieve any point of the
+achievable cost\slash distortion region? Not at all. Using the results of
+Gastpar et al.~\cite{GastparRV2003}, one can construct infinitely many examples
+of very simple joint source-channel codes that incur minimal delay yet whose
+average cost and distortion lie on the boundary of the achievable region
+characterized by~\eqref{eq:separation} and can thus be considered optimal. Later
+in this chapter we will encounter a prominent example of such a code. First,
+though, let us give some general considerations about delay limited codes.
 
 
 \section{Codes With a Delay Constraint}
 
-The forward part of the separation theorem relies on the source coding
-and channel coding theorems, which assume unrestricted block lengths and
-ignore the resulting delay. This section looks at the consequences that arise
-when a constraint is put on the delay incurred by a point-to-point communication
+The forward part of the separation theorem relies on the source coding and
+channel coding theorems, which assume unrestricted block lengths and thus
+unrestricted delay. This section looks at the consequences that arise when a
+constraint is put on the delay incurred by a point-to-point communication
 system. To be precise, we first define what we exactly mean by delay.
 
 \begin{definition}
@@ -298,6 +264,29 @@ that become tighter for stricter delay constraints. However, none of the bounds
 obtained (so far) using this method are provably tight for a given delay
 constraint, not even for the canonical case of a Gaussian source and channel,
 which is the subject of the next section.
+
+\figref{achievableregions} summarizes the current state of knowledge. For codes
+without delay limits, the achievable cost/distortion region is completely
+characterized by the separation theorem. For delay limited
+codes, on the other hand, no general achievability result exists, but there are
+some refined outer bounds. The lower right corner of the figure is thus empty
+except for a few dots that represent special cases where minimal delay codes
+achieve the outer bound of \thmref{separationconverse}.
+
+\begin{figure}
+  \begin{center}
+    \input{figures/achievableregions.tex_t}
+  \end{center}
+  \caption{The current knowledge of the theoretical limits of source-channel
+  coding. For codes without delay constraint, the outer bound and the
+  region achievable using separation-based codes coincide and thus characterize
+  exactly the achievable cost/distortion region. For delay limited codes, some
+  bounds exist that improve on the converse separation theorem, but no general
+  characterization of the achievable cost/distortion region exist. The few
+  special cases where minimal-delay codes achieve the separation theorem bound
+  are represented by the dots in the lower right corner.}
+  \label{fig:achievableregions}
+\end{figure}
 
 
 \section{The Gaussian Case}
@@ -771,9 +760,22 @@ chapter.
 
 \section{Historical Notes}
 
-\textbf{This section to be completed.}
+The separation theorem goes back to Shannon~\cite{Shannon1948}. Gastpar et
+al.~\cite{GastparRV2003} analyzed in details the optimality conditions of
+\thmref{optimalityconditions}. That a Gaussian source directly plugged into a
+Gaussian channel achieves and optimal cost--distortion tradeoff was first
+observed by Goblick~\cite{Goblick1965}.
 
-% Stuff about posterior matching:
+Ziv and Zakai published their method for alternative bounds, where an
+alternative mutual information not based on the logarithm is used, in
+1973~\cite{ZivZ1973}. A version of their result was later formulated in the
+context of convex optimization by Ben-Tal and Teboulle~\cite{BenTalT1988}. In
+2008, Ingber et al.\ used the R\'enyi entropy power measure in place of the
+logarithm in the mutual information and showed that at high SNR, the achievable
+distortion of a Gaussian source across a Gaussian channel is strictly bounded
+away from Shannon's limit when a single source symbol is transmitted in several
+channel uses. 
+
 The idea underlying posterior matching is well known and was used by Gastpar and
 Rimoldi~\cite{GastparR2003} to develop various examples of optimal uncoded
 transmission with feedback.  Later, it was studied in depth by Shayevitz and
@@ -821,5 +823,41 @@ conditioning can only decrease the entropy. (d) and (e) follow from the data
 processing inequality. (f) is because conditioning can only decrease entropy and
 because the channel is memoryless. Finally, (g) applies by definition and (h) is
 due to the convexity$_\cap$ of~$C(P)$.  \hfil\qed
+
+
+\section{Separation Theorem, Forward Part}\label{app:separationforward}
+
+\begin{theorem}
+  \label{thm:separationforward}
+  Consider a memoryless source with rate-distortion function~$R(D)$ that
+  produces a source symbol every $\ts$~seconds, and memoryless channel with
+  capacity-cost function~$C(P)$ that accepts an input symbol for transmission
+  every $\tc$~seconds. Then for any $(D,P)$ pair satisfying
+  \begin{equation}
+    \label{eq:separationforward}
+    R(D)/\ts \le C(P)/\tc - \e,
+  \end{equation}
+  where $\e > 0$, there exists a source code and a channel code that, when
+  combined to transmit the source across the channel, result in an average
+  distortion of at most~$D$ and an average cost of at most~$P$.
+\end{theorem}
+
+\begin{proof}
+  Assume $R(D)/\ts \le C(P)/\tc - \e$. According to the source coding theorem
+  there exists, for an arbitrary $\e' > 0$, a source code that achieves
+  distortion at most~$D$ and produces $R(D) + \e'$ bits per source symbol, or
+  $(R(D) + \e')/\ts$ bits per second. According to the channel coding theorem,
+  for any $\e' > 0$ there exists a channel code that uses average input
+  cost at most~$P$ and can reliably transmit $C(P) - \e'$ bits per channel use
+  or $(C(P) - \e')/\tc$ bits per second.
+
+  The output of the source code can be mapped to the input of the channel code
+  provided that $(R(D) + \e')/\ts \le (C(P) - \e')/\tc$, 
+  or equivalently
+  \[ R(D)/\ts \le C(P)/\tc - \e'\left(\frac{1}{\ts} + \frac{1}{\tc} \right). \]
+  By choosing $\e'$ small enough, it follows from the assumption on~$D$ and~$P$
+  that this inequality holds.
+\end{proof}
+
 
 \end{subappendices}

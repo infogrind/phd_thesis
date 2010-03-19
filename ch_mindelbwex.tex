@@ -52,8 +52,8 @@ Suppose a perfect source code combined with a perfect channel code is
 used to transmit~$S$ across the first $n-1$~channel uses. This implies a
 decomposition of~$S$ as $S = Q + E$, where $Q$~is transmitted error free and
 the associated distortion $\E[E^2]$ scales as $\snr^{-(n-1)}$
-(cf.~\thmref{sdrub}). If $E$ is transmitted uncoded in the $n\th$~channel use
-and the receiver sets $\Sh = Q + \Eh$, the overall SDR is
+(cf.~Equation~\vref{eq:gausssepsdr}). If $E$ is transmitted uncoded in the
+$n\th$~channel use and the receiver sets $\Sh = Q + \Eh$, the overall SDR is
 \begin{equation*}
   \sdr = \frac{\ssq}{\mse} = \frac{\ssq}{\E[E^2]} \cdot \frac{\E[E^2]}{\E[(\Eh -
   E)^2]},
@@ -389,7 +389,7 @@ P$ for all~$i$.
   converges to that of the $X_i$, and so for all $i = 1$, \ldots, $n-1$, the
   mutual information $I(X_i; Y_i)$ is upper bounded by a constant independent of
   the SNR. Since the SDR scales at best as $2^{2I(X^n;Y^n)}$ (see
-  Chapter~\ref{ch:prelim}), this limits the SDR scaling to be at best linear in
+  Chapter~\ref{ch:fundamentals}), this limits the SDR scaling to be at best linear in
   the SNR.
 \end{remark}
 
@@ -1516,6 +1516,26 @@ delay schemes.
   \end{equation*}
 \end{proof}
   
+
+  \section{Asymptotic Notation}\label{app:asymptotic}
+
+  \begin{definition}
+    \label{def:bigo}
+    Let $f(x)$ and $g(x)$ be two functions defined on~$\R$. The set $O(g(x))$ is
+    defined as
+    \begin{equation*}
+      f(x) \in O(g(x))
+    \end{equation*}
+    if and only if there exists an $x_0$ and a constant~$c$ such that
+    \begin{equation*}
+      f(x) \le c g(x)
+    \end{equation*}
+    for all $x > x_0$. 
+    Similarly, $f(x) \in \Omega(g(x))$ if $\le$ is replaced by $\ge$ in
+    the above definition. Finally, $\Theta(g(x)) \deq O(g(x)) \cap
+    \Omega(g(x))$.
+  \end{definition}
+
 
   \section{Proof of Ziv's Lower Bound (Lemma~\ref{lem:zivbound})}
   \label{app:zivboundproof}

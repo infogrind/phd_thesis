@@ -2,7 +2,7 @@
 %     Created: Tue Jan 12 11:00 AM 2010 C
 % Last Change: Tue Jan 12 11:00 AM 2010 C
 %
-\documentclass[review]{ipgthesis}
+\documentclass[booklet]{ipgthesis}
 %\documentclass[a4paper]{lcavthesis}
 
 % All external packages
@@ -16,7 +16,7 @@
 
 % Style definitions for TikZ
 \input{tikzstyles}
-\tikzexternalize{thesis}
+%\tikzexternalize{thesis}
 
 % Various commands affecting the whole document
 \bibliographystyle{IEEEtranS}
@@ -40,13 +40,15 @@
 
 \mainmatter
 %\input{ch_intro}
-\input{ch_prelim}
-\input{ch_mindelbwex}
-%\input{ch_nofeedback}
-%\input{ch_qescheme}
-%\setcounter{chapter}{2}
+%\chapter{Fundamentals of Source-Channel Communication}\label{ch:fundamentals}
+\input{ch_fundamentals}
+%\chapter{Minimal Delay Codes}\label{ch:mindelbwex}
+%\input{ch_mindelbwex}
+%\chapter{Fidelity}\label{ch:fidelity}
 %\input{ch_fidelity}
+%\chapter{Simulator}\label{ch:simulator}
 %\input{ch_simulator}
+%\chapter{Conclusions}\label{ch:conclusions}
 %\input{ch_conclusions}
 
 \backmatter

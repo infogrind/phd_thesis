@@ -1,0 +1,36 @@
+% vim:ft=tex
+\begin{tikzpicture}
+  \colorlet{lightgray}{white!90!black}
+  \tikzstyle{thmboxfont}=[font=\scriptsize\sffamily]
+  \tikzstyle{thmbox}=[draw,fill=lightgray,align=center,thmboxfont]
+
+  %\draw[help lines] (0,0) grid (10,5);
+  
+  \foreach \y in {1,2}
+    \draw (0,\y) -- +(10,0);
+
+  \foreach \x in {4,7} \draw (\x,0) -- (\x,3);
+
+  \node at (2,.5) {delay limited codes};
+  \node at (2,1.5) {delay unlimited codes};
+
+  \node at (5.5,2.5) {outer bound};
+  \node at (8.5,2.5) {achievability};
+
+  %\draw[fill=lightgray] (4.2,0.2) rectangle (6.8,1.8);
+  \node[thmbox,minimum width=2.8cm,minimum height=1.8cm]
+  at (5.5,1)  {};
+
+  \node[align=center,thmboxfont] at (5.5,1.5) {converse part of\\ separation
+  theorem};
+  
+  \node[thmbox,minimum height=.8cm] at (8.5,1.5) 
+  {forward part of\\separation theorem};
+
+  \node[thmbox,fill=white!75!black,minimum width=2.6cm,minimum height=.6cm] at
+  (5.5,.55) {some tighter\\bounds};
+
+  \foreach \x/\y in {7.5/.6,8/.3,8.1/.7,8.8/.3,9.5/.5}
+  \fill (\x,\y) circle (1pt);
+
+\end{tikzpicture}
