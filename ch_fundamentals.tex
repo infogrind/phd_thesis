@@ -12,15 +12,19 @@ following six elements, displayed schematically in \figref{scgen}.
     = (S_1, \dots, S_k)$ into $n$~channel input symbols $X^n = (X_1,
     \dots, X_n)$.
   \item A decoder function~$g$ that maps a block of $n$~channel output symbols
-    $Y^n = (Y_1, \dots, Y_n)$ to $k$~source estimates $\Sh^k = (\Sh_1,
+    $Y^n = (Y_1, \dots, Y_n)$ into $k$~source estimates $\Sh^k = (\Sh_1,
     \dots, \Sh_k)$.
-  \item A \emph{distortion measure} $d(s,\sh)$ that assigns a distortion to
-    every pair of source symbol and estimate, and a \emph{cost measure}
-    $\rho(x)$ that assigns a transmission cost to each channel input symbol. 
+  \item A \emph{cost measure} $\rho(x)$ that assigns a transmission cost to each
+    channel input symbol, and a \emph{distortion measure} $d(s,\sh)$ that
+    assigns a reconstruction ``badness'' to every pair of source symbol and
+    estimate.
 \end{itemize}
-The parameters $\ts$, $\tc$, $n$, and $k$ are given as part of the problem
+The parameters $\ts$, $\tc$, $k$, and $n$ are given as part of the problem
 setting. To match the number of channel inputs produced by the encoder to the
-rate at which the channel accepts them, they must satisfy $n/k = \ts / \tc$. 
+rate at which the channel accepts them, they must satisfy $n/k = \ts / \tc$. The
+communication consists thus of identical rounds of transmission of length $k\ts$
+(or $n\tc$), and the analysis can be limited to one such round.
+
 
 \begin{figure}
   \begin{center}
@@ -30,19 +34,19 @@ rate at which the channel accepts them, they must satisfy $n/k = \ts / \tc$.
   \label{fig:scgen}
 \end{figure}
 
-If the discrete-time source and channel model an underlying continuous
-bandlimited source and channel, respectively, $\ts$ and $\tc$ relate directly to
+If the discrete-time source and channel represent an underlying continuous
+bandlimited source and channel, $\ts$ and $\tc$ relate directly to
 the respective bandwidths. If $\ts = \tc$, one therefore says that the source
 and channel are \emph{bandwidth matched}. Correspondingly, a code is said to be
 \emph{bandwidth matched} if $k=n$, to be a \emph{bandwidth expansion} code if $k
-< n$, and to be a bandwidth compression code if $k > n$.
-
-
+< n$, and to be a bandwidth compression code if $k > n$. 
 The source and the channel, together with the encoder and decoder, imply a joint
 distribution of the tuple $(S^k, X^n, Y^n, \Sh^k)$.  Depending on the encoder,
-the sequence $X^n$ of channel inputs may not be identically distributed; the
-average cost can therefore only be defined as the empirical average of the
-expected cost of each channel input.
+the sequence of channel inputs $X^n$ may not be identically distributed;
+similarly, the marginal (joint) distribution of the source/estimate pairs
+$(S_i,\Sh_i)$ may not be the same for all~$i$. The average cost and distortion
+of a communication system are therefore defined as the empirical average over
+blocks of channel inputs and source symbols, respectively.
 
 \begin{definition}
   \label{def:avgcost}
@@ -52,11 +56,6 @@ expected cost of each channel input.
     P = \sum_{i=1}^n \E[\rho(X_i)].
   \end{equation*}
 \end{definition}
-
-Similarly, depending on the encoder and the decoder the sequence $\Sh^k$ of
-estimates may not be identically distributed, so that the average distortion
-must be defined as the average of the expected distortion of each pair $(S_i,
-\Sh_i)$. 
 
 \begin{definition}
   \label{def:avgdist}
@@ -76,7 +75,7 @@ The most fundamental boundary on the performance of a memoryless point-to-point
 communication system as described above is given by the converse part of
 Shannon's separation theorem~\cite{Gallager1968}. It is formulated in terms of
 the rate-distortion function of the source and the capacity-cost function of the
-channel, whose definitions are given first. 
+channel. 
 
 \begin{definition}
   \label{def:capacity}
@@ -124,15 +123,15 @@ use the operational meanings of $R(D)$ and $C(P)$.
 
 \section{Optimality Conditions}\label{sec:optimality}
 
-For the purpose of this thesis, the optimality of a communication system is
+For the purpose of this chapter, an optimal communication system is
 defined as follows.
 
 \begin{definition}
   \label{def:optimality}
-  A \emph{optimal communication system} is either a communication system whose
+  An \emph{optimal communication system} is either a communication system whose
   average cost and distortion satisfy~\eqref{eq:separation} with equality, or
-  the limit of a sequence of systems (with increasing block length) whose
-  performance approach equality in~\eqref{eq:separation}.
+  the limit of a sequence of systems whose performance approach equality
+  in~\eqref{eq:separation}.
 \end{definition}
 
 This is not the strictest form of optimality and it precludes the existence of
@@ -183,7 +182,7 @@ name).
   \end{equation}
   where $\e > 0$, there exists a source code and a channel code that, when
   combined to transmit the source across the channel, result in an average
-  distortion~$D$ and an average cost~$P$.
+  distortion of at most~$D$ and an average cost of at most~$P$.
 \end{theorem}
 
 \begin{proof}
@@ -192,35 +191,36 @@ name).
   distortion at most~$D$ and produces $R(D) + \e'$ bits per source symbol, or
   $(R(D) + \e')/\ts$ bits per second. According to the channel coding theorem,
   for any $\e' > 0$ there exists a channel code that uses average input
-  cost at most~$P$ and can transmit reliably $C(P) - \e'$ bits per channel use
+  cost at most~$P$ and can reliably transmit $C(P) - \e'$ bits per channel use
   or $(C(P) - \e')/\tc$ bits per second.
 
   The output of the source code can be mapped to the input of the channel code
   provided that $(R(D) + \e')/\ts \le (C(P) - \e')/\tc$, 
   or equivalently
   \[ R(D)/\ts \le C(P)/\tc - \e'\left(\frac{1}{\ts} + \frac{1}{\tc} \right). \]
-  This follows directly from the assumption if $\e'$ is chosen small enough.
+  By choosing $\e'$ small enough, it follows from the assumption on~$D$ and~$P$
+  that this inequality holds.
 \end{proof}
 
 \thmref{separationforward} states that under the conditions of the source coding
 theorem and the channel coding theorem, there exist for any source, channel,
-distortion measure and cost measure a sequence of codes that approach $k R(D) =
-nC(P)$ and thus lead to an optimal communication system in the sense of
-\defref{optimality}. In the limit, the sequence of separation codes thus
-fulfills all the conditions of \thmref{optimalityconditions}.
+distortion measure and cost measure, a sequence of codes that approach $k R(D) =
+nC(P)$ and thus lead to an optimal communication system. In the limit, this
+sequence of codes thus fulfills all the conditions of
+\thmref{optimalityconditions}.
 
 Good channel codes achieve (or rather, approach) conditions~5 and~6 of this
 theorem by mapping a long bit sequence to a long sequence of channel input
 symbols whose empirical distribution approaches the \iid\ capacity achieving
 distribution, in a sense made precise in an interesting paper by Shamai and
-Verd\'u~\cite{ShamaiV1997}. Similar arguments to those in the paper probably
+Verd\'u~\cite{ShamaiV1997}. Similar arguments to those in that paper probably
 apply to how good source codes achieve conditions~1 and~2. Since by design a
 separation based code has a deterministic encoder, condition~3 is always
 satisfied.  How a separation based code achieves condition~4 is not immediately
 clear. It might have to do with the fact that the empirical input distribution
 of a good channel code does not actually convert (in divergence) to the capacity
-achieving distribution (cf.~\cite{ShamaiV1997}); this is a question that
-certainly merits further investigation.
+achieving distribution (cf.~\cite{ShamaiV1997}); this question certainly merits
+further investigation.
 
 
 \subsection{Alternatives to Separation-Based Codes}
@@ -234,11 +234,11 @@ according to the separation principle are just one way to do this.
 
 \section{Codes With a Delay Constraint}
 
-The forward part of the separation theorem relies on the source coding theorem
-and the channel coding theorem, which assume unrestricted block lengths and
+The forward part of the separation theorem relies on the source coding
+and channel coding theorems, which assume unrestricted block lengths and
 ignore the resulting delay. This section looks at the consequences that arise
 when a constraint is put on the delay incurred by a point-to-point communication
-system. To be precise, we define first what we exactly mean by delay.
+system. To be precise, we first define what we exactly mean by delay.
 
 \begin{definition}
   \label{def:delay}
@@ -258,6 +258,21 @@ of the channel, the receiver can thus decode the first source symbol after $k\ts
 by a code that encodes a \emph{single} source symbol at a time. We call such a
 code a \emph{minimal-delay code}.
 
+Codes based on the separation theorem have the advantage that separate codes can
+be designed for the source and the channel. This way, the designer of the source
+code does not have to know a priori over what channel the source will be
+transmitted, and neither does the designer of the channel code have to know what
+kind of source will be transmitted across the channel. The cost paid for this
+flexibility is the large delay and complexity required by a separation based
+code. 
+
+In situations where external circumstances (such as real-time communication) put
+a constraint on the tolerable delay, the flexibility of separate source and
+channel coding must be sacrificed in favor of codes that are designed jointly
+for a particular source and a channel. As we will see shortly, there exist such
+joint source-channel codes that perform as good as any separation-based code,
+yet only cause minimal delay.
+
 \begin{remark}
   \label{rem:blocklength}
   In conventional source coding and channel coding, the term ``large block
@@ -270,32 +285,19 @@ code a \emph{minimal-delay code}.
   block length altogether in the context of such codes. 
 \end{remark}
 
-Codes based on the separation theorem have the advantage that separate codes can
-be designed for the source and the channel. This way the designer of the source
-code does not have to know a priori over what channel the source will be
-transmitted, and neither does the designer of the channel code have to know what
-kind of source will be transmitted across the channel. The cost paid for this
-flexibility is the large delay and complexity required by a separation based
-code. 
-
-In situations where external circumstances (such as real-time communication) put
-a constraint on the tolerable delay, the flexibility of separate source and
-channel codes must be sacrificed in favor of codes that are designed jointly for
-a particular source and a channel. As we will see shortly, there exist of such
-joint source-channel codes that perform as good as any separation-based code,
-yet cause only minimal delay.
-
 From a theoretical point of view, the drawback of codes with a delay limit is
 that there exists no exact characterization of the achievable cost and
-distortion region for such codes. There have certainly been attempts to refine
-the bound of \thmref{separationconverse} for delay limited codes, most notably
-Ziv and Zakai's observation that tighter bounds can be obtained by replacing the
-logarithm in the mutual information by a different function, as long as this
-function satisfies certain constraints~\cite{ZivZ1973}. This can result in outer
-bounds that take into account the delay. However, no bounds have been found
-(yet) using this method that are provably tight for a given delay constraint,
-not even for the canonical case of a Gaussian source and channel, which is the
-subject of the next section.
+distortion region for such codes. While the bound of \thmref{separationconverse}
+still applies, it only depends on the \emph{ratio} $k/n$ and therefore does not
+take into account delay constraints. There have certainly been attempts to
+refine this bound to apply to delay limited codes, most notably Ziv and Zakai's
+observation that tighter bounds can be obtained by replacing the logarithm in
+the mutual information by a different function, as long as this function
+satisfies certain constraints~\cite{ZivZ1973}. This can result in outer bounds
+that become tighter for stricter delay constraints. However, none of the bounds
+obtained (so far) using this method are provably tight for a given delay
+constraint, not even for the canonical case of a Gaussian source and channel,
+which is the subject of the next section.
 
 
 \section{The Gaussian Case}

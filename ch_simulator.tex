@@ -34,8 +34,7 @@ communication problems other than joint source-channel coding.
 This chapter is organized as follows. \secref{overview} makes the reader
 familiar with \jscsim\ by leading him through a series of hands-on examples and
 giving an overview of the implementation.  Thereafter, \secref{reference}
-provides a detailed reference and usage manual.  Lastly, \secref{implementation}
-contains a few more remarks on the implementation.
+provides a detailed reference and usage manual.  
 
 Before introducing \jscsim, though, the chapter starts with a short example that
 illustrates why object oriented programming is so well suited for writing
@@ -361,6 +360,7 @@ on:
 \end{enumerate}
 All this work was done by |Performance|\-|Processor| and the base class
 |Practical|\-|Scheme|, leaving us free to focus on the essential stuff.
+(\secref{impoverview} explains in detail how the above steps are performed.)
 
 
 \subsubsection{Theoretical Performance}
@@ -542,7 +542,7 @@ simulated (passed as the argument |scheme|) is queried by calling its
 \end{listing}
 
 For another example of a performance processor, consider the hybrid
-communication scheme implemented as |Hybrid2DScheme| in \lstvref{hybridscheme}.
+communication scheme implemented as |Hybrid2DScheme| in \lstref{hybridscheme}.
 In this communication scheme, each source symbol~$S$ is split into a discrete
 part~$Q$ and a continuous part~$E$ (lines~10--11), which are then transmitted
 across two
@@ -1433,32 +1433,35 @@ plotting is done then it can override |check_parameters()|.
 %
 %
 
-\section{Implementation Notes}\label{sec:implementation}
+% [Marius] The following implementation section becomes obsolete with the
+% implementation overview (section impoverview).
 
-\subsection{Schemes and Scheme Processors}
-
-To implement new communication schemes and to analyze them using scheme
-processors, it is not necessary to know anything about how scheme classes and
-scheme processor classes actually interact. For the curious, this section
-explains what is going on behind the scenes.
-
-All objects based on the |Scheme| class have the method |set_snr()|, whose
-definition is
-\begin{method}{set_snr(\obj, \oarg{snr}) (public)}
-\end{method}
-To ``process'' a scheme for a given SNR, all that scheme processors in fact do
-is call the scheme's |set_snr()| method with the given SNR. This method first
-checks if the specified SNR value differs from the one currently set. If so, it
-calls the abstract method |snr_updated()|, in which derived classes must put the
-code to update the object's state based on the new SNR. 
-
-The two classes derived from |Scheme|, which are |TheoreticalScheme| and
-|PracticalScheme|, implement |snr_updated()| in different ways. In
-|The|\-|o|\-|ret|\-|i|\-|cal|\-|Scheme|, it just calls |update_mse()|, which
-classes derived from it (such as |ShannonScheme|) must implement. 
-
-In classes based on |PracticalScheme|, |snr_updated()| does slightly more work.
-To update an objects state, a whole round of communication must be simulated.
-Thus, |snr_updated()| as implemented in |PracticalScheme| calls
-|run_simulation()|, which is the method that actually calls  |encode()| and
-|decode()|.
+%\section{Implementation Notes}\label{sec:implementation}
+%
+%\subsection{Schemes and Scheme Processors}
+%
+%To implement new communication schemes and to analyze them using scheme
+%processors, it is not necessary to know anything about how scheme classes and
+%scheme processor classes actually interact. For the curious, this section
+%explains what is going on behind the scenes.
+%
+%All objects based on the |Scheme| class have the method |set_snr()|, whose
+%definition is
+%\begin{method}{set_snr(\obj, \oarg{snr}) (public)}
+%\end{method}
+%To ``process'' a scheme for a given SNR, all that scheme processors in fact do
+%is call the scheme's |set_snr()| method with the given SNR. This method first
+%checks if the specified SNR value differs from the one currently set. If so, it
+%calls the abstract method |snr_updated()|, in which derived classes must put the
+%code to update the object's state based on the new SNR. 
+%
+%The two classes derived from |Scheme|, which are |TheoreticalScheme| and
+%|PracticalScheme|, implement |snr_updated()| in different ways. In
+%|The|\-|o|\-|ret|\-|i|\-|cal|\-|Scheme|, it just calls |update_mse()|, which
+%classes derived from it (such as |ShannonScheme|) must implement. 
+%
+%In classes based on |PracticalScheme|, |snr_updated()| does slightly more work.
+%To update an objects state, a whole round of communication must be simulated.
+%Thus, |snr_updated()| as implemented in |PracticalScheme| calls
+%|run_simulation()|, which is the method that actually calls  |encode()| and
+%|decode()|.
