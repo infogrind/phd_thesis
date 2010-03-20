@@ -1,29 +1,48 @@
 \chapter{Fundamentals of Source-Channel Communication}\label{ch:fundamentals}
 
+The goal of this first chapter is to introduce the reader to the general problem
+of source-channel communication and then to present the problem of delay-limited
+source-channel coding within the more general framework.
+
+We start by introducing the elements that make up the problem in
+\secref{setup}. In \secref{fundamentallimits} we present the fundamental limits.
+In \secref{optimality} we given the conditions for a communication system to
+achieve this limits. \secref{delayconstraint} looks at codes with a delay
+constraint. We then focus our attention in \secref{gaussian} on the particular
+case of a Gaussian source and channel. Special attention is paid to the
+situation when there is feedback from the receiver to the transmitter, because
+feedback allows simple optimal communication in cases where this would not be
+possible without feedback. In \secref{lessonsfromfeedback} we draw insights from
+the feedback case and pave the way to the communication strategy introduced in
+the next chapter. 
+
+
+\section{Problem Set-Up}\label{sec:setup}
+
 This thesis is about point-to-point communication of a memoryless source across
 a memoryless channel. In its most general form, this problem is made up of the
 following six elements, displayed schematically in \figref{scgen}.
 \begin{itemize}
-  \item A memoryless source with distribution~$\pS$, producing a source symbol
-    every $\ts$~seconds.
-  \item A memoryless channel with transition distribution~$\pyx$, accepting an
-    input symbol for transmission every $\tc$~seconds.
-  \item An encoder function~$f$ that maps a block of~$k$ source symbols $S^k
-    = (S_1, \dots, S_k)$ into $n$~channel input symbols $X^n = (X_1,
-    \dots, X_n)$.
-  \item A decoder function~$g$ that maps a block of $n$~channel output symbols
-    $Y^n = (Y_1, \dots, Y_n)$ into $k$~source estimates $\Sh^k = (\Sh_1,
+  \item A memoryless \emph{source} with distribution~$\pS$, producing a source
+    symbol every $\ts$~seconds.
+  \item A memoryless \emph{channel} with transition distribution~$\pyx$,
+    accepting an input symbol for transmission every $\tc$~seconds.
+  \item An \emph{encoder} function~$f$ that maps a block of~$k$ source symbols
+    $S^k = (S_1, \dots, S_k)$ into $n$~channel input symbols $X^n = (X_1, \dots,
+    X_n)$.
+  \item A \emph{decoder} function~$g$ that maps a block of $n$~channel output
+    symbols $Y^n = (Y_1, \dots, Y_n)$ into $k$~source estimates $\Sh^k = (\Sh_1,
     \dots, \Sh_k)$.
   \item A \emph{cost measure} $\rho(x)$ that assigns a transmission cost to each
     channel input symbol, and a \emph{distortion measure} $d(s,\sh)$ that
     assigns a reconstruction ``badness'' to every pair of source symbol and
     estimate.
 \end{itemize}
-The parameters $\ts$, $\tc$, $k$, and $n$ are given as part of the problem
+The parameters $\ts$ and $\tc$ are given as part of the problem
 setting. To match the number of channel inputs produced by the encoder to the
-rate at which the channel accepts them, they must satisfy $n/k = \ts / \tc$. The
-communication consists thus of identical rounds of transmission of length $k\ts$
-(or $n\tc$), and the analysis can be limited to one such round.
+rate at which the channel accepts them, $k$ and $n$ must satisfy $n/k = \ts /
+\tc$. The communication consists thus of identical rounds of transmission of
+length $k\ts$ (or $n\tc$).
 
 
 \begin{figure}
@@ -40,6 +59,7 @@ the respective bandwidths. If $\ts = \tc$, one therefore says that the source
 and channel are \emph{bandwidth matched}. Correspondingly, a code is said to be
 \emph{bandwidth matched} if $k=n$, to be a \emph{bandwidth expansion} code if $k
 < n$, and to be a bandwidth compression code if $k > n$. 
+
 The source and the channel, together with the encoder and decoder, imply a joint
 distribution of the tuple $(S^k, X^n, Y^n, \Sh^k)$.  Depending on the encoder,
 the sequence of channel inputs $X^n$ may not be identically distributed;
@@ -87,7 +107,7 @@ blocks of channel inputs and source symbols, respectively.
 \end{definition}
 
 
-\section{Fundamental Limits of Performance}
+\section{Fundamental Limits of Performance}\label{sec:fundamentallimits}
 
 The goal of source-channel communication is to transmit a source at a low cost
 of transmission and with a reconstruction at the receiver that has little
@@ -122,7 +142,7 @@ the following result~\cite[Theorem~21]{Shannon1948}.
 \end{proof}
 
 \thmref{separationconverse} provides an \emph{outer bound} to the achievable
-cost/distortion region. It says that regardless how powerful an encoder and
+cost/distortion region. It says that regardless of how powerful an encoder and
 decoder are, the incurred cost and distortion always lie in the region
 specified by~\eqref{eq:separation}. Note also that~\eqref{eq:separation} only
 depends on the ratio $k/n$, so that the same bound applies to a code that
@@ -131,13 +151,13 @@ encodes $1000k$ source symbols into $1000n$ channel inputs.
 This theorem is often referred to as the converse part of the separation
 theorem, because it establishes that a $(D,P)$ pair which cannot be achieved (or
 approached) using separately performed source and channel coding cannot be
-achieved at all.  The theorem should not only be seen in relation to
-separation-based coding, though.  In fact, while the forward part of the
+achieved at all. However, the theorem should not only be seen in relation to
+separation-based coding.  In fact, while the forward part of the
 separation theorem (given for reference in \appref{separationforward}) is only
 valid if one allows for codes of unrestricted delay (and complexity),
 \thmref{separationconverse} applies to \emph{all} codes and is thus in a way
 more general than the forward part. In particular, it also applies to codes with
-limited delay, which are the subject of this thesis.
+limited delay, which are a central subject of this thesis.
 
 
 \section{Optimality Conditions}\label{sec:optimality}
@@ -149,12 +169,11 @@ defined as follows.
   \label{def:optimality}
   An \emph{optimal communication system} is either a communication system whose
   average cost and distortion satisfy~\eqref{eq:separation} with equality, or
-  the limit of a sequence of systems whose performance approach equality
-  in~\eqref{eq:separation}.\footnote{This is not the strictest form of
+  the limit of a sequence of communication systems whose performance approaches
+  equality in~\eqref{eq:separation}.\footnote{This is not the strictest form of
   optimality and it precludes the existence of optimal communication systems in
   some situations, for example when $\max_D R(D) < \min_P C(P)$. See
-  Gastpar~\cite{GastparThesis} for a more in-depth treatment of alternative
-  definitions of optimal communication systems.}
+  Gastpar~\cite{GastparThesis} for a more general  definition of optimality.}
 \end{definition}
 
 By going step by step through the inequalities in the proof of
@@ -181,10 +200,10 @@ By going step by step through the inequalities in the proof of
   \end{enumerate}
 \end{theorem}
 
-The separation theorem~\cite[Theorem~21]{Shannon1948} states that under the
+The forward part of the separation theorem states that under the
 conditions of the source coding theorem and the channel coding theorem, there
 exist for any source, channel, distortion measure and cost measure, a sequence
-of codes that approach $k R(D) = nC(P)$ and thus lead to an optimal
+of codes that approaches $k R(D) = nC(P)$ and thus leads to an optimal
 communication system. In the limit, this sequence of codes thus fulfills all the
 conditions of \thmref{optimalityconditions}.
 
@@ -193,16 +212,16 @@ achievable cost\slash distortion region? Not at all. Using the results of
 Gastpar et al.~\cite{GastparRV2003}, one can construct infinitely many examples
 of very simple joint source-channel codes that incur minimal delay yet whose
 average cost and distortion lie on the boundary of the achievable region
-characterized by~\eqref{eq:separation} and can thus be considered optimal. Later
+characterized by~\eqref{eq:separation} and are thus optimal. Later
 in this chapter we will encounter a prominent example of such a code. First,
-though, let us give some general considerations about delay limited codes.
+though, let us state some general considerations about delay limited codes.
 
 
-\section{Codes With a Delay Constraint}
+\section{Codes With a Delay Constraint}\label{sec:delayconstraint}
 
 The forward part of the separation theorem relies on the source coding and
-channel coding theorems, which assume unrestricted block lengths and thus
-unrestricted delay. This section looks at the consequences that arise when a
+channel coding theorems, which assume unrestricted block length and
+delay. This section looks at the consequences that arise when a
 constraint is put on the delay incurred by a point-to-point communication
 system. To be precise, we first define what we exactly mean by delay.
 
@@ -220,9 +239,9 @@ $k\ts$ seconds to gather $k$~source symbols. Assuming that the encoding process
 takes place instantaneously, it takes an additional $n\tc$ seconds to transmit
 the encoded source sequence across the channel. Neglecting the transmission time
 of the channel, the receiver can thus decode the first source symbol after $k\ts
-+ n \tc$ seconds, or $2k\ts$ seconds. Accordingly, the smallest delay is caused
-by a code that encodes a \emph{single} source symbol at a time. We call such a
-code a \emph{minimal-delay code}.
++ n \tc$ seconds, or $2k\ts$ seconds\footnote{because $k/n = \tc/\ts$}.
+Accordingly, the smallest delay is caused by a code that encodes a \emph{single}
+source symbol at a time. We call such a code a \emph{minimal-delay code}.
 
 Codes based on the separation theorem have the advantage that separate codes can
 be designed for the source and the channel. This way, the designer of the source
@@ -271,7 +290,8 @@ characterized by the separation theorem. For delay limited
 codes, on the other hand, no general achievability result exists, but there are
 some refined outer bounds. The lower right corner of the figure is thus empty
 except for a few dots that represent special cases where minimal delay codes
-achieve the outer bound of \thmref{separationconverse}.
+achieve the outer bound of \thmref{separationconverse}. This is the region that
+we shall explore in this thesis. 
 
 \begin{figure}
   \begin{center}
@@ -289,7 +309,7 @@ achieve the outer bound of \thmref{separationconverse}.
 \end{figure}
 
 
-\section{The Gaussian Case}
+\section{The Gaussian Case}\label{sec:gaussian}
 
 The Gaussian source and channel play a special role in information theory not
 only because of the significance of the Gaussian distribution due to the central
@@ -402,19 +422,19 @@ of~\cite{IngberLZF2008} implies that not all conditions of
 $n > 1$.  This changes, however, if we modify the scenario and allow the encoder
 access to perfect feedback from the receiver, as the next section shows.
 
-\begin{remark}
-  \label{rem:ratematched}
-  As mentioned above, when $k = n = 1$ then transmitting any source uncoded
-  across any channel is optimal, provided that the cost and distortion measures
-  are properly matched to the statistics of the system. One could extend the
-  concept of \emph{matching} sources and channels in the following way. 
-
-  Consider a source that produces symbols from a $4$-ary alphabet, uniformly
-  distributed, and a binary symmetric channel. If $\tc = 2\ts$, this source is
-  matched to the channel in the sense that the source can be split into two
-  independent random variables, and so it produces essentially two independent
-  symbols for every two channel inputs.
-\end{remark}
+%\begin{remark}
+%  \label{rem:ratematched}
+%  As mentioned above, when $k = n = 1$ then transmitting any source uncoded
+%  across any channel is optimal, provided that the cost and distortion measures
+%  are properly matched to the statistics of the system. One could extend the
+%  concept of \emph{matching} sources and channels in the following way. 
+%
+%  Consider a source that produces symbols from a $4$-ary alphabet, uniformly
+%  distributed, and a binary symmetric channel. If $\tc = 2\ts$, this source is
+%  matched to the channel in the sense that the source can be split into two
+%  independent random variables, and so it produces essentially two independent
+%  symbols for every two channel inputs.
+%\end{remark}
 
 
 \subsection{Optimality Through Feedback}
@@ -706,7 +726,7 @@ example shows.
 \end{example}
 
 
-\section{Lessons from the Case With Feedback}
+\section{Lessons from the Case With Feedback}\label{sec:lessonsfromfeedback}
 
 In the previous sections we have seen that if more than one channel use is
 available per source symbol then a Gaussian source can be transmitted optimally
@@ -749,7 +769,7 @@ $n-1$ channel uses, since this would require infinite delay. As we will see in
 the next chapter, however, if some ``weak'' coding is used for the first $n-1$
 transmissions such that the estimation error after the first $n-1$ channel uses
 is negligible with respect to that from the $n\th$~channel use (in a sense that
-will made precise in the next chapter) then we can always increase the SDR that
+will made precise) then we can always increase the SDR that
 would be obtained after $n-1$ channel uses by a factor $\snr$ using uncoded
 transmission in the $n\th$ channel use. One way to achieve this is by
 transmitting a quantized version of the source in the first $n-1$ channel uses
@@ -760,11 +780,12 @@ chapter.
 
 \section{Historical Notes}
 
-The separation theorem goes back to Shannon~\cite{Shannon1948}. Gastpar et
-al.~\cite{GastparRV2003} analyzed in details the optimality conditions of
-\thmref{optimalityconditions}. That a Gaussian source directly plugged into a
-Gaussian channel achieves and optimal cost--distortion tradeoff was first
-observed by Goblick~\cite{Goblick1965}.
+The separation theorem is originally due to Shannon~\cite{Shannon1948}. Gastpar
+et al.~\cite{GastparRV2003} analyzed in details the optimality conditions of
+\thmref{optimalityconditions} and presented optimal communication from a
+different point of view than that of the separation theorem. That a Gaussian
+source directly plugged into a Gaussian channel achieves and optimal
+cost--distortion tradeoff was first observed by Goblick~\cite{Goblick1965}.
 
 Ziv and Zakai published their method for alternative bounds, where an
 alternative mutual information not based on the logarithm is used, in
@@ -778,11 +799,12 @@ channel uses.
 
 The idea underlying posterior matching is well known and was used by Gastpar and
 Rimoldi~\cite{GastparR2003} to develop various examples of optimal uncoded
-transmission with feedback.  Later, it was studied in depth by Shayevitz and
-Feder in~2007~\cite{ShayevitzF2007,ShayevitzF2008} (who baptized it
-\emph{posterior matching}) to generalize the capacity achieving channel coding
-schemes of Schalkwijk and Kailath~\cite{SchalkwijkK1966} and
-Horstein~\cite{Horstein1963} to arbitrary channels with feedback.
+transmission with feedback (including the Gaussian example given in this
+chapter). Later, it was used by Shayevitz and Feder
+in~2007~\cite{ShayevitzF2007,ShayevitzF2008} (who baptized it \emph{posterior
+matching}) to generalize the capacity achieving channel coding schemes of
+Schalkwijk and Kailath~\cite{SchalkwijkK1966} and Horstein~\cite{Horstein1963}
+to arbitrary channels with feedback.
 
 
 
@@ -798,7 +820,7 @@ Horstein~\cite{Horstein1963} to arbitrary channels with feedback.
 \section{Proof of the Converse Part of the Separation Theorem}
 \label{app:separationproof}
 
-The proof follows from the following chain of inequalities.
+The proof results from the following chain of inequalities.
 {\allowdisplaybreaks
 \begin{align*}
   kR(D) &= k R(\frac1k \sk \E[d(S_i, \Sh_i))] \\
