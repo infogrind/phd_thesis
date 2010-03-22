@@ -48,14 +48,14 @@
 
       % Add the channel input nodes
       \path (quant\i\j -| chx) node (X\j) {} 
-      node[right] {$X_{\the\indj}$};
+      node[right] {$X_{\the\indi}$};
 
 
       % Draw all connections.
       \draw[l] (b\i\j) -- (quant\i\j);
       \draw[l] (b\i\j) -- (plus1\i\j);
       \draw[l] (plus1\i\j) -- (sc\i\j);
-      \draw[l] (quant\i\j) |- node[above,pos=0.95] {$-$} (plus1\i\j);
+      \draw[l] ($ (quant\i\j) + (.8,0) $) |- node[above,pos=0.95] {$-$} (plus1\i\j);
       \draw[l] (scc\i\j) -- (X\j);
 %
 %      % Horizontal connections from the quantizers to the scaler.

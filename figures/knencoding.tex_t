@@ -5,7 +5,8 @@
 %
 \begin{tikzpicture}[every node/.style=smallfont]
   % Horizontal position of ``channel''
-  \coordinate (chx) at (9,0);
+  \coordinate (chx) at (8.6,0);
+  
 
   \def\Elabelarray{{"3","4","5"}}
   \foreach \i in {0,1} {
@@ -24,11 +25,11 @@
 
     % The following coordinates denote the horizontal and vertial distance
     % between elements (quantizers, ...) in the same group.
-    \coordinate (dh) at (-1,0);
+    \coordinate (dh) at (-.8,0);
     \coordinate (dv) at (0,-.8);
 
-    \path (a\i) ++(dv)  +(5.5,0) node[rectangle,draw,
-    minimum height=3cm,minimum width=2cm]
+    \path (a\i) ++(dv)  +(5.75,0) node[rectangle,draw,
+    minimum height=2.4cm,minimum width=1.8cm]
     (combiner\i) {combine};
 
     % A scaler to the right of the combiner.
@@ -65,7 +66,8 @@
         \draw[l] (b\i\j) -- (quant\i\j);
         \draw[l] (b\i\j) -- (plus1\i\j);
         \draw[l] (plus1\i\j) -- (sc\i\j);
-        \draw[l] (quant\i\j) |- node[above,pos=0.95] {$-$} (plus1\i\j);
+        \draw[l] ($ (quant\i\j) + (.8,0) $) |- node[above,pos=0.95] {$-$}
+        (plus1\i\j);
 
       % Horizontal connections from the quantizers to the combiner.
       % Note the trick using -| to create a horizontal line to the node.
@@ -85,11 +87,11 @@
 
     % Add the source nodes and the connections.
     \pgfmathsetcount{\indj}{\j+1}
-    \node (S\j) at ($ (b00) + 3*(dh) + \j*(dv) $) {$S_{\the\indj}$};
+    \node (S\j) at ($ (b00) + 3*(dh) + \j*(dv) + (.25,0) $) {$S_{\the\indj}$};
     \draw[l] (S\j) -- (b0\j);
 
     \path (sc1\j)
-    +(0,-1)
+    +(0,-.8)
     node[coordinate] (p\j) {};
 
     \coordinate (p2\j) at ($ (p0) + \j*(dv) + (1,0) $);
