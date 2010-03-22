@@ -1,20 +1,46 @@
 \chapter{Fundamentals of Source-Channel Communication}\label{ch:fundamentals}
 
-The goal of this first chapter is to introduce the reader to the general problem
-of source-channel communication and then to present the problem of delay-limited
-source-channel coding within the more general framework.
+Source-channel communication under a delay constraint is a rather marginal topic
+in information theory. The main reason is perhaps that two pillars of
+information theory, Shannon's source coding and channel coding theorems, do not
+apply if one is restricted to operate on sequences of short length. In fact, the
+whole notion of typicality, a standard ingredient in information theoretic
+achievability proofs, does not apply if one cannot assume arbitrarily long block
+lengths. 
 
-We start by introducing the elements that make up the problem in
-\secref{setup}. In \secref{fundamentallimits} we present the fundamental limits.
-In \secref{optimality} we given the conditions for a communication system to
-achieve this limits. \secref{delayconstraint} looks at codes with a delay
-constraint. We then focus our attention in \secref{gaussian} on the particular
-case of a Gaussian source and channel. Special attention is paid to the
-situation when there is feedback from the receiver to the transmitter, because
-feedback allows simple optimal communication in cases where this would not be
-possible without feedback. In \secref{lessonsfromfeedback} we draw insights from
-the feedback case and pave the way to the communication strategy introduced in
-the next chapter. 
+This chapter has two goals. The first goal is to introduce the source-channel
+communication problem in its generality and to quote the relevant previous work.
+The second goal is to establish delay-constrained communication within this
+general framework and to argue why it merits investigation. 
+
+\secref{setup} starts by introducing the elements that make up the
+source-channel communication problem and by defining the performance criteria of
+interest. The known fundamental limits for these criteria are then reviewed in
+\secref{fundamentallimits}.  \secref{optimality} considers the
+conditions for a given communication system to achieve the theoretical limits on
+the performance. 
+
+If coding delay and complexity are unrestricted, one can achieve these
+conditions by performing source and channel coding separately. If the delay is
+restricted, however, the optimality of the separation-based approach is no
+longer guaranteed. \secref{delayconstraint} thus looks at the consequences of
+limited delay and shows that this topic still has a lot of open questions.
+\secref{gaussian} focuses on the particular case of a Gaussian source and
+channel under squared error distortion and an average transmit power constraint.
+If the source and the channel produce and transmit, respectively, symbols at the
+same rate, then uncoded transmission (with minimal delay) performs as good as
+any code of arbitrary complexity and delay in this case, which is explained in
+\secref{gaussuncoded}. If the channel allows several transmissions for each
+source symbol, on the other hand, no such simple transmission scheme exist, as
+\secref{gaussbwex} argues. This situation changes, however, if the transmitter
+has perfect causal feedback from the receiver. In this case, studied in detail
+in \secref{gaussfeedback}, a similarly simple scheme as that of
+\secref{gaussuncoded} is possible. In a short digression, \secref{gaussfeedback}
+shows how this scheme is not, in fact, particular to the Gaussian case but is of
+a more general nature. Lastly, \secref{lessonsfromfeedback} derives insight from
+the feedback example and suggests how one could use the properties of the
+feedback scheme, even if no feedback is available; thus paving the way for the
+scheme to come in \chapref{mindelbwex}. 
 
 
 \section{Problem Set-Up}\label{sec:setup}
@@ -356,7 +382,7 @@ where we have defined the \emph{source-to-distortion ratio} $\sdr = \ssq/D$ and
 the \emph{signal-to-noise ratio} $\snr = P/\szq$. 
 
 
-\subsection{When Uncoded Transmission is Optimal}
+\subsection{When Uncoded Transmission is Optimal}\label{sec:gaussuncoded}
 
 It is a well known fact that when $\ts = \tc$ (\ie, the number of source symbols
 produced per second is equal to that of channel inputs accepted per second),
@@ -402,7 +428,7 @@ measuring distortion. This paradigm, called \emph{measure matching}, is made
 precise and extensively discussed in~\cite{GastparRV2003}.
 
 
-\subsection{Bandwidth Expansion}
+\subsection{Bandwidth Expansion}\label{sec:gaussbwex}
 
 Does a similarly simple transmission scheme exist for the Gaussian case when the
 channel accepts more than one input for each source symbol, \ie, $\tc > \ts$?
@@ -437,7 +463,7 @@ access to perfect feedback from the receiver, as the next section shows.
 %\end{remark}
 
 
-\subsection{Optimality Through Feedback}
+\subsection{Optimality Through Feedback}\label{sec:gaussfeedback}
 
 If there is a causal, noiseless feedback link from the receiver to the encoder,
 then the $i\th$ channel input symbol can depend on the past channel outputs
