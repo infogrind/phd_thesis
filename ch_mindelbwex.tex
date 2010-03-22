@@ -8,7 +8,10 @@ problem of optimizing how the SDR scales asymptotically when the SNR goes to
 infinity. 
 
 We define $\sdr = \ssq / D$ and $\snr = P / \szq$, where $\ssq$ and $\szq$ are
-the source and noise variance, respectively, and $D$ and $P$ are the average squared error and average transmit power, respectively. In the previous chapter we have seen that when k source symbols are encoded into n channel input symbols, the SDR and the SNR are related by
+the source and noise variance, respectively, and $D$ and $P$ are the average
+squared error and average transmit power, respectively. In the previous chapter
+we have seen that when $k$~source symbols are encoded into $n$~channel input
+symbols, the SDR and the SNR are related by
 \begin{equation}
   \label{eq:gausslimitch2}
   \sdr \le (1 + \snr)^{n/k}.
@@ -25,7 +28,18 @@ this notation, the constraint of~\eqref{eq:gausslimitch2} becomes
   \sdr \in O(\snr^{n/k}).
 \end{equation}
 
-\todo: For analog sources, the same asymptotic limit applies.
+For arbitrary sources, the $\sdr$ can be bounded as
+\begin{equation}
+  \label{eq:gensrcsdrlb}
+  \sdr \le 2{2 D(\ps \| \phi_{\ssq})} (1 + \snr)^{n/k},
+\end{equation}
+where $D(\cdot\|\cdot)$ is the relative entropy or Kullback-Leibler divergence
+between two distributions (see \eg~\cite{CoverT1991}) and $\phi_{\ssq}$ is the
+\pdf\ of a centered Gaussian distribution of variance~$\ssq$. (If $\ps$ is a
+Gaussian distribution, the divergence becomes zero and \eqref{eq:gensrcsdrlb}
+simplifies to~\eqref{eq:gausslimitch2}.) Thus, the scaling
+bound~\eqref{eq:gaussasymplimit} applies not only to Gaussian but to arbitrary
+continuous-valued sources.
 
 The communication scheme studied in this chapter is easy to describe. It
 consists of quantizing a source symbol, sending the quantizer output across the
@@ -203,7 +217,7 @@ approximated in a small neighborhood around $s_0$ as
 \end{equation}
 If the noise is small, a valid approximation of the ML estimate is therefore
 the projection of the received point onto the tangent through~$f(s_0)$ (see
-\figvref{tangentproj}). Writing $\sh = s_0 + \Delta$, the estimation error is
+\figref{tangentproj}). Writing $\sh = s_0 + \Delta$, the estimation error is
 $\sh - s_0 = \Delta$ and by~\eqref{eq:linapprox} satisfies
 \begin{equation*}
   \| \Delta \|^2 \approx \frac{\| f(s_0 + \Delta) - f(s_0) \|^2}
@@ -420,18 +434,21 @@ P$ for all~$i$.
   defined in \secref{geomviewpoint}, is therefore $\beta^{n-1}/\gamma$.
 \end{remark}
 
-\begin{remark}
-  \label{rem:betagrow}
-  If the quantization resolution $\beta$ is upper bounded then the SDR scales at
-  best as $\snr$, as a simple argument shows. If $\beta \le \beta_{\max}$, the
-  entropy of the $Q_i$ is upper bounded, and so is the entropy of the $X_i$ for
-  $i = 1$, \ldots, $n$. As $\snr \goesto \infty$, the entropy of the $Y_i$
-  converges to that of the $X_i$, and so for all $i = 1$, \ldots, $n-1$, the
-  mutual information $I(X_i; Y_i)$ is upper bounded by a constant independent of
-  the SNR. Since the SDR scales at best as $2^{2I(X^n;Y^n)}$ (see
-  Chapter~\ref{ch:fundamentals}), this limits the SDR scaling to be at best linear in
-  the SNR.
-\end{remark}
+% [Marius] - Removed this since the bound SDR <= 2^{2 I(X;Y)} is no longer
+% explicitly mentioned. Moreover, the argument is only valid for sources with
+% bounded support. 
+%\begin{remark}
+%  \label{rem:betagrow}
+%  If the quantization resolution $\beta$ is upper bounded then the SDR scales at
+%  best as $\snr$, as a simple argument shows. If $\beta \le \beta_{\max}$, the
+%  entropy of the $Q_i$ is upper bounded, and so is the entropy of the $X_i$ for
+%  $i = 1$, \ldots, $n$. As $\snr \goesto \infty$, the entropy of the $Y_i$
+%  converges to that of the $X_i$, and so for all $i = 1$, \ldots, $n-1$, the
+%  mutual information $I(X_i; Y_i)$ is upper bounded by a constant independent of
+%  the SNR. Since the SDR scales at best as $2^{2I(X^n;Y^n)}$ (see
+%  Chapter~\ref{ch:fundamentals}), this limits the SDR scaling to be at best linear in
+%  the SNR.
+%\end{remark}
 
 
 \subsection{Lower Bound on the Mean Squared Error}\label{sec:scalarlowerbound}

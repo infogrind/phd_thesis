@@ -2,11 +2,9 @@
 
 Source-channel communication under a delay constraint is a rather marginal topic
 in information theory. The main reason is perhaps that two pillars of
-information theory, Shannon's source coding and channel coding theorems, do not
-apply if one is restricted to operate on sequences of short length. In fact, the
-whole notion of typicality, a standard ingredient in information theoretic
-achievability proofs, does not apply if one cannot assume arbitrarily long block
-lengths. 
+information theory, Shannon's source coding and channel coding theorems, are
+asymptotic results and the codes they use are not allowed if one is restricted
+to operate on sequences of short length. 
 
 This chapter has two goals. The first goal is to introduce the source-channel
 communication problem in its generality and to quote the relevant previous work.
@@ -24,7 +22,8 @@ If coding delay and complexity are unrestricted, one can achieve these
 conditions by performing source and channel coding separately. If the delay is
 restricted, however, the optimality of the separation-based approach is no
 longer guaranteed. \secref{delayconstraint} thus looks at the consequences of
-limited delay and shows that this topic still has a lot of open questions.
+limited delay and shows that characterizing the theoretically achievable
+performance limits for this problem is still a largely unsolved question.
 \secref{gaussian} focuses on the particular case of a Gaussian source and
 channel under squared error distortion and an average transmit power constraint.
 If the source and the channel produce and transmit, respectively, symbols at the
@@ -39,8 +38,8 @@ in \secref{gaussfeedback}, a similarly simple scheme as that of
 shows how this scheme is not, in fact, particular to the Gaussian case but is of
 a more general nature. Lastly, \secref{lessonsfromfeedback} derives insight from
 the feedback example and suggests how one could use the properties of the
-feedback scheme, even if no feedback is available; thus paving the way for the
-scheme to come in \chapref{mindelbwex}. 
+feedback scheme even if no feedback is available, thus paving the way for the
+communication scheme to come in \chapref{mindelbwex}. 
 
 
 \section{Problem Set-Up}\label{sec:setup}
@@ -215,8 +214,8 @@ By going step by step through the inequalities in the proof of
       distortion~$D$.
     \item The \emph{reverse test channel} $p(s^k|\sh^k)$ factors as
       $\prod_{i=1}^k p(s_i | \sh_i)$. 
-    \item The encoder is information lossless in the sense that $I(S^k;Y^n) =
-      I(X^k; Y^n)$. 
+    \item The encoder is information lossless in the sense that it satisfies
+      $I(S^k;Y^n) = I(X^k; Y^n)$. 
     \item The estimate sequence $\Sh^k$ is a sufficient statistic for $S^k$
       given $Y^n$. (Equivalently, we can say that the decoder must be memoryless
       in the sense that $I(X^n;Y^n) = I(X^n;\Sh^k)$.)
@@ -532,16 +531,17 @@ bound~\eqref{eq:gausssep} with equality, as the following example demonstrates.
   which is indeed the largest possible SDR according to~\eqref{eq:gausssepsdr}.
 \end{example}
 
-As we have already seen before, achieving the capacity and the rate-distortion
-function (conditions~1 and~6 of \thmref{optimalityconditions}) are just a matter
-of using the ``right'' cost measure and distortion measure, respectively. The
-transmission scheme of \exref{gaussfb} in addition satisfies all other
-conditions of \thmref{optimalityconditions}. In particular, it produces a
-sequence of independent channel outputs. Again, we may ask if this is just due
-to some special property of the Gaussian distribution. And again, the answer is
-no: the next section explains how, using feedback, one can design a
-minimal-delay encoder that produces a sequence of independent, capacity
-achieving output symbols for any channel (and any cost measure).
+As we have already seen before, achieving the capacity and the
+rate-dis\-tor\-tion function (conditions~1 and~6 of
+\thmref{optimalityconditions}) are just a matter of using the ``right'' cost
+measure and distortion measure, respectively. The transmission scheme of
+\exref{gaussfb} in addition satisfies all other conditions of
+\thmref{optimalityconditions}. In particular, it produces a sequence of
+independent channel outputs. Again, we may ask if this is just due to some
+special property of the Gaussian distribution. And again, the answer is no: the
+next section explains how, using feedback, one can design a minimal-delay
+encoder that produces a sequence of independent, capacity achieving output
+symbols for any channel (and any cost measure).
 
 
 \subsubsection{Exploiting Feedback Via Posterior Matching}
@@ -843,7 +843,7 @@ to arbitrary channels with feedback.
 
 \begin{subappendices}
 
-\section{Proof of the Converse Part of the Separation Theorem}
+\section{Proof of the Converse Part of \thmref{separationconverse}}
 \label{app:separationproof}
 
 The proof results from the following chain of inequalities.
@@ -877,8 +877,8 @@ due to the convexity$_\cap$ of~$C(P)$.  \hfil\qed
 
 \begin{theorem}
   \label{thm:separationforward}
-  Consider a memoryless source with rate-distortion function~$R(D)$ that
-  produces a source symbol every $\ts$~seconds, and memoryless channel with
+  Consider a memoryless source that has rate-distortion function~$R(D)$ and 
+  produces a source symbol every $\ts$~seconds, and a memoryless channel with
   capacity-cost function~$C(P)$ that accepts an input symbol for transmission
   every $\tc$~seconds. Then for any $(D,P)$ pair satisfying
   \begin{equation}

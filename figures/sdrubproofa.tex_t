@@ -1,6 +1,6 @@
 % vim:ft=tex
 
-\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+\begin{tikzpicture}[every node/.style={font=\scriptsize},scale=.8]
   \path[use as bounding box] (-1,0) rectangle (6.5,6);
   
   \coordinate (s) at (5,1);
