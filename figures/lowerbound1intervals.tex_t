@@ -3,7 +3,7 @@
 \begin{tikzpicture}[every node/.style={font=\scriptsize}]
 
   % Length of one interval beta^{n-1}
-  \def\il{3cm}
+  \def\il{2.5cm}
 
   % Fraction of the interval taken by the I_j
   \def\ifr{0.75}
