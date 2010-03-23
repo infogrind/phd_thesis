@@ -1,8 +1,8 @@
 \chapter{Minimal-Delay Codes for Bandwidth Expansion}\label{ch:mindelbwex}
 
-The goal of this chapter is to transmit a single symbol of an analog source
-across $n$~uses of a Gaussian channel when $n > 1$. Since the optimal mean squared
-error for a given SNR (given by \thmref{separationconverse}) may not be
+The main goal of this chapter is to transmit a single symbol of an analog source
+across $n$~uses of a Gaussian channel when $n > 1$. Since the optimal mean
+squared error for a given SNR (given by \thmref{separationconverse}) may not be
 achievable (see \chapref{fundamentals}), we look in this chapter at the simpler
 problem of optimizing how the SDR scales asymptotically when the SNR goes to
 infinity. 
@@ -18,11 +18,11 @@ symbols, the SDR and the SNR are related by
 \end{equation}
 For large values of SNR, the SDR behaves thus at best as $\snr^{n/k}$.
 
-In this chapter we use the "Big-O" and "Big-Omega" notation. This notation is
-defined formally in \appref{asymptotic}. Informally, we can say that $O(f(x))$
-is the set of functions that scale \emph{at most}  as $f(x)$. Similarly,
-$\Omega(f(x))$ is the set of functions that scale \emph{at least} as $f(x)$. In
-this notation, the constraint of~\eqref{eq:gausslimitch2} becomes
+In this chapter we use the ``Big-O'' and ``Big-Omega'' notation. This notation
+is defined formally in \appref{asymptotic}. Informally, we can say that
+$O(f(x))$ is the set of functions that scale \emph{at most}  as $f(x)$.
+Similarly, $\Omega(f(x))$ is the set of functions that scale \emph{at least} as
+$f(x)$. In this notation, the constraint of~\eqref{eq:gausslimitch2} implies
 \begin{equation}
   \label{eq:gaussasymplimit}
   \sdr \in O(\snr^{n/k}).
@@ -31,25 +31,26 @@ this notation, the constraint of~\eqref{eq:gausslimitch2} becomes
 For arbitrary sources, the $\sdr$ can be bounded as
 \begin{equation}
   \label{eq:gensrcsdrlb}
-  \sdr \le 2{2 D(\ps \| \phi_{\ssq})} (1 + \snr)^{n/k},
+  \sdr \le 2^{2 D(\ps \| \phi_{\ssq})} (1 + \snr)^{n/k},
 \end{equation}
 where $D(\cdot\|\cdot)$ is the relative entropy or Kullback-Leibler divergence
 between two distributions (see \eg~\cite{CoverT1991}) and $\phi_{\ssq}$ is the
-\pdf\ of a centered Gaussian distribution of variance~$\ssq$. (If $\ps$ is a
-Gaussian distribution, the divergence becomes zero and \eqref{eq:gensrcsdrlb}
-simplifies to~\eqref{eq:gausslimitch2}.) Thus, the scaling
-bound~\eqref{eq:gaussasymplimit} applies not only to Gaussian but to arbitrary
-continuous-valued sources.
+\pdf\ of a centered Gaussian distribution of variance~$\ssq$. This bound
+follows directly from Shannon's lower bound on the rate distortion function for
+arbitrary sources under a difference distortion measure~\cite{Shannon1959}.
+(If $\ps$ is a Gaussian distribution, the divergence becomes zero and
+\eqref{eq:gensrcsdrlb} simplifies to~\eqref{eq:gausslimitch2}.) Thus, the
+scaling bound~\eqref{eq:gaussasymplimit} applies not only to Gaussian but to
+arbitrary continuous-valued sources.
 
 The communication scheme studied in this chapter is easy to describe. It
 consists of quantizing a source symbol, sending the quantizer output across the
 first channel use, and then repeatedly quantizing the quantization error of the
 previous step and transmitting it across the channel. The last quantization
-error is transmitted uncoded in the $n\th$~channel use. 
-
-This is not a novel strategy. However, both the motivation behind this scheme
-(inspired from the feedback example of the previous chapter) and the analysis
-provided is new. [\todo: improve this paragraph] 
+error is transmitted uncoded in the $n\th$~channel use. While this strategy is
+not entirely new (see \secref{mindelbwexhist} for references to previous work),
+the work presented in this thesis provides the first exact analysis of the
+resulting SDR scaling and the optimization thereof.
 
 The problem of transmitting a single source symbol in $n$~channel uses can be
 approached from two different perspectives. The first perspective is to take
@@ -71,7 +72,7 @@ constants may be larger). \secref{genbwexp} extends the scheme of
 into $n$~channel inputs, where $k \le n$. For this case, the achievable SDR is
 shown to scale as $\snr^{n/k} /(\log\snr)^{(n-k)/k}$. 
 
-None of the considered transmission schemes achieves the optimal SDR scaling of
+None of the transmission schemes considered achieve the optimal SDR scaling of
 Equation~\ref{eq:gaussasymplimit}. Instead, the optimal scaling is divided by a
 ``penalty factor'' of $\log\snr$ raised to a power equal to the number of
 channel input symbols per source symbol that are used for ``coded'', \ie,
@@ -80,10 +81,10 @@ scheme studied here; in fact there is no known scheme for transmitting a
 single analog source symbol in $n > 1$ channel uses that achieves a better SDR
 scaling. 
 
-The question whether this is a fundamental limit is unfortunately not answered
-by this thesis.  Nevertheless, \secref{gensdrub} prepares the way towards
-answering this question by exploring possible avenues towards an upper bound to
-the SDR scaling that applies to more general transmission strategies. 
+The question whether this is a fundamental limit is unfortunately not resolved
+in this thesis.  Nevertheless, \secref{gensdrub} prepares the way towards
+answering this question by exploring possible ways to upper bound the SDR
+scaling of  a wider class of transmission strategies. 
 
 
 \section{Two Alternative Points of View}\label{sec:twoperspectives}
@@ -1454,29 +1455,131 @@ them into a bounded interval; this problem is left as future work.
 % SECTION: TOWARDS A GENERAL SDR UPPER BOUND
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+
 \section{Towards a General SDR Upper Bound}\label{sec:gensdrub}
 
-\begin{notebox}
-  Not clear if we really have anything substantial to put here.
-\end{notebox}
+None of the communication strategies studied in this chapter achieve the optimal
+SDR scaling of  $\snr^{n/k}$. Instead, in each case the optimal scaling is
+divided by $(\log\snr)^{(n-k)/k}$, \ie, there is a ``penalty factor'' of
+$(\log\snr)^{1/k}$ for every channel input that is from a discrete alphabet.
+
+At first sight, this may just be due to the particular nature of the
+constellations used here. Because a significant fraction of channel inputs is
+from discrete alphabets, a certain decrease from the theoretically optimal
+performance is likely to result. On the other hand, the arguments brought
+forward in \secref{twoperspectives} make the use of discrete channel inputs
+plausible for a good minimal-delay code. What is more, there seems to be no
+known minimal-delay code that has been shown to achieve a better scaling than
+the one found here. The obvious question to ask, then, is whether the upper
+bounds found in this chapter do not only apply to the type of schemes studied,
+but may be of a more general nature. 
+
+
+\subsubsection{Lower Bounding the Mean Squared Error for More General
+Constellations}
+
+To evaluate the best achievable SDR for a given transmission strategy, one has
+to assume that the best possible decoder is used. The decoder that minimizes the
+mean squared error is the posterior mean decoder, which computes $\Sh^k = \E[S^k
+| Y^n]$. As mentioned earlier in this chapter, the error resulting from this
+decoder is in general hard to evaluate mathematically. 
+
+The proofs for the lower bounds on the MSE scaling in this chapter use a trick
+by Ziv to lower bound the MSE by the error probability of binary decoding,
+regardless of the particular decoder used, thus avoiding the need to analyze the
+posterior mean decoder. However, Ziv's bound can only be applied to a signal
+constellation that has some regularity: there must be a $\Delta$ such that for
+any source value $s$ (in an interval with strictly positive probability
+density), the source points $s$ and $s + \Delta$ are mapped to two channel
+inputs whose Euclidean distance is upper bounded. For example, in the proof of
+\lemref{lowerbound2}, we found that when $\Delta  = \beta^{-1}$, the distance
+between $X(s)$ and $X(s + \Delta)$ is always $\sqrt{P}/\gamma\beta$. 
+
+This does not mean that less regular constellations necessarily perform better.
+It only means that Ziv's bound cannot be readily applied to constellations that
+do not have the same regularity properties. One direction for future work is
+thus to extend Ziv's result such that the MSE resulting from more general
+constellations can be upper bounded. 
+
+
+\subsubsection{Properties of a Scheme With Optimal SDR Scaling}
+
+Assuming that there exists a minimal-delay code that achieves the optimal SDR
+scaling $\snr^{n/k}$, such a code should have good minimal distance properties
+in the following intuitive sense. In conventional channel coding, a code has
+good minimum distance properties if every codeword is not too close to another
+codeword. In joint source-channel coding with a mean squared error criterion for
+a Gaussian channel, not all constellation points must be far from each other. In
+fact, two constellation points may be close to each other provided that the
+corresponding points in the source are close. Conversely, the farther two points
+of the source are from each other, the farther away the corresponding
+constellation points should be.  This ensures that decoding errors resulting
+in a large squared error occur less frequently than those resulting in a
+smaller squared error. 
+
+By studying general properties of arbitrary maps from $\R^k$ to $\R^n$, one can
+perhaps obtain limits of such minimum distance properties from which MSE lower
+bounds can be derived. 
+
+
+\subsubsection{Piecewise Continuous Maps from $\R$ to $\R^n$}
+
+Of particular interest are maps that are (at least piecewise) continuous, since
+they can be implemented more easily than less structured maps. We can make a few
+general observations about such maps. First note that no loss of performance is
+incurred by using a constant stretch. The argumentation is similar to the
+``minimax considerations'' by Wozencraft and
+Jacobs~\cite[p.~620]{WozencraftJ1965}: using Ziv's bound, we can obtain a lower
+bound on the MSE by choosing the interval $[A,B]$ such that it contains the
+source section corresponding to the smallest stretch. The smallest stretch
+determines thus the MSE scaling, and it should be maximized.
+
+On the other hand, by a similar argument as that used in the proof of
+\lemref{lowerbound1}, if the stretch is constant and has value~$\ell$, then the
+SDR scales at most as $\ell^2 \snr$. Thus, if the stretch is less than
+$\snr^{(n-1)/2}$, the optimal scaling cannot be achieved. 
+
+This implies that to achieve the optimal SDR scaling, a piecewise continuous map
+must have a constant stretch of at least $\snr^{(n-1)/2}$. For the example of a
+uniform source with support~$[-1/2, 1/2]$, the problem of designing a good
+encoder then becomes the problem of how to arrange a line of total
+length $\snr^{(n-1)/2}$ in~$\R^n$ such that the resulting constellation has good
+minimum distance properties while simultaneously satisfying the power
+constraint. The maps presented in this chapter are one such way; they arrange
+the line as parallel segments. Another possibility is \eg\ the Archimedes
+spiral~\cite{Ramstad2002}.
+
+
+\subsubsection{Summary}
+
+Summarizing the above considerations, the problem of upper bounding the
+performance of minimal-delay codes can be broken down into two aspects. On one
+hand, it is about finding maps with good minimum distance properties. On the
+other hand, a way must be found to lower bound the MSE for general maps. As we
+have seen, Ziv's bound only works if the constellation fulfills certain
+regularity properties. For more general bounds, either Ziv's bound must be
+extended or a wholly different bounding method must be found. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SECTION: HISTORICAL REMARKS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Historical Remarks}
+\section{Historical Remarks}\label{sec:mindelbwexhist}
 
 Schemes similar to the ones proposed here have been considered before. Indeed,
 one of the first schemes to transmit an analog source across two uses of a
 Gaussian channel was suggested by Shannon~\cite{Shannon1949}. In fact, such
 joint source-channel mappings are sometimes called Shannon mappings  or
-Shannon-Kotel'nikov mappings. \textbf{[Insert reference to Kotel'nikov after we
-have looked at his book. (I have ordered it.)]} Notice its resemblance to the
-constellation resulting from the communication scheme of \secref{scalarquant},
-shown in Figure~\ref{fig:shannoncomparison}. The important contribution of this
-work is to specify exactly how the distance between the segments must behave as
-the SNR increases in order to optimize the SDR scaling.
+Shannon-Kotel'nikov mappings after Shannon and V.~E.~Kotel'nikov, who studied
+the problem independently of Shannon in his 1947 doctoral
+dissertation~\cite{Kotelnikov1960}.  Notice the resemblance of the
+constellation resulting from the communication scheme of \secref{scalarquant} to
+Shannon's original suggestion,
+both shown in Figure~\ref{fig:shannoncomparison}. The contribution of this
+thesis is to specify exactly how the distance between the segments must behave
+as the SNR increases in order to optimize the SDR scaling.
 
 \begin{figure}
   \centerline{\subfloat[Shannon's original proposition.]{\input{figures/shannonline.tex_t}}
@@ -1489,41 +1592,41 @@ the SNR increases in order to optimize the SDR scaling.
   suggestion (left).} \label{fig:shannoncomparison}
 \end{figure}
 
-After Shannon, Wozencraft and Jacobs~\cite{WozencraftJ1965} were among the first
-to study source-channel mappings as curves in $n$-dimensional space. Sakrison's
-monograph~\cite{Sakrison1970} derived the optimal compander under the low noise
-assumption.  Ziv~\cite{Ziv1970} found important theoretical limitations of
-source-channel mappings and developed the proof technique of which this chapter
-makes heavy use.  Much of the later work is due to Ramstad and his coauthors
-(see~\cite{Ramstad2002}, \cite{FloorR2006}, \cite{CowardR2000,CowardR2000a},
-\cite{WernerssonSR2007}, \cite{HeklandFR2009}). 
+Wozencraft and Jacobs devoted a whole section of their 1965 textbook to
+the study of minimal-delay source-channel codes as curves in $n$-dimensional
+space~\cite[Section~8.2]{WozencraftJ1965}. Sakrison's
+monograph~\cite{Sakrison1970} derived the optimal compander for sources with
+unbounded support (such as Gaussian sources) under the low noise assumption. 
 
-Ziv and Zakai developped generalized notions of capacity and rate distortion
-function which can lead to distortion bounds that are dependent on the
-blocklength~\cite{ZivZ1973}. Their technique was used by Ingber et al.\ to 
-prove that for a Gaussian source and channel, the performance of minimal-delay
-bandwidth expansion codes is strictly smaller than that of codes with
-unrestricted delay when $n>1$.
+The bound used to lower bound the MSE scaling in \secref{scalarlowerbound} first
+occurred in a simpler form in a paper by Ziv and Zakai~\cite{ZivZ1969}. The
+version used here is based on the version that Ziv developped for his 1970
+paper~\cite{Ziv1970}. In that paper, Ziv found important
+theoretical limitations of source-channel mappings if the encoder can depend
+on the SNR only through a scaling factor.
 
-For $n=2$, the presented scheme is almost identical to the HSQLC scheme by
-Coward~\cite{Coward2001}, which uses a numerically optimized quantizer,
-transmitter and receiver to minimize the mean-squared error (MSE) for finite
-values of the SNR. Coward conjectured that the right strategy for $n > 2$ would
-be to repeatedly quantize the quantization error from the previous step, which
-is exactly what we do here.
+Much of the more recent work on minimal-delay joint source-channel codes is due
+to Ramstad and his coauthors (see~\cite{Ramstad2002}, \cite{FloorR2006},
+\cite{CowardR2000,CowardR2000a}, \cite{WernerssonSR2007}, \cite{HeklandFR2009}).
+For $n=2$, the scheme of \secref{scalarquant} is almost identical to the HSQLC
+scheme by Coward~\cite{Coward2001}, which uses a numerically optimized
+quantizer, transmitter and receiver to minimize the mean-squared error (MSE) for
+finite values of the SNR. Coward conjectured that the right strategy for $n > 2$
+would be to repeatedly quantize the quantization error from the previous step,
+which is exactly what we do here.
 
 Another closely related communication scheme is the \emph{shift-map} scheme due
 to Chen and Wornell~\cite{ChenW1998}.  Vaishampayan and
-Costa~\cite{VaishampayanC2003} showed in their analysis that it achieves the
-scaling exponent $n-\e$ for any $\e > 0$ if the relevant parameters are chosen
-correctly as a function of the SNR. Up to rotation and a different constellation
-shaping, the shift-map scheme is in fact virtually identical to the one
-presented here, a fact that was pointed out recently by Taherzadeh and
+Costa~\cite{VaishampayanC2003} showed in their analysis that it achieves an SDR
+that scales as $\snr^{n-\e}$ for any $\e > 0$ if the relevant parameters are
+chosen correctly as a function of the SNR. Up to rotation and a different
+constellation shaping, the shift-map scheme is in fact virtually identical to
+the one presented here, a fact that was pointed out recently by Taherzadeh and
 Khandani~\cite{TaherzadehK2008}. In their own paper they develop a scheme that
-achieves the optimal scaling exponent exactly and is in addition robust to SNR
-estimation errors; their scheme, however, is based on rearranging the digits of
-the binary expansion of the source and is thus quite different from the one
-presented here.
+achieves almost the same SDR scaling the scheme presented here and is in
+addition robust to SNR estimation errors; their scheme, however, is based on
+rearranging the digits of the binary expansion of the source and requires
+greater implementation complexity.
 
 Shamai, Verd\'u and Zamir~\cite{ShamaiVZ1998} used Wyner-Ziv coding to extend an
 existing analog system with a digital code when additional bandwidth is
@@ -1536,9 +1639,6 @@ and their scheme includes Shamai et al.\ and Mittal \& Phamdo as extreme cases.
 All three schemes, however, use long block codes for the digital phase and incur
 correspondingly large delays, so they are not directly comparable with minimum
 delay schemes.
-
-
-
 
 
 
