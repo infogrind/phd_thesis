@@ -1464,7 +1464,7 @@ SDR scaling of  $\snr^{n/k}$. Instead, in each case the optimal scaling is
 divided by $(\log\snr)^{(n-k)/k}$, \ie, there is a ``penalty factor'' of
 $(\log\snr)^{1/k}$ for every channel input that is from a discrete alphabet.
 
-At first sight, this may just be due to the particular nature of the
+At first sight this may just be due to the particular nature of the
 constellations used here. Because a significant fraction of channel inputs is
 from discrete alphabets, a certain decrease from the theoretically optimal
 performance is likely to result. On the other hand, the arguments brought
@@ -1485,16 +1485,16 @@ mean squared error is the posterior mean decoder, which computes $\Sh^k = \E[S^k
 | Y^n]$. As mentioned earlier in this chapter, the error resulting from this
 decoder is in general hard to evaluate mathematically. 
 
-The proofs for the lower bounds on the MSE scaling in this chapter use a trick
-by Ziv to lower bound the MSE by the error probability of binary decoding,
-regardless of the particular decoder used, thus avoiding the need to analyze the
-posterior mean decoder. However, Ziv's bound can only be applied to a signal
-constellation that has some regularity: there must be a $\Delta$ such that for
-any source value $s$ (in an interval with strictly positive probability
-density), the source points $s$ and $s + \Delta$ are mapped to two channel
-inputs whose Euclidean distance is upper bounded. For example, in the proof of
-\lemref{lowerbound2}, we found that when $\Delta  = \beta^{-1}$, the distance
-between $X(s)$ and $X(s + \Delta)$ is always $\sqrt{P}/\gamma\beta$. 
+This chapter uses a trick by Ziv to lower bound the MSE by the error probability
+of binary decoding, regardless of the particular decoder used, thus avoiding the
+need to analyze the posterior mean decoder. However, Ziv's bound can only be
+applied to a signal constellation that has some regularity: there must be a
+$\Delta$ such that for any source value $s$ (in an interval with strictly
+positive probability density), the source points $s$ and $s + \Delta$ are mapped
+to two channel inputs whose Euclidean distance is upper bounded. For example, in
+the proof of \lemref{lowerbound2}, we found that when $\Delta  = \beta^{-1}$,
+the distance between $X(s)$ and $X(s + \Delta)$ is always
+$\sqrt{P}/\gamma\beta$. 
 
 This does not mean that less regular constellations necessarily perform better.
 It only means that Ziv's bound cannot be readily applied to constellations that
@@ -1518,10 +1518,25 @@ constellation points should be.  This ensures that decoding errors resulting
 in a large squared error occur less frequently than those resulting in a
 smaller squared error. 
 
-By studying general properties of arbitrary maps from $\R^k$ to $\R^n$, one can
-perhaps obtain limits of such minimum distance properties from which MSE lower
-bounds can be derived. 
+In order to find bounds on the performance of minimal-delay source-channel
+codes, one could thus try to characterize the ``best'' minimum distance behavior
+that an arbitrary map from $\R^k$ to $\R^n$ (under a power constraint on its
+image) can have. 
 
+Essentially, a map $f: \R^k \rightarrow \R^n$ is good for joint source-channel
+coding if its inverse $f^{-1}$ is ``almost surely'' \emph{continuous}. A map
+from $\R^n$ to $\R^k$ is continuous, roughly speaking, if any two points close
+in $\R^n$ are mapped to points close in $\R^k$. Here we say ``almost surely''
+continuous, meaning that there may be pairs of points in $\R^n$ that violate the
+continuity property, as long as a decoding error between these points occurs
+almost never.
+
+The preceding reflections are admittedly quite vague. The problem is that as
+long as it is not clear how one can bound the MSE for an arbitrary map
+(cf.~above), it is also not clear how to formally specify the properties that
+such a map should have. In any case, how to formulate an exact problem and
+come up with good answers is definitely a topic that should be investigated
+further.
 
 \subsubsection{Piecewise Continuous Maps from $\R$ to $\R^n$}
 
@@ -1532,8 +1547,10 @@ incurred by using a constant stretch. The argumentation is similar to the
 ``minimax considerations'' by Wozencraft and
 Jacobs~\cite[p.~620]{WozencraftJ1965}: using Ziv's bound, we can obtain a lower
 bound on the MSE by choosing the interval $[A,B]$ such that it contains the
-source section corresponding to the smallest stretch. The smallest stretch
-determines thus the MSE scaling, and it should be maximized.
+source section corresponding to the smallest stretch. It is therefore the
+\emph{minimum} stretch that determines the MSE scaling, and by making the
+stretch constant (while preserving the shape of the constellation) this minimum
+can only be increased, leading to a better MSE scaling.
 
 On the other hand, by a similar argument as that used in the proof of
 \lemref{lowerbound1}, if the stretch is constant and has value~$\ell$, then the
