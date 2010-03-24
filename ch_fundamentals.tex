@@ -829,7 +829,7 @@ $n-1$ channel uses, since this would require infinite delay. As we will see in
 the next chapter, however, if some ``weak'' coding is used for the first $n-1$
 transmissions such that the estimation error after the first $n-1$ channel uses
 is negligible with respect to that from the $n\th$~channel use (in a sense that
-will made precise) then we can always increase the SDR that
+will be made precise) then we can always increase the SDR that
 would be obtained after $n-1$ channel uses by a factor $\snr$ using uncoded
 transmission in the $n\th$ channel use. One way to achieve this is by
 transmitting a quantized version of the source in the first $n-1$ channel uses
@@ -883,17 +883,17 @@ to arbitrary channels with feedback.
 The proof results from the following chain of inequalities.
 {\allowdisplaybreaks
 \begin{align*}
-  kR(D) &= k R(\frac1k \sk \E[d(S_i, \Sh_i))] \\
-  &\stackrel{(a)}{\le} \sk R(\E[d(S_i, \Sh_i))] \\
+  kR(D) &= k R\left(\frac1k \sk \E[d(S_i, \Sh_i)] \right) \\
+  &\stackrel{(a)}{\le} \sk R\left(\E[d(S_i, \Sh_i)] \right) \\
   &\stackrel{(b)}{\le} \sk I(S_i; \Sh_i) \\
-  &= \sk H(S_i) - H(S_i|\Sh_i) \\
+  &= \sk \left( H(S_i) - H(S_i|\Sh_i)  \right)\\
   &= H(S^k) - \sk H(S_i|\Sh_i) \\
   &\stackrel{(c)}{\le} H(S^k) - \sk H(S_i|S^{i-1} \Sh^k) \\
   &=I(S^k;\Sh^k) \\
   &\stackrel{(d)}{\le} I(S^k; Y^n) \\
   &\stackrel{(e)}{\le} I(X^n; Y^n) \\
-  &= \sn H(Y_i|Y^{i-1}) - H(Y_i|Y^{i-1} X^n)  \\
-  &\stackrel{(f)}{\le} \sn H(Y_i) - H(Y_i|X_i) \\
+  &= \sn \left( H(Y_i|Y^{i-1}) - H(Y_i|Y^{i-1} X^n) \right)  \\
+  &\stackrel{(f)}{\le} \sn \left( H(Y_i) - H(Y_i|X_i) \right) \\
   &= \sn I(X_i; Y_i) \\
   &\stackrel{(g)}{\le} \sn C(\E \rho(X_i)) \\
   &\stackrel{(h)}{\le} n C(\frac1n \E \rho(X_i)) \\
