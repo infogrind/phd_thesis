@@ -560,7 +560,17 @@ rate-dis\-tor\-tion function (conditions~1 and~6 of
 measure and distortion measure, respectively. The transmission scheme of
 \exref{gaussfb} in addition satisfies all other conditions of
 \thmref{optimalityconditions}. In particular, it produces a sequence of
-independent channel outputs. Again, we may ask if this is just due to some
+independent channel outputs.\footnote{It might not be obvious at first glance
+why the channel output sequence is independent, given that $Y_i$ depends on
+$X_i$, which is computed as a function of the past outputs. Note, however, that
+the encoder~\eqref{eq:gaussfbxi} is specifically chosen such that each $X_i$ is
+Gaussian with zero mean and variance~$P$, regardless of the past channel
+outputs. Thus, $p(x_i | y_1, \dots, y_{i-1})$ has the same distribution whatever
+the values of $y_1$, \dots, $y_{i-1}$. The key to understanding this is the
+distinction between statistical dependence and causal dependence: $X_i$ is
+\emph{causally} dependent on the past outputs, but this causal dependence is
+chosen such that it becomes \emph{statistically} independent of them.}
+Again, we may ask if this is just due to some
 special property of the Gaussian distribution. And again, the answer is no: the
 next section explains how, using feedback, one can design a minimal-delay
 encoder that produces a sequence of independent, capacity achieving output
