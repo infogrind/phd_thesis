@@ -166,12 +166,35 @@ the following result~\cite[Theorem~21]{Shannon1948}.
   See \appref{separationproof}.
 \end{proof}
 
-\thmref{separationconverse} provides an \emph{outer bound} to the achievable
-cost/distortion region. It says that regardless of how powerful an encoder and
-decoder are, the incurred cost and distortion always lie in the region
-specified by~\eqref{eq:separation}. Note also that~\eqref{eq:separation} only
-depends on the ratio $k/n$, so that the same bound applies to a code that
-encodes $1000k$ source symbols into $1000n$ channel inputs. 
+Because $R(D)$ is a convex$_\cup$ function of~$D$ and $C(P)$ is a concave$_\cap$
+function of~$P$, \thmref{separationconverse} can alternatively be written as $D
+\ge R^{-1}((n/k) C(P))$ or $P \ge C^{-1}((k/n) R(D))$.  It thus specifies the
+smallest distortion achievable for a given cost constraint or the smallest cost
+required to achieve a given distortion, respectively, and so provides an
+\emph{outer bound} to the achievable cost/distortion region.  Regardless of how
+powerful an encoder and decoder are, the incurred cost and distortion always lie
+in the region specified by~\eqref{eq:separation}; this is illustrated in
+\figref{achievableregion}. Note also that~\eqref{eq:separation} only depends on
+the ratio $k/n$, so that the same bound applies to a code that encodes $1000k$
+source symbols into $1000n$ channel inputs. 
+
+\begin{figure}
+  \begin{center}
+    \begin{tikzpicture}
+      \draw[l] (-.5,0) -- (4,0) node[right] {$P$};
+      \draw[l] (0,-.5) -- (0,2.5) node[above] {$D$};
+
+      \path[clip] (0,0) rectangle (4,2.5);
+      \draw[fill=black!10] (4,2.5) circle [x radius=3.5cm,y radius=2cm];
+
+      \node[font=\scriptsize\sffamily,align=center] at (2.7,1.75) 
+      {achievable\\region};
+    \end{tikzpicture}
+  \end{center}
+  \caption{Schematic display of the achievable cost and distortion region that
+  follows from \thmref{separationconverse}.}
+  \label{fig:achievableregion}
+\end{figure}
 
 This theorem is often referred to as the converse part of the separation
 theorem, because it establishes that a $(D,P)$ pair which cannot be achieved (or
@@ -870,7 +893,7 @@ of~$R(D)$ and (b) from its definition. (c) is because
 conditioning can only decrease the entropy. (d) and (e) follow from the data
 processing inequality. (f) is because conditioning can only decrease entropy and
 because the channel is memoryless. Finally, (g) applies by definition and (h) is
-due to the convexity$_\cap$ of~$C(P)$.  \hfil\qed
+due to the concavity$_\cap$ of~$C(P)$.  \hfil\qed
 
 
 \section{Separation Theorem, Forward Part}\label{app:separationforward}
