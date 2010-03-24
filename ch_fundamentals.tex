@@ -83,7 +83,7 @@ bandlimited source and channel, $\ts$ and $\tc$ relate directly to
 the respective bandwidths. If $\ts = \tc$, one therefore says that the source
 and channel are \emph{bandwidth matched}. Correspondingly, a code is said to be
 \emph{bandwidth matched} if $k=n$, to be a \emph{bandwidth expansion} code if $k
-< n$, and to be a bandwidth compression code if $k > n$. 
+< n$, and to be a \emph{bandwidth compression} code if $k > n$. 
 
 The source and the channel, together with the encoder and decoder, imply a joint
 distribution of the tuple $(S^k, X^n, Y^n, \Sh^k)$.  Depending on the encoder,
@@ -98,8 +98,9 @@ blocks of channel inputs and source symbols, respectively.
   The \emph{average channel input cost} incurred by a memoryless point-to-point
   communication system is
   \begin{equation*}
-    P = \sum_{i=1}^n \E[\rho(X_i)].
+    P = \sum_{i=1}^n \E[\rho(X_i)],
   \end{equation*}
+  where the expectations are taken over the marginal distributions of the~$X_i$.
 \end{definition}
 
 \begin{definition}
