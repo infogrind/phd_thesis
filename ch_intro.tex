@@ -1,3 +1,126 @@
 \chapter*{Introduction}
 
-\textsc{To Be Completed!}
+We cite~\cite{KleinerR2009} so that we don't get the warning about the empty
+bibliography.
+
+\subsubsection{Themes}
+
+\begin{itemize}
+
+  \item \textbf{Minimal-Delay Source-Channel Coding.} If coding delay and
+    complexity is unconstrained, the region of achievable cost and distortion
+    pairs for a given source, channel, cost measure and distortion measure is
+    completely characterized by Shannon's separation theorem. On one hand, this
+    theorem provides an outer bound to the achievability region; on the other
+    hand it shows that any point in this region can be achieved using separate
+    source and channel coding. Under a delay constraint, however, only the outer
+    bound applies, and the exact achievability region is no longer known. 
+
+    This thesis considers the strictest form of a delay constraint, where a
+    single source symbol is to be encoded at a time. The focus is
+    on the situation where the channel accepts inputs for transmission at a
+    higher rate than the source produces them (this is sometimes called
+    \emph{bandwidth expansion}). The analysis is concentrated on the Gaussian
+    channel with an input power constraint and the squared error distortion
+    measure. 
+
+  \item \textbf{Optimal Cost--Fidelity Ratio.} The source-channel communication
+    problem represents a tradeoff between cost and fidelity. Usually, the goal
+    is either to maximize the fidelity obtained for a fixed transmission cost
+    constraint, or to minimize the cost required to achieve a given fidelity of
+    reproduction. The bigger the cost one is willing to pay, the bigger a
+    fidelity one can obtain. 
+
+    An alternative point of view is to look at the \emph{ratio} between cost and
+    fidelity. This is the approach taken in \chapref{fidelity} of this thesis,
+    where the question of interest is how to characterize the largest fidelity
+    per cost.
+
+  \item \textbf{Simulation.} For the communication engineer, simulations are a
+    valuable tool. For all their limitations, they not only help to quickly test
+    new ideas and to determine which ones deserve a more thorough theoretical
+    analysis, they also allow one to perform a reality check on theoretical
+    derivations.
+
+    The ideas to be simulated are often simple enough that an engineer can write
+    a complete simulator from the ground up. However, simulation code often
+    becomes cluttered up from countless modifications in countless places, which
+    gradually decreases clarity and productivity. Sometimes, a simulator changes
+    so much over time that it is no longer possible to reproduce previous
+    results.
+
+    In \chapref{simulator}, this thesis explores how the object-oriented
+    programming paradigm helps to manage the complexity of simulators while at
+    the same time allowing rapid, undistracted implementation of new
+    communication strategies. 
+
+\end{itemize}
+
+
+\subsubsection{Contributions}
+
+\begin{enumerate}
+
+  \item \textbf{Asymptotic Performance of a Minimal-Delay Communication
+    Strategy.} A simple hybrid transmission strategy to transmit a single
+    continuous-valued source symbol across $n$~uses of a Gaussian channel is
+    analyzed. It consists of repeatedly quantizing the source symbol,
+    transmitting the quantizer outputs in the first $n-1$~channel uses, and
+    sending the remaining error uncoded in the $n\th$~channel use. This thesis
+    provides the first exact characterization of the best asymptotic behavior of
+    this strategy at large signal-to-noise ratios. It is shown that the
+    asymptotic performance is strictly bounded away from the optimal behavior
+    (if separate source and channel coding could be used), and that the gap (in
+    dB) to the optimum increases with increasing SNR. 
+
+  \item \textbf{Extensions of Minimal-Delay Communication Scheme.} Two
+    extensions to the hybrid scheme are provided. The first extension is to
+    encode several source symbols at a time using vector quantization with
+    lattices. The second extension is to encode not one, but $k$ source symbols
+    into $n$~channel uses, where $1 < k < n$. It is found that these extensions
+    are subject to the same asymptotic performance limits as when a single
+    source symbol is encoded at a time.
+
+  \item \textbf{Connection to Feedback.} It is well known that a Gaussian source
+    can be communicated optimally with minimal delay across $n$~uses of a
+    Gaussian channel if the encoder has access to perfect feedback from the
+    receiver. In this work,  the use of the hybrid communication scheme sketched
+    above is justified by drawing on insights from the case with feedback.
+    Furthermore, it is shown that there are clear parallels between this point
+    of view and the more traditional way of analyzing minimal-delay
+    source-channel codes geometrically. 
+
+  \item \textbf{Characterization of Optimal Fidelity--Cost Ratio.} The three
+    problems of source coding with a fidelity criterion, channel coding with an
+    input cost constraint, and reproducing a source across a noisy channel all
+    face a similar tradeoff between resource and performance. Of particular
+    interest is the operating point with the highest performance per resource.
+    In the case of channel coding, channel input cost is traded for rate, and
+    the optimal tradeoff corresponds to the \emph{capacity per unit cost}, a
+    subject that has been well studied in the past. This thesis defines the
+    equivalent notions of \emph{fidelity per unit rate} for the source coding
+    problem and \emph{fidelity per unit cost} for the end-to-end source-channel
+    communication problem and shows how they relate. 
+
+  \item \textbf{Matching Conditions for Fidelity Per Unit Cost.} It is known
+    that when the channel transition distribution, the input distribution, and
+    the input cost measure are matched in a particular way then the channel
+    operates at capacity. Here a refined condition is provided under which the
+    channel operates at capacity per unit cost. The condition under which a
+    source operates at the rate-distortion function is refined in a similar way.
+    When combined, these refined conditions yield a necessary and sufficient
+    condition for a source-channel communication system to operate at fidelity
+    per unit cost. 
+
+  \item \textbf{An Object-Oriented Source-Channel Coding Simulator.} A full,
+    workable implementation of a joint source-channel coding simulator in
+    \matlab\ is presented. It allows rapid testing of ideas, while its structure
+    is such that code remains clean even when many different configurations
+    exist. 
+
+\end{enumerate}
+
+
+\subsubsection{Outline}
+
+
