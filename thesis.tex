@@ -17,14 +17,15 @@
 % Style definitions for TikZ
 \input{tikzstyles}
 %\tikzexternalize{thesis}
+%\tikzset{/tikz/external/optimize=false}
 
 % Various commands affecting the whole document
 \bibliographystyle{IEEEtranS}
 \frenchspacing
 
-\title{On Low-Delay Joint Source-Channel Communication}
+\title{Strategies for Delay-Limited Source-Channel Coding}
 \author{Marius Kleiner}
-\date{1 April, 2010}
+\date{28 April, 2010}
 
 \begin{document}
 \frontmatter
@@ -39,20 +40,22 @@
 \tableofcontents
 
 \mainmatter
-%\input{ch_intro}
+\input{ch_intro}
 %\chapter{Fundamentals of Source-Channel Communication}\label{ch:fundamentals}
 \input{ch_fundamentals}
 %\chapter{Minimal Delay Codes}\label{ch:mindelbwex}
-%\input{ch_mindelbwex}
+\input{ch_mindelbwex}
 %\chapter{Fidelity}\label{ch:fidelity}
-%\input{ch_fidelity}
+\input{ch_fidelity}
 %\chapter{Simulator}\label{ch:simulator}
-%\input{ch_simulator}
+\input{ch_simulator}
 %\chapter{Conclusions}\label{ch:conclusions}
-%\input{ch_conclusions}
+\input{ch_conclusions}
 
 \backmatter
 \bibliography{mkbiblio}
+
+\input{ch_cv}
 
 \end{document}
 
