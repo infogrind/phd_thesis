@@ -110,6 +110,10 @@
 \newcommand{\matlab}{{\normalfont\textsf{MATLAB}}}
 \newcommand{\pgfplots}{{\normalfont\textsc{pgfplots}}}
 \newcommand{\jscsim}{{\normalfont\textsc{JSCsim}}}
+% Redefine Memoir's fancy break command to use fleurons.
+%\renewcommand{\pfbreakdisplay}{%
+%\ding{167}\quad\ding{167}\quad\ding{167}}
+\renewcommand{\pfbreakdisplay}{\ding{166}}
 
 % Shortcuts for references
 \newcommand{\secref}[1]{Section~\ref{sec:#1}}
@@ -125,6 +129,7 @@
 \newcommand{\lstref}[1]{Listing~\ref{lst:#1}}
 \newcommand{\lstvref}[1]{Listing~\vref{lst:#1}}
 \newcommand{\chapref}[1]{Chapter~\ref{ch:#1}}
+\newcommand{\bchapref}[1]{\textbf{\chapref{#1}}}
 \newcommand{\lineref}[1]{line~#1}
 
 % Used in distortion lower bound
