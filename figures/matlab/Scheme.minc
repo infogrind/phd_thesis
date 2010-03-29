@@ -1,0 +1,26 @@
+classdef Scheme < handle 
+    properties (Access = 'protected')
+        sv    % Source variance.
+        snr   % SNR (power per channel input symbol).
+        mse   % Mean squared error resulting from the simulation.
+    end
+    
+    methods (Access = 'public') 
+        function obj = Scheme(sv, s)
+            obj.sv = sv;
+        end
+        
+        function set_snr(obj, snr)
+            obj.snr = snr;
+            snr_updated(obj);
+        end
+
+        function mse = compute_mse(obj)
+            mse = obj.mse;
+        end
+    end
+    
+    methods (Access = 'protected', Abstract = true) 
+        snr_updated(obj) 
+    end 
+end 
