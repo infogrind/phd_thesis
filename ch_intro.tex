@@ -1,7 +1,30 @@
 \chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
 
-We cite~\cite{KleinerR2009} so that we don't get the warning about the empty
-bibliography.
+\nocite{KleinerR2009}
+The task of the communication engineer is to process information and to
+transform it such that it can be transmitted reliably across an unreliable
+medium. The information can be bits from a computer file, an audio signal
+recorded from a microphone, images captured by a TV camera, or any other
+physical signal. The unreliable medium is for example a wire undergoing
+corruption by thermal noise, a wireless link subject to interference from other
+transmitters, or a hard disk with occasional read errors.
+
+The processing of information at the transmitter is called \emph{encoding}. It
+is usually done on \emph{blocks} of data. For example, one kilobyte of a file is
+encoded at a time, or one second of recorded voice. The more information is
+encoded at once, the better the reconstruction quality one can expect at the
+receiver. This is because a longer sequence of data is more likely to contain a
+\emph{structure} that can be efficiently exploited. 
+
+However, encoding a long information sequence at a time can cause delay, as the
+encoder has to wait until the source has produced enough data. Suppose your cell
+phone encoded ten seconds of audio at once. This may increase the quality of
+your voice at the receiver, but your conversation partner will hardly care about
+this if she hears your voice only ten seconds after you started talking.  
+
+The subject of this thesis is communication under a strict delay constraint. In
+particular, the following themes are addressed. 
 
 \subsubsection{Themes}
 
@@ -10,7 +33,7 @@ bibliography.
   \item \textbf{Minimal-Delay Source-Channel Coding.} If coding delay and
     complexity is unconstrained, the region of achievable cost and distortion
     pairs for a given source, channel, cost measure and distortion measure is
-    completely characterized by Shannon's separation theorem. On one hand, this
+    completely characterized by Shannon's separation theorem. On one hand this
     theorem provides an outer bound to the achievability region; on the other
     hand it shows that any point in this region can be achieved using separate
     source and channel coding. Under a delay constraint, however, only the outer
@@ -69,9 +92,9 @@ bibliography.
     sending the remaining error uncoded in the $n\th$~channel use. This thesis
     provides the first exact characterization of the best asymptotic behavior of
     this strategy at large signal-to-noise ratios. It is shown that the
-    asymptotic performance is strictly bounded away from the optimal behavior
-    (if separate source and channel coding could be used), and that the gap (in
-    dB) to the optimum increases with increasing SNR. 
+    asymptotic performance (signal-to-distortion ratio) is strictly bounded away
+    from that achievable without a delay constraint, and that the gap (in dB) to
+    the optimum increases with increasing signal-to-noise ratio.
 
   \item \textbf{Extensions of Minimal-Delay Communication Scheme.} Two
     extensions to the hybrid scheme are provided. The first extension is to
@@ -123,4 +146,51 @@ bibliography.
 
 \subsubsection{Outline}
 
+\bchapref{fundamentals} introduces the fundamentals of the source-channel
+communication problem and defines the relevant performance measures as well as
+their theoretical limits.  This is followed by a review of the general
+conditions required for a system to operate at these limits, \ie, on the border
+of the region of achievable cost and distortion pairs. Next, codes with a delay
+constraint are discussed and related to the wider setting. The last part of the
+chapter focuses on the particular case where a memoryless Gaussian source is to
+be transmitted across a memoryless Gaussian channel with minimal delay, \ie,
+when a single source symbol is to be encoded at a time. If one channel use is
+available per source symbol, it is well known that uncoded transmission (with
+minimal delay) achieves the theoretical limits. If more than one value can be
+transmitted across the channel per source symbol, a similarly simple optimal
+scheme exists only if the encoder has perfect feedback. These optimal schemes
+are revisited, and some conclusions are drawn from the case with feedback on how
+to design a good minimal-delay code for the situation without feedback if
+several channel uses are available per source symbol.
+
+\bchapref{mindelbwex} is concerned purely with transmission across Gaussian
+channels. It first looks at the problem of minimal-delay bandwidth-expansion
+coding from two points of view: one inspired by the example of optimal coding
+with feedback; the other is a more traditional geometric analysis of the signal
+constellation. Motivated by these reflections, the chapter then introduces a
+concrete hybrid transmission scheme to transmit a single analog source symbol
+across several channel uses.  Asymptotic upper bounds as well as asymptotic
+lower bounds on the achieved mean squared error as a function of the SNR are
+given, and they are shown to coincide. The hybrid communication scheme is
+extended to two more general cases, and the respective asymptotic performance is
+given. The last section of the chapter looks ahead and suggests possible
+directions to obtain a more general characterization of the performance of
+minimal-delay schemes. 
+
+The thesis returns to arbitrary sources and channels in \bchapref{fidelity}.
+Instead of finding the best cost--performance tradeoff, the goal of this chapter
+is to characterize the best \emph{ratio} between performance and cost. For this,
+the notion of distortion is replaced with a (mathematically equivalent) notion
+of \emph{fidelity}. By refining previous results, necessary and sufficient
+conditions are found for a memoryless point-to-point communication system to
+operate at the maximal fidelity per cost ratio. 
+
+\bchapref{simulator} is of a more practical nature. It argues that
+object-oriented programming is particularly suitable for implementing
+simulations and presents a complete simulator for joint source-channel coding
+that allows fast and easy testing of arbitrary point-to-point communication
+schemes. 
+
+Lastly, \bchapref{conclusions} presents conclusions and possible directions for
+future research.
 

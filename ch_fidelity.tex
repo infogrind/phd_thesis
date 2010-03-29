@@ -700,7 +700,7 @@ of~$\Phi_0$.
 
 \begin{figure}
   {
-\newcommand{\clipcmd}{\path[clip] (-1.25,-1) rectangle (3.2,3.5);}
+\newcommand{\clipcmd}{\path[clip] (-.8,-1) rectangle (3,3.5);}
 \newcommand{\myaxes}{
         \draw[->] (-0.1,0) -- (2.2,0) node[right] {$R(\Phi)$};
         \draw[->] (0,-2.8) -- (0, 2.8) node[above] {$\Phi$};
@@ -718,7 +718,7 @@ of~$\Phi_0$.
         \begin{scope}[yshift=3.5cm]
           \draw[color=black,domain=0:.75] plot[id=rfid2_short] 
           function{19*(0.1 + 0.01 - 2**(-2*(x+1)))};
-          \draw[dashed] (0,-2.66) -- (-.5,-2.66) node [left] {$\Phi_0$};
+          \draw[dashed] (0,-2.66) -- (-.3,-2.66) node [left] {$\Phi_0$};
         \end{scope}
 
         \draw[red] (0,0) -- (0,0.84);
@@ -741,12 +741,12 @@ of~$\Phi_0$.
           \draw[color=red,domain=0:2.5] plot[id=tangent2]
           function{x};
 
-          \draw[dashed] (0,-2.66) -- (-.5,-2.66) node [left] {$\Phi_0$};
+          \draw[dashed] (0,-2.66) -- (-.3,-2.66) node [left] {$\Phi_0$};
         %%%% END \Phi < 0 %%%%
         
         % A label with an arrow for \Phi_0.
-        \node (phizlabel) at (-0.75,-0.25) {$\Phi_0$};
-        \draw[->] (phizlabel) -- +(.25,-.5);
+        \node (phizlabel) at (-0.3,-0.25) {$\Phi_0$};
+        \draw[->] (phizlabel) -- +(.1,-.5);
 
       \end{tikzpicture}}
       \hfil
@@ -762,7 +762,7 @@ of~$\Phi_0$.
         \begin{scope}[yshift=2.66cm]
           \draw[color=black,domain=0:1] plot[id=rfid2_short2] 
           function{19*(0.1 + 0.01 - 2**(-2*(x+1)))};
-          \draw[dashed] (0,-2.66) -- (-.5,-2.66) node [left] {$\Phi_0$};
+          \draw[dashed] (0,-2.66) -- (-.3,-2.66) node [left] {$\Phi_0$};
         \end{scope}
 
         \draw[red] (0,0) -- (.5,3);
