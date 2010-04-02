@@ -19,16 +19,17 @@ conditions for a given communication system to achieve the theoretical limits on
 the performance. 
 
 If coding delay and complexity are unrestricted, one can achieve these
-conditions by performing source and channel coding separately. If the delay is
-restricted, however, the optimality of the separation-based approach is no
-longer guaranteed. \secref{delayconstraint} thus looks at the consequences of
-limited delay and shows that characterizing the theoretically achievable
-performance limits for this problem is still a largely unsolved question.
-\secref{gaussian} focuses on the particular case of a Gaussian source and
-channel under squared error distortion and an average transmit power constraint.
-If the source and the channel produce and transmit, respectively, symbols at the
-same rate, then uncoded transmission (with minimal delay) performs as good as
-any code of arbitrary complexity and delay in this case, which is explained in
+conditions by performing source and channel coding separately (this is sometimes
+called \emph{tandem coding}). If the delay is restricted, however, the
+optimality of the separation-based approach is no longer guaranteed.
+\secref{delayconstraint} thus looks at the consequences of limited delay and
+shows that characterizing the theoretically achievable performance limits for
+this problem is still a largely unsolved question.  \secref{gaussian} focuses on
+the particular case of a Gaussian source and channel under squared error
+distortion and an average transmit power constraint.  If the source and the
+channel produce and transmit, respectively, symbols at the same rate, then
+uncoded transmission (with minimal delay) performs as good as any code of
+arbitrary complexity and delay in this case, which is explained in
 \secref{gaussuncoded}. If the channel allows several transmissions for each
 source symbol, on the other hand, no such simple transmission scheme exist, as
 \secref{gaussbwex} argues. This situation changes, however, if the transmitter
@@ -858,6 +859,13 @@ logarithm in the mutual information and showed that at high SNR, the achievable
 distortion of a Gaussian source across a Gaussian channel is strictly bounded
 away from Shannon's limit when a single source symbol is transmitted in several
 channel uses. 
+
+Lim and Neuhoff~\cite{LimN2003} compared a particular joint source-channel code
+with a particular separation based code under various delay constraints. They
+found, for the particular schemes studied, that there is a threshold to the
+delay constraint above which the separation based code performs better, and vice
+versa. They suggest that their results should somehow carry over to a wider
+class of codes, but do not specify exactly how. 
 
 The idea underlying posterior matching is well known and was used by Gastpar and
 Rimoldi~\cite{GastparR2003} to develop various examples of optimal uncoded
