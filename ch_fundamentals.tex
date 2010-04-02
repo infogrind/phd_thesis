@@ -25,9 +25,9 @@ optimality of the separation-based approach is no longer guaranteed.
 \secref{delayconstraint} thus looks at the consequences of limited delay and
 shows that characterizing the theoretically achievable performance limits for
 this problem is still a largely unsolved question.  \secref{gaussian} focuses on
-the particular case of a Gaussian source and channel under squared error
-distortion and an average transmit power constraint.  If the source and the
-channel produce and transmit, respectively, symbols at the same rate, then
+the particular case of a Gaussian source and a Gaussian channel under squared
+error distortion and an average transmit power constraint.  If the source and
+the channel produce and transmit, respectively, symbols at the same rate, then
 uncoded transmission (with minimal delay) performs as good as any code of
 arbitrary complexity and delay in this case, which is explained in
 \secref{gaussuncoded}. If the channel allows several transmissions for each
@@ -64,11 +64,11 @@ following six elements, displayed schematically in \figref{scgen}.
     assigns a reconstruction ``badness'' to every pair of source symbol and
     estimate.
 \end{itemize}
-The parameters $\ts$ and $\tc$ are given as part of the problem
-setting. To match the number of channel inputs produced by the encoder to the
+To match the number of channel inputs produced by the encoder to the
 rate at which the channel accepts them, $k$ and $n$ must satisfy $n/k = \ts /
 \tc$. The communication consists thus of identical rounds of transmission of
 length $k\ts$ (or $n\tc$).
+
 
 
 \begin{figure}
@@ -144,11 +144,12 @@ communication problem.
 
 \begin{definition}
   \label{def:achievableregion}
-  For a given source~$\ps$, channel~$\pyx$, cost measure~$\rho(x)$ and
-  distortion measure~$d(s,\sh)$, the \emph{achievable cost\slash distortion
-  region} is the set of all pairs $(D,P)$ for which there exists either a code
-  $(f,g)$ that incurs average distortion~$D$ and average cost~$P$, or a sequence
-  of codes that approach the distortion~$D$ and the cost~$P$ in the limit.
+  For a given source~$\ps$ producing a symbol every $\ts$~seconds, a
+  channel~$\pyx$ accepting an input every $\tc$~second, a cost measure~$\rho(x)$
+  and a distortion measure~$d(s,\sh)$, the \emph{achievable cost\slash
+  distortion region} is the set of all pairs $(D,P)$ for which there exists  a
+  sequence of codes that approach the distortion~$D$ and the cost~$P$ in the
+  limit.
 \end{definition}
 
 The most fundamental bound on the achievable cost/distortion region is given by
@@ -168,7 +169,7 @@ the following result~\cite[Theorem~21]{Shannon1948}.
   See \appref{separationproof}.
 \end{proof}
 
-Because $R(D)$ is a convex$_\cup$ function of~$D$ and $C(P)$ is a concave$_\cap$
+Because $R(D)$ is a decreasing function of~$D$ and $C(P)$ is an increasing
 function of~$P$, \thmref{separationconverse} can alternatively be written as $D
 \ge R^{-1}((n/k) C(P))$ or $P \ge C^{-1}((k/n) R(D))$.  It thus specifies the
 smallest distortion achievable for a given cost constraint or the smallest cost
@@ -217,10 +218,9 @@ defined as follows.
 
 \begin{definition}
   \label{def:optimality}
-  An \emph{optimal communication system} is either a communication system whose
-  average cost and distortion satisfy~\eqref{eq:separation} with equality, or
-  the limit of a sequence of communication systems whose performance approaches
-  equality in~\eqref{eq:separation}.\footnote{This is not the strictest form of
+  An \emph{optimal communication system} is a communication system whose
+  average cost and distortion satisfy~\eqref{eq:separation} with
+  equality.\footnote{This is not the strictest form of
   optimality and it precludes the existence of optimal communication systems in
   some situations, for example when $\max_D R(D) < \min_P C(P)$. See
   Gastpar~\cite{GastparThesis} for a more general  definition of optimality.}
@@ -250,15 +250,20 @@ By going step by step through the inequalities in the proof of
   \end{enumerate}
 \end{theorem}
 
-The forward part of the separation theorem states that under the
-conditions of the source coding theorem and the channel coding theorem, there
-exist for any source, channel, distortion measure and cost measure, a sequence
-of codes that approaches $k R(D) = nC(P)$ and thus leads to an optimal
-communication system. In the limit, this sequence of codes thus fulfills all the
-conditions of \thmref{optimalityconditions}.
+%The forward part of the separation theorem states that under the
+%conditions of the source coding theorem and the channel coding theorem, there
+%exist for any source, channel, distortion measure and cost measure, a sequence
+%of codes that approaches $k R(D) = nC(P)$ and thus leads to an optimal
+%communication system. In the limit, this sequence of codes thus fulfills all the
+%conditions of \thmref{optimalityconditions}.
 
-Can only codes based on the separation principle achieve any point of the
-achievable cost\slash distortion region? Not at all. Using the results of
+According to the above definition of optimality, a communication system that
+uses codes based on the separation principle can only approach, but not achieve
+optimality, in the sense that for any $\e > 0$ there exists a separation based
+code for which $kR(D) = nC(P) - \e$, but in general not for $\e = 0$. 
+
+Can only codes based on the separation principle achieve (or approach) any point
+of the achievable cost\slash distortion region? Not at all. Using the results of
 Gastpar et al.~\cite{GastparRV2003}, one can construct infinitely many examples
 of very simple joint source-channel codes that incur minimal delay yet whose
 average cost and distortion lie on the boundary of the achievable region
@@ -278,9 +283,8 @@ system. To be precise, we first define what we exactly mean by delay.
 \begin{definition}
   \label{def:delay}
   The \emph{delay} incurred by a point-to-point source-channel communication
-  system is the time between the instant a source symbol is produced and the
-  instant the receiver has gathered enough channel output symbols to decode that
-  symbol. 
+  system is the largest time between the instant a source symbol is produced and
+  the instant the decoder produces an estimate of that symbol. 
 \end{definition}
 
 What is the delay of a code that encodes $k$~source symbols into $n$~channel
@@ -321,18 +325,18 @@ yet only cause minimal delay.
 \end{remark}
 
 From a theoretical point of view, the drawback of codes with a delay limit is
-that there exists no exact characterization of the achievable cost and
-distortion region for such codes. While the bound of \thmref{separationconverse}
-still applies, it only depends on the \emph{ratio} $k/n$ and therefore does not
-take into account delay constraints. There have certainly been attempts to
-refine this bound to apply to delay limited codes, most notably Ziv and Zakai's
-observation that tighter bounds can be obtained by replacing the logarithm in
-the mutual information by a different function, as long as this function
-satisfies certain constraints~\cite{ZivZ1973}. This can result in outer bounds
-that become tighter for stricter delay constraints. However, none of the bounds
-obtained (so far) using this method are provably tight for a given delay
-constraint, not even for the canonical case of a Gaussian source and channel,
-which is the subject of the next section.
+that there exists in general no exact characterization of the achievable cost
+and distortion region for such codes. While the bound of
+\thmref{separationconverse} still applies, it only depends on the \emph{ratio}
+$k/n$ and therefore does not take into account delay constraints. There have
+certainly been attempts to refine this bound to apply to delay limited codes,
+most notably Ziv and Zakai's observation that tighter bounds can be obtained by
+replacing the logarithm in the mutual information by a different function, as
+long as this function satisfies certain constraints~\cite{ZivZ1973}. This can
+result in outer bounds that become tighter for stricter delay constraints.
+However, none of the bounds obtained (so far) using this method are provably
+tight for a given delay constraint, not even for the canonical case of a
+Gaussian source and channel, which is the subject of the next section.
 
 \figref{achievableregions} summarizes the current state of knowledge. For codes
 without delay limits, the achievable cost/distortion region is completely
@@ -366,12 +370,9 @@ only because of the significance of the Gaussian distribution due to the central
 limit theorem, but also because the Gaussian case allows for analytical
 solutions of many information theoretic quantities, most notably the
 rate-distortion function (under squared error distortion) and the capacity
-(under an average power constraint). In addition, Gaussian noise is the worst
-kind of additive noise under a constraint on the noise variance, so solving a
-communication problem for Gaussian noise gives the solution a certain
-universality. On the search for the achievable cost and distortion region under
-a delay constraint, it is therefore plausible to start by looking at the
-Gaussian source and channel. 
+(under an average power constraint). On the search for the achievable cost and
+distortion region under a delay constraint, it is therefore plausible to start
+by looking at the Gaussian source and channel. 
 
 \begin{definition}[Gaussian source and channel]
   \label{def:gaussiansc}
@@ -606,8 +607,8 @@ Before continuing we prove some properties of cumulative distribution functions
   1$.  If $y \in [0,1]$ then
   \begin{align*}
     \Pr[F_X(X) \le y] &= \Pr[X \le F_X^{-1}(y)] \\
-    &= \int_{-\infty}^{F_X^{-1}(y)} f(x) dx \\
-    &= F_X(F_X^{-1}(y)) = y.
+    %&= \int_{-\infty}^{F_X^{-1}(y)} f(x) dx \\
+    &= F_X(F_X^{-1}(y)) = y
   \end{align*}
   The \cdf\ of~$Y$ is therefore that of a uniform random variable on $[0,1]$.
 \end{proof}
@@ -629,9 +630,10 @@ Before continuing we prove some properties of cumulative distribution functions
   The definition of $F_X^{-1}$ according to~\eqref{eq:invcdf} is such
   that $\Pr[F_X^{-1}(Y) \le x] = \Pr[Y \le F_X(x)]$. Thus,
   \begin{align*}
-    \Pr[F_X^{-1}(Y) \le x] &= \Pr[Y \le F_X(x)] \\
-    &= \int_0^{F_X(x)} d\xi = F_X(x).
+    F_{X'}(x) &= \Pr[F_X^{-1}(Y) \le x] \\
+    &= \Pr[Y \le F_X(x)]  = F_X(x)
   \end{align*}
+  since $Y$~is uniformly distributed on~$[0,1]$.
 \end{proof}
 
 Consider now a channel~$\pyx$ and let $\pi(x)$ be the capacity achieving
@@ -663,7 +665,7 @@ sends
 \end{equation}
 Again, since $S$ is continuous, $F_{S|y_1, \dots, y_{i-1}}(S)$ is uniform. For
 any $y_1$, \ldots, $y_{i-1}$, therefore, \begin{equation*}
-  p(x_i|s, y_1, \dots, y_{i-1}) = \pi(x)
+  p(x_i|y_1, \dots, y_{i-1}) = \pi(x)
 \end{equation*}
 and so $X_i$ is independent of $Y_1$, \ldots, $Y_{i-1}$. 
 
@@ -692,9 +694,11 @@ Let us now derive the posterior matching encoder for the communication system of
   \end{equation*}
   which coincides with~\eqref{eq:gaussfbxi} in \exref{gaussfb} when~$i=1$.
 
-  Given $Y_1$, $S$ is Gaussian with mean $\E[S|Y_1]$ and variance $\Var(S -
-  \E[S|Y_1])$. Following~\eqref{eq:posteriorxi}, the second channel input is
-  thus
+  Given $Y_1$, $S$ is Gaussian with mean $\E[S|Y_1]$ and variance
+  \[ Var(S|Y_1) = \E[(S-\E[S|Y_1])^2 | Y_1] = \Var(S-\E[S|Y_1]), \]
+  since the error $S - \E[S|Y_1]$ is orthogonal to~$Y_1$ (according to the
+  properties of the conditional mean).  Following~\eqref{eq:posteriorxi}, the
+  second channel input is thus
   \begin{align*}
     X_2 &= \sqrt P F_{\N}^{-1} \left( F_{\N} \left( \frac{S - \E[S|Y_1]}
     {\sqrt{\Var(S-\E[S|Y_1])}} \right) \right) \\
@@ -747,8 +751,8 @@ decoder be
   \label{eq:distmatchdec}
   g(y) = F_{\Phi_s}^{-1}(F_{Y|S=s}(y)).
 \end{equation}
-The resulting joint distribution of $\Sh = g(Y)$ and~$S$ thus satisfies
-$I(S;\Sh) = R(D)$. 
+Given $S = s$, $g(Y)$ thus has the distribution~$\Phi_s$, and the resulting
+joint distribution of $\Sh = g(Y)$ and~$S$ satisfies $I(S;\Sh) = R(D)$. 
 
 It is immediately clear that this approach cannot work -- both \cdf s needed to
 implement this decoder depend on the actual value of~$s$, which is obviously not
