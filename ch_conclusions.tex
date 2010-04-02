@@ -1,27 +1,28 @@
-\chapter{Conclusions}\label{ch:conclusions}
+\chapter{Conclusions and Outlook}\label{ch:conclusions}
 
-An important unsolved problem in information theory is the characterization of
-the achievable cost and distortion region of point-to-point communication
-systems under a delay constraint. In this thesis we have looked at the
+The characterization of the achievable cost and distortion region of
+point-to-point communication systems under a delay constraint is an important
+unsolved problem in information theory. In this thesis we have looked at the
 particular case of minimal-delay transmission with bandwidth expansion across
-Gaussian channels. We analyzed a hybrid transmission strategy based on
+Gaussian channels. We have analyzed a hybrid transmission strategy based on
 quantization and uncoded transmission. This strategy is by no means new; it has
 appeared previously in various shapes (see the historical notes section in
 \chapref{mindelbwex}). Here we have established a justification for this
-strategy, inspired by the case with feedback, arguing that any minimal-delay
-bandwidth expansion scheme with uncoded components should only use uncoded
-transmission in the last channel use. Furthermore, we have exactly characterized
-the scaling behavior of the signal-to-distortion ratio (SDR) achieved when the
-signal-to-noise ratio (SNR) goes to infinity. 
+strategy, inspired by the case with feedback, arguing that \emph{any}
+minimal-delay bandwidth expansion scheme with uncoded components should use
+uncoded transmission only in the \emph{last} channel use. Furthermore, we have
+exactly characterized the scaling behavior of the signal-to-distortion ratio
+(SDR) achieved when the signal-to-noise ratio (SNR) goes to infinity. 
 
-To date, there is no known minimal-delay communication scheme for the Gaussian
-channel that achieves an SDR that scales better than the hybrid strategy
-presented here, namely $\snr^n / (\log\snr)^{n-1}$. Where does the $\log\snr$
-factor come from? Can it be explained by the particular nature of our hybrid
-scheme, or is there something more fundamental to it? Can the optimal SDR
-scaling of $\snr^n$ be achieved at all with minimal delay for $n > 1$? These are
-open questions that should be investigated in the future, the ultimate goal
-being to completely characterize the achievable distortion region. 
+To date there is no known minimal-delay communication scheme for the Gaussian
+channel with bandwidth expansion that achieves an SDR that scales better than
+the hybrid strategy presented here, namely $\snr^n / (\log\snr)^{n-1}$. Where
+does the $\log\snr$ factor come from? Can it be explained by the particular
+nature of our hybrid scheme, or is there something more fundamental to it? Can
+the optimal SDR scaling of $\snr^n$ be achieved at all with minimal delay for $n
+> 1$? These are open questions that should be investigated in the future, the
+ultimate goal being to completely characterize the achievable cost and
+distortion region. 
 
 \medbreak
 
@@ -39,26 +40,27 @@ achieve an optimal fidelity--cost tradeoff.
 Why would one want to maximize the \emph{ratio} of performance per cost, rather
 than to obtain the greatest fidelity for a given cost constraint or incur the
 least cost for a required fidelity? It is not trivial to find an application for
-which this would indeed be the case. There seems to be an important practical
-difference between fidelity, rate, and cost. Rate and cost are naturally
-additive quantities. Suppose a channel is used $n$~times per second at cost
-$P/n$ per channel use. Then the total cost per second is~$P$, regardless of~$n$,
-and the total number of bits transmitted per second is the sum of the bits
-transmitted in each of the $n$~channel uses. This gives important practical
-significance to capacity per unit cost: it determines the maximum number of bits
-per second one can transmit for a cost constraint \emph{per second} if the
-number of channel uses is a free parameter (such as in wideband communication). 
+which this is indeed the case. There seems to be an important practical
+difference between fidelity on one hand, and rate and cost on the other hand.
+Rate and cost are naturally additive quantities. Suppose a channel is used
+$n$~times per second at cost $P/n$ per channel use. Then the total cost per
+second is~$P$, regardless of~$n$, and the total number of bits transmitted per
+second is the sum of the bits transmitted in each of the $n$~channel uses. This
+gives important practical significance to capacity per unit cost: it determines
+the maximum number of bits per second one can transmit for a cost constraint
+\emph{per second} if the number of channel uses is a free parameter (such as in
+wideband communication). 
 
-Fidelity, on the other hand, is not obviously additive. Our results say that for
-a given cost per second we have the choice to either transmit a single source
-symbol at high fidelity, or several source symbols at a lower fidelity each.
-Which one is better? A possible application is oversampling with low-resolution
-quantization. For example, if a bandlimited analog source is oversampled at a
-sufficiently high rate, the quantization resolution can be as low as $1$~bit
-per sample. For this case, our results may yield a tradeoff between quantization
-resolution and sampling frequency; we have not investigated this issue further
-though. Nevertheless, it certainly presents an interesting opportunity for
-future research. 
+Fidelity is not obviously additive. Our results say that for a given cost per
+second we have the choice to either transmit a single source symbol at high
+fidelity, or several source symbols at a lower fidelity.  Which one is
+better? In many situations the two cases may not be comparable. One possible
+application is oversampling with low-resolution quantization.  For example, if a
+bandlimited analog source is oversampled at a sufficiently high rate, the
+quantization resolution can be as low as $1$~bit per sample. Our
+results may yield a tradeoff between quantization resolution and sampling
+frequency; we have not investigated this issue further though.  Nevertheless, it
+certainly presents an interesting opportunity for future research. 
 
 \medbreak
 
@@ -71,7 +73,7 @@ frustrating experience of simulator code gone chaotic.
 \medbreak
 
 It may yet take a long time until the fundamental results of information theory
-are extended to take into account delay constraints. Meanwhile, the author hopes
-that the results contained in this thesis indicate some of the avenues to follow
-and some of the questions to investigate. If one day a complete answer has been
-found, please inform me -- without delay!
+are extended to completely take into account delay constraints. Meanwhile, it is
+the author's hope that the results contained in this thesis indicate some of the
+avenues to follow and some of the questions to investigate. If one day a
+complete answer has been found, let him be notified -- without delay!
