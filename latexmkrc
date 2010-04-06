@@ -3,4 +3,4 @@ $latex = 'latex %O -shell-escape %S';
 $pdflatex = 'pdflatex %O -shell-escape %S';
 
 # Set main tex file to compile (if latexmk is run without arguments)
-@default_files = ( 'thesis.tex' );
+@default_files = ( 'mk_publications.tex', 'thesis.tex' );
