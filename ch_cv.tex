@@ -57,23 +57,12 @@ Switzerland\hfill Swiss Citizen
 %\clearpage
 \noindent\textsf{\textbf{PUBLICATIONS}}
 \nobreak
-\begin{enumerate}
-\item
-M.~Kleiner and B.~Rimoldi, ``Asymptotically optimal joint source-channel coding
-  with minimal delay,'' in \emph{2009 IEEE Globecom Communication Theory
-  Symposium}, Honolulu, HI, 2009.
 
-\item
-------, ``On fidelity per unit cost,'' in \emph{2009 IEEE International
-  Symposium on Information Theory}, Seoul, South Korea, July 2009, pp.
-  1639--1643.
-
-\item
-------, ``A tight bound on the performance of a minimal-delay joint
-  source-channel coding scheme,'' in \emph{2010 IEEE International Symposium on
-  Information Theory (submitted)}, Austin, TX, June 2010.
-\end{enumerate}
-
+{
+\renewenvironment{thebibliography}[1]{\begin{enumerate}}{\end{enumerate}}
+\renewcommand\bibitem[1]{\item}
+\input{mk_publications.bbl}
+}
 
 \vspace{\baselineskip}
 \noindent\textsf{\textbf{LANGUAGE SKILLS}}

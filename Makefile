@@ -4,6 +4,7 @@ EPSTOPDF = epstopdf
 FIG2DEV = fig2dev
 MATLAB = matlab
 BUNDLEDOC = bundledoc_mk
+BIBFILE = $(shell kpsewhich -progname bibtex mkbiblio.bib)
 
 JOBNAME = thesis
 
@@ -80,7 +81,10 @@ force : clean all
 #
 # etc...
 thesis.pdf : subdirs thesis.tex packages.tex tikzstyles.tex theoremdefs.tex \
-	$(wildcard ch_*.tex)
+	$(wildcard ch_*.tex) mk_publications.bbl $(BIBFILE)
+
+mk_publications.bbl : mk_publications.tex $(BIBFILE)
+	$(LATEXMK) $<
 
 
 # Add here subdirectories where you would like 'make' to run recursively. 
