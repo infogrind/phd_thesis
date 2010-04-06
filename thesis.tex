@@ -1,3 +1,4 @@
+\RequirePackage{snapshot}
 %        File: thesis.tex
 %     Created: Tue Jan 12 11:00 AM 2010 C
 % Last Change: Tue Jan 12 11:00 AM 2010 C
@@ -31,15 +32,17 @@
 \frontmatter
 \input{title}
 
-%\input{abstract}
+\input{abstract}
 %\input{resume}
 %\input{zusfsg}
 %\input{ack}
+
 
 \cleardoublepage
 \tableofcontents
 
 \mainmatter
+%\chapter*{Introduction}\addcontentsline{toc}{chapter}{Introduction}
 \input{ch_intro}
 %\chapter{Fundamentals of Source-Channel Communication}\label{ch:fundamentals}
 \input{ch_fundamentals}

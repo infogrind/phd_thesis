@@ -299,7 +299,18 @@ illustrated on \figref{hybridlocus}.
   \label{fig:hybridlocus}
 \end{figure}
 
-
+\begin{remark}
+  The geometric perspective provides a simple argument why a linear encoder
+  can achieve a MSE scaling of only $\snr^{-1}$, regardless of the number of
+  channel uses. The image of a linear function from $\R$ to $\R^n$ is a straight
+  line (a subspace of dimension~$1$). Applying invertible transforms at the
+  encoder and decoder, this straight line can be rotated to lie on the $X_1$
+  axis without changing the performance. The resulting constellation is such
+  that all $X_i$ for $i = 2$, \dots, $n$ are zero. Effectively, thus, only a
+  single transmission is made on the channel. The same reasoning implies that a
+  linear encoder from $\R^k$ to $\R^n$, where $k < n$, achieves a MSE scaling of
+  only $\snr^{-k}$, regardless of~$n$. 
+\end{remark}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
