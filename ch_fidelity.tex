@@ -96,7 +96,7 @@ corresponding to these input distributions.
     \label{eq:ratepercost}
     \frac{\Iq(X;Y)}{\Expq[\ro(X)]} \le \frac{\Ip(X;Y)}{\Ep[\ro(X)]} = 1,
   \end{equation}
-  with equality if and only if $Q_X = P_X$.
+  with equality if and only if $Q_Y = P_Y$.
 \end{proposition}
 
 Proposition~\ref{prop:ratepercost} implies that if the channel input cost
@@ -119,7 +119,7 @@ capacity per unit cost.
   It follows that
   \[ \frac{\Iq(X;Y)}{\Expq [\ro(X)]} \le 1
   \]
-  with equality if and only if $P_Y = Q_Y$, or $P_X = Q_X$.
+  with equality if and only if $P_Y = Q_Y$.
 \end{proof}
 
 \begin{remark}
@@ -318,41 +318,6 @@ unique (up to a scaling factor).
   See Figure~\ref{fig:cuccongeom} for a geometric interpretation of this proof.
 \end{proof}
 
-The following counterexample shows that if the capacity function is not
-differentiable then the cost function for which the capacity per unit cost is
-achieved is not unique.
-
-\begin{example}
-  \label{ex:nondiffcapacity}
-  Consider the ternary-input channel shown in \figref{ternaryinputchannel}. The
-  input alphabet is $\{0,1,\?\}$ and the output alphabet
-  is~$\{0,1\}$. Let the cost be given by $\rho(\?) = 1$ and $\rho(0) = \rho(1) =
-  2$. If the average cost constraint~$P$ is between~$1$ and~$2$, the capacity
-  achieving distribution is $\Pr[X=0] = \Pr[X=1] = (P-1)/2$ and $\Pr[X = \?] = 2
-  - P$. Then $H(Y) = 1$, $H(Y|X=0) = H(Y|X=1) = 0$ and $H(Y|X=\?) = 1$, so the
-  resulting mutual information is $I(X;Y) = 1 - (2-P) = P - 1$.  If $P \ge 2$,
-  the capacity achieving distribution is $\Pr[X=0] = \Pr[X = 1] = 1/2$, and the
-  mutual information is $I(X;Y) = 1$. The corresponding capacity function, shown
-  on \figref{edgecapacity}, has a sharp edge at $P=2$. It is thus clear that
-  when it is moved horizontally (by changing~$\rho(x)$ by a constant), the new
-  operating point will still achieve the capacity per unit cost.
-  \begin{figure}
-    \centerline{%
-    \subfloat[Ternary input channel.]{\label{fig:ternaryinputchannel}%
-    \input{figures/ternarychannel.tex_t}}% end subfloat
-      \hfil
-      \subfloat[Capacity curve.]{\label{fig:edgecapacity}%
-      \input{figures/ternarycapacity.tex_t}}
-      }%end centerline
-    \caption{Ternary input channel and corresponding capacity function for
-    \exref{nondiffcapacity}. If a constant is added to the cost function, the
-    capacity curve in~(b) shifts horizontally but a tangent through the origin
-    still touches the curve in the same point. Hence the cost function for which
-    capacity per unit cost is achieved is not unique in this case.}
-%    \label{fig:ternaryinputch}
-  \end{figure}
-\end{example}
-
 \begin{figure}
   \begin{center}
     \begin{tikzpicture}[scale=0.7]
@@ -392,6 +357,41 @@ achieved is not unique.
   origin.}
   \label{fig:cuccongeom}
 \end{figure}
+
+The following counterexample shows that if the capacity function is not
+differentiable then the cost function for which the capacity per unit cost is
+achieved is not unique.
+
+\begin{example}
+  \label{ex:nondiffcapacity}
+  Consider the ternary-input channel shown in \figref{ternaryinputchannel}. The
+  input alphabet is $\{0,1,\?\}$ and the output alphabet
+  is~$\{0,1\}$. Let the cost be given by $\rho(\?) = 1$ and $\rho(0) = \rho(1) =
+  2$. If the average cost constraint~$P$ is between~$1$ and~$2$, the capacity
+  achieving distribution is $\Pr[X=0] = \Pr[X=1] = (P-1)/2$ and $\Pr[X = \?] = 2
+  - P$. Then $H(Y) = 1$, $H(Y|X=0) = H(Y|X=1) = 0$ and $H(Y|X=\?) = 1$, so the
+  resulting mutual information is $I(X;Y) = 1 - (2-P) = P - 1$.  If $P \ge 2$,
+  the capacity achieving distribution is $\Pr[X=0] = \Pr[X = 1] = 1/2$, and the
+  mutual information is $I(X;Y) = 1$. The corresponding capacity function, shown
+  on \figref{edgecapacity}, has a sharp edge at $P=2$. It is thus clear that
+  when it is moved horizontally (by changing~$\rho(x)$ by a constant), the new
+  operating point will still achieve the capacity per unit cost.
+  \begin{figure}
+    \centerline{%
+    \subfloat[Ternary input channel.]{\label{fig:ternaryinputchannel}%
+    \input{figures/ternarychannel.tex_t}}% end subfloat
+      \hfil
+      \subfloat[Capacity curve.]{\label{fig:edgecapacity}%
+      \input{figures/ternarycapacity.tex_t}}
+      }%end centerline
+    \caption{Ternary input channel and corresponding capacity function for
+    \exref{nondiffcapacity}. If a constant is added to the cost function, the
+    capacity curve in~(b) shifts horizontally but a tangent through the origin
+    still touches the curve in the same point. Hence the cost function for which
+    capacity per unit cost is achieved is not unique in this case.}
+%    \label{fig:ternaryinputch}
+  \end{figure}
+\end{example}
 
 Propositions~\ref{prop:ratepercost} and~\ref{prop:cucconverse} are summarized
 in the following theorem. 
@@ -818,7 +818,7 @@ fidelity per cost:
 \begin{equation}
   \label{eq:extineq}
 \frac\Phi P = \frac\Phi{R(\Phi)} \cdot \frac{R(\Phi)}{C(P)} \cdot
-\frac{C(P)}{P} \le \frac nk \Ch \Phih.
+\frac{C(P)}{P} \le \Phih \frac nk \Ch.
 \end{equation}
 We call the right-hand side of~$\eqref{eq:extineq}$ the \emph{fidelity per unit
 cost} of the communication system.
@@ -850,16 +850,18 @@ conditions are stated in the following theorem.
   all of the following conditions are satisfied.
 
 \begin{enumerate}
-  \item The reproduction is related to the source via the test channel, \ie,
+  \item The distribution of the reproduction sequence given the source sequence
+    factors as
     \[P_{\Sh^k|S^k}(\sh^k|s^k)=\prod_{i=1}^k
     V(\sh_i|s_i), \]
-    where $s^k =(s_1, \ldots, s_k)$     and where $V$ relates to the fidelity
+    where $s^k =(s_1, \ldots, s_k)$  and where $V$ is the test channel that
+    achieves fidelity per unit rate, \ie, it relates to the fidelity
     function according to~\eqref{eq:optfid}.
   \item The channel input is \iid\ with distribution $P_X$ that achieves
     capacity per unit cost, \ie, it relates to the cost function according
     to~\eqref{eq:optcostthm}.
-  \item The encoder and decoder are information lossless in the sense that
-    $kI(S;\Sh) = n I(X;Y)$.  
+  \item The encoder and decoder are information lossless in the sense that they
+    satisfy $kI(S;\Sh) = n I(X;Y)$.  
 \end{enumerate}
 \end{theorem}
 
