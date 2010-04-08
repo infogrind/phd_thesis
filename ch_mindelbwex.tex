@@ -37,7 +37,10 @@ where $D(\cdot\|\cdot)$ is the relative entropy or Kullback-Leibler divergence
 between two distributions (see \eg~\cite{CoverT1991}) and $\phi_{\ssq}$ is the
 \pdf\ of a centered Gaussian distribution of variance~$\ssq$. This bound
 follows directly from Shannon's lower bound on the rate distortion function for
-arbitrary sources under a difference distortion measure~\cite{Shannon1959}.
+arbitrary sources under a difference distortion measure\footnote{Shannon calls a
+\emph{difference distortion measure} a distortion measure that depends only on
+the difference $s - \sh$. Examples are the squared error $(s-\sh)^2$, or the
+absolute error $|s - \sh|$.}~\cite{Shannon1959}.
 (If $\ps$ is a Gaussian distribution, the divergence becomes zero and
 \eqref{eq:gensrcsdrlb} simplifies to~\eqref{eq:gausslimitch2}.) Thus, the
 scaling bound~\eqref{eq:gaussasymplimit} applies not only to Gaussian but to
@@ -59,18 +62,18 @@ The second, more traditional perspective is a geometric analysis of the signal
 constellation.  \secref{twoperspectives} starts this chapter by presenting the
 two points of view and showing how they both lead to the same tradeoff.
 \secref{scalarquant} then formally introduces the hybrid communication scheme
-that is at the heart of this chapter. It is shown that this scheme achieves an
-SDR that scales as $\snr^n / (\log\snr)^{n-1}$, and that no scheme that combines
-quantization and uncoded transmission in the same way achieves a better SDR
-scaling. In \secref{latticequant}, the communication scheme of
+that is at the heart of this chapter. It is shown that this scheme cannot
+achieve an SDR that scales better than $\snr^n / (\log\snr)^{n-1}$, regardless
+of the decoder used, and a simple suboptimal decoder in fact attains this
+scaling.  In \secref{latticequant}, the communication scheme of
 \secref{scalarquant} is extended to encode \emph{blocks} of $m$~source symbols
 into $mn$~channel inputs using lattice quantizers. It turns out that even when
-powerful high dimensional lattices are used, the SDR for any finite
-block length~$m$ scales just like when $m = 1$ (although the multiplicative
-constants may be larger). \secref{genbwexp} extends the scheme of
-\secref{scalarquant} in a different way, namely to encode $k$~source symbols
-into $n$~channel inputs, where $k \le n$. For this case, the achievable SDR is
-shown to scale as $\snr^{n/k} /(\log\snr)^{(n-k)/k}$. 
+powerful high dimensional lattices are used, the SDR for any finite block
+length~$m$ scales just like when $m = 1$ (although the multiplicative constants
+may be larger). \secref{genbwexp} extends the scheme of \secref{scalarquant} in
+a different way, namely to encode $k$~source symbols into $n$~channel inputs,
+where $k \le n$. For this case, the achievable SDR is shown to scale as
+$\snr^{n/k} /(\log\snr)^{(n-k)/k}$. 
 
 None of the transmission schemes considered achieve the optimal SDR scaling of
 Equation~\ref{eq:gaussasymplimit}. Instead, the optimal scaling is divided by a
@@ -1475,7 +1478,8 @@ them into a bounded interval; this problem is left as future work.
 None of the communication strategies studied in this chapter achieve the optimal
 SDR scaling of  $\snr^{n/k}$. Instead, in each case the optimal scaling is
 divided by $(\log\snr)^{(n-k)/k}$, \ie, there is a ``penalty factor'' of
-$(\log\snr)^{1/k}$ for every channel input that is from a discrete alphabet.
+$(\log\snr)^{1/k}$ for each of the $n-k$ channel inputs that carry quantized
+information about the source.
 
 At first sight this may just be due to the particular nature of the
 constellations used here. Because a significant fraction of channel inputs is
@@ -1505,9 +1509,11 @@ applied to a signal constellation that has some regularity: there must be a
 $\Delta$ such that for any source value $s$ (in an interval with strictly
 positive probability density), the source points $s$ and $s + \Delta$ are mapped
 to two channel inputs whose Euclidean distance is upper bounded. For example, in
-the proof of \lemref{lowerbound2}, we found that when $\Delta  = \beta^{-1}$,
+the proof of \lemref{lowerbound2} we found that when $\Delta  = \beta^{-1}$,
 the distance between $X(s)$ and $X(s + \Delta)$ is always
-$\sqrt{P}/\gamma\beta$. 
+$\sqrt{P}/\gamma\beta$.  If there does not exist such a~$\Delta$, then the MSE
+cannot be bounded as in Equation~\ref{eq:avglbd} in the proof of Ziv's lemma
+(see page~\pageref{eq:avglbd}). 
 
 This does not mean that less regular constellations necessarily perform better.
 It only means that Ziv's bound cannot be readily applied to constellations that
@@ -1525,11 +1531,12 @@ good minimum distance properties if every codeword is not too close to another
 codeword. In joint source-channel coding with a mean squared error criterion for
 a Gaussian channel, not all constellation points must be far from each other. In
 fact, two constellation points may be close to each other provided that the
-corresponding points in the source are close. Conversely, the farther two points
-of the source are from each other, the farther away the corresponding
-constellation points should be.  This ensures that decoding errors resulting
-in a large squared error occur less frequently than those resulting in a
-smaller squared error. 
+corresponding points in the source are close (except possibly for a set of
+source points of vanishing probability). Conversely, the farther two points of
+the source are from each other, the farther away the corresponding constellation
+points should be. This ensures that decoding errors resulting in a large
+squared error occur less frequently than those resulting in a smaller squared
+error. 
 
 In order to find bounds on the performance of minimal-delay source-channel
 codes, one could thus try to characterize the ``best'' minimum distance behavior
@@ -1573,23 +1580,24 @@ $\snr^{(n-1)/2}$, the optimal scaling cannot be achieved.
 This implies that to achieve the optimal SDR scaling, a piecewise continuous map
 must have a constant stretch of at least $\snr^{(n-1)/2}$. For the example of a
 uniform source with support~$[-1/2, 1/2]$, the problem of designing a good
-encoder then becomes the problem of how to arrange a line of total
-length $\snr^{(n-1)/2}$ in~$\R^n$ such that the resulting constellation has good
-minimum distance properties while simultaneously satisfying the power
-constraint. The maps presented in this chapter are one such way; they arrange
-the line as parallel segments. Another possibility is \eg\ the Archimedes
-spiral~\cite{Ramstad2002}.
+encoder then becomes the problem of how to arrange segments of a line of total
+length $\snr^{(n-1)/2}$ in~$\R^n$ such that the resulting signal locus has good
+minimum distance properties (as explained before) while simultaneously
+satisfying the power constraint. The maps presented in this chapter are one such
+way; they arrange the line as parallel segments. Another possibility is \eg\ the
+Archimedes spiral~\cite{Ramstad2002}.
 
 
 \subsubsection{Summary}
 
 Summarizing the above considerations, the problem of upper bounding the
 performance of minimal-delay codes can be broken down into two aspects. On one
-hand, it is about finding maps with good minimum distance properties. On the
-other hand, a way must be found to lower bound the MSE for general maps. As we
-have seen, Ziv's bound only works if the constellation fulfills certain
-regularity properties. For more general bounds, either Ziv's bound must be
-extended or a wholly different bounding method must be found. 
+hand, it is about finding maps with good minimum distance properties, \ie, maps
+whose inverse is ``almost surely'' continuous (see above). On the other hand, a way must be
+found to lower bound the MSE for general maps. As we have seen, Ziv's bound only
+works if the constellation fulfills certain regularity properties. For more
+general bounds, either Ziv's bound must be extended or a wholly different
+bounding method must be found. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

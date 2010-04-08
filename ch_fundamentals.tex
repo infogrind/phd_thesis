@@ -26,12 +26,13 @@ optimality of the separation-based approach is no longer guaranteed.
 shows that characterizing the theoretically achievable performance limits for
 this problem is still a largely unsolved question.  \secref{gaussian} focuses on
 the particular case of a Gaussian source and a Gaussian channel under squared
-error distortion and an average transmit power constraint.  If the source and
-the channel produce and transmit, respectively, symbols at the same rate, then
-uncoded transmission (with minimal delay) performs as good as any code of
-arbitrary complexity and delay in this case, which is explained in
-\secref{gaussuncoded}. If the channel allows several transmissions for each
-source symbol, on the other hand, no such simple transmission scheme exist, as
+error distortion and an average transmit power constraint. In this case, if the
+source and the channel produce and transmit, respectively, symbols at the same
+rate, then uncoded transmission (with minimal delay) performs as good as any
+code of arbitrary complexity and delay, which is explained in
+\secref{gaussuncoded}. If, on the other hand, the rate at which the channel
+accepts inputs is greater than the rate at which the source symbols are
+produced, then no such simple transmission scheme exists for this case, as
 \secref{gaussbwex} argues. This situation changes, however, if the transmitter
 has perfect causal feedback from the receiver. In this case, studied in detail
 in \secref{gaussfeedback}, a similarly simple scheme as that of
@@ -458,10 +459,11 @@ precise and extensively discussed in~\cite{GastparRV2003}.
 Does a similarly simple transmission scheme exist for the Gaussian case when the
 channel accepts more than one input for each source symbol, \ie, $\tc > \ts$?
 Unfortunately, no. In fact, the performance of any code that encodes a single
-source symbol into $n>1$~channel inputs is strictly bounded away from the
-optimum given by~\eqref{eq:gausssep}~\cite{IngberLZF2008}.  The bound given
-in~\cite{IngberLZF2008} is not necessarily tight, however, so the region of
-achievable cost and distortion pairs is not known when $k = 1$ and $n > 1$. 
+Gaussian source symbol into $n>1$~inputs to a Gaussian channel is strictly
+bounded away from the optimum given by~\eqref{eq:gausssep}~\cite{IngberLZF2008}.
+The bound given in~\cite{IngberLZF2008} is not necessarily tight, however, so
+the region of achievable cost and distortion pairs is not known when $k = 1$ and
+$n > 1$. 
 
 While conditions~1 and~6 of \thmref{optimalityconditions} can still be achieved
 by a simple linear encoder and a MMSE decoder (just as in \exref{gausssingle}),
