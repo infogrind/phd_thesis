@@ -191,7 +191,7 @@
 \renewcommand{\maketitlehookc}{% 
 \vskip 10cm
 \begin{center}
-Submitted for the degree of Docteur \`Es Sciences \\\'Ecole Polytechnique F\'ed\'erale de Lausanne
+Submitted for the degree of docteur \`es sciences \\Ecole Polytechnique F\'ed\'erale de Lausanne
 \end{center}
 }
 
