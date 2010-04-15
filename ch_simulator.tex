@@ -223,9 +223,12 @@ The object-oriented approach has none of the drawbacks of the previous example:
 The concept we have exploited here is called \emph{inheritance}, since
 |Alternative|\-|Simulation| \emph{inherits} all those methods from
 |Simulation| which it doesn't explicitly redefine.  The power of
-inheritance is that it allows \emph{old code to call new code}: the
-``old'' method |run_simulation()| calls the new |decode()| method, without
-the need to make \emph{any} changes to the former. 
+inheritance is that it allows \emph{old code to call new code}: if |as| is an
+instance of |Alternative|\-|Simulation| then a call to |as.run_simulation()|
+calls the ``old'' method |run_simulation()| (defined in |Simulation|), which in
+turn calls the \emph{new} |decode()| method, without the need to make any
+changes to |run_simulation()|. 
+
 
 In \emph{procedural programming}\footnote{Procedural programming is programming
 using functions or \emph{procedures}, as opposed to object-oriented
@@ -257,8 +260,8 @@ the implementation, and continue alternating between the two parts.
 
 \subsection{A Step-By-Step Tutorial}\label{sec:tutorial}
 
-To demonstrate how \jscsim\ helps creating and analyzing simulations, this
-section presents a number of small hands-on examples. 
+To demonstrate how \jscsim\ helps defining communication schemes and simulating
+them, this section presents a number of small hands-on examples. 
 
 \subsubsection{Implementing a Communication Scheme}
 
@@ -280,15 +283,17 @@ observations.
     |Uncoded|\-|Scheme| (\lineref{1}). It is derived from the class
     |PracticalScheme|. This is the class that all ``practical'' communication
     schemes are derived from, \ie, communication schemes that can be implemented
-    in practice as opposed to merely ``theoretical'' schemes (of which we will
-    soon see an example).
+    in practice as opposed to merely ``theoretical'' schemes. The so called
+    theoretical schemes, of which we will see an example shortly, compute a MSE
+    from a mathematical formula (such as $\ssq/(1+\snr)^n$) without simulating
+    transmission.
 
   \item The constructor of |UncodedScheme| receives two parameters
     (\lineref{4}). |sv| is the source variance and |s| is the sequence of source
     symbols that are to be transmitted.\footnote{If you wonder why the
     constructor returns something called \Verb+obj+: this is simply how
-    \matlab's syntax specifies the constructor; the returned value stands for
-    the object just created.}
+    \matlab's syntax specifies the constructor; the returned value is the object
+    just created.}
 
     The constructor of the base class |PracticalScheme| has two additional
     arguments. They are, respectively, the number~$k$ of source symbols encoded
@@ -509,7 +514,7 @@ Figures~\ref{fig:uncoded} and~\ref{fig:shannonscheme}.
 
 The performance processor we have used to plot the performance in the previous
 examples is a particular type of \emph{scheme processor}. The idea behind scheme
-processors is to separate the implementation and the analysis of communication
+processors is to separate the implementation and the simulation of communication
 schemes.
 
 A scheme processor takes a list of schemes along with the corresponding
@@ -640,20 +645,20 @@ a hybrid communication scheme.}
 \subsubsection{Design Philosophy}
 
 The design philosophy behind \jscsim\ is to separate the implementation of a
-communication strategy and the analysis thereof. The end user should be able to
-concentrate either on implementing the communication scheme or writing the code
-that analyzes its performance, but shouldn't have to think about both tasks at
-the same time.  For this reason, the core classes that make up \jscsim\ are
-divided into two categories. In the first category are the \emph{scheme classes}
-(or simply 'schemes'), which are classes that implement communication
+communication strategy and the simulation thereof. The end user should be able
+to concentrate either on implementing the communication scheme or writing the
+code that processes it during simulation, but shouldn't have to think about both
+tasks at the same time.  For this reason, the core classes that make up \jscsim\
+are divided into two categories. In the first category are the \emph{scheme
+classes} (or simply 'schemes'), which are classes that implement communication
 schemes and have the class |Scheme| as their common ancestor. The second
 category consists of  \emph{scheme processors}, which are classes that implement
-the analysis of a particular aspect of a single or of a family of communication
-schemes. Scheme processors derive from the common ancestor class
-|SchemeProcessor|. 
+the processing of a particular quantity (such as the MSE) during the simulation
+of a single or of a family of communication schemes. Scheme processors derive
+from the common ancestor class |SchemeProcessor|. 
 
 Based on the reasonable assumption that you implement a particular
-communication scheme in \jscsim\ because you eventually want to analyze it, you never directly instantiate a scheme class. Rather, you create a
+communication scheme in \jscsim\ because you eventually want to simulate it, you never directly instantiate a scheme class. Rather, you create a
 particular scheme processor (by instantiating a class derived -- directly or
 indirectly -- from |SchemeProcessor|) and call its |process()| method. Note that
 you cannot create an instance of the base class |SchemeProcessor| since the
@@ -710,7 +715,7 @@ a large class of schemes, of which \jscsim\ takes advantage.
 After calling a scheme's |set_snr()| method, a scheme processor can access
 the scheme's |mse| property (for instance) via the scheme's |compute_mse()|
 method (which we will see shortly). A scheme processor whose purpose it is to
-analyze the MSE achieved by a particular scheme thus alternatingly calls
+track the MSE achieved by a particular scheme thus alternatingly calls
 |set_snr()| and |compute_mse()| and stores the MSE for each SNR. This is
 precisely what the class |PerformanceProcessor| does. 
 
@@ -737,15 +742,15 @@ communication scheme classes are derived.}
 \end{listing}
 
 The class definition starts in \lineref{1}. It is a \matlab\ convention that any
-class whose instances need to keep a persistent state (in their class
-properties\footnote{In other object oriented languages, \emph{properties}
-are also called \emph{member variables.}}) must be derived from the |handle|
-class. 
+class whose internal state can change over time (as is the case for all classes
+considered here) must be derived from the |handle| class, but this is only a
+technical detail and of no importance in the sequel.
 
 As we will shortly see in detail, \jscsim\ divides communication schemes into
-two groups: theoretical schemes and practical schemes. Schemes of both
-groups are (indirectly) derived from |Scheme|, so |Scheme| defines only the
-properties and methods common to both groups.
+two types: theoretical schemes and practical schemes. Schemes of both
+types are (indirectly) derived from |Scheme|, so |Scheme| defines only the
+behavior common to both types, which consists essentially of the methods to set
+the SNR and to retrieve the MSE. 
 
 Every communication scheme has access to the three properties defined in
 lines~2 to~6: the source variance, the SNR, and the incurred mean squared error.
@@ -763,7 +768,8 @@ does not use the source symbols. More about this is explained further below.
 We have already mentioned the method |set_snr()| (\lineref{13}). It is called by
 a scheme processor whenever the communication scheme is to be simulated for a
 new SNR. This method first saves the new SNR in its |snr| property
-(\lineref{14}) and then calls the abstract method |snr_updated()|. 
+(\lineref{14}) and then calls the abstract method |snr_updated()| to inform
+derived classes about the changed SNR.
 
 The method |compute_mse()| allows scheme processors to access a scheme's
 |mse| property. (Because the property is declared as \emph{protected} (cf.
@@ -771,17 +777,17 @@ The method |compute_mse()| allows scheme processors to access a scheme's
 through a method.) 
 
 Line~24 declares the abstract method |snr_updated()|. Because |Scheme| itself
-does not implement this method, it cannot be instantiated directly. Instead, any
-class derived from |Scheme| must implement |snr_updated()|.\footnote{It is not
-quite true to say that any class derived from \texttt{Scheme} \emph{must}
-implement the abstract method \texttt{snr\_updated()}. A derived class is free
-not to implement the method; if it does not implement it, however, it remains
-itself an abstract class and cannot be instantiated either. A class can only be
-instantiated if it implements all abstract methods defined by any of its
-ancestors. Of course, if a base class \texttt{X} has already implemented an
-abstract class, then other classes derived from~\texttt{X} no longer need to
-implement the abstract method themselves as they inherit the implementation
-from~\texttt{X}.}
+does not implement this method, the class cannot be instantiated directly.
+Instead, any class derived from |Scheme| must implement
+|snr_updated()|.\footnote{It is not quite true to say that any class derived
+from \texttt{Scheme} \emph{must} implement the abstract method
+\texttt{snr\_updated()}. A derived class is free not to implement the method; if
+it does not implement it, however, it remains itself an abstract class and
+cannot be instantiated either. A class can only be instantiated if it implements
+all abstract methods defined by any of its ancestors. Of course, if a base class
+\texttt{X} has already implemented an abstract class, then other classes derived
+from~\texttt{X} no longer need to implement the abstract method themselves as
+they inherit the implementation from~\texttt{X}.}
 
 
 \subsubsection{Theoretical Schemes}
@@ -917,7 +923,7 @@ reader so inclined is invited to peruse the source code.
 \section{Reference}\label{sec:reference}
 
 This reference section explains in detail how to use \jscsim\ to implement new
-communication schemes, how to analyze them, and how to build custom scheme
+communication schemes, how to simulate them, and how to build custom scheme
 processors. 
 
 
