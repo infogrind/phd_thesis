@@ -1,5 +1,20 @@
 #!/bin/bash
 
+# ASSUMPTIONS:
+# - Thesis dependency file is called thesis.deplist (can be changed below).
+# - This script is run in a directory called thesis.
+# - In the current directory's parent directory, there is NO file called
+#   thesis.tar, otherwise it will be overwritten. 
+
+# Required programs:
+# - bash (tested with GNU bash version 3.2.17(1)-release (i386-apple-darwin9.0))
+# - make (tested with GNU Make 3.81)
+# - perl (for latexmk; tested with perl v5.8.8)
+# - tar  (tested with GNU tar 1.22)
+# - ruby (for scandeps; tested with ruby 1.8.6 (2009-06-08 patchlevel 369))
+
+# To build all dependencies, MATLAB is also needed. (Tested for release R2009b.)
+
 TARGET=~/phdthesis_mariuskleiner.tar.gz
 TMPDIR=${TEMP-/tmp}
 BASEDIR=`ruby -e 'puts (0...12).map{?a.+(rand(26)).chr}.join()'`
