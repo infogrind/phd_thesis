@@ -81,10 +81,8 @@ force : clean all
 #
 # etc...
 thesis.pdf : subdirs thesis.tex packages.tex tikzstyles.tex theoremdefs.tex \
-	$(wildcard ch_*.tex) mk_publications.bbl $(BIBFILE)
-
-mk_publications.bbl : mk_publications.tex $(BIBFILE)
-	$(LATEXMK) $<
+	$(wildcard ch_*.tex) mk_publications.tex $(BIBFILE)
+	$(LATEXMK) -dependents -pdf -g 2>&1 | tee $(JOBNAME).deplist
 
 
 # Add here subdirectories where you would like 'make' to run recursively. 
@@ -114,13 +112,13 @@ subdirs : $(SUBDIRS)
 $(SUBDIRS) : 
 	$(MAKE) --directory=$@
 
-# Compile latex to pdf
-%.pdf : %.tex
-	$(LATEXMK) -dependents -g -pdf $< 2>&1 | tee $*.deplist
+## Compile latex to pdf
+#%.pdf : %.tex
+#	$(LATEXMK) -dependents -g -pdf $< 2>&1 | tee $*.deplist
 
-# Compile latex to postscript
-%.ps : %.tex
-	$(LATEXMK) -g -ps $<
+## Compile latex to postscript
+#%.ps : %.tex
+#	$(LATEXMK) -g -ps $<
 
 # Convert EPS to PDF
 %.pdf : %.eps

@@ -29,7 +29,7 @@ fi
 
 # Prepare everything
 echo "Building thesis..."
-if make > /dev/null; then
+if make; then
     echo "Successfully built thesis."
 else
     echo "There was an error building the thesis."

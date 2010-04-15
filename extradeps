@@ -12,3 +12,5 @@ figures/*.table
 /Users/marius/Library/texmf/tex/generic/pgf/basiclayer/pgfcoreimage.code.tex
 /Users/marius/Library/texmf/tex/generic/pgf/basiclayer/pgfcoreshade.code.tex
 /Users/marius/bin/latexmk
+/Users/marius/Library/texmf/tex/generic/pgf/utilities/pgfkeysfiltered.code.tex
+/Users/marius/Library/texmf/tex/generic/pgf/basiclayer/pgfcoreobjects.code.tex
