@@ -1,5 +1,5 @@
 # Program names
-LATEXMK = latexmk
+LATEXMK = ./latexmk
 EPSTOPDF = epstopdf
 FIG2DEV = fig2dev
 MATLAB = matlab
@@ -106,7 +106,7 @@ clean :
 	rm -Rf $(TEXPS) $(TEXPDF) $(FIGPDF) $(EPSPDF) $(FIGPS) $(FIG_T) 	\
 		$(MPDF) $(MPS) $(LATEXAUX) $(CLEAN) $(JOBNAME).*.gnuplot \
 	$(JOBNAME).*.table ; \
-	latexmk -C; \
+	$(LATEXMK) -C; \
 		for d in $(SUBDIRS); do $(MAKE) --directory=$$d clean; done
 
 subdirs : $(SUBDIRS)

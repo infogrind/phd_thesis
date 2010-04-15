@@ -1,0 +1,67 @@
+#!/bin/bash
+
+TARGET=~/phdthesis_mariuskleiner.tar.gz
+TMPDIR=${TEMP-/tmp}
+BASEDIR=`ruby -e 'puts (0...12).map{?a.+(rand(26)).chr}.join()'`
+TARGETDIR="$TMPDIR/$BASEDIR" 
+LATEXARC=thesis_latexdeps.tar.gz
+LATEXDEPS=thesis.deplist
+
+if [ -e $TARGET ]; then
+    echo "Target $TARGET already exists, stopping."
+    exit 1
+fi
+
+# Prepare everything
+echo "Building thesis..."
+if make > /dev/null; then
+    echo "Successfully built thesis."
+else
+    echo "There was an error building the thesis."
+    exit 1
+fi
+
+echo Creating directory $TARGETDIR
+mkdir $TARGETDIR
+
+# Create archive
+pushd . > /dev/null
+cd ..
+echo "Creating thesis archive, excluding svn files."
+tar cvf thesis.tar thesis --exclude '.svn' > /dev/null || \
+    (echo "Error creating thesis archive."; exit 1)
+echo "Unpacking thesis archive to temporary directory $TARGETDIR."
+tar xvf thesis.tar --directory $TARGETDIR > /dev/null || \
+    (echo "Error unpacking thesis archive."; exit 1)
+rm thesis.tar
+popd > /dev/null
+
+# Create latex dependencies
+echo Creating latex dependency file
+./scandeps -e extradeps -o $LATEXARC $LATEXDEPS
+
+# Unpack dependencies to target directory
+if [ ! -e $LATEXARC ]; then
+    echo "Error: $LATEXARC not found!"
+    exit 1
+fi
+echo "Unpacking latex dependency file to temporary directory $TARGETDIR."
+tar xvfz $LATEXARC --directory $TARGETDIR > /dev/null  || \
+    (echo "Error unpacking latex dependencies."; exit 1)
+
+# Create final archive
+cd $TARGETDIR
+echo "Creating final archive $TARGET from temporary directory $TARGETDIR."
+tar cvfz $TARGET thesis > /dev/null || \
+    (echo "Error creating final archive $TARGET."; exit 1)
+
+# Clean up
+echo Cleaning up
+rm -Rf $TARGETDIR
+
+if [ -e $TARGET ]; then
+    echo "Sucessfully created $TARGET."
+else
+    echo "Somehow I could not create $TARGET."
+    exit 1
+fi

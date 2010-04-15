@@ -1,0 +1,14 @@
+simulator/@UncodedScheme/UncodedScheme.m
+figures/matlab/ex_uncoded.minc
+figures/matlab/ex_shannonscheme.minc
+figures/matlab/PerformanceProcessor_ex.minc
+figures/matlab/Scheme.minc
+figures/matlab/TheoreticalScheme.minc
+figures/matlab/PracticalScheme.minc
+figures/matlab/SchemeProcessor.minc
+latexmkrc
+Makefile
+figures/*.table
+/Users/marius/Library/texmf/tex/generic/pgf/basiclayer/pgfcoreimage.code.tex
+/Users/marius/Library/texmf/tex/generic/pgf/basiclayer/pgfcoreshade.code.tex
+/Users/marius/bin/latexmk
