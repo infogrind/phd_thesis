@@ -116,7 +116,7 @@ $(SUBDIRS) :
 
 # Compile latex to pdf
 %.pdf : %.tex
-	$(LATEXMK) -g -pdf $<
+	$(LATEXMK) -dependents -g -pdf $< 2>&1 | tee $*.deplist
 
 # Compile latex to postscript
 %.ps : %.tex
