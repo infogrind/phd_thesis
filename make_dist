@@ -53,7 +53,8 @@ popd > /dev/null
 
 # Create latex dependencies
 echo Creating latex dependency file
-./scandeps -e extradeps -o $LATEXARC $LATEXDEPS
+#./scandeps -e extradeps -o $LATEXARC $LATEXDEPS
+./scandeps -o $LATEXARC $LATEXDEPS
 
 # Unpack dependencies to target directory
 if [ ! -e $LATEXARC ]; then

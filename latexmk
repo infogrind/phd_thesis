@@ -108,8 +108,8 @@ use warnings;
 
 $my_name = 'latexmk';
 $My_name = 'Latexmk';
-$version_num = '4.15';
-$version_details = "$My_name, John Collins, 7 April 2010";
+$version_num = '4.15c';
+$version_details = "$My_name, John Collins, 16 April 2010";
 
 
 use Config;
@@ -119,7 +119,7 @@ use FileHandle;
 use File::Find;
 use Cwd;            # To be able to change cwd
 use Cwd "chdir";    # Ensure $ENV{PWD}  tracks cwd
-use Digest;
+use Digest::MD5;
 
 #use strict;
 
@@ -178,6 +178,18 @@ else {
 ##
 ##   Modification log from 22 Jan 2010 onwards in detail
 ##
+##     16 Apr 2010, John Collins  V. 4.15c.  Correct line wrapping issue.
+##     12 Apr 2010, John Collins  V. 4.15b.  Change 
+##                            use Digest;
+##                        to 
+##                            use Digest::MD5;
+##                        for TeX Live compatibility. Needed also to change 
+##                            my $md5 = Digest->MD5;
+##                        to
+##                            my $md5 = Digest::MD5->new;
+##
+##      8 Apr 2010, John Collins  V. 4.15a.  Better defaults for system
+##                                  configuration file under cygwin
 ##      7 Apr 2010, John Collins  V. 4.15: Change defaults on 
 ##                           $latex_silent_switch and $pdflatex_silent_switch
 ##                                to make them TeXLive compatible always
@@ -574,8 +586,15 @@ elsif ( $^O eq "cygwin" ) {
 
     ## List of possibilities for the system-wide initialization file.  
     ## The first one found (if any) is used.
-    ## We can stay with MSWin files here, since perl understands them,
-    @rc_system_files = ( 'C:/latexmk/LatexMk' );
+    ## We could stay with MSWin files here, since cygwin perl understands them
+    ## @rc_system_files = ( 'C:/latexmk/LatexMk' );
+    ## But they are deprecated in v. 1.7.  So use the UNIX version, prefixed
+    ##   with a cygwin equivalent of the MSWin location
+    @rc_system_files = 
+     ( '/cygdrive/c/latexmk/LatexMk', 
+       '/opt/local/share/latexmk/LatexMk', 
+       '/usr/local/share/latexmk/LatexMk',
+       '/usr/local/lib/latexmk/LatexMk' );
 
     $search_path_separator = ';';  # Separator of elements in search_path
     # This is tricky.  The search_path_separator depends on the kind
@@ -2844,8 +2863,12 @@ sub parse_logB {
         #    characters.  So we recover the unwrapped line(s) simply 
         #    by deleting the end-of-line following a line of exactly 
         #    $log_wrap characters.  
+        # The above is false.  Sometimes there's no extra end-of-line
+        #    character.  So keep both options open by putting the
+        #    line into the array before and after appending the next line: 
         my $len = length($_);
         while ( ($len == $log_wrap) && !eof($log_file) ) {
+            push @lines, $_;
             my $extra = <$log_file>;
             $extra =~ s/[\n\r]*$//;
             $len = length($extra);
@@ -5936,7 +5959,7 @@ sub get_time_size_raw
 sub get_checksum_md5 {
     my $source = shift;
     my $input = new FileHandle;
-    my $md5 = Digest->MD5;
+    my $md5 = Digest::MD5->new;
     my $ignore_pattern = '';
 
 #warn "======= GETTING MD5: $source\n";

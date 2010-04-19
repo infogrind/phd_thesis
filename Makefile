@@ -100,12 +100,17 @@ CLEAN += $(JOBNAME)-figure.*
 # - All .ps and .pdf files for which a .tex file of the same name exists
 # - All .ps, .pdf, and _t files for which a .fig files exists
 # - All auxiliary latex files (.aux, .log, .bbl, .dvi, ...)
-clean :
+clean : cleansubdirs localclean
+
+
+localclean :
 	rm -Rf $(TEXPS) $(TEXPDF) $(FIGPDF) $(EPSPDF) $(FIGPS) $(FIG_T) 	\
 		$(MPDF) $(MPS) $(LATEXAUX) $(CLEAN) $(JOBNAME).*.gnuplot \
 	$(JOBNAME).*.table ; \
-	$(LATEXMK) -C; \
-		for d in $(SUBDIRS); do $(MAKE) --directory=$$d clean; done
+	$(LATEXMK) -C
+
+cleansubdirs : 
+	for d in $(SUBDIRS); do $(MAKE) --directory=$$d clean; done
 
 subdirs : $(SUBDIRS)
   
