@@ -651,11 +651,32 @@ code that processes it during simulation, but shouldn't have to think about both
 tasks at the same time.  For this reason, the core classes that make up \jscsim\
 are divided into two categories. In the first category are the \emph{scheme
 classes} (or simply 'schemes'), which are classes that implement communication
-schemes and have the class |Scheme| as their common ancestor. The second
-category consists of  \emph{scheme processors}, which are classes that implement
-the processing of a particular quantity (such as the MSE) during the simulation
-of a single or of a family of communication schemes. Scheme processors derive
-from the common ancestor class |SchemeProcessor|. 
+schemes and have the class |Scheme| as their common ancestor. \secref{ooforsim}
+already covered why it makes sense to implement communication schemes as
+classes. 
+
+The second category consists of  \emph{scheme processors}, which are classes
+that implement the processing of a particular quantity (such as the MSE) during
+the simulation of a single or of a family of communication schemes. Scheme
+processors derive from the common ancestor class |SchemeProcessor|. What is the
+motivation behind organizing the processing code in this way? The ``processing''
+of a communication scheme consists of two steps:
+\begin{enumerate}
+  \item simulating the scheme by feeding the encoder with randomly generated
+    source samples, transforming the encoder output by simulating a noisy
+    channel (\eg, by adding Gaussian noise), and passing the channel output to
+    the decoder
+  \item gathering relevant data, \eg, the mean squared error or other
+    performance criteria, after the simulation has run, and displaying it
+\end{enumerate}
+The base class |SchemeProcessor| essentially implements the first
+step.\footnote{To be exact, as this section will explain, some of the simulation
+code is actually in the class \texttt{PracticalScheme}.} The
+second step is implemented in derived classes such as
+|Performance|\-|Processor| (which computes and plots the achieved SDR). This
+structure makes it possible to quickly implement new processor classes to
+analyze arbitrary quantities of a communication scheme or of a set of schemes,
+as the examples in the previous section show.
 
 Based on the reasonable assumption that you implement a particular
 communication scheme in \jscsim\ because you eventually want to simulate it, you never directly instantiate a scheme class. Rather, you create a
