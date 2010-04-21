@@ -16,11 +16,11 @@ encoded at once, the better the reconstruction quality one can expect at the
 receiver. This is because a longer sequence of data is more likely to contain a
 \emph{structure} that can be efficiently exploited. 
 
-However, encoding a long information sequence at a time can cause delay, as the
-encoder has to wait until the source has produced enough data. Suppose your cell
-phone encoded ten seconds of audio at once. This may increase the quality of
-your voice at the receiver, but your conversation partner will hardly care about
-this if she hears your voice only ten seconds after you started talking.  
+However, encoding long blocks of data at a time causes delay, as the encoder has
+to wait until the source has produced enough data. Suppose your cell phone
+encoded ten seconds of audio at once. This may increase the quality of your
+voice at the receiver, but your conversation partner will hardly care about this
+if she hears your voice only ten seconds after you have started talking.  
 
 The subject of this thesis is communication under a strict delay constraint. In
 particular, the following themes are addressed. 
@@ -61,15 +61,15 @@ particular, the following themes are addressed.
   \item \textbf{Simulation.} For the communication engineer, simulations are a
     valuable tool. For all their limitations, they not only help to quickly test
     new ideas and to determine which ones deserve a more thorough theoretical
-    analysis, they also allow one to perform a reality check on theoretical
+    analysis, but they also allow one to perform a reality check on theoretical
     derivations.
 
-    The ideas to be simulated are often simple enough that an engineer can write
-    a complete simulator from the ground up. However, simulation code often
-    becomes cluttered up from countless modifications in countless places, which
-    gradually decreases clarity and productivity. Sometimes, a simulator changes
-    so much over time that it is no longer possible to reproduce previous
-    results.
+    The ideas to be simulated are in most cases simple enough that an engineer
+    can write a complete simulator from the ground up. Over time, however,
+    simulation code often becomes cluttered up from countless modifications in
+    countless places, which gradually decreases clarity and productivity.
+    Sometimes the original code changes so much that it is no longer possible to
+    reproduce previous results.
 
     In \chapref{simulator}, this thesis explores how the object-oriented
     programming paradigm helps to manage the complexity of simulators while at
@@ -187,7 +187,7 @@ operate at the maximal fidelity per cost ratio.
 \bchapref{simulator} is of a more practical nature. It argues that
 object-oriented programming is particularly suitable for implementing
 simulations and presents a complete simulator for joint source-channel coding
-that allows fast and easy testing of arbitrary point-to-point communication
+that allows for fast and easy testing of arbitrary point-to-point communication
 schemes. 
 
 Lastly, \bchapref{conclusions} presents conclusions and possible directions for
