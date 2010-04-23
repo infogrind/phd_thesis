@@ -6,7 +6,8 @@ channels.  We consider three standard communication problems, namely source
 coding with a fidelity criterion, channel coding  with a channel input
 constraint, and the combined problem of reproducing a source across a noisy
 channel. Our focus here is on discrete memoryless sources and channels, but the
-essence of our results extends to continous alphabets. 
+essence of our results extends to continous alphabets.\footnote{Up to editorial
+changes, this chapter is identical to~\cite{KleinerR2009a}.}
 
 We begin by addressing the channel coding problem in Section~\ref{sec:cuc}. We
 consider the capacity per unit cost, a concept that is traceable in various
@@ -66,8 +67,7 @@ In the last result of the present chapter we give necessary and sufficient
 conditions under which a given communication  system operates at fidelity per
 unit cost. This can be seen in analogy to \thmref{optimalityconditions}, which
 gave necessary and sufficient conditions for a communication system to be
-optimal according to \defref{optimality}.\footnote{Up to editorial changes, this
-chapter is identical to~\cite{KleinerR2009a}.}
+optimal according to \defref{optimality}.
 
 
 \section{Achieving Capacity per Unit Cost}
@@ -334,11 +334,11 @@ unique (up to a scaling factor).
 
       % First function
       \draw[color=black,domain=0.5:3.5] plot[id=cp1]
-      function{1.5 * log(1 + (x-0.5)) / log(2)} node[right] {$\beta = 0$};
+      function{1.5 * log(1 + (x-0.5)) / log(2)} node[above] {$\beta = 0$};
 
       % Second function
       \draw[color=black,domain=2.5:5.5] plot[id=cp2]
-      function{1.5 * log(1 + (x - 2.5)) / log(2)} node[right] {$\beta \ne 0$};
+      function{1.5 * log(1 + (x - 2.5)) / log(2)} node[above] {$\beta \ne 0$};
 
       % Label for mutual information
       \draw[dashed] (0,1.7) -- (5,1.7);
@@ -695,7 +695,7 @@ The three cases are illustrated in \figref{verduphi}.
 
 This differs from Verd\'u's approach in that the latter -- if stated in terms of
 fidelity -- defines the counterpart to the capacity per unit cost to be
-$\lim_{\Phi \searrow \Phi_0} \Phi / R(\Phi)$ regardless of the value
+$\lim_{\Phi \searrow \Phi_0} (\Phi - \Phi_0) / R(\Phi)$ regardless of the value
 of~$\Phi_0$. 
 \end{remark}
 
