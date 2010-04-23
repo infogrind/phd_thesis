@@ -5,7 +5,7 @@
 
 \RequirePackage{textfit}
 %\RequirePackage[french,german,italian,english]{babel}
-\RequirePackage[english]{babel}
+\RequirePackage[german,english]{babel}
 
 \newif\if@epfl\@epflfalse
 \newif\if@review\@reviewfalse
@@ -174,7 +174,7 @@
 \newcommand{\keywordname}{Keywords}
 \newenvironment{keywords}{%
 \iflanguage{french}{\renewcommand{\keywordname}{Mots-cl\'es}}{}
-\iflanguage{german}{}{}
+\iflanguage{german}{\renewcommand{\keywordname}{Stichw\"orter}}{}
 \iflanguage{italian}{}{}
 \iflanguage{english}{\renewcommand{\keywordname}{Keywords}}{}
 \par\vspace{\baselineskip}

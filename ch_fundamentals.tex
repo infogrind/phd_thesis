@@ -50,10 +50,11 @@ This thesis is about point-to-point communication of a memoryless source across
 a memoryless channel. In its most general form, this problem is made up of the
 following six elements, displayed schematically in \figref{scgen}.
 \begin{itemize}
-  \item A memoryless \emph{source} with distribution~$\pS$, producing a source
-    symbol every $\ts$~seconds.
-  \item A memoryless \emph{channel} with transition distribution~$\pyx$,
-    accepting an input symbol for transmission every $\tc$~seconds.
+  \item A discrete-time memoryless \emph{source} with distribution~$\pS$,
+    producing a source symbol every $\ts$~seconds.
+  \item A discrete-time memoryless \emph{channel} with transition
+    distribution~$\pyx$, accepting an input symbol for transmission every
+    $\tc$~seconds.
   \item An \emph{encoder} function~$f$ that maps a block of~$k$ source symbols
     $S^k = (S_1, \dots, S_k)$ into $n$~channel input symbols $X^n = (X_1, \dots,
     X_n)$.
@@ -81,7 +82,7 @@ length $k\ts$ (or $n\tc$).
 \end{figure}
 
 If the discrete-time source and channel represent an underlying continuous
-bandlimited source and channel, $\ts$ and $\tc$ relate directly to
+bandlimited source and channel, the sampling theorem relates $\ts$ and $\tc$ to
 the respective bandwidths. If $\ts = \tc$, one therefore says that the source
 and channel are \emph{bandwidth matched}. Correspondingly, a code is said to be
 \emph{bandwidth matched} if $k=n$, to be a \emph{bandwidth expansion} code if $k
@@ -146,11 +147,11 @@ communication problem.
 \begin{definition}
   \label{def:achievableregion}
   For a given source~$\ps$ producing a symbol every $\ts$~seconds, a
-  channel~$\pyx$ accepting an input every $\tc$~second, a cost measure~$\rho(x)$
-  and a distortion measure~$d(s,\sh)$, the \emph{achievable cost\slash
-  distortion region} is the set of all pairs $(D,P)$ for which there exists  a
-  sequence of codes that approach the distortion~$D$ and the cost~$P$ in the
-  limit.
+  channel~$\pyx$ accepting an input every $\tc$~seconds, a cost
+  measure~$\rho(x)$ and a distortion measure~$d(s,\sh)$, the \emph{achievable
+  cost\slash distortion region} is the set of all pairs $(D,P)$ for which there
+  exists  a sequence of codes that approach the distortion~$D$ and the cost~$P$
+  in the limit.
 \end{definition}
 
 The most fundamental bound on the achievable cost/distortion region is given by
@@ -309,9 +310,9 @@ code.
 In situations where external circumstances (such as real-time communication) put
 a constraint on the tolerable delay, the flexibility of separate source and
 channel coding must be sacrificed in favor of codes that are designed jointly
-for a particular source and a channel. As we will see shortly, there exist such
-joint source-channel codes that perform as good as any separation-based code,
-yet only cause minimal delay.
+for a particular source and a particular channel. As we will see shortly, there
+exist such joint source-channel codes that perform as good as any
+separation-based code, yet only cause minimal delay.
 
 \begin{remark}
   \label{rem:blocklength}
@@ -322,7 +323,7 @@ yet only cause minimal delay.
   other hand, the block length of a channel code is the length $n$ of each
   channel input codeword. Rather than attempting to define the block length of a
   joint source-channel code one way or the other, we prefer to avoid the term
-  block length altogether in the context of such codes. 
+  block length altogether in the context of joint source-channel codes. 
 \end{remark}
 
 From a theoretical point of view, the drawback of codes with a delay limit is
@@ -404,7 +405,7 @@ or equivalently
   \label{eq:gausssepsdr}
   \sdr \le (1 + \snr)^{n/k},
 \end{equation}
-where we have defined the \emph{source-to-distortion ratio} $\sdr = \ssq/D$ and
+where we have defined the \emph{signal-to-distortion ratio} $\sdr = \ssq/D$ and
 the \emph{signal-to-noise ratio} $\snr = P/\szq$. 
 
 
@@ -457,13 +458,13 @@ precise and extensively discussed in~\cite{GastparRV2003}.
 \subsection{Bandwidth Expansion}\label{sec:gaussbwex}
 
 Does a similarly simple transmission scheme exist for the Gaussian case when the
-channel accepts more than one input for each source symbol, \ie, $\tc > \ts$?
-Unfortunately, no. In fact, the performance of any code that encodes a single
-Gaussian source symbol into $n>1$~inputs to a Gaussian channel is strictly
-bounded away from the optimum given by~\eqref{eq:gausssep}~\cite{IngberLZF2008}.
-The bound given in~\cite{IngberLZF2008} is not necessarily tight, however, so
-the region of achievable cost and distortion pairs is not known when $k = 1$ and
-$n > 1$. 
+channel accepts more than one input for each source symbol, \ie, when $\tc <
+\ts$?  Unfortunately, no. In fact, the performance of any code that encodes a
+single Gaussian source symbol into $n>1$~inputs to a Gaussian channel is
+strictly bounded away from the optimum given
+by~\eqref{eq:gausssep}~\cite{IngberLZF2008}.  The bound given
+in~\cite{IngberLZF2008} is not necessarily tight, however, so the region of
+achievable cost and distortion pairs is not known when $k = 1$ and $n > 1$. 
 
 While conditions~1 and~6 of \thmref{optimalityconditions} can still be achieved
 by a simple linear encoder and a MMSE decoder (just as in \exref{gausssingle}),
@@ -513,9 +514,9 @@ bound~\eqref{eq:gausssep} with equality, as the following example demonstrates.
 \begin{example}
   \label{ex:gaussfb}
   In this example, a memoryless Gaussian source of variance~$\ssq$ is
-  transmitted across a memoryless Gaussian channel with power constraint~$P$ and
-  noise variance~$\szq$.  Define $E_0 = S$. In the $i\th$ channel use ($i = 1$,
-  \dots, $n$), the encoder produces
+  transmitted across $n$~uses of a memoryless Gaussian channel with power
+  constraint~$P$ and noise variance~$\szq$.  Define $E_0 = S$. In the $i\th$
+  channel use ($i = 1$, \dots, $n$), the encoder produces
   \begin{equation}
     \label{eq:gaussfbxi}
     X_i = \sqrt{\frac{P}{\Var E_{i-1}}} E_{i-1}.
@@ -566,20 +567,20 @@ measure and distortion measure, respectively. The transmission scheme of
 \exref{gaussfb} in addition satisfies all other conditions of
 \thmref{optimalityconditions}. In particular, it produces a sequence of
 independent channel outputs.\footnote{It might not be obvious at first glance
-why the channel output sequence is independent, given that $Y_i$ depends on
-$X_i$, which is computed as a function of the past outputs. Note, however, that
+why the channel outputs are independent, given that $Y_i$ depends on $X_i$,
+which is computed itself as a function of the past outputs. Note, however, that
 the encoder~\eqref{eq:gaussfbxi} is specifically chosen such that each $X_i$ is
 Gaussian with zero mean and variance~$P$, regardless of the past channel
 outputs. Thus, $p(x_i | y_1, \dots, y_{i-1})$ has the same distribution whatever
 the values of $y_1$, \dots, $y_{i-1}$. The key to understanding this is the
 distinction between statistical dependence and causal dependence: $X_i$ is
 \emph{causally} dependent on the past outputs, but this causal dependence is
-chosen such that it becomes \emph{statistically} independent of them.}
-Again, we may ask if this is just due to some
-special property of the Gaussian distribution. And again, the answer is no: the
-next section explains how, using feedback, one can design a minimal-delay
-encoder that produces a sequence of independent, capacity achieving output
-symbols for any channel (and any cost measure).
+chosen such that it becomes \emph{statistically} independent of them.} Again, we
+may ask if this is just due to some special property of the Gaussian
+distribution. And again, the answer is no: the next section explains how, using
+feedback, one can design a minimal-delay encoder that produces a sequence of
+independent, capacity achieving output symbols for any channel (and any cost
+measure).
 
 
 \subsubsection{Exploiting Feedback Via Posterior Matching}
@@ -697,7 +698,7 @@ Let us now derive the posterior matching encoder for the communication system of
   which coincides with~\eqref{eq:gaussfbxi} in \exref{gaussfb} when~$i=1$.
 
   Given $Y_1$, $S$ is Gaussian with mean $\E[S|Y_1]$ and variance
-  \[ Var(S|Y_1) = \E[(S-\E[S|Y_1])^2 | Y_1] = \Var(S-\E[S|Y_1]), \]
+  \[ \Var(S|Y_1) = \E[(S-\E[S|Y_1])^2 | Y_1] = \Var(S-\E[S|Y_1]), \]
   since the error $S - \E[S|Y_1]$ is orthogonal to~$Y_1$ (according to the
   properties of the conditional mean).  Following~\eqref{eq:posteriorxi}, the
   second channel input is thus
@@ -813,12 +814,12 @@ turns the channel into an essentially error-free link, the encoder knows (with
 high probability) the decoder's estimate after $n-1$ channel uses, just like
 when there is feedback.
 
-Let $\Sh'$ be the receiver's estimate after $n-1$ channel uses. According to the
-separation theorem and because we have assumed perfect codes,
-the estimation error satisfies $\E[(\Sh' - S)^2] = \ssq / (1 + \snr)^{n-1}$ (up
-to an arbitrary $\e > 0$). If the encoder transmits the error $E = \Sh' - S$
-uncoded in the $n\th$ channel use and the receiver estimates it as~$\Eh$, the
-resulting estimation error satisfies
+Let $\Sh'$ be the receiver's estimate after $n-1$ channel uses and suppose the
+encoder indeed knows~$\Sh'$. According to the separation theorem and because we
+have assumed perfect codes, the estimation error satisfies $\E[(\Sh' - S)^2] =
+\ssq / (1 + \snr)^{n-1}$ (up to an arbitrarily small $\e > 0$). If the encoder
+transmits the error $E = \Sh' - S$ uncoded in the $n\th$ channel use and the
+receiver estimates it as~$\Eh$, the resulting estimation error satisfies
 \begin{align*}
   \E[(\Eh - E)^2] &= \frac{\E[E^2]}{ 1 + \snr } \\
   &= \frac{\ssq}{(1 + \snr)^n}
