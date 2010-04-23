@@ -52,7 +52,7 @@
       % Add the quantizers and the adder nodes and scalers below them.
       \path (b\i\j)
       +(3,0)
-      node[sq] (quant\i\j) {Q}
+      node[sq] (quant\i\j) {Quantizer}
       +(0,-3)
       node[smallplus] (plus1\i\j) {$+$}
       +(0,-5.25)

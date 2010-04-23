@@ -35,7 +35,7 @@
       % Add the quantizers and the adder nodes and scalers below them.
       \path (b\i\j)
       +(1,0)
-      node[sq] (quant\i\j) {Q}
+      node[sq] (quant\i\j) {Quantizer}
       +(3,0)
       node[trir] (scc\i\j) {}
       +(0,-1)

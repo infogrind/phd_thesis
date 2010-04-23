@@ -2,7 +2,7 @@
 
 The main goal of this chapter is to transmit a single symbol of an analog source
 across $n$~uses of a Gaussian channel when $n > 1$. Since the optimal mean
-squared error for a given SNR (given by \thmref{separationconverse}) may not be
+squared error for a given SNR (given by \thmref{separationconverse}) is not
 achievable (see \chapref{fundamentals}), we look in this chapter at the simpler
 problem of optimizing how the SDR scales asymptotically when the SNR goes to
 infinity. 
@@ -52,8 +52,8 @@ first channel use, and then repeatedly quantizing the quantization error of the
 previous step and transmitting it across the channel. The last quantization
 error is transmitted uncoded in the $n\th$~channel use. While this strategy is
 not entirely new (see \secref{mindelbwexhist} for references to previous work),
-the work presented in this thesis provides the first exact analysis of the
-resulting SDR scaling and the optimization thereof.
+this chapter provides the first exact analysis of the resulting SDR scaling and
+the optimization thereof.
 
 The problem of transmitting a single source symbol in $n$~channel uses can be
 approached from two different perspectives. The first perspective is to take
@@ -160,17 +160,22 @@ the SDR scales as
   \label{eq:sdrscalingapprox}
   \frac{\ssq}{\E[E^2]} \cdot \frac{\E[E^2]}{\msee}.
 \end{equation}
-The right hand side is again the SDR from the uncoded transmission of~$E$ and
-scales as~$\snr$; overall, the SDR scales thus as $\snr / \E[E^2]$.
+The second term is again the SDR from uncoded transmission of~$E$ and scales
+as~$\snr$; overall, the SDR behaves thus as
+\begin{equation}
+  \label{eq:sdrscalingapprox2}
+  \sdr \approx \frac{\ssq\snr}{\E[E^2]}.
+\end{equation}
 
 There is a tradeoff in how~$Q$ (and~$E$) are chosen as a function of~$S$. If
-$Q$~is such that
-$\mseq$ decreases too slowly, the approximation~\eqref{eq:sdrscalingapprox}
-is not valid and~\eqref{eq:sdrqesep} scales instead as $\ssq / \mseq$, so the
-SDR gain from the uncoded transmission is lost.  If, on the other hand, $\mseq$
-decreases to fast then $\E[E^2]$ decreases only slowly and the overall SDR,
-$\snr / \E[E^2]$, grows only slowly with~$\snr$. It is clear, then, that the
-best SDR scaling is obtained when $\mseq$ scales the same as~$\msee$.
+$Q$~is such that $\mseq$ decreases too slowly with increasing SNR (for example
+because $Q$~is obtained by quantizing the source with a too fine resolution),
+the approximation~\eqref{eq:sdrscalingapprox2} is not valid
+and~\eqref{eq:sdrqesep} scales instead as $\ssq / \mseq$, so the SDR gain from
+the uncoded transmission is lost.  If, on the other hand, $\mseq$ decreases to
+fast then $\E[E^2]$ decreases only slowly and the overall SDR, $\snr / \E[E^2]$,
+grows only slowly with~$\snr$. It is clear, then, that the best SDR scaling is
+obtained when $\mseq$ scales the same as~$\msee$.
 
 The conclusion from all this is that to take advantage of uncoded communication
 in the last channel use, error free communication in the first $n-1$~channel
@@ -243,7 +248,12 @@ the \emph{stretch} of the signal locus. If the stretch does not depend on~$s$,
 the overall MSE simplifies to
 \begin{equation}
   \label{eq:constantstretch}
-  \mse \approx (\snr l^2)^{-1}.
+  \mse \approx (\snr l^2)^{-1}
+\end{equation}
+or equivalently
+\begin{equation}
+  \label{eq:sdrconstantstretch}
+  \sdr \approx \ssq\snr l^2.
 \end{equation}
 
 \begin{figure}
@@ -274,12 +284,12 @@ errors contribute equally to the overall error.
 There are clear parallels to the previous point of view. In the
 feedback-inspired discussion, the error from decoding~$Q$ had to be dominated by
 that from decoding~$E$ in order for the
-approximation~\eqref{eq:sdrscalingapprox} to work. Here, the error due to
+approximation~\eqref{eq:sdrscalingapprox2} to work. Here, the error due to
 decoding the wrong fold of the curve must be dominated by that from decoding the
 wrong point on the same fold, in order for the
 approximation~\eqref{eq:errorlinapprox} to be valid. Note in particular the
-striking similarity between Equations~\ref{eq:sdrscalingapprox}
-and~\ref{eq:constantstretch}: both equations express the SDR as the product of
+striking similarity between Equations~\ref{eq:sdrconstantstretch}
+and~\ref{eq:sdrscalingapprox2}: both equations express the SDR as the product of
 the SNR and a factor that should grow with the SNR but whose growth rate is
 limited by the conditions of the underlying approximation. 
 
@@ -339,7 +349,8 @@ The communication strategy described hereafter is displayed schematically on
     \input{figures/1nencoding.tex_t}
   \end{center}
   \caption{Schematic display of the encoder described in \secref{commscheme} for
-  $n = 4$.}
+  $n = 4$. The triangles represent the scaling operations of
+  Equations~\ref{eq:QEdefB} and~\ref{eq:Xdef}.}
   \label{fig:1nencoding}
 \end{figure}
 To encode a single source letter $S$ into $n$~channel input symbols $X_1$,
@@ -363,7 +374,7 @@ error~$E_1$, and so on. $E_{n-1}$ is the remaining quantization error after
 $n-1$ steps.
 
 The parameter $\beta \in \NN$ determines the quantization
-resolution; the larger~$\beta$ the finer the quantization.
+resolution; the larger~$\beta$, the finer the quantization.
 Equation~\ref{eq:QEdef} implies a partition of the source space into intervals
 of length $1/\beta^{n-1}$, as illustrated in \figvref{sourcepartition}. The
 $Q_i$ determine the interval that contains~$S$, and $E_{n-1}$ determines the
@@ -546,9 +557,9 @@ on the source distribution.
 \end{proof}
 
 The next two lemmata provide two different asymptotic lower bounds on the
-mean squared error of the transmission strategy considered, each of which is
-tighter for a different class of~$\e$. They hold regardless of the decoder used.
-(The $\Omega$-notation is defined in Appendix~\ref{app:asymptotic}.)
+mean squared error of the hybrid transmission strategy considered, each of which
+is tighter for a different class of~$\e$. They hold regardless of the decoder
+used.  (The $\Omega$-notation is defined in Appendix~\ref{app:asymptotic}.)
 
 \begin{lemma}
   \label{lem:lowerbound1}
@@ -580,6 +591,9 @@ choose~$\e(\snr)$ optimally will be the subject of Theorem~\ref{thm:scalinglb}.
   Assume $\Delta \in [0, \beta^{-(n-1)})$ and define for $j \in \Z$
   \[ \I_j^\Delta = \left[ (j - \frac12 )\beta^{-(n-1)}, 
     (j + \frac12 ) \beta^{-(n-1)} - \Delta \right).\]
+  These intervals will be used to partition the source space, as illustrated in
+  \figref{lowerbound1intervals}.
+
   It can be verified from~\eqref{eq:QEdef} that if $s \in \I_j^\Delta$ for
   some~$j$, the following properties hold: 1) $Q_i(s) = Q_i(s+\Delta)$ for
   $i=1$, \dots, $n-1$, and 2) $E_{n-1}(s+\Delta) - E_{n-1}(s) =
@@ -599,14 +613,15 @@ choose~$\e(\snr)$ optimally will be the subject of Theorem~\ref{thm:scalinglb}.
     \Delta/2) \int_{\psi(\Delta)} ds.
   \end{equation*}
   Letting $\Delta = 1/(\sqrt{\snr}\beta^{n-1})$ and using $\beta^2 \in
-  \Theta(\snr^{1-\e})$ yields (for sufficiently large~$\snr$)
+  \Theta(\snr^{1-\e})$ (see \remref{betaepswlog}) yields (for sufficiently
+  large~$\snr$)
   \begin{equation*}
     \mse \ge c \snr^{-n+(n-1)\e} Q\left(1/2\gamma\right)
     \int_{\psi(\Delta)} ds.
   \end{equation*}
 
   The proof is almost complete; it only remains to show that
-  $\int_{\psi(\Delta)}ds$ can be bounded below by a constant for large SNR. The
+  $\int_{\psi(\Delta)}ds$ can be lower bounded by a constant for large SNR. The
   length of a single interval~$\I_j^\Delta$ is $\beta^{-(n-1)} - \Delta$. Within
   $[A,B-\Delta)$ there are $(B-A-\Delta)\beta^{n-1}$ such intervals (see
   \figref{lowerbound1intervals}). The total
@@ -650,7 +665,6 @@ choose~$\e(\snr)$ optimally will be the subject of Theorem~\ref{thm:scalinglb}.
   Apply now \lemref{zivbound} with $\Delta = \beta^{-1}$. The
   parameter $\beta$ will be chosen to increase with the SNR, therefore $\Delta
   \in [0, B-A)$ holds for sufficiently large values of~$\snr$.
-
   Using~\eqref{eq:xbetadist}, the resulting bound on the mean squared error is
   \begin{equation*}
     \mse \ge \frac{\pmin}{4} \beta^{-2}
@@ -662,8 +676,9 @@ choose~$\e(\snr)$ optimally will be the subject of Theorem~\ref{thm:scalinglb}.
   $\limtoinf{\snr} \snr^{\e(\snr)} = \infty$, use the fact that $Q(x)$~converges
   to $e^{-x^2/2}/\sqrt{2\pi}x$ (cf.~\cite[\Spg 26.2.12]{AbramowitzS1964}).
   Otherwise $\snr^{\e(\snr)}$ is upper bounded by a constant, in which case
-  $Q(x)$ is lower bounded for $x = \snr^{\e(\snr)}$ and so is $e^{-x^2/2}/x$.
-  In any case, for sufficiently large values of~$\snr$,
+  $Q(x)$ is bounded above and below by constants for $x = \snr^{\e(\snr)}$, and
+  $e^{-x^2/2}/x$ is equally upper and lower bounded.  In any case, for
+  sufficiently large values of~$\snr$,
   \begin{equation*}
     \mse \ge c_1 \snr^{-1 + \e/2} \exp\{-c_2\snr^\e\},
   \end{equation*}
@@ -681,8 +696,8 @@ choose~$\e(\snr)$ optimally will be the subject of Theorem~\ref{thm:scalinglb}.
   } % end centerline
   \caption{Geometric view of the proofs of \lemref{lowerbound1} (left) and
   \lemref{lowerbound2} (right) for $n = 2$. In the former case, $s$ and $s +
-  \Delta$ are mapped to the same line segment, whereas in the latter case they
-  are mapped to adjacent segments but at the same ``height''.}
+  \Delta$ are mapped to the same segment of the signal locus, whereas in the
+  latter case they are mapped to adjacent segments but at the same ``height''.}
   \label{fig:sdrubproof}
 \end{figure}
 
@@ -703,7 +718,7 @@ result of this section.
   Define $W(x)$ to be the function that satisfies $W(x)e^{W(x)} = x$ for $x >
   0$.  This function is well defined and is sometimes called the \emph{Lambert
   $W$-function}~\textnormal{\cite{CorlessGHJK1996}}. Then for $\snr > 1$ and
-  arbitrary real constants $a$, $b>0$, and $c > 0$, 
+  arbitrary real constants $a$, $b>0$, and $c > 0$, it holds that
   \begin{equation}
     \label{eq:epsequation}
     \snr^{a+b\e} = \exp\{-c\snr^\e\},
@@ -717,8 +732,8 @@ result of this section.
 
 \begin{proof}
   Let $\snr>1$. Since $\snr^{a+b\e}$ is strictly increasing and
-  $\exp\{-c \snr^\e\}$ is strictly decreasing in~$\e$, there is at most one
-  solution to~\eqref{eq:epsequation}.  Assume now $\snr^\e$ is as
+  $\exp\{-c \snr^\e\}$ is strictly decreasing in~$\snr^\e$, there is at most one
+  solution to~\eqref{eq:epsequation} in~$\snr^\e$.  Assume now $\snr^\e$ is as
   in~\eqref{eq:epssolution}. Then
   \begin{equation*}
     \exp\{-c \snr^\e\} = \exp\{-b W(c \snr^{-a/b}/b)\}.
@@ -961,7 +976,7 @@ E_{n-1})^2]$.
     &= \frac{\seq}{1 + \snr\seq/\gamma^2} \\
     & < \frac{\gamma^2}{\snr}.
   \end{align*}
-  Since $\gamma$ is independent of~SNR (cf.\
+  Since $\gamma$ is independent of the SNR (cf.\
   Proposition~\ref{prop:qeproperties}), $\Ee \in O(\snr^{-1})$ as claimed.
 \end{proof}
 
@@ -1009,7 +1024,8 @@ SDR scaling upper bound of \thmref{scalinglb}.
   \caption{Simulation results illustrating the tradeoff represented by the
   choice of~$\e$ for $n = 4$. For larger~$\e$, the error from decoding the
   discrete signal part decays quickly but the final scaling is less good, while
-  for smaller~$\e$ the opposite holds.}
+  for smaller~$\e$ the opposite holds. The theoretically optimal curve
+  corresponds to {\normalfont$\sdr = (1 + \snr)^n$}.}
   \label{fig:scalarcomparison}
 \end{figure}
 
@@ -1059,8 +1075,9 @@ provided in \appref{latticebasics}.
 
 To anticipate the conclusion of this section, it turns out that the SDR scaling
 achieved for $m=1$ cannot be improved upon by choosing a larger~$m$. Choosing a
-larger~$m$ and thus a lattice of larger dimension can however result in larger
-multiplicative constants and thus increase the SDR for any given SNR.
+larger~$m$ and thus a lattice of larger dimension can however result in faster
+convergence to the asymptotic scaling and thus increase the SDR for low SNR
+values (see \figref{sim_latticeperf} for a preview).
 
 
 \subsection{Transmission Strategy}
@@ -1076,12 +1093,14 @@ For $i = 1$, \ldots, $n-1$ define
   \Q_i &= \QLb(\Evc_{i-1})  \nonumber \\
   \Evc_i &= \beta ( \Evc_{i-1} - \Q_i), \label{eq:latticeQE}
 \end{align}
-where $\beta \in \NN$. According to \lemref{latquantvar}, $\E[\|\Q_i\|^2]$~is
-upper bounded by a constant independent of~$\beta$. Moreover, $\Evc_i$
-is contained within the Voronoi region of~$\Lambda$ around the origin, so by
-\lemref{voronoivarbound} $\E[\|\Evc_i\|^2]$ is also upper bounded independent
-of~$\beta$. Let $\gamma$~denote the common upper bound on~$\E[\|\Q_i\|^2]/m$
-and~$\E[\|\Evc_i\|^2]/m$.  The channel inputs are then given by
+where $\beta \in \NN$ and where $\QLb(\cdot)$ denotes quantization with respect
+to the lattice $\Lambda/\beta$. According to \lemref{latquantvar} (in the
+appendix), $\E[\|\Q_i\|^2]$~is upper bounded by a constant independent
+of~$\beta$.  Moreover, $\Evc_i$ is contained within the Voronoi region
+of~$\Lambda$ around the origin, so by \lemref{voronoivarbound}
+$\E[\|\Evc_i\|^2]$ is also upper bounded independent of~$\beta$. Let
+$\gamma$~denote the common upper bound on~$\E[\|\Q_i\|^2]/m$
+and~$\E[\|\Evc_i\|^2]/m$.  The channel inputs are then computed as
 \begin{align*}
   \X_i &= \frac{\sqrt{P}}{\gamma} \Q_i \quad \text{for $i = 1$, \dots, $n-1$
   and} \\
@@ -1157,7 +1176,7 @@ statements are in fact identical to the scalar case.
   For an arbitrary function $\e(\snr) \ge 0$, the mean squared error of the
   lattice communication scheme satisfies
   \begin{equation*}
-    \msev \in \Omega(\snr^{-1 + \e/2} \exp\{- c \snr^\e \},
+    \msev \in \Omega(\snr^{-1 + \e/2} \exp\{- c \snr^\e \}),
   \end{equation*}
   where $c > 0$ does not depend on~$\snr$.
 \end{lemma}
@@ -1165,8 +1184,6 @@ statements are in fact identical to the scalar case.
 \begin{proof}
   See \appref{lbvecproofs}.
 \end{proof}
-
-The proofs are given in \appref{lbvecproofs}.
 
 Since Lemmata~\ref{lem:lowerbound1vec} and~\ref{lem:lowerbound2vec} are
 identical to Lemmata~\ref{lem:lowerbound1} and~\ref{lem:lowerbound2}, it is a
@@ -1302,8 +1319,8 @@ channel inputs $X_1$, \dots, $X_n$ is displayed schematically on
   \end{center}
   \caption{Schematic display of the transmission strategy of \secref{genbwexp}
   for~$k = 3$ and~$n=5$. The boxes labeled~\textsf{Q} are uniform scalar
-  quantizers with resolution~$\beta$ as described in~\eqref{eq:QEdefkn}. The
-  boxes marked ``combine'' implement the operation~\eqref{eq:Qtot}. The
+  quantizers with resolution~$\beta$ as described in~(\ref{eq:QEdefkn}). The
+  boxes marked ``combine'' implement the operation~(\ref{eq:Qtot}). The
   part marked in thick lines corresponds exactly to the encoding scheme
   described in \secref{scalarquant} to encode one source symbol into three
   channel uses; compare this with \figref{1nencoding}.}
@@ -1318,10 +1335,11 @@ the index of the source symbol, the encoder defines $E_{i,0} = S_i$ for
 each~$i$ and computes
 \begin{align}
   Q_{i,j} &= \frac{1}{\beta} \Int(\beta E_{i,j-1}) \quad\text{and} \nonumber \\
-  E_{i,j} &= \beta(E_{i,j-1} - Q_{i,j}). \label{eq:QEdefkn}
+  E_{i,j} &= \beta(E_{i,j-1} - Q_{i,j}) \label{eq:QEdefkn}
 \end{align}
+for $j = 1$, \dots, $n-k$.
 (This is exactly the same as~\eqref{eq:QEdef}, except for the addition of the
-subscript~$i$.) For each quantization level~$j = 1$, \dots, $n-k$, the
+subscript~$i$.) For each quantization level~$j$, the
 $k$~parallel quantizer outputs are combined into
 \begin{equation}
   \label{eq:Qtot}
@@ -1351,8 +1369,8 @@ all $Q_{i,j}$ and~$E_{i,j}$ for all~$\beta$. The channel inputs are thus
 
 \subsection{Decoder}
 
-Just like when $k=1$ the decoder first computes separate estimates~$\Qh_{i,j}$
-and~$E_{i,n-k}$ and then combines them into the estimates~$\Sh_i$. The
+Just like when $k=1$, the decoder first computes separate estimates~$\Qh_{i,j}$
+and~$E_{i,n-k}$ for $i = 1$, \dots, $k$ and then combines them into the estimates~$\Sh_i$. The
 $\Qh_{i,j}$ are obtained using a maximum likelihood (minimum distance) estimate
 of~$Q_{\tot,j}$ and then by breaking it down according to~\eqref{eq:Qtotinv}.
 The estimate of $Q_{\tot,j}$ is
@@ -1435,7 +1453,7 @@ Moreover, using \lemref{Eedecayk},
   \frac{n-k}{k}}).
 \end{equation}
 
-The final step is to choose $\e$ as a function of~$\snr$ (again just as
+The final step is to choose $\e$ as a function of~$\snr$ (again just like
 for~$k=1$). Let
 \begin{equation*}
   \e(\snr) = \frac{\log(n \log\snr / c)}{\log\snr}.
@@ -1574,12 +1592,12 @@ can only be increased, leading to a better MSE scaling.
 
 On the other hand, by a similar argument as that used in the proof of
 \lemref{lowerbound1}, if the stretch is constant and has value~$\ell$, then the
-SDR scales at most as $\ell^2 \snr$. Thus, if the stretch is less than
-$\snr^{(n-1)/2}$, the optimal scaling cannot be achieved. 
+SDR scales at most as $\ell^2 \snr$. Thus, if the squared stretch is less than
+$\snr^{n-1}$, the optimal scaling cannot be achieved. 
 
 This implies that to achieve the optimal SDR scaling, a piecewise continuous map
-must have a constant stretch of at least $\snr^{(n-1)/2}$. For the example of a
-uniform source with support~$[-1/2, 1/2]$, the problem of designing a good
+must have a constant squared stretch of at least $\snr^{n-1}$. For the example
+of a uniform source with support~$[-1/2, 1/2]$, the problem of designing a good
 encoder then becomes the problem of how to arrange segments of a line of total
 length $\snr^{(n-1)/2}$ in~$\R^n$ such that the resulting signal locus has good
 minimum distance properties (as explained before) while simultaneously
@@ -2080,8 +2098,8 @@ delay schemes.
       \msev \ge c_1 \Delta^2 Q(c_2 \sqrt{\snr} \beta^{n-1} \Delta) 
       \int_{\Psi(\Dv)} d\s
     \end{equation*}
-    for some positive constants~$c_1$ and~$c_2$. Letting $\Delta =
-    1/(\sqrt{\snr} \beta^{n-1})$ and $\beta^2 = \snr^{1-\e}$ yields
+    for some positive constants~$c_1$ and~$c_2$. Letting
+    $\Delta = 1/(\sqrt{\snr} \beta^{n-1})$ and $\beta^2 = \snr^{1-\e}$ yields
     \begin{equation*}
       \msev \ge c_3 \snr^{-n+(n-1)\e} \int_{\Psi(\Dv)} d\s,
     \end{equation*}
