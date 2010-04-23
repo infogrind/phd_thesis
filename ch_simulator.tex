@@ -1,5 +1,6 @@
 \chapter{JSCsim: A Joint Source--Channel Coding Simulator}
 \label{ch:simulator}
+\urldef{\jscsimurl}\url{http://ipg.epfl.ch/~kleiner/jscsim/}
 
 For a communication engineer, simulations are an invaluable tool. They can not
 only help to verify the correctness of a theoretical result, they can also
@@ -17,7 +18,8 @@ so ugly that it is easier to rewrite a new simulation from scratch rather than
 to modify the existing one. 
 
 This chapter presents \jscsim, an object-oriented simulator for joint
-source-channel coding schemes. Its main design goal is to allow rapid testing
+source-channel coding
+schemes.\footnote{\jscsimurl} Its main design goal is to allow rapid testing
 of new ideas while simultaneously keeping the code clean and free of
 redundancies. 
 
@@ -37,7 +39,7 @@ provides a detailed reference and usage manual.
 
 Before introducing \jscsim, though, the chapter starts with a short example that
 illustrates why object oriented programming is so well suited for writing
-good simulations.
+simulations.
 
 \begin{remark}
   \label{rem:oofundamentals}
@@ -91,8 +93,8 @@ scheme.}
 
 Suppose now that you want to test an alternative decoding method. For example,
 you want to see how a maximum likelihood decoder compares to an MMSE decoder. To
-this end you write the function |alt_decode()|. How do you test this function?
-You have essentially four possibilities:
+this end you implement the alternative decoder in the function |alt_decode()|.
+How do you test this function?  You have essentially four possibilities:
 \begin{enumerate}
   \item You replace the call to |decode()| in |run_simulation()| by a call to
     |alt_decode()|. The change to the existing code is only minimal. In doing
@@ -156,13 +158,13 @@ and that you have implemented |run_simulation()|, along with the functions it
 calls, as \emph{methods} of the class |Simulation|, as shown in
 \lstref{objectsim}. Creating a new simulation with an alternative |decode()|
 function now couldn't be easier: just create a \emph{derived class}\footnote{In
-many languages, derived classes are called \emph{subclasses} and base classes
-are called \emph{superclasses}. As pointed out by
-Stroustrup~\cite[\Spg12.2]{Stroustrup1997}, this is somewhat confusing because
-the capabilities of a \emph{sub}class form a \emph{super}set of those of its
-superclass (and vice versa). Hence in this text we shall stick to the terms
-\emph{base class} and \emph{derived class}.} of |Simulation| and override the
-|decode()| method, as shown in \lstref{derivedclass}. 
+many object oriented programming languages, most notably Java, derived classes
+are called \emph{subclasses} and base classes are called \emph{superclasses}. As
+pointed out by Stroustrup~\cite[\Spg12.2]{Stroustrup1997}, this is somewhat
+confusing because the capabilities of a \emph{sub}class form a \emph{super}set
+of those of its superclass (and vice versa). Hence in this text we shall stick
+to the terms \emph{base class} and \emph{derived class}.} of |Simulation| and
+override the |decode()| method, as shown in \lstref{derivedclass}. 
 
 The two versions of the simulation can then be run as follows.
 \begin{Code}
@@ -441,9 +443,9 @@ two elements and that we need to specify the parameter $n=1$ for
 |ShannonScheme|.  This parameter will be passed to the constructor of
 |ShannonScheme| as its third argument.
 
-The resulting plot is shown on \figvref{shannonscheme}. Note that a legend has
-automatically been added because we are plotting the performance of more than
-one communication scheme.
+The resulting plot is shown on \figvref{shannonscheme} and confirms that uncoded
+transmission is indeed optimal. Note that a legend has automatically been added
+because we are plotting the performance of more than one communication scheme.
 
 \begin{figure}
   \begin{center}
@@ -670,9 +672,7 @@ of a communication scheme consists of two steps:
     performance criteria, after the simulation has run, and displaying it
 \end{enumerate}
 The base class |SchemeProcessor| essentially implements the first
-step.\footnote{To be exact, as this section will explain, some of the simulation
-code is actually in the class \texttt{PracticalScheme}.} The
-second step is implemented in derived classes such as
+step. The second step is implemented in derived classes such as
 |Performance|\-|Processor| (which computes and plots the achieved SDR). This
 structure makes it possible to quickly implement new processor classes to
 analyze arbitrary quantities of a communication scheme or of a set of schemes,
@@ -685,7 +685,7 @@ indirectly -- from |SchemeProcessor|) and call its |process()| method. Note that
 you cannot create an instance of the base class |SchemeProcessor| since the
 latter contains abstract methods\footnote{An \emph{abstract method} is a
 method that is declared in a class but not implemented. For example, a class
-\texttt{Shape} may declare an abstract method \texttt{compute\_area()}, which
+\texttt{Shape} might declare an abstract method \texttt{compute\_area()}, which
 must be implemented by the derived classes \texttt{Circle}, \texttt{Square}, and
 \texttt{Triangle}. A class that has abstract methods cannot be instantiated.}
 and serves only as a template for scheme processors. The
@@ -805,10 +805,11 @@ from \texttt{Scheme} \emph{must} implement the abstract method
 \texttt{snr\_updated()}. A derived class is free not to implement the method; if
 it does not implement it, however, it remains itself an abstract class and
 cannot be instantiated either. A class can only be instantiated if it implements
-all abstract methods defined by any of its ancestors. Of course, if a base class
-\texttt{X} has already implemented an abstract class, then other classes derived
-from~\texttt{X} no longer need to implement the abstract method themselves as
-they inherit the implementation from~\texttt{X}.}
+all abstract methods defined by any of its ancestors. Of course, if a class
+\texttt{X} has already implemented an abstract class declared in one of its
+ancestors, then classes derived from~\texttt{X} no longer need to
+implement the abstract method themselves because they inherit the implementation
+from~\texttt{X}.}
 
 
 \subsubsection{Theoretical Schemes}
@@ -938,7 +939,8 @@ For instance, |PracticalScheme| also helps in arranging the source sequence in
 blocks of $k$~source symbols if a scheme encodes more than one source symbol at
 once, and scheme processors use a slightly more involved method to store schemes
 and their parameters internally than the one shown. For these details, the
-reader so inclined is invited to peruse the source code.
+reader so inclined is invited to peruse the source code, available at
+\jscsimurl.
 
 
 \section{Reference}\label{sec:reference}

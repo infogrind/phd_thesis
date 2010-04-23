@@ -1,4 +1,3 @@
-%%% MK:STARTSHOW
 classdef PracticalScheme < Scheme
     methods (Access = 'protected', Sealed = true) 
         function snr_updated(obj) 
