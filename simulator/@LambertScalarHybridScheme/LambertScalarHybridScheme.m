@@ -15,6 +15,13 @@ classdef LambertScalarHybridScheme < ScalarHybridScheme
             % We can pass an arbitrary value for e (here 1) since this class
             % will compute it dynamically as a function of the SNR.
             obj@ScalarHybridScheme(sv, s, p, 1);
+            
+            % The best determined value for c is 1/8, so we use this if nothing
+            % is provided. 
+            if nargin < 4
+                c = 1/8;
+            end
+            
             obj.c = c;
         end
         

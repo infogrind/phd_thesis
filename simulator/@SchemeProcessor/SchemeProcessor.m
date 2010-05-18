@@ -225,7 +225,7 @@ classdef SchemeProcessor < handle
             
             % First we reset the random number generator to its initial state,
             % so we get repeatable results.
-            randn('state', 0);
+            reset(RandStream.getDefaultStream);
             
             % And now we generate N(0,1) Gaussian samples, scaled to have the
             % desired variance. 

@@ -22,7 +22,7 @@ classdef PracticalScheme < Scheme
     
     methods
         function obj = PracticalScheme(sv, s, k, n)
-            obj@Scheme(sv, s)
+            obj@Scheme(sv, s);
             
             % Store rate parameters.
             obj.k = k;
