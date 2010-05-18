@@ -3,6 +3,8 @@ classdef ScalarHybridCompScheme < PracticalScheme
     %   This is a scheme to transmit an n-dimensional uniform source across
     %   a single channel use.
     
+    % $Id$
+    
     properties
         beta    % Quantization resolution.
         epsilon % To compute the quantization resolution beta.

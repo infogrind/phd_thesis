@@ -1,12 +1,19 @@
 classdef OptHybrid2DScheme < Hybrid2DScheme
-    %OPTHYBRID2DSCHEME Summary of this class goes here
-    %   Detailed explanation goes here
+    %OPTHYBRID2DSCHEME Like Hybrid2DScheme, but with epsilon = epsilon(SNR).
+    %   The difference between this scheme and Hybrid2DScheme is that in the
+    %   latter epsilon is specified as a parameter, where as here it is computed
+    %   as a function of the SNR.
+    
+    % $Id$
     
     properties
     end
     
     methods (Access = 'public')
         function obj = OptHybrid2DScheme(sv, s)
+            % The value of epsilon is determined later as a function of the SNR,
+            % but the base class requires us to specify epsilon so we just set
+            % it to 1. (Could be any other value, it is not used anyway.)
             obj@Hybrid2DScheme(sv, s, 1);
         end
     end

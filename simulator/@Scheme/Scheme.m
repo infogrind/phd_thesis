@@ -3,6 +3,14 @@ classdef Scheme < handle % MK:SHOW
     %   Any communication scheme inherits from this base class. If a scheme is
     %   practical rather than just theoretical, it should extend
     %   PracticalScheme.
+    %
+    %   This class essentially stores the parameters common to all schemes
+    %   (source variance, snr, and resulting MSE) and handles updates of the
+    %   SNR. 
+    %
+    %   The only abstract method declared by this class is snr_updated(), in
+    %   which derived classes must implement what happens when a new SNR value
+    %   is set. 
     
     % $Id$
     
@@ -27,7 +35,7 @@ classdef Scheme < handle % MK:SHOW
         % symbols. Note that this base class ignores the source symbols; only
         % classes derived from PracticalScheme will store s. 
         %%% MK:STARTSHOW
-        function obj = Scheme(sv, s)
+        function obj = Scheme(sv, s) %#ok<INUSD>
             obj.sv = sv;
         end
         

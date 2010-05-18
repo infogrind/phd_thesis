@@ -4,6 +4,8 @@ classdef SmoothAltLSHScheme < AltLambertScalarHybridScheme
     %   function is not used when computing beta, so beta can be non-integer.
     %   This results in a smoother curve while still giving a good performance.
     
+    % $Id$
+    
     properties
     end
     

@@ -2,6 +2,11 @@ classdef D4HybridScheme < HybridScheme
     %D4HYBRIDSCHEME 4-D quantization using D4 lattice for discrete part.
     %   This scheme encodes 4 source symbols into 4p channel inputs using the D4
     %   (checkerboard) lattice for quantization.
+    %
+    %   Most of the work is done in the base class, all that is done here is to
+    %   specify the lattice and the covering radius.
+    
+    % $Id$
     
     properties
     end

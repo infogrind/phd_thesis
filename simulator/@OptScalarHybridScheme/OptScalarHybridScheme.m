@@ -1,6 +1,14 @@
 classdef OptScalarHybridScheme < ScalarHybridScheme
-    %OPTSCALARHYBRIDSCHEME Summary of this class goes here
-    %   Detailed explanation goes here
+    %OPTSCALARHYBRIDSCHEME Scalar hybrid scheme with epsilon = epsilon(SNR).
+    %   As opposed to the base class, where epsilon is fixed (and specified as a
+    %   parameter), this scheme computes epsilon as a function of the SNR as in
+    %   Eq. 19 of the Globecom paper. 
+    %
+    %   While this way of computing epsilon leads to the optimal scaling, there
+    %   are better ways to compute epsilon, see e.g.
+    %   AltLambertScalarHybridScheme.
+    
+    % $Id$
     
     properties
     end

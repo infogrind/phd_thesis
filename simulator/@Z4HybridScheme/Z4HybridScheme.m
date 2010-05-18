@@ -1,7 +1,15 @@
 classdef Z4HybridScheme < HybridScheme
     %Z4HYBRIDSCHEME Hybrid scheme with Z4 lattice for quantization.
     %   This is a scheme that uses the Z4 lattice as quantizer. Its performance
-    %   should essentially be the same as that of ScalarHybridScheme.
+    %   should essentially be the same as that of ScalarHybridScheme. 
+    %
+    %   In practice, this scheme should perform a bit worse than
+    %   ScalarHybridScheme because the covering radius of 1 is a very loose
+    %   upper bound for the variance of the quantization error, and therefore
+    %   the actual transmit power will be quite a bit below the power
+    %   constraint. 
+    
+    % $Id$
     
     properties
     end

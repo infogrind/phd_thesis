@@ -1,5 +1,9 @@
 classdef ZHybridScheme < HybridScheme
     %ZHYBRIDSCHEME Quantization using integer lattice of arbitrary dimension.
+    %   This is just a generalization of Z4HybridScheme and makes the latter in
+    %   principle obsolete.
+    
+    % $Id$
     
     properties
     end

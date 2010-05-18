@@ -1,6 +1,11 @@
 classdef ScalarHybridScheme < HybridScheme
-    %SCALARHYBRIDSCHEME Summary of this class goes here
-    %   Detailed explanation goes here
+    %SCALARHYBRIDSCHEME Hybrid scheme using 1-D integer lattice.
+    %   This class implements the simples version of the quantize/uncoded hybrid
+    %   scheme described in my thesis. Since most of the general work is already
+    %   done by the base class, all we need to do here is to specify the integer
+    %   lattice.
+    
+    % $Id$
     
     properties
     end

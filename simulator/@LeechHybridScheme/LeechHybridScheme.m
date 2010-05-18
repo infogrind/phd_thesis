@@ -1,6 +1,12 @@
 classdef LeechHybridScheme < HybridScheme
     %LEECHHYBRIDSCHEME Hybrid Scheme using Leech lattice
-    %   Detailed explanation goes here
+    %   This class implements the hybrid transmission scheme using a
+    %   24-dimensional Leech lattice. 
+    %
+    %   Most of the work is done in the base class, all that is done here is to
+    %   specify the lattice and the covering radius.
+    
+    % $Id$
     
     properties
     end

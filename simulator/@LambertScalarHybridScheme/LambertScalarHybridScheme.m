@@ -1,6 +1,15 @@
 classdef LambertScalarHybridScheme < ScalarHybridScheme
     %LAMBERTSCALARHYBRIDSCHEME Computing beta using the Lambert W function.
-    %   Detailed explanation goes here
+    %   This scheme computes the parameter epsilon as a function of the SNR by
+    %   using the formula for the optimal epsilon in the MSE lower bound
+    %   theorem. 
+    % 
+    %   Especially at high SNR, the simulation results are not too reliable,
+    %   since the probability of a decoding error in Q becomes very low, while
+    %   the expected error is still not too low. Thus the simulation result is
+    %   not an accurate approximation of the expectation.
+    
+    % $Id$
     
     properties
         % This is the constant used in the lambert formula to compute
@@ -37,7 +46,8 @@ classdef LambertScalarHybridScheme < ScalarHybridScheme
                 lambertw(c * snr^(2*(n-1)/(2*n-3)) / (n - 3/2));
             
             % Set beta as a function of SNR^\epsilon.
-            b = ceil(sqrt(snr / SNRe));
+            %b = ceil(sqrt(snr / SNRe));
+            b = sqrt(snr / SNRe);
         end        
     end
 

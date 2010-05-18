@@ -1,6 +1,17 @@
 classdef PracticalScheme < Scheme
     %PRACTICALSCHEME Base class for all schemes that require simulation.
-    %   The main difference 
+    %   Practical schemes receive a sequence of source symbol. They encode it,
+    %   add Gaussian noise to the encoder output, and decode the result to get
+    %   an estimate of the source sequence. 
+    %
+    %   PracticalScheme declares two abstract methods, encode() and decode(). In
+    %   addition to the source variance and the source sequence, the constructor
+    %   accepts the parameters k and n, which denote the number k of source
+    %   symbols encoded at a time and the number n of channel input symbols
+    %   produced at a time.
+    %
+    %   Scheme processors can use the various public compute_* methods to get
+    %   data about a simulation run.
     
     % $Id$
     

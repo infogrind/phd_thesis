@@ -1,6 +1,11 @@
 classdef Hybrid2DScheme < PracticalScheme
     %HYBRID2DSCHEME Implementation of simple Globecom-style scheme for n = 2.
-    %   Detailed explanation goes here
+    %   This scheme does essentially the same as ScalarHybridScheme with
+    %   parameter n = 2. I don't quite remember why I implemented it, I believe
+    %   it had something to do that I wanted to analyze certain things
+    %   particular to 1:2 bandwidth expansion, using the Hybrid2DProcessor.
+    
+    % $Id$
     
     properties (Access = 'protected')
         epsilon

@@ -1,7 +1,8 @@
 classdef LinearScheme < PracticalScheme
     %LINEARSCHEME This class implements a linear encoder/decoder to transmit one
     %source symbol across n channel uses.
-    %   Detailed explanation goes here
+
+    % $Id$
     
     properties
     end

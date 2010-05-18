@@ -1,6 +1,16 @@
 classdef HybridScheme < PracticalScheme
-    %HYBRIDSCHEME Summary of this class goes here
-    %   Detailed explanation goes here
+    %HYBRIDSCHEME Base class for hybrid quantization/uncoded tx schemes.
+    %   HybridScheme is the abstract base class for all schemes that combine
+    %   quantization and uncoded transmission for 1:n respectively m:m*p
+    %   bandwidth expansion. 
+    %
+    %   The only variable thing is the lattice used for the quantization (which
+    %   also implies all the dimensions). This lattice must be given by the
+    %   derived classes by implementing the abstract methods lattice() and
+    %   covering_radius(). (The latter is needed to compute an upper bound to
+    %   the variance of the quantizer outputs.)
+    
+    % $Id$
     
     properties (Access = 'protected')
         % m and p mean that m source symbols are encoded into mp channel inputs.
@@ -27,7 +37,7 @@ classdef HybridScheme < PracticalScheme
     
     methods (Access = 'public')
         function obj = HybridScheme(sv, s, m, p, e)
-            % In the 'language' of PracticalScheme, k is m and n is mn.
+            % In the 'language' of PracticalScheme, k is m and n is mp.
             obj@PracticalScheme(sv, s, m, m*p);
             
             % Verify that m and p are integers.
