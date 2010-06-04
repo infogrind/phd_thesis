@@ -49,6 +49,7 @@ classdef PGFPlotsOutputModule < OutputModule
         function write_file_header(obj, fid)
             fprintf(fid, '%% vim:ft=tex\n');
             fprintf(fid, '%% THIS FILE WAS AUTOMATICALLY GENERATED.\n');
+            write_extra_headers(obj, fid);
             fprintf(fid, '\\begin{tikzpicture}\n');
             
 
@@ -56,6 +57,12 @@ classdef PGFPlotsOutputModule < OutputModule
             fprintf(fid, '\\begin{axis}[%s]\n', ...
                 optstring(obj, axisopts(obj)));
             
+        end
+        
+        % This function does nothing by default, but can be overridden by
+        % derived classes to add extra style options.
+        function write_extra_headers(obj, fid)
+            % Nothing here.
         end
         
         
@@ -97,6 +104,9 @@ classdef PGFPlotsOutputModule < OutputModule
             if ~isempty(s)
                 o{length(o) + 1} = sprintf('legend pos=%s', s);
             end
+
+            % Make legend entries left aligned rather than centered.
+            o{length(o) + 1} = 'legend style={cells={anchor=west}}';
         end
         
         
