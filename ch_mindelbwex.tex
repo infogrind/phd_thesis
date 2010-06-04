@@ -144,10 +144,9 @@ which scales as $\snr^{n-1} \cdot \snr = \snr^n$.
 
 Naturally, the constraint that a single source symbol must be encoded at a
 time prevents the use of a perfect source and channel code, which would require
-large block lenghts. Suppose thus that
-the receiver decodes not~$Q$ after $n-1$~channel uses, but that it has only an
-estimate~$\Qh$. In that case the overall estimate is $\Sh = \Qh + \Eh$ and the
-overall SDR (assuming $Q$ and~$E$ are estimated separately) is
+large block lenghts. Suppose thus that the receiver decodes not~$Q$ after
+$n-1$~channel uses, but that it has only an estimate~$\Qh$ and that it sets $\Sh
+= \Qh + \Eh$. In that case the overall SDR is
 \begin{equation}
   \label{eq:sdrqesep}
   \sdr = \frac{\ssq}{\mseq + \msee} =
@@ -172,7 +171,7 @@ $Q$~is such that $\mseq$ decreases too slowly with increasing SNR (for example
 because $Q$~is obtained by quantizing the source with a too fine resolution),
 the approximation~\eqref{eq:sdrscalingapprox2} is not valid
 and~\eqref{eq:sdrqesep} scales instead as $\ssq / \mseq$, so the SDR gain from
-the uncoded transmission is lost.  If, on the other hand, $\mseq$ decreases to
+the uncoded transmission is lost.  If, on the other hand, $\mseq$ decreases too
 fast then $\E[E^2]$ decreases only slowly and the overall SDR, $\snr / \E[E^2]$,
 grows only slowly with~$\snr$. It is clear, then, that the best SDR scaling is
 obtained when $\mseq$ scales the same as~$\msee$.
@@ -205,16 +204,16 @@ of radius~$\sqrt{P}$.
 \end{figure}
 
 The estimate that minimizes the mean squared error is the conditional mean $\E[S
-| Y^n]$. For nonlinear encoders, mathematical evaluation of the corresponding
+| Y^n]$. For nonlinear encoders, closed-form evaluation of the corresponding
 estimation error is in general hopelessly complicated. A decoder whose
 performance is easier to evaluate is the \emph{maximum likelihood} (ML) decoder.
 It computes $\sh = \arg\max_{s} f(\y|s)$, where $f(\y|s)$ is the conditional
 \pdf\ of~$\Y = (Y_1, \dots, Y_n)$ given~$S$. For the AWGN channel, $\Y = f(S) +
-\Zv$, where $\Zv$ is circularly symmetric Gaussian noise of variance~$\szq$. In
-this case $f(\y|s)$ is a decreasing function of $\|\y - f(s)\|$, so the ML
-decoder can equivalently be described by $\sh = \arg\min_{s} \|\y - f(s)\|$. It
-decides thus for $\sh$ such that $f(\sh)$ is the point on the signal curve
-closest to~$\y$. 
+\Zv$, where $\Zv$ is circularly symmetric Gaussian noise whose orthogonal
+components have variance~$\szq$. In this case $f(\y|s)$ is a decreasing function
+of $\|\y - f(s)\|$, so the ML decoder can equivalently be described by $\sh =
+\arg\min_{s} \|\y - f(s)\|$. It decides thus for $\sh$ such that $f(\sh)$ is the
+point on the signal curve closest to~$\y$. 
 
 Suppose now that the transmitted point is $f(s_0)$ and suppose further that
 $f(s)$ is differentiable in~$s_0$. Then the signal curve can be linearly
@@ -244,8 +243,8 @@ squared error given $S = s_0$ is approximately
 Expressing $f(s) = \sqrt{P} \ft(s)$, with $\E[\|\ft(S)\|^2] \le 1$, its
 derivative is
 $df(s)/ds = \sqrt{P} d\ft(s)/s$. The quantity $l(s) \deq d\ft(s)/ds$ is called
-the \emph{stretch} of the signal locus. If the stretch does not depend on~$s$,
-the overall MSE simplifies to
+the \emph{stretch factor} or simply the \emph{stretch} of the signal locus. If
+the stretch does not depend on~$s$, the overall MSE simplifies to
 \begin{equation}
   \label{eq:constantstretch}
   \mse \approx (\snr l^2)^{-1}
@@ -268,7 +267,7 @@ or equivalently
 As long as the noise level is small with respect to the distance between
 different folds of the signal curve, \eqref{eq:errorlinapprox}~is a valid
 approximation for the achieved MSE, and the latter decreases with growing
-stretch. It is clear, though, thath the MSE cannot decrease arbitrarily: a
+stretch. It is clear, though, that the MSE cannot decrease arbitrarily: a
 larger stretch implies a longer signal curve, so the folds of the curve must be
 placed closer together to satisfy the power constraint. If the stretch becomes
 too large, the small noise assumption will no longer be valid.  On the other
@@ -288,9 +287,9 @@ approximation~\eqref{eq:sdrscalingapprox2} to work. Here, the error due to
 decoding the wrong fold of the curve must be dominated by that from decoding the
 wrong point on the same fold, in order for the
 approximation~\eqref{eq:errorlinapprox} to be valid. Note in particular the
-striking similarity between Equations~\ref{eq:sdrconstantstretch}
-and~\ref{eq:sdrscalingapprox2}: both equations express the SDR as the product of
-the SNR and a factor that should grow with the SNR but whose growth rate is
+striking similarity between \eqref{eq:sdrconstantstretch}
+and~\eqref{eq:sdrscalingapprox2}: both equations express the SDR as the product
+of the SNR and a factor that should grow with the SNR but whose growth rate is
 limited by the conditions of the underlying approximation. 
 
 Translated to the geometric perspective, the principle that uncoded transmission
@@ -314,15 +313,15 @@ illustrated on \figref{hybridlocus}.
 
 \begin{remark}
   The geometric perspective provides a simple argument why a linear encoder
-  can achieve a MSE scaling of only $\snr^{-1}$, regardless of the number of
-  channel uses. The image of a linear function from $\R$ to $\R^n$ is a straight
-  line (a subspace of dimension~$1$). Applying invertible transforms at the
-  encoder and decoder, this straight line can be rotated to lie on the $X_1$
-  axis without changing the performance. The resulting constellation is such
-  that all $X_i$ for $i = 2$, \dots, $n$ are zero. Effectively, thus, only a
-  single transmission is made on the channel. The same reasoning implies that a
-  linear encoder from $\R^k$ to $\R^n$, where $k < n$, achieves a MSE scaling of
-  only $\snr^{-k}$, regardless of~$n$. 
+  cannot achieve an MSE scaling better than $\snr^{-1}$, regardless of the
+  number of channel uses. The image of a linear function from $\R$ to $\R^n$ is
+  a straight line (a subspace of dimension~$1$). Applying invertible transforms
+  at the encoder and decoder, this straight line can be rotated to lie on the
+  $X_1$ axis without changing the performance. The resulting constellation is
+  such that all $X_i$ for $i = 2$, \dots, $n$ are zero. Effectively, thus, only
+  a single transmission is made on the channel. The same reasoning implies that
+  a linear encoder from $\R^k$ to $\R^n$, where $k < n$, achieves a MSE scaling
+  of only $\snr^{-k}$, regardless of~$n$. 
 \end{remark}
 
 
@@ -342,15 +341,15 @@ in~\cite{KleinerR2009b} and~\cite{KleinerR2010}.}
 
 \subsection{Transmission Strategy}\label{sec:commscheme}
 
-The communication strategy described hereafter is displayed schematically on
+The communication strategy described hereafter is displayed schematically in
 \figref{1nencoding}.
 \begin{figure}
   \begin{center}
     \input{figures/1nencoding.tex_t}
   \end{center}
   \caption{Schematic display of the encoder described in \secref{commscheme} for
-  $n = 4$. The triangles represent the scaling operations of
-  Equations~\ref{eq:QEdefB} and~\ref{eq:Xdef}.}
+  $n = 4$. The triangles represent the scaling operations of~(\ref{eq:QEdefB})
+  and~(\ref{eq:Xdef}).}
   \label{fig:1nencoding}
 \end{figure}
 To encode a single source letter $S$ into $n$~channel input symbols $X_1$,
@@ -396,7 +395,7 @@ The following result will be useful in the sequel.
   \label{lem:Qvarbound}
   For all $i = 1$, \dots, $n-1$, the variance of $Q_i$ satisfies
   \begin{equation*}
-    \Var Q_i \le \Var E_{i-1} + \frac{\sqrt{\Var E_{i-1}}}{\beta} +
+    \E[Q_i^2] \le \E[E_{i-1}^2] + \frac{\sqrt{\E[E_{i-1}^2]}}{\beta} +
     \frac{1}{4\beta^2}.
   \end{equation*}
 \end{lemma}
@@ -424,7 +423,7 @@ The following result will be useful in the sequel.
 
 \begin{proof}
   \begin{enumerate}
-    \item From the definition~\eqref{eq:QEdefB}, 
+    \item From the definition~\eqref{eq:QEdefB}, with $E_0 = S$,
     \begin{equation}
       \label{eq:reverserec}
       E_{i-1} = \frac{1}{\beta} E_i + Q_i.
@@ -436,14 +435,16 @@ The following result will be useful in the sequel.
     variance is upper bounded as well. Finally, since $\beta \ge 1$ and by
     \lemref{Qvarbound}, 
     \begin{align*}
-      \Var Q_i &\le \Var E_{i-1} + \sqrt{\Var E_{i-1}} + \frac14,
+      \Var Q_i \le \E[Q_i^2] \le \E[E_{i-1}^2] + \sqrt{\E[E_{i-1}^2]} +
+    \frac{1}{4}.
     \end{align*}
     which completes the proof.
   \end{enumerate}
 \end{proof}
 
-Finally the $Q_i$ and $E_{n-1}$ are scaled to satisfy the power constraint,
-resulting in the channel inputs
+To complete the description of the transmission strategy, the $Q_i$ and
+$E_{n-1}$ are scaled to satisfy the power constraint, resulting in the channel
+inputs
 \begin{align}
   X_i &= (\sqrt{P}/\gamma) Q_i \quad
   \text{for $i = 1$, \dots, $n-1$ and} \nonumber\\
@@ -491,16 +492,15 @@ quantization resolution quickly becomes very fine, and the line segments of the
 constellation move close together fast, so the probability of decoding the wrong
 segment is high. On the other hand, since the stretch of the signal curve is
 proportional to~$\beta^{n-1}$ (\remref{sqgeometry}), the error decreases fast in
-case the correct segment is decoded. Vice versa, if $\beta$ grows only slowly
+case the correct segment is decoded. Conversely, if $\beta$ grows only slowly
 with the SNR then decoding the wrong segment is unlikely. But because the
 stretch also only grows slowly, the error when the correct segment is decoded
 decreases only slowly.
 
-The following results make these reflections precise. They are independent of
-the source distribution; the only condition on the source is that there is an
-interval over which its density is strictly positive. Based on these results one
-can choose $\beta$ as a function of the SNR in order to optimize the MSE
-scaling. 
+The following results make these reflections precise. The results apply to any
+source; provided that there is an interval on which the source distribution
+admits a density. Based on these results one can choose $\beta$ as a function of
+the SNR in order to optimize the MSE scaling. 
 
 \begin{remark}
   \label{rem:betaepswlog}
@@ -556,31 +556,31 @@ on the source distribution.
   See Appendix~\ref{app:zivboundproof}.
 \end{proof}
 
-The next two lemmata provide two different asymptotic lower bounds on the
-mean squared error of the hybrid transmission strategy considered, each of which
-is tighter for a different class of~$\e$. They hold regardless of the decoder
-used.  (The $\Omega$-notation is defined in Appendix~\ref{app:asymptotic}.)
+The next two lemmas provide two different asymptotic lower bounds on the mean
+squared error of the hybrid transmission strategy considered. They hold
+regardless of the decoder used.  (The $\Omega$-notation is defined in
+Appendix~\ref{app:asymptotic}.)
 
 \begin{lemma}
   \label{lem:lowerbound1}
-  For an arbitrary function $\e(\snr) \ge 0$, the mean squared error satisfies
-  \begin{equation*}
-    \mse \in \Omega(\snr^{-n + (n-1)\e}).
-  \end{equation*}
+  Given a hybrid transmission strategy characterized by $\e(\snr) \ge 0$, the
+  mean squared error satisfies
+  \begin{equation*} \mse \in \Omega(\snr^{-n +
+    (n-1)\e}).  \end{equation*}
 \end{lemma}
 
 \begin{lemma}
   \label{lem:lowerbound2}
-  For an arbitrary function $\e(\snr) \ge 0$, the mean squared error
-  satisfies
+  Given a hybrid transmission strategy characterized by $\e(\snr) \ge 0$, the
+  mean squared error satisfies
   \begin{equation*}
     \mse \in \Omega(\snr^{-1+\e/2} \exp\{-c\snr^\e\}),
   \end{equation*}
   where $c>0$ does not depend on~$\snr$.
 \end{lemma}
 
-\emph{Discussion:} An immediate consequence of the lemmata is that the
-theoretically optimal scaling $\snr^{-n}$ is not achievable with the given
+\emph{Discussion:} An immediate consequence of the lemmas is that the
+scaling $\snr^{-n}$ is not achievable with the given
 encoding strategy: by Lemma~\ref{lem:lowerbound1} this would require $\e = 0$,
 but following Lemma~\ref{lem:lowerbound2} the scaling is at best $\snr^{-1}$ if
 $\e = 0 $.  More generally, which one of the two lower bounds decays more slowly
@@ -703,7 +703,7 @@ choose~$\e(\snr)$ optimally will be the subject of Theorem~\ref{thm:scalinglb}.
 
 \begin{remark}
   \label{rem:geomlb}
-  \figref{sdrubproof} nicely illustrates the connection to the geometric
+  \figref{sdrubproof} illustrates the connection to the geometric
   argument given in \secref{twoperspectives}. The MSE is lower bounded by
   \lemref{lowerbound1} in case the correct fold of the signal curve is decoded
   and by \lemref{lowerbound2} in case the wrong fold is decoded. The
@@ -715,10 +715,8 @@ result of this section.
 
 \begin{lemma}
   \label{lem:epssolution}
-  Define $W(x)$ to be the function that satisfies $W(x)e^{W(x)} = x$ for $x >
-  0$.  This function is well defined and is sometimes called the \emph{Lambert
-  $W$-function}~\textnormal{\cite{CorlessGHJK1996}}. Then for $\snr > 1$ and
-  arbitrary real constants $a$, $b>0$, and $c > 0$, it holds that
+   For $\snr > 1$ and arbitrary real constants $a$, $b>0$, and $c > 0$, it holds
+   that
   \begin{equation}
     \label{eq:epsequation}
     \snr^{a+b\e} = \exp\{-c\snr^\e\},
@@ -726,8 +724,11 @@ result of this section.
   if and only if
   \begin{equation}
     \label{eq:epssolution}
-    \snr^\e = (b/c) W(c\snr^{-a/b} / b).
+    \snr^\e = (b/c) W(c\snr^{-a/b} / b),
   \end{equation}
+  where $W(x)$ is the function that satisfies $W(x)e^{W(x)} = x$ for $x > 0$.
+  This function is well defined and is sometimes called the \emph{Lambert
+  $W$-function}~\textnormal{\cite{CorlessGHJK1996}}.
 \end{lemma}
 
 \begin{proof}
@@ -750,7 +751,13 @@ result of this section.
   which proves the claim.
 \end{proof}
 
-The following is the main result of this section.
+Lemmas~\ref{lem:lowerbound1} and~\ref{lem:lowerbound2} provide conflicting
+objectives for the choice of~$\e$: according to
+\lemref{lowerbound1}, $\e$ should be small for the MSE to decay fast, but
+according to \lemref{lowerbound2} it should be large to have a fast exponential
+decay of the error. 
+The following theorem, which is the main result of this section, is obtained by
+finding the $\e$ for which the two lower bounds scale the same.
 \begin{theorem}
   \label{thm:scalinglb}
   For any parameter~$\beta$ and for any decoder, the mean squared error of the
@@ -773,7 +780,7 @@ The following is the main result of this section.
     l_1(\snr, \e) &= \snr^{-n+(n-1)\e} \quad\text{and} \\
     l_2(\snr,\e) &= \snr^{-1+\e/2} \exp\{-c\snr^\e\}.
   \end{align*}
-  By Lemmata~\ref{lem:lowerbound1} and~\ref{lem:lowerbound2},
+  By Lemmas~\ref{lem:lowerbound1} and~\ref{lem:lowerbound2},
   \begin{equation*}
     \mse \in \Omega\big(\max \left( l_1(\snr,\e), l_2(\snr,\e) \right) \big).
   \end{equation*}
@@ -822,7 +829,7 @@ The following is the main result of this section.
 \end{proof}
 
 
-\subsection{Asymptotical Achievability of Lower Bound}
+\subsection{Asymptotic Achievability of Lower Bound}
 \label{sec:achievable}
 
 The previous section showed that the hybrid transmission strategy 
@@ -1013,7 +1020,7 @@ As already mentioned in \remref{geomlb}, the choice of $\e$ represents a
 tradeoff: for small $\e$ the error due to the ``discrete'' part vanishes only
 slowly, but the scaling exponent in the limit is larger. For larger $\e$, $\Eq$
 vanishes quickly but the resulting exponent is smaller. This is illustrated by
-the simulation results on \figref{scalarcomparison}.  The remainder of this
+the simulation results in \figref{scalarcomparison}.  The remainder of this
 section shows how to choose $\e$ as a function of~$\snr$ in order to achieve the
 SDR scaling upper bound of \thmref{scalinglb}.
 
@@ -1022,9 +1029,9 @@ SDR scaling upper bound of \thmref{scalinglb}.
     \input{figures/matlab/fig_scalar_comparison.tex_t}
   \end{center}
   \caption{Simulation results illustrating the tradeoff represented by the
-  choice of~$\e$ for $n = 4$. For larger~$\e$, the error from decoding the
-  discrete signal part decays quickly but the final scaling is less good, while
-  for smaller~$\e$ the opposite holds. The theoretically optimal curve
+  choice of~$\e$ for $n = 3$. For larger~$\e$, the error from decoding the
+  discrete signal part decays quickly but the final scaling is worse, while
+  for smaller~$\e$ the opposite holds. The delay unconstrained curve
   corresponds to {\normalfont$\sdr = (1 + \snr)^n$}.}
   \label{fig:scalarcomparison}
 \end{figure}
@@ -1154,14 +1161,14 @@ the quantization resolution in terms of~$\snr$ is assumed to be $\beta = \lceil
   \Dv)}$.
 \end{proof}
 
-Using \lemref{zivboundvec}, Lemmata~\ref{lem:lowerbound1}
+Using \lemref{zivboundvec}, Lemmas~\ref{lem:lowerbound1}
 and~\ref{lem:lowerbound2} can be rederived for the case of lattices; the
 statements are in fact identical to the scalar case.
 
 \begin{lemma}
   \label{lem:lowerbound1vec}
-  For an arbitrary function~$\e(\snr)$, the mean squared error of the lattice
-  communication scheme satisfies
+  For an arbitrary function~$\e(\snr) \ge 0$, the mean squared error of the
+  lattice communication scheme characterized by this function satisfies
   \begin{equation*}
     \msev \in \Omega(\snr^{-n + (n-1)\e}).
   \end{equation*}
@@ -1174,7 +1181,7 @@ statements are in fact identical to the scalar case.
 \begin{lemma}
   \label{lem:lowerbound2vec}
   For an arbitrary function $\e(\snr) \ge 0$, the mean squared error of the
-  lattice communication scheme satisfies
+  lattice communication scheme characterized by this function satisfies
   \begin{equation*}
     \msev \in \Omega(\snr^{-1 + \e/2} \exp\{- c \snr^\e \}),
   \end{equation*}
@@ -1185,8 +1192,8 @@ statements are in fact identical to the scalar case.
   See \appref{lbvecproofs}.
 \end{proof}
 
-Since Lemmata~\ref{lem:lowerbound1vec} and~\ref{lem:lowerbound2vec} are
-identical to Lemmata~\ref{lem:lowerbound1} and~\ref{lem:lowerbound2}, it is a
+Since Lemmas~\ref{lem:lowerbound1vec} and~\ref{lem:lowerbound2vec} are
+identical to Lemmas~\ref{lem:lowerbound1} and~\ref{lem:lowerbound2}, it is a
 direct consequence that \thmref{scalinglb} also applies to lattice quantizers.
 It is restated here for completeness.
 
@@ -1493,11 +1500,11 @@ them into a bounded interval; this problem is left as future work.
 
 \section{Towards a General SDR Upper Bound}\label{sec:gensdrub}
 
-None of the communication strategies studied in this chapter achieve the optimal
-SDR scaling of  $\snr^{n/k}$. Instead, in each case the optimal scaling is
-divided by $(\log\snr)^{(n-k)/k}$, \ie, there is a ``penalty factor'' of
-$(\log\snr)^{1/k}$ for each of the $n-k$ channel inputs that carry quantized
-information about the source.
+None of the communication strategies studied in this chapter achieve the
+SDR scaling of  $\snr^{n/k}$ that is achievable without a delay limit. Instead,
+in each case the scaling is divided by $(\log\snr)^{(n-k)/k}$, \ie,
+there is a ``penalty factor'' of $(\log\snr)^{1/k}$ for each of the $n-k$
+channel inputs that carry quantized information about the source.
 
 At first sight this may just be due to the particular nature of the
 constellations used here. Because a significant fraction of channel inputs is
@@ -1715,7 +1722,7 @@ delay schemes.
 \begin{proof}
   Let $f(\xi)$ be the probability density function of~$E_{i-1}$. Then
   \begin{align*}
-    \Var Q_i &\le \frac{1}{\beta^2} \int_{\R} \Int(\beta E_{i-1})^2 f(\xi) d\xi
+    \E[Q_i^2] &= \frac{1}{\beta^2} \int_{\R} \Int(\beta E_{i-1})^2 f(\xi) d\xi
     \\
     &= \frac{1}{\beta^2} \sum_{i\in\Z} i^2
     \int_{\frac{i-1/2}{\beta}}^{\frac{i+1/2}{\beta}} f(\xi) d\xi.
@@ -1723,17 +1730,17 @@ delay schemes.
   Now, $|i| \le \beta|\xi| + 1/2$ whenever $\xi \in [(i-1/2)/\beta,
   (i+1/2)/\beta)$, so
   \begin{align*}
-    \Var Q_i &\le \frac{1}{\beta^2} \sum_{i\in \Z}
+    \E[Q_i^2] &\le \frac{1}{\beta^2} \sum_{i\in \Z}
     \int_{\frac{i-1/2}{\beta}}^{\frac{i+1/2}{\beta}} (\beta|\xi| + 1/2)^2 
     f(\xi) d\xi \\
     &= \frac{1}{\beta^2} \int_{\R} (\beta|\xi| + 1/2)^2 f(\xi) d\xi \\
-    &= \Var E_{i-1} + \frac{1}{4\beta^2} + \frac{1}{\beta} \int_{\R} |\xi|
+    &= \E[E_{i-1}^2] + \frac{1}{4\beta^2} + \frac{1}{\beta} \int_{\R} |\xi|
     f(\xi)d\xi.
   \end{align*}
-  To bound the last integral, use the fact that $\E[|E_{i-1}|] \le \sqrt{\Var
-  E_{i-1}}$ to finally obtain
+  To bound the last integral, use the fact that $\E[|E_{i-1}|] \le \sqrt{
+  \E[E_{i-1}^2]}$ to finally obtain
   \begin{equation*}
-    \Var Q_i \le \Var E_{i-1} + \frac{\sqrt{\Var E_{i-1}}}{\beta} +
+    \E[Q_i^2] \le \E[E_{i-1}^2] + \frac{\sqrt{\E[E_{i-1}^2]}}{\beta} +
     \frac{1}{4\beta^2}.
   \end{equation*}
 \end{proof}
@@ -1743,8 +1750,8 @@ delay schemes.
 
   \begin{definition}
     \label{def:bigo}
-    Let $f(x)$ and $g(x)$ be two functions defined on~$\R$. The set $O(g(x))$ is
-    defined as
+    Let $f(x) \ge 0$ and $g(x) \ge 0$ be two functions defined on~$\R$. The set
+    $O(g(x))$ is defined as
     \begin{equation*}
       f(x) \in O(g(x))
     \end{equation*}
@@ -1825,10 +1832,9 @@ delay schemes.
   Sloane~\cite{ConwayS1988} and by Gersho and Gray~\cite{GershoG1992}.
 
   \begin{definition}
-    An $n$-dimensional \emph{lattice} $\Lambda$ is a discrete set of vectors
-    (points) in~$\R^n$ such that for any $\x$, $\y \in \Lambda$, $\x + \y \in
-    \Lambda$. A sublattice of~$\Lambda$ is a subset $\Lambda' \subseteq \Lambda$
-    that is itself a lattice. 
+    An $n$-dimensional \emph{lattice} $\Lambda$ is a discrete subgroup of~$\R^n$
+    that spans~$\R^n$. A sublattice of~$\Lambda$ is a subset $\Lambda' \subseteq
+    \Lambda$ that is itself a lattice. 
   \end{definition}
 
   \begin{figure}
@@ -1945,7 +1951,7 @@ delay schemes.
   %  The proof is left as an exercise for the reviewers.
   %\end{proof}
   %
-  The next two lemmata are useful to bound the transmit power when transmitting
+  The next two lemmas are useful to bound the transmit power when transmitting
   a quantized random vector.
   \begin{lemma}
     \label{lem:latquantvar}
@@ -2002,7 +2008,7 @@ delay schemes.
 
 
 
-  \section{Proof of Lemmata~\ref{lem:lowerbound1vec}
+  \section{Proof of Lemmas~\ref{lem:lowerbound1vec}
   and~\ref{lem:lowerbound2vec}}\label{app:lbvecproofs}
 
   The following auxiliary result and its corollary will be useful for the proofs

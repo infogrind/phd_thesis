@@ -1,7 +1,9 @@
 % vim:ft=tex
 % THIS FILE WAS AUTOMATICALLY GENERATED.
 \begin{tikzpicture}
-\begin{axis}[cycle list name=black white,width=\textwidth,xlabel={SNR [dB]},ylabel={SDR [dB]},grid=major,legend pos=north west]
+\begin{axis}[cycle list name=black white,width=\textwidth,xlabel={SNR [dB]},
+  ylabel={SDR [dB]},grid=major,legend pos=north west,
+  legend style={cells={anchor=west}}]
 
 \addplot coordinates{ 
   (0.00,-1.70)

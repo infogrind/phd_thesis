@@ -11,8 +11,8 @@ pp.verbose = true;
 pp.snr = 10.^(0:.5:10);
 
 % Define schemes and parameters.
-s = {'ShannonScheme', 'ScalarHybridScheme', 'LambertScalarHybridScheme'};
-p = {4, [4 4; 0.3 0.5], [4; 0.2]};
+s = {'ShannonScheme', 'ScalarHybridScheme', 'SmoothAltLSHScheme'};
+p = {3, [3 3 3; 0.8 0.5 0.3], 3};
 
 % Run the scheme processor.
 pp.process(s, p);
@@ -25,8 +25,9 @@ om.set_color_mode('black white');
 om.x = 10*log10(pp.snr);
 om.y = 10*log10(pp.sv ./ pp.mse);
 
-om.legend = {'theoretical optimum', '$\epsilon = 0.3$', ...
-    '$\epsilon = 0.5$', '$\epsilon = \epsilon(\textsc{SNR})$'};
+om.legend = {'delay unconstrained', '$\epsilon = 0.8$', ...
+    '$\epsilon = 0.5$', '$\epsilon = 0.3$', ...
+    '$\epsilon = \epsilon(\textsc{SNR})$'};
 
 % Set labels and grid.
 om.xlabel     = 'SNR [dB]';

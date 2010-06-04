@@ -10,17 +10,16 @@ Simulations are often seen as not more than ad-hoc tools. They are
 quick-and-dirty programming jobs that have served their purpose once the desired
 result has been obtained. According to the rule that the more a program is
 likely to change the better it should be structured, however, simulations should
-actually be among the most well-structured and thought through pieces of
-software. It takes time to plan and write well-structured code, though, but
+instead be among the most well-structured and thought through pieces of
+software. It takes time to plan and write well-structured code, but
 if the simulation is seen merely as a means to an end, communication engineers
 rarely take this time.  As a result, most simulation code will eventually become
-so ugly that it is easier to rewrite a new simulation from scratch rather than
+so ugly that it is easier to write a new simulation from scratch rather than
 to modify the existing one. 
 
 This chapter presents \jscsim, an object-oriented simulator for joint
-source-channel coding
-schemes.\footnote{\jscsimurl} Its main design goal is to allow rapid testing
-of new ideas while simultaneously keeping the code clean and free of
+source-channel coding schemes.\footnote{\jscsimurl} Its main design goal is to
+allow rapid testing of new ideas while simultaneously keeping the code free of
 redundancies. 
 
 \jscsim\ is implemented in \matlab\ but could easily be translated to other
@@ -37,7 +36,7 @@ familiar with \jscsim\ by leading him through a series of hands-on examples and
 giving an overview of the implementation.  Thereafter, \secref{reference}
 provides a detailed reference and usage manual.  
 
-Before introducing \jscsim, though, the chapter starts with a short example that
+Before introducing \jscsim, the chapter starts with a short example that
 illustrates why object oriented programming is so well suited for writing
 simulations.
 
@@ -48,9 +47,7 @@ simulations.
   the subject, the Wikipedia article on object-oriented
   programming~\cite{wiki:ooprogramming} provides a good introduction; otherwise
   there are numerous good language-specific introductions around. The examples
-  throughout this chapter are in \matlab's programming language; \matlab's
-  particular syntax for objects should be easily grasped by someone already
-  familiar with object-oriented programming.
+  throughout this chapter are in \matlab's programming language.
 \end{remark}
 
 % Install a verbatim shortcut for all the function and variable names that occur
@@ -462,7 +459,7 @@ because we are plotting the performance of more than one communication scheme.
 \subsubsection{Alternative Output Formats}
 
 In the examples we saw so far, the performance processor just launched a
-standard \matlab\ figure window with the performance plot. Often, though, you
+standard \matlab\ figure window with the performance plot. Often, you
 may not only want to look at the plot on the screen but also use it in a report
 or in a paper. For this, \jscsim\ has the concept of \emph{output modules}. An
 output module is a class that implements a rudimentary set of plot capabilities.
@@ -497,9 +494,9 @@ in the above example by |PGFPlotsOutputModule| and set \eg
 \end{Code}
 The resulting file can then be included in a \LaTeX\ file, provided that the
 |pgfplots| package has been loaded.  The result is shown on \figref{uncodedpgf}.
-Admittedly, plots created by \pgfplots\ fit in nicer with the \LaTeX\
-layout, and their labels are more readable than those of
-Figures~\ref{fig:uncoded} and~\ref{fig:shannonscheme}.
+Plots created by \pgfplots\ fit in nicer with the \LaTeX\ layout, and their
+labels are more readable than those of Figures~\ref{fig:uncoded}
+and~\ref{fig:shannonscheme}.
 
 \begin{figure}
   \begin{center}
@@ -701,7 +698,7 @@ this behavior may easily be changed by a derived class.} Next you call the
 |process()| method of the scheme processor, passing a list of schemes (\ie,
 names of scheme classes) and a list of parameters for each scheme (cf.~the
 example on page~\pageref{sec:perfanalysis}). (A scheme can have any number of
-parameters, like for instance the number of channel input symbols produced per
+parameters; for instance the number of channel input symbols produced per
 source symbol.) Internally, the scheme processor then creates an instance of
 each specified scheme, passing the source sample sequence to each one's
 constructor. Because all schemes operate on the same source sequence, a fair
@@ -853,7 +850,8 @@ schemes can then be derived. The actual encoding and decoding functions are
 declared abstract in |PracticalScheme|, \ie, classes that implement
 communication strategies need only implement these two methods. 
 
-A simplified version of |PracticalScheme| is shown in \lstvref{practicalscheme}.
+% Next ref: consider vref
+A simplified version of |PracticalScheme| is shown in \lstref{practicalscheme}.
 Its |snr_updated()| method performs exactly the steps mentioned above: the
 source sequence~|s| is encoded into a channel input sequence~|x| (\lineref{5}),
 transmission is simulated by adding Gaussian noise to~|x| (\lineref{8}), and
@@ -882,7 +880,7 @@ as abstract. They must be implemented by derived classes (such as
 
 Scheme processors instantiate a list of scheme classes and process them for a
 range of SNR values. All scheme processors derive from |SchemeProcessor|, a
-simplified implementation of which is given in \lstvref{schemeprocessor}. 
+simplified implementation of which is given in \lstref{schemeprocessor}. 
 
 \begin{listing}
   \CodeInput{figures/matlab/SchemeProcessor.minc}

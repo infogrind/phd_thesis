@@ -3,7 +3,7 @@
       minimum size=2pt}]
 
       % Clipping rectangle to include only what's important.
-      \clip (2,1) rectangle (8,4);
+      \clip (2,1) rectangle (8.5,4);
 
       % The noise vector.
       \coordinate (z) at (2.5,1.25);
@@ -58,7 +58,11 @@
       \draw[-stealth] (fs0) -- node[above] {$\Zv$} (y) node[above] {$\Y$};
 
       % Dashed line to illustrate noise projection.
-      \draw[dashed] (y) -- (np) node[below] {$f(\sh)$};
+      \draw[dashed] (y) -- (np) node[align=left,below right]
+      {approximation\\to $f(\sh)$};
+
+      % A dot to illustrate the actual f(\sh)
+      \path (np) +(0.175,0.25) node[p] {} node[above] {$f(\sh)$};
 
       % Some labels
       \node[below] at (e0) {$f(s_0)$};

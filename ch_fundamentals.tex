@@ -31,7 +31,7 @@ source and the channel produce and transmit, respectively, symbols at the same
 rate, then uncoded transmission (with minimal delay) performs as good as any
 code of arbitrary complexity and delay, which is explained in
 \secref{gaussuncoded}. If, on the other hand, the rate at which the channel
-accepts inputs is greater than the rate at which the source symbols are
+accepts inputs is greater or less than the rate at which the source symbols are
 produced, then no such simple transmission scheme exists for this case, as
 \secref{gaussbwex} argues. This situation changes, however, if the transmitter
 has perfect causal feedback from the receiver. In this case, studied in detail
@@ -94,7 +94,7 @@ the sequence of channel inputs $X^n$ may not be identically distributed;
 similarly, the marginal (joint) distribution of the source/estimate pairs
 $(S_i,\Sh_i)$ may not be the same for all~$i$. The average cost and distortion
 of a communication system are therefore defined as the empirical average over
-blocks of channel inputs and source symbols, respectively.
+a block of channel inputs and source symbols, respectively.
 
 \begin{definition}
   \label{def:avgcost}
@@ -186,8 +186,8 @@ source symbols into $1000n$ channel inputs.
 \begin{figure}
   \begin{center}
     \begin{tikzpicture}
-      \draw[l] (-.5,0) -- (4,0) node[right] {$P$};
-      \draw[l] (0,-.5) -- (0,2.5) node[above] {$D$};
+      \draw[l] (0,0) -- (4,0) node[right] {$P$};
+      \draw[l] (0,0) -- (0,2.5) node[above] {$D$};
 
       \path[clip] (0,0) rectangle (4,2.5);
       \draw[fill=black!10] (4,2.5) circle [x radius=3.5cm,y radius=2cm];
@@ -419,8 +419,8 @@ optimal communication system, as the following example makes clear.
 \begin{example}
   \label{ex:gausssingle}
   Let the source be zero-mean Gaussian with variance~$\ssq$ and let the channel
-  be AWGN with noise variance~$\szq$. The encoder is given by $X =
-  f(S) = \sqrt{P/\ssq} S$ and the decoder is given by $\Sh = g(Y) = \sqrt{P}
+  be AWGN with noise variance~$\szq$. Consider the encoder given by $X =
+  f(S) = \sqrt{P/\ssq} S$ and the decoder given by $\Sh = g(Y) = \sqrt{P}
   \ssq Y / (P + \szq)$. Using $Y = X + Z$ it is quickly verified that
   \begin{equation*}
     D = \E[(S - \Sh)^2] = \ssq / (1 + P/\szq),
@@ -632,7 +632,7 @@ Before continuing we prove some properties of cumulative distribution functions
 
 \begin{proof}
   The definition of $F_X^{-1}$ according to~\eqref{eq:invcdf} is such
-  that $\Pr[F_X^{-1}(Y) \le x] = \Pr[Y \le F_X(x)]$. Thus,
+  that $\{y: F_X^{-1}(y) \le x\} = \{y: y \le F_X(x)\}$. Thus,
   \begin{align*}
     F_{X'}(x) &= \Pr[F_X^{-1}(Y) \le x] \\
     &= \Pr[Y \le F_X(x)]  = F_X(x)
@@ -686,7 +686,7 @@ Let us now derive the posterior matching encoder for the communication system of
   First, a few properties of Gaussian \cdf s are given. Let $F_{\N(\mu, \sq)}$
   be the \cdf\ of a Gaussian random variable of mean~$\mu$ and variance~$\sq$
   and let $F_\N \deq F_{\N(0,1)}$. Then $F_{\N(\mu,\sq)}(x) =
-  F_\N((x-\mu)/\sigma)$. Furthermore, the inverse \cdf\ is 
+  F_\N((x-\mu)/\sigma)$. Consequently, the inverse \cdf\ is 
   \begin{equation*}
     F_{\N(\mu,\sq)}^{-1}(y) = \sigma F_\N^{-1}(y) + \mu.
   \end{equation*}
@@ -806,14 +806,14 @@ the receiver.  What lessons can we draw from the feedback case that help us in
 the case without feedback?
 
 The first observation is that if the encoder knows the state of the receiver
-then it can transmit the receiver's current estimation error uncoded, as done in
-\exref{gaussfb}. Feedback, however, is not the only way for the encoder to know
-the receiver's state. Indeed, assume that the encoder uses a perfect source code
-followed by a perfect channel code to communicate the source across the first
-$n-1$ channel uses (ignoring delay constraints). Because a perfect channel code
-turns the channel into an essentially error-free link, the encoder knows (with
-high probability) the decoder's estimate after $n-1$ channel uses, just like
-when there is feedback.
+then it can transmit the receiver's current estimation error without coding, as
+done in \exref{gaussfb}. Feedback, however, is not the only way for the encoder
+to know the receiver's state. Indeed, assume that the encoder uses a perfect
+source code followed by a perfect channel code to communicate the source across
+the first $n-1$ channel uses (ignoring delay constraints). Because a perfect
+channel code turns the channel into an essentially error-free link, the encoder
+knows (with high probability) the decoder's estimate after $n-1$ channel uses,
+just like when there is feedback.
 
 Let $\Sh'$ be the receiver's estimate after $n-1$ channel uses and suppose the
 encoder indeed knows~$\Sh'$. According to the separation theorem and because we
@@ -855,10 +855,10 @@ The separation theorem is originally due to Shannon~\cite{Shannon1948}. Gastpar
 et al.~\cite{GastparRV2003} analyzed in details the optimality conditions of
 \thmref{optimalityconditions} and presented optimal communication from a
 different point of view than that of the separation theorem. An interesting
-analysis of the properties of a capacity achieving channel code is provided by
-Shamai and Verd\'u~\cite{ShamaiV1997}. That a Gaussian source directly plugged
-into a Gaussian channel achieves and optimal cost--distortion tradeoff was first
-observed by Goblick~\cite{Goblick1965}.
+analysis of the properties of a sequence of channel codes that approaches
+capacity is provided by Shamai and Verd\'u~\cite{ShamaiV1997}. That a Gaussian
+source directly plugged into a Gaussian channel achieves and optimal
+cost--distortion tradeoff was first observed by Goblick~\cite{Goblick1965}.
 
 Ziv and Zakai published their method for alternative bounds, where an
 alternative mutual information not based on the logarithm is used, in

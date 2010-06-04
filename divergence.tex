@@ -1,0 +1,58 @@
+%        File: thesis.tex
+%     Created: Tue Jan 12 11:00 AM 2010 C
+% Last Change: Tue Jan 12 11:00 AM 2010 C
+%
+\documentclass[review]{ipgthesis}
+%\documentclass[a4paper]{lcavthesis}
+
+% All external packages
+\input{packages}
+
+% Theorem-like definitions
+\input{theoremdefs}
+
+% All macros and definitions
+\input{thesismac}
+
+% Style definitions for TikZ
+\input{tikzstyles}
+
+% Various commands affecting the whole document
+\bibliographystyle{IEEEtranS}
+\frenchspacing
+
+\begin{document}
+
+\setcounter{chapter}{1}
+\def\px{p_X}
+\newcommand{\is}{^{(\sq)}}
+
+\begin{lemma}
+  Let $\{ \px\is : \sq > 0 \}$ be a set of $n$-dimensional zero-mean probability
+  distributions parametrized by~$\sq$ and covariance matrix~$K\is$ satsifying
+  $\Tr K\is \le n$. Consider $n$~parallel AWGN channels with equal noise
+  variance. Let the input be distributed according to~$\px\is$ when the channel
+  noise has variance~$\sq$ and let $I(\sq)$ be the corresponding mutual
+  information. Then $2^{2I(\sq)} \in \Omega(\sigma^{-2n})$ as $\sq \goesto 0$ if
+  and only if the following conditions are satisfied. 
+  \begin{enumerate}
+    \item $\limsup_{\sq \goesto 0} D(\px\is \star p_Z\is \| \phi\is \star
+      p_Z\is) < \infty$, where
+      $\phi\is \sim \N(0,K\is)$ and $p_Z\is \sim \N(0,\sq\is)$.
+    \item $\min_i \liminf_{\sq \goesto 0} \lambda_i\is > 0$, where
+      $\lambda_i\is$ are the eigenvalues of~$K\is$.
+  \end{enumerate}
+\end{lemma}
+
+\emph{Observations:} If one of the $\lambda_i\is$ converges to zero, the
+divergence will go to infinity, so point 1.\ implies point 2.  Furthermore, if
+$p_X\is$ is discrete, then the ``points'' of its alphabet have to move closer
+together as $\sq \goesto 0$, otherwise $\px\is \star p_Z\is$ converges to a
+discrete distribution and the divergence blows up.
+
+Can we determine how fast the points of $\px\is$ have to move together? Perhaps
+this could be simulated in MATLAB.
+
+
+\end{document}
+
