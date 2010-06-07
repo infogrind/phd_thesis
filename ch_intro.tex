@@ -7,8 +7,9 @@ transform it such that it can be transmitted reliably across an unreliable
 medium. The information can be bits from a computer file, an audio signal
 recorded from a microphone, images captured by a TV camera, or any other
 physical signal. The unreliable medium is for example a wire undergoing
-corruption by thermal noise, a wireless link subject to interference from other
-transmitters, or a hard disk with occasional read errors.
+corruption by thermal noise at the receiver, a wireless link subject to
+interference from other transmitters, or a hard disk with occasional read
+errors.
 
 The processing of information at the transmitter is called \emph{encoding}. It
 is usually done on \emph{blocks} of data. For example, one kilobyte of a file is
@@ -33,11 +34,12 @@ particular, the following themes are addressed.
   \item \textbf{Minimal-Delay Source-Channel Coding.} If coding delay and
     complexity is unconstrained, the region of achievable cost and distortion
     pairs for a given source, channel, cost measure and distortion measure is
-    completely characterized by Shannon's separation theorem. On one hand this
-    theorem provides an outer bound to the achievability region; on the other
-    hand it shows that any point in this region can be achieved using separate
-    source and channel coding. Under a delay constraint, however, only the outer
-    bound applies, and the exact achievability region is no longer known. 
+    completely characterized by Shannon's separation theorem. On the one hand
+    this theorem provides an outer bound to the achievability region; on the
+    other hand it shows that any point in this region can be achieved using
+    separate source and channel coding. Under a delay constraint, however, only
+    the outer bound applies, and the exact achievability region is no longer
+    known. 
 
     This thesis considers the strictest form of a delay constraint, where a
     single source symbol is to be encoded at a time. The focus is
@@ -101,9 +103,10 @@ particular, the following themes are addressed.
     extensions to the hybrid scheme are provided. The first extension is to
     encode several source symbols at a time using vector quantization with
     lattices. The second extension is to encode not one, but $k$ source symbols
-    into $n$~channel uses, where $1 < k < n$. It is found that these extensions
-    are subject to the same asymptotic performance limits as when a single
-    source symbol is encoded at a time.
+    into $n$~channel uses, where $1 < k < n$. It is found that for a fixed ratio
+    $k/n$, these extensions are subject to the same asymptotic performance
+    limits (at large SNR) as when a single source symbol is encoded at a time,
+    no matter how large $k$ and~$n$ are.
 
   \item \textbf{Connection to Feedback.} It is well known that a Gaussian source
     can be communicated optimally with minimal delay across $n$~uses of a

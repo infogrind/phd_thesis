@@ -29,45 +29,28 @@ distortion region.
 A communication system achieves an optimal fidelity--cost tradeoff if the
 elements making up the system are properly matched, which requires that the cost
 and distortion measures are related in a certain way to the statistics of the
-communication system. This has been known before.  We have shown here that the
-set of cost and distortion measures for which a given communication system is
-thus matched has a \emph{subset} of measures for which the \emph{ratio} of
-fidelity per cost is maximized, in the sense that no alternative encoder or
-decoder can increase this ratio. The set of communication systems operating at
-maximal fidelity per cost is thus a subset of those communication systems that
-achieve an optimal fidelity--cost tradeoff.
+communication system. This has been known before~\cite{GastparRV2003}.  We have
+shown here that the set of cost and distortion measures for which a given
+communication system is thus matched has a \emph{subset} of measures for which
+the \emph{ratio} of fidelity per cost is maximized, in the sense that no
+alternative encoder or decoder can increase this ratio. The set of communication
+systems operating at maximal fidelity per cost is thus a subset of those
+communication systems that achieve an optimal fidelity--cost tradeoff.
 
-Why would one want to maximize the \emph{ratio} of fidelity per cost, rather
-than to obtain the greatest fidelity for a given cost constraint or incur the
-least cost for a required fidelity? It is not trivial to find an application for
-which this is indeed the case. There seems to be an important practical
-difference between fidelity on one hand, and rate and cost on the other hand.
-Rate and cost are naturally additive quantities. Suppose a channel is used
-$n$~times per second at cost $P/n$ per channel use. Then the total cost per
-second is~$P$, regardless of~$n$, and the total number of bits transmitted per
-second is the sum of the bits transmitted in each of the $n$~channel uses. This
-gives important practical significance to capacity per unit cost: it determines
-the maximum number of bits per second one can transmit for a cost constraint
-\emph{per second} if the number of channel uses is a free parameter (such as in
-wideband communication). 
+Whether achieving the maximal ratio of fidelity per cost is of practical value
+is not conclusively clear. The challenge lies in finding a fidelity measure for
+which one can quantitatively compare the performance of encoding many source
+symbols at low fidelity with encoding few source symbols at high fidelity. The
+conclusion to \chapref{fidelity} mentions one potential application; it might
+be interesting to search for others. 
 
-Fidelity is not obviously additive. Our results say that for a given cost per
-second we have the choice to either transmit a single source symbol at high
-fidelity, or several source symbols at a lower fidelity.  Which one is
-better? In many situations the two cases may not be comparable. One possible
-application is oversampling with low-resolution quantization.  For example, if a
-bandlimited analog source is oversampled at a sufficiently high rate, the
-quantization resolution can be as low as $1$~bit per sample. Our
-results may yield a tradeoff between quantization resolution and sampling
-frequency; we have not investigated this issue further though.  Nevertheless, it
-certainly presents an interesting opportunity for future research. 
 
 \medbreak
 
 The chapter on simulation was written with two goals in mind. The first was to
 show how object-oriented techniques are particularly helpful for simulations.
 The second goal was to make the \jscsim\ simulator freely available to the
-public. It is our hope that it may save at least some students from the
+public. The author hopes that it may save at least some students from the
 frustrating experience of simulator code gone chaotic. 
 
 \medbreak

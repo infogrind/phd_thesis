@@ -67,7 +67,7 @@ following six elements, displayed schematically in \figref{scgen}.
     estimate.
 \end{itemize}
 To match the number of channel inputs produced by the encoder to the
-rate at which the channel accepts them, $k$ and $n$ must satisfy $n/k = \ts /
+rate at which the channel accepts them, $k$ and $n$ must satisfy $n/k \le \ts /
 \tc$. The communication consists thus of identical rounds of transmission of
 length $k\ts$ (or $n\tc$).
 
@@ -223,7 +223,7 @@ defined as follows.
   An \emph{optimal communication system} is a communication system whose
   average cost and distortion satisfy~\eqref{eq:separation} with
   equality.\footnote{This is not the strictest form of
-  optimality and it precludes the existence of optimal communication systems in
+  optimality, and it precludes the existence of optimal communication systems in
   some situations, for example when $\max_D R(D) < \min_P C(P)$. See
   Gastpar~\cite{GastparThesis} for a more general  definition of optimality.}
 \end{definition}
@@ -237,8 +237,11 @@ By going step by step through the inequalities in the proof of
   \defref{optimality} if and only if the following conditions are all satisfied.
   \begin{enumerate}
     \item For each $i = 1$, \dots, $k$, the joint distribution $p(s_i,\sh_i)$
-      achieves the rate-distortion function of the source at the same average
-      distortion~$D$.
+      achieves the rate-distortion function of the source such that
+      \[ R\left(\frac1k \sum_{i=1}^k \E[d(S_i,\Sh_i)] \right) = \frac1k
+      \sum_{i=1}^k R\left( \E[d(S_i,\Sh_i)] \right).\]
+%      at the same average
+%      distortion~$D$.
     \item The \emph{reverse test channel} $p(s^k|\sh^k)$ factors as
       $\prod_{i=1}^k p(s_i | \sh_i)$. 
     \item The encoder is information lossless in the sense that it satisfies
@@ -247,8 +250,10 @@ By going step by step through the inequalities in the proof of
       given $Y^n$. (Equivalently, we can say that the decoder must be memoryless
       in the sense that $I(X^n;Y^n) = I(X^n;\Sh^k)$.)
     \item The channel output sequence $Y^n$ is \iid.
-    \item The marginal distributions $p(x_i)$ all achieve the capacity at the
-      same average cost~$P$.
+    \item The marginal distributions $p(x_i)$ all achieve the capacity of the
+      channel such that
+      \[ \frac1n \sum_{i=1}^n C(\E[\rho(X_i)]) = C\left( \frac1n \sum_{i=1}^n
+      \E[\rho(X_i)] \right). \]
   \end{enumerate}
 \end{theorem}
 
@@ -462,9 +467,10 @@ channel accepts more than one input for each source symbol, \ie, when $\tc <
 \ts$?  Unfortunately, no. In fact, the performance of any code that encodes a
 single Gaussian source symbol into $n>1$~inputs to a Gaussian channel is
 strictly bounded away from the optimum given
-by~\eqref{eq:gausssep}~\cite{IngberLZF2008}.  The bound given
-in~\cite{IngberLZF2008} is not necessarily tight, however, so the region of
-achievable cost and distortion pairs is not known when $k = 1$ and $n > 1$. 
+by~\eqref{eq:gausssep}~\cite{IngberLZF2008} (shown using a result by Ziv and
+Zakai~\cite{ZivZ1973}).  The bound given in~\cite{IngberLZF2008} is not
+necessarily tight, however, so the region of achievable cost and distortion
+pairs is not known when $k = 1$ and $n > 1$. 
 
 While conditions~1 and~6 of \thmref{optimalityconditions} can still be achieved
 by a simple linear encoder and a MMSE decoder (just as in \exref{gausssingle}),
@@ -641,7 +647,8 @@ Before continuing we prove some properties of cumulative distribution functions
 \end{proof}
 
 Consider now a channel~$\pyx$ and let $\pi(x)$ be the capacity achieving
-distribution at average cost~$P$, \ie, 
+distribution at average cost~$P$ (or \emph{a} capacity achieving distribution if
+there are multiple), \ie, 
 \begin{equation*}
   \pi(x) = \arg\max_{p(x): \E[\rho(X)] \le P} I(X;Y)
 \end{equation*}
@@ -736,7 +743,7 @@ posterior matching, with the particular property that the posterior matching
 encoder is linear.
 
 
-\subsubsection{Achieving $R(D)$ using Posterior Matching?}
+\subsubsection{Achieving $R(D)$ using Posterior Matching}
 
 Using posterior matching,  one can turn an arbitrary source distribution into
 the capacity achieving distribution. Can the same trick be used to make the
@@ -746,9 +753,9 @@ function?
 For simplicity assume $n = 1$ (whether there is feedback or not is irrelevant).
 For a fixed~$D$, let
 \begin{equation*}
-  \Phi_s(\sh) = \arg\min_{p(\sh|s): \E[d(S,\Sh)] \le D} I(S;\Sh).
+  \Phi_s(\sh) = \arg\min_{p(\sh|s): \E[d(S,\Sh)] \le D} I(S;\Sh),
 \end{equation*}
-\Ie, $\Phi_s(\sh)$ is the conditional distribution of~$\Sh$ given~$S$ that
+\ie, $\Phi_s(\sh)$ is the conditional distribution of~$\Sh$ given~$S$ that
 achieves the rate distortion function at expected distortion~$D$. Let the
 decoder be
 \begin{equation}
@@ -916,7 +923,7 @@ The proof results from the following chain of inequalities.
   &\stackrel{(f)}{\le} \sn \left( H(Y_i) - H(Y_i|X_i) \right) \\
   &= \sn I(X_i; Y_i) \\
   &\stackrel{(g)}{\le} \sn C(\E \rho(X_i)) \\
-  &\stackrel{(h)}{\le} n C(\frac1n \E \rho(X_i)) \\
+  &\stackrel{(h)}{\le} n C(\frac1n \sn \E \rho(X_i)) \\
   &= n C(P).
 \end{align*}}%
 The inequalities are justified as follows. (a) follows from the convexity$_\cup$

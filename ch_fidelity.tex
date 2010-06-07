@@ -467,7 +467,7 @@ the ratio of distortion per rate.
     \log_2 \frac{V(\sh|s)}{\psh(\sh)} \right] \\
     &= \sum_{s,\sh} \ps(s)W(\sh|s) \left[ \log_2\frac{W(\sh|s)}{V(\sh|s)} -
     \log_2 \frac{\qsh(\sh)}{\psh(\sh)} \right] \\
-    &= \sum_s \ps(s) D(W(\cdot|s) \| V(\cdot |s)) - D(\qsh(\sh) \| \psh(\sh)) \\
+    &= \sum_s \ps(s) D(W(\cdot|s) \| V(\cdot |s)) - D(\qsh \| \psh) \\
     &\ge 0,
   \end{align*}
   where the inequality follows from the convexity of the Kullback-Leibler
@@ -894,3 +894,44 @@ point-to-point communication system to satisfy $k R(D) = n C(P)$. According
 to~\eqref{eq:extineq}, a communication system that operates at fidelity per unit
 cost also satisfies $k R(D) = n C(P)$, so it is also optimal in the sense of
 \defref{optimality}.
+
+
+\section{Conclusion}
+
+This chapter provides a tight upper bound to the ratio of average fidelity per
+average cost of an arbitrary memoryless point-to-point communication system.
+Using the conditions in Theorems~\ref{thm:cuccond} and~\ref{thm:rdthm}, one can
+verify whether a given communication system does indeed operate at the maximum
+fidelity per cost ratio. In particular, the conditions can be used to check when
+uncoded communication performs optimally. This chapter also provides a
+separation theorem for fidelity per unit cost: it shows how the problem of
+maximizing the fidelity per cost corresponds to simultaneously achieving
+capacity per unit cost (on the channel) and achieving fidelity per unit rate (on
+the source), which can be approached arbitrarily close using appropriate
+sequences of source codes and channel codes.
+
+Why would one want to maximize the \emph{ratio} of fidelity per cost, rather
+than to obtain the greatest fidelity for a given cost constraint or incur the
+least cost for a required fidelity? It is not trivial to find an application for
+which this is indeed the case. There seems to be an important practical
+difference between fidelity on one hand, and rate and cost on the other hand.
+Rate and cost are naturally additive quantities. Suppose a channel is used
+$n$~times per second at cost $P/n$ per channel use. Then the total cost per
+second is~$P$, regardless of~$n$, and the total number of bits transmitted per
+second is the sum of the bits transmitted in each of the $n$~channel uses. This
+gives important practical significance to capacity per unit cost: it determines
+the maximum number of bits per second one can transmit for a cost constraint
+\emph{per second} if the number of channel uses is a free parameter (such as in
+wideband communication). 
+
+Fidelity is not obviously additive. For a given cost per second, one has the
+choice to either transmit a single source symbol at high fidelity, or several
+source symbols at a lower fidelity.  Which one is better? In many situations the
+two cases may not be comparable. One possible application is oversampling with
+low-resolution quantization.  For example, if a bandlimited analog source is
+oversampled at a sufficiently high rate, the quantization resolution can be as
+low as $1$~bit per sample. Our results may yield a tradeoff between quantization
+resolution and sampling frequency; we have not investigated this issue further
+though.  Nevertheless, it certainly presents an interesting opportunity for
+future research. 
+

@@ -13,8 +13,8 @@
   \pgfmathsetmacro{\rad}{sqrt(2)*1.8}
   \draw (0,0) circle (\rad);
 
-  \draw[->] (0,0) -- node[above] {$R$} (10:1.8);
-  \draw[->] (0,0) -- node[above right] {$\rho$} (110:\rad);
+  \draw[->] (0,0) -- node[above] {$\rho$} (10:1.8);
+  \draw[->] (0,0) -- node[above right] {$R$} (110:\rad);
 \end{tikzpicture}
 \hfil
 \begin{tikzpicture}

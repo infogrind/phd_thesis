@@ -39,7 +39,7 @@ between two distributions (see \eg~\cite{CoverT1991}) and $\phi_{\ssq}$ is the
 follows directly from Shannon's lower bound on the rate distortion function for
 arbitrary sources under a difference distortion measure\footnote{Shannon calls a
 \emph{difference distortion measure} a distortion measure that depends only on
-the difference $s - \sh$. Examples are the squared error $(s-\sh)^2$, or the
+the difference $s - \sh$. Examples are the squared error $(s-\sh)^2$ or the
 absolute error $|s - \sh|$.}~\cite{Shannon1959}.
 (If $\ps$ is a Gaussian distribution, the divergence becomes zero and
 \eqref{eq:gensrcsdrlb} simplifies to~\eqref{eq:gausslimitch2}.) Thus, the
@@ -69,8 +69,8 @@ scaling.  In \secref{latticequant}, the communication scheme of
 \secref{scalarquant} is extended to encode \emph{blocks} of $m$~source symbols
 into $mn$~channel inputs using lattice quantizers. It turns out that even when
 powerful high dimensional lattices are used, the SDR for any finite block
-length~$m$ scales just like when $m = 1$ (although the multiplicative constants
-may be larger). \secref{genbwexp} extends the scheme of \secref{scalarquant} in
+length~$m$ scales just like when $m = 1$ (although the performance at low SNR
+may be better). \secref{genbwexp} extends the scheme of \secref{scalarquant} in
 a different way, namely to encode $k$~source symbols into $n$~channel inputs,
 where $k \le n$. For this case, the achievable SDR is shown to scale as
 $\snr^{n/k} /(\log\snr)^{(n-k)/k}$. 
@@ -1215,7 +1215,7 @@ It is restated here for completeness.
 \subsection{Achievability}
 
 The MSE scaling lower bound of \thmref{scalinglbvec} is trivially achievable
-with a rectangular lattice: quantization with this lattice can be performed
+with the integer lattice~$\Z$: quantization with this lattice can be performed
 independently in each dimension and is equivalent to repeated application of the
 scalar scheme of \secref{scalarquant}. Hence \thmref{scalarachievability}
 applies to lattice quantizers as well. 
@@ -1247,14 +1247,14 @@ $\Lambda/\beta$. The resulting error therefore satisfies $\Qhv_i - \Q_i = \p \in
 Voronoi region of $\p$ (with respect to $\Lambda/\beta$). Averaging over the
 noise, the average squared error is then
 \begin{align*}
-  \mseqiv &= \sum_{\p \in \Lambda/\beta \setminus \{\vz\}} \| \p \|^2
+  \mseqiv &= \sum_{\p \in (\Lambda/\beta) \setminus \{\vz\}} \| \p \|^2
   \int_{V(\p)} \xi(\z) d\z,
 \end{align*}
 where $\xi(\z)$ is the pdf of $\sqrt{\gamma^2/P} \Zv_i$.
 Since $\z \in V(\p)$ implies $\|\p\| \le \|\z\| + R/\beta$, where $R/\beta$ is
 the covering radius of $\Lambda/\beta$, $\mseqiv$ can be upper bounded by
 \begin{align*}
-  \mseqiv &\le \sum_{\p \in \Lambda/\beta \setminus \{\vz\}} \int_{V(\p)}
+  \mseqiv &\le \sum_{\p \in (\Lambda/\beta) \setminus \{\vz\}} \int_{V(\p)}
   (\|\z\| + R/\beta)^2 \xi(\z) d\z \\
   &\le \int_{\R^m \setminus B(0,\rho/\beta)} (\|\z\| + R/\beta)^2 \xi(\z) d\z,
 \end{align*}
@@ -1273,7 +1273,7 @@ $(\gamma^2/P) \szq = \gamma^2/\snr$. To get explicit bounds for finite~SNR that
 depend on $R$ and $\rho$ (and thus on the particular lattice used), this
 integral can be evaluated using the formula
 \begin{equation*}
-  \int_\mu^\infty r^n e^{-c r^2} = \frac12 c^{-(n+1)/2} \Gamma\left(
+  \int_\mu^\infty r^n e^{-c r^2} dr = \frac12 c^{-(n+1)/2} \Gamma\left(
   \frac{1+n}{2}, c \mu^2 \right),
 \end{equation*}
 where $\Gamma(s, x) = \int_x^\infty t^{s-1} e^{-t} dt$ is the upper incomplete
@@ -1717,6 +1717,26 @@ delay schemes.
 \begin{subappendices}
 
 
+  \section{Asymptotic Notation}\label{app:asymptotic}
+
+  \begin{definition}
+    \label{def:bigo}
+    Let $f(x) \ge 0$ and $g(x) \ge 0$ be two functions defined on~$\R$. The set
+    $O(g(x))$ is defined as
+    \begin{equation*}
+      f(x) \in O(g(x))
+    \end{equation*}
+    if and only if there exists an $x_0$ and a constant~$c$ such that
+    \begin{equation*}
+      f(x) \le c g(x)
+    \end{equation*}
+    for all $x > x_0$. 
+    Similarly, $f(x) \in \Omega(g(x))$ if $\le$ is replaced by $\ge$ in
+    the above definition. Finally, $\Theta(g(x)) \deq O(g(x)) \cap
+    \Omega(g(x))$.
+  \end{definition}
+
+
 \section{Proof of \lemref{Qvarbound}}\label{app:qvarboundproof}
 
 \begin{proof}
@@ -1745,26 +1765,6 @@ delay schemes.
   \end{equation*}
 \end{proof}
   
-
-  \section{Asymptotic Notation}\label{app:asymptotic}
-
-  \begin{definition}
-    \label{def:bigo}
-    Let $f(x) \ge 0$ and $g(x) \ge 0$ be two functions defined on~$\R$. The set
-    $O(g(x))$ is defined as
-    \begin{equation*}
-      f(x) \in O(g(x))
-    \end{equation*}
-    if and only if there exists an $x_0$ and a constant~$c$ such that
-    \begin{equation*}
-      f(x) \le c g(x)
-    \end{equation*}
-    for all $x > x_0$. 
-    Similarly, $f(x) \in \Omega(g(x))$ if $\le$ is replaced by $\ge$ in
-    the above definition. Finally, $\Theta(g(x)) \deq O(g(x)) \cap
-    \Omega(g(x))$.
-  \end{definition}
-
 
   \section{Proof of Ziv's Lower Bound (Lemma~\ref{lem:zivbound})}
   \label{app:zivboundproof}
