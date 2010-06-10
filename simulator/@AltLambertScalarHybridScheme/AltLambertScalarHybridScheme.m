@@ -50,14 +50,7 @@ classdef AltLambertScalarHybridScheme < ScalarHybridScheme
             
             obj.c1 = c1;
             obj.c2 = c2;
-        end
-        
-        
-        function b = compute_beta(obj)
-            % Set beta as a function of SNR^\epsilon.
-            SNRe = compute_snre(obj);
-            b = ceil(sqrt(obj.snr / SNRe));
-        end
+        end      
         
         
         % This function returns SNR^\epsilon from the lower bound theorem.

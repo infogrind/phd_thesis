@@ -74,7 +74,13 @@ classdef HybridScheme < PracticalScheme
         
         function b = compute_beta(obj)
             % The standard beta definition from the thesis.
-            b = ceil(obj.snr ^ ((1 - obj.epsilon)/2));
+            SNRe = compute_snre(obj);
+            b = ceil(sqrt(obj.snr / SNRe));
+        end
+        
+        % This function computes SNR to the power of epsilon.
+        function snre = compute_snre(obj)
+            snre = obj.snr ^ obj.epsilon;
         end
         
     end

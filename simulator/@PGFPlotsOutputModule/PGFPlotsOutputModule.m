@@ -10,6 +10,11 @@ classdef PGFPlotsOutputModule < OutputModule
     
     properties (Access = 'protected')
         colormode = 'color';
+        
+        % This cell array can be filled using set_plot_options. If its nth entry
+        % is nonempty, then its contents will be added as options to the
+        % "\addplot" command for the respective data series.
+        plot_options = {};
     end
 
     
@@ -20,6 +25,8 @@ classdef PGFPlotsOutputModule < OutputModule
                     obj.colormode = 'color';
                 case 'bw'
                     obj.colormode = 'bw';
+                case 'empty'
+                    obj.colormode = 'empty';
                 case 'black white'
                     obj.colormode = 'black white';
                 otherwise
@@ -28,6 +35,12 @@ classdef PGFPlotsOutputModule < OutputModule
         end
         
         
+        % This function lets you set the plot options for a particular data
+        % series.
+        function set_plot_options(obj, n, opt)
+            obj.plot_options{n} = opt;
+        end
+
     end
     
     methods (Access = 'protected')
@@ -119,6 +132,8 @@ classdef PGFPlotsOutputModule < OutputModule
                         '{mark=asterisk},mark={star},{mark=square},', ...
                         '{mark=diamond},{mark=triangle},mark={pentagon},', ...
                         '{mark=oplus},{mark=otimes}}'];
+                case 'empty'
+                    s = 'cycle list={{black,mark=none}}';
                 case 'black white'
                     s = 'cycle list name=black white';
                 otherwise
@@ -153,7 +168,7 @@ classdef PGFPlotsOutputModule < OutputModule
         function write_plots(obj, fid)
             % Write a separate plot command for each row of y.
             for k = 1:size(obj.y, 1)
-                write_plot(obj, fid, obj.x, obj.y(k,:))
+                write_plot(obj, fid, obj.x, obj.y(k,:), k)
                 
                 % Add a legend entry if one exists.
                 if length(obj.legend) >= k
@@ -162,11 +177,23 @@ classdef PGFPlotsOutputModule < OutputModule
             end
         end
         
-        function write_plot(obj, fid, x, y)
-            fprintf(fid, '\\addplot coordinates{ \n');
+        function write_plot(obj, fid, x, y, k)
+            
+            % Add the addplot PGFplots command, including options if any options
+            % have been specified for the current data series.
+            if length(obj.plot_options) >= k && ~isempty(obj.plot_options{k})
+                fprintf(fid, '\\addplot[%s] coordinates{ \n', ...
+                    obj.plot_options{k});
+            else
+                fprintf(fid, '\\addplot coordinates{ \n');
+            end
+            
+            % Add the data points.
             for k = 1:length(x)
                 fprintf(fid, '  (%.2f,%.2f)\n', x(k), y(k));
             end
+            
+            % Final right brace to close the \addplot command.
             fprintf(fid, '};\n\n');
         end
         

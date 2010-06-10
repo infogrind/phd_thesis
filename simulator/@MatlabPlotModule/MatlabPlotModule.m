@@ -47,6 +47,8 @@ classdef MatlabPlotModule < OutputModule
                     set_style_list(obj, 'color');
                 case 'bw'
                     set_style_list(obj, 'bw');
+                case 'empty'
+                    set_style_list(obj, 'empty');
                 otherwise
                     error('%s is not a valid color mode.', c);
             end
@@ -81,6 +83,8 @@ classdef MatlabPlotModule < OutputModule
                 case 'bw'
                     obj.stylelist = {'ko-', 'kx-', 'k+-', 'k*-', 'ks-', ...
                     'kd-', 'kv-', 'k^-', 'k<-', 'k>-', 'kp-', 'kh-'};
+                case 'empty'
+                    obj.stylelist = {'k-'};
                 otherwise
                     % We should never reach here, error checking should be done
                     % before.
