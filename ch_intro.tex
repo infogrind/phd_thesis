@@ -86,6 +86,28 @@ particular, the following themes are addressed.
 
 \begin{enumerate}
 
+  \item \textbf{Characterization of Optimal Fidelity--Cost Ratio.} The three
+    problems of source coding with a fidelity criterion, channel coding with an
+    input cost constraint, and reproducing a source across a noisy channel all
+    face a similar tradeoff between resource and performance. Of particular
+    interest is the operating point with the highest performance per resource.
+    In the case of channel coding, channel input cost is traded for rate, and
+    the optimal tradeoff corresponds to the \emph{capacity per unit cost}, a
+    subject that has been well studied in the past. This thesis defines the
+    equivalent notions of \emph{fidelity per unit rate} for the source coding
+    problem and \emph{fidelity per unit cost} for the end-to-end source-channel
+    communication problem and shows how they relate. 
+
+  \item \textbf{Matching Conditions for Fidelity Per Unit Cost.} It is known
+    that when the channel transition distribution, the input distribution, and
+    the input cost measure are matched in a particular way then the channel
+    operates at capacity. Here a refined condition is provided under which the
+    channel operates at capacity per unit cost. The condition under which a
+    source operates at the rate-distortion function is refined in a similar way.
+    When combined, these refined conditions yield a necessary and sufficient
+    condition for a source-channel communication system to operate at fidelity
+    per unit cost. 
+
   \item \textbf{Asymptotic Performance of a Minimal-Delay Communication
     Strategy.} A simple hybrid transmission strategy to transmit a single
     continuous-valued source symbol across $n$~uses of a Gaussian channel is
@@ -117,28 +139,6 @@ particular, the following themes are addressed.
     of view and the more traditional way of analyzing minimal-delay
     source-channel codes geometrically. 
 
-  \item \textbf{Characterization of Optimal Fidelity--Cost Ratio.} The three
-    problems of source coding with a fidelity criterion, channel coding with an
-    input cost constraint, and reproducing a source across a noisy channel all
-    face a similar tradeoff between resource and performance. Of particular
-    interest is the operating point with the highest performance per resource.
-    In the case of channel coding, channel input cost is traded for rate, and
-    the optimal tradeoff corresponds to the \emph{capacity per unit cost}, a
-    subject that has been well studied in the past. This thesis defines the
-    equivalent notions of \emph{fidelity per unit rate} for the source coding
-    problem and \emph{fidelity per unit cost} for the end-to-end source-channel
-    communication problem and shows how they relate. 
-
-  \item \textbf{Matching Conditions for Fidelity Per Unit Cost.} It is known
-    that when the channel transition distribution, the input distribution, and
-    the input cost measure are matched in a particular way then the channel
-    operates at capacity. Here a refined condition is provided under which the
-    channel operates at capacity per unit cost. The condition under which a
-    source operates at the rate-distortion function is refined in a similar way.
-    When combined, these refined conditions yield a necessary and sufficient
-    condition for a source-channel communication system to operate at fidelity
-    per unit cost. 
-
   \item \textbf{An Object-Oriented Source-Channel Coding Simulator.} A full,
     workable implementation of a joint source-channel coding simulator in
     \matlab\ is presented. It allows rapid testing of ideas, while its structure
@@ -154,40 +154,36 @@ particular, the following themes are addressed.
 communication problem and defines the relevant performance measures as well as
 their theoretical limits.  This is followed by a review of the general
 conditions required for a system to operate at these limits, \ie, on the border
-of the region of achievable cost and distortion pairs. Next, codes with a delay
-constraint are discussed and related to the wider setting. The last part of the
-chapter focuses on the particular case where a memoryless Gaussian source is to
-be transmitted across a memoryless Gaussian channel with minimal delay, \ie,
-when a single source symbol is to be encoded at a time. If one channel use is
+of the region of achievable cost and distortion pairs. In addition, the
+``measure matching'' perspective is reviewed, where an optimal system is
+characterized in terms of a  \emph{match} between the various quantities of the
+system.
+
+\bchapref{fidelity} establishes an upper bound to the average fidelity per cost
+of a point-to-point source-channel communication system and shows that this
+bound is tight. It then extends the measure matching point of view to this
+problem, yielding necessary and sufficient conditions for a communication system
+to operate at the maximal fidelity per cost ratio. 
+
+\textbf{Chapters~\ref{ch:delaygauss} and~\ref{ch:mindelbwex}} deal with
+delay-limited block codes for the Gaussian channel.  If one channel use is
 available per source symbol, it is well known that uncoded transmission (with
-minimal delay) achieves the theoretical limits. If more than one value can be
-transmitted across the channel per source symbol, a similarly simple optimal
-scheme exists only if the encoder has perfect feedback. These optimal schemes
-are revisited, and some conclusions are drawn from the case with feedback on how
-to design a good minimal-delay code for the situation without feedback if
-several channel uses are available per source symbol.
+minimal delay) achieves the same performance as the best codes with
+unconstrained delay. If more than one value can be transmitted across the
+channel per source symbol, a similarly simple optimal scheme exists only if the
+encoder has perfect feedback.  These optimal schemes are revisited in
+\bchapref{delaygauss}, and it is shown how uncoded communication can be used
+even in the absence of feedback. This results in an alternative justification
+for a well known hybrid communication strategy combining quantization and
+uncoded transmission.
 
-\bchapref{mindelbwex} is concerned solely with transmission across Gaussian
-channels. It first looks at the problem of minimal-delay bandwidth-expansion
-coding from two points of view: one inspired by the example of optimal coding
-with feedback; the other is a more traditional geometric analysis of the signal
-constellation. Motivated by these reflections, the chapter then introduces a
-concrete hybrid transmission scheme to transmit a single analog source symbol
-across several channel uses.  Asymptotic upper bounds as well as asymptotic
-lower bounds on the achieved mean squared error as a function of the SNR are
-given, and they are shown to coincide. The hybrid communication scheme is
-extended to two more general cases, and the respective asymptotic performance is
-given. The last section of the chapter looks ahead and suggests possible
-directions to obtain a more general characterization of the performance of
-minimal-delay schemes. 
-
-The thesis returns to arbitrary sources and channels in \bchapref{fidelity}.
-Instead of finding the best cost--performance tradeoff, the goal of this chapter
-is to characterize the best \emph{ratio} between performance and cost. For this,
-the notion of distortion is replaced with a (mathematically equivalent) notion
-of \emph{fidelity}. By refining previous results, necessary and sufficient
-conditions are found for a memoryless point-to-point communication system to
-operate at the maximal fidelity per cost ratio. 
+This hybrid strategy is described in detail in \bchapref{mindelbwex}, which
+then derives asymptotic upper as well as lower bounds on the achieved mean
+squared error as a function of the SNR and shows that they coincide. The hybrid
+communication scheme is extended to two more general cases, and the respective
+asymptotic performance is given. The last section of the chapter looks ahead and
+suggests possible directions to obtain a more general characterization of the
+performance of minimal-delay schemes. 
 
 \bchapref{simulator} is of a more practical nature. It argues that
 object-oriented programming is particularly suitable for implementing

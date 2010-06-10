@@ -1,345 +1,22 @@
-\chapter{Minimal-Delay Codes for Bandwidth Expansion}\label{ch:mindelbwex}
-
-The main goal of this chapter is to transmit a single symbol of an analog source
-across $n$~uses of a Gaussian channel when $n > 1$. Since the optimal mean
-squared error for a given SNR (given by \thmref{separationconverse}) is not
-achievable (see \chapref{fundamentals}), we look in this chapter at the simpler
-problem of optimizing how the SDR scales asymptotically when the SNR goes to
-infinity. 
-
-We define $\sdr = \ssq / D$ and $\snr = P / \szq$, where $\ssq$ and $\szq$ are
-the source and noise variance, respectively, and $D$ and $P$ are the average
-squared error and average transmit power, respectively. In the previous chapter
-we have seen that when $k$~source symbols are encoded into $n$~channel input
-symbols, the SDR and the SNR are related by
-\begin{equation}
-  \label{eq:gausslimitch2}
-  \sdr \le (1 + \snr)^{n/k}.
-\end{equation}
-For large values of SNR, the SDR behaves thus at best as $\snr^{n/k}$.
-
-In this chapter we use the ``Big-O'' and ``Big-Omega'' notation. This notation
-is defined formally in \appref{asymptotic}. Informally, we can say that
-$O(f(x))$ is the set of functions that scale \emph{at most}  as $f(x)$.
-Similarly, $\Omega(f(x))$ is the set of functions that scale \emph{at least} as
-$f(x)$. In this notation, the constraint of~\eqref{eq:gausslimitch2} implies
-\begin{equation}
-  \label{eq:gaussasymplimit}
-  \sdr \in O(\snr^{n/k}).
-\end{equation}
-
-For arbitrary sources, the $\sdr$ can be bounded as
-\begin{equation}
-  \label{eq:gensrcsdrlb}
-  \sdr \le 2^{2 D(\ps \| \phi_{\ssq})} (1 + \snr)^{n/k},
-\end{equation}
-where $D(\cdot\|\cdot)$ is the relative entropy or Kullback-Leibler divergence
-between two distributions (see \eg~\cite{CoverT1991}) and $\phi_{\ssq}$ is the
-\pdf\ of a centered Gaussian distribution of variance~$\ssq$. This bound
-follows directly from Shannon's lower bound on the rate distortion function for
-arbitrary sources under a difference distortion measure\footnote{Shannon calls a
-\emph{difference distortion measure} a distortion measure that depends only on
-the difference $s - \sh$. Examples are the squared error $(s-\sh)^2$ or the
-absolute error $|s - \sh|$.}~\cite{Shannon1959}.
-(If $\ps$ is a Gaussian distribution, the divergence becomes zero and
-\eqref{eq:gensrcsdrlb} simplifies to~\eqref{eq:gausslimitch2}.) Thus, the
-scaling bound~\eqref{eq:gaussasymplimit} applies not only to Gaussian but to
-arbitrary continuous-valued sources.
-
-The communication scheme studied in this chapter is easy to describe. It
-consists of quantizing a source symbol, sending the quantizer output across the
-first channel use, and then repeatedly quantizing the quantization error of the
-previous step and transmitting it across the channel. The last quantization
-error is transmitted uncoded in the $n\th$~channel use. While this strategy is
-not entirely new (see \secref{mindelbwexhist} for references to previous work),
-this chapter provides the first exact analysis of the resulting SDR scaling and
-the optimization thereof.
-
-The problem of transmitting a single source symbol in $n$~channel uses can be
-approached from two different perspectives. The first perspective is to take
-inspiration from the feedback case of \exref{gaussfb} in \chapref{fundamentals}.
-The second, more traditional perspective is a geometric analysis of the signal
-constellation.  \secref{twoperspectives} starts this chapter by presenting the
-two points of view and showing how they both lead to the same tradeoff.
-\secref{scalarquant} then formally introduces the hybrid communication scheme
-that is at the heart of this chapter. It is shown that this scheme cannot
-achieve an SDR that scales better than $\snr^n / (\log\snr)^{n-1}$, regardless
-of the decoder used, and a simple suboptimal decoder in fact attains this
-scaling.  In \secref{latticequant}, the communication scheme of
-\secref{scalarquant} is extended to encode \emph{blocks} of $m$~source symbols
-into $mn$~channel inputs using lattice quantizers. It turns out that even when
-powerful high dimensional lattices are used, the SDR for any finite block
-length~$m$ scales just like when $m = 1$ (although the performance at low SNR
-may be better). \secref{genbwexp} extends the scheme of \secref{scalarquant} in
-a different way, namely to encode $k$~source symbols into $n$~channel inputs,
-where $k \le n$. For this case, the achievable SDR is shown to scale as
-$\snr^{n/k} /(\log\snr)^{(n-k)/k}$. 
-
-None of the transmission schemes considered achieve the optimal SDR scaling of
-Equation~\ref{eq:gaussasymplimit}. Instead, the optimal scaling is divided by a
-``penalty factor'' of $\log\snr$ raised to a power equal to the number of
-channel input symbols per source symbol that are used for ``coded'', \ie,
-discrete, transmission. This seems to be not only a limitation of the particular
-scheme studied here; in fact there is no known scheme for transmitting a
-single analog source symbol in $n > 1$ channel uses that achieves a better SDR
-scaling. 
-
-The question whether this is a fundamental limit is unfortunately not resolved
-in this thesis.  Nevertheless, \secref{gensdrub} prepares the way towards
-answering this question by exploring possible ways to upper bound the SDR
-scaling of  a wider class of transmission strategies. 
-
-
-\section{Two Alternative Points of View}\label{sec:twoperspectives}
-
-\subsection{The Point of View from Feedback}
-
-The lesson from \exref{gaussfb} is that uncoded transmission is asymptotically
-optimal if the transmitter knows the receiver's estimate given the previous
-channel outputs.  Because of the inherent randomness of uncoded transmission,
-however, the transmitter has little chance of guessing the receiver's estimate
-correctly after a round of uncoded transmission if there is no feedback.
-Nevertheless, if the transmission in the first $n-1$ channel uses was such that
-the transmitter has a reasonably good idea of the receiver's estimate (by using
-some form of coding, for example) then the transmitter can send the estimation
-error uncoded in the last channel use, even if there is no feedback, as already
-briefly mentioned at the end of \chapref{fundamentals}. 
-
-Indeed, suppose that after $n-1$~channel uses the receiver has a preliminary
-estimate~$\Sh'$ and suppose the transmitter knows~$\Sh'$. Then it 
-can use uncoded transmission to send the error $E \deq \Sh' - S$ in the last
-channel use. Upon receiving the corresponding channel output, the receiver
-computes an estimate $\Eh$ of~$E$ and sets the final estimate of~$S$ to be $\Sh
-= \Sh' - \Eh$. This results in the overall error $\Sh - S = \Sh' - E - S + E -
-\Eh = E - \Eh$ and an SDR of
-\begin{equation*}
-  \sdr = \frac{\ssq}{\mse} = \frac{\ssq}{\E[(\Sh' - S)^2]} \cdot
-  \frac{\E[(\Sh' - S)^2]}{\msee}.
-\end{equation*}
-The first term on the right hand side is~$\sdr'$, the SDR after $n-1$ channel
-uses. The second term, equal to $\E[E^2]/\msee$, is the SDR resulting from the
-uncoded transmission of~$E$, which, as seen in \exref{gausssingle}, scales
-linearly with the SNR. Hence, the overall SDR scales as $\sdr' \cdot \snr$ and
-so uncoded transmission in the last channel use boosts the SDR by a
-factor~$\snr$. 
-
-The argument just given assumed that the transmitter knew the receiver's
-estimate exactly, even though there was no feedback. This is possible only in
-two cases.  Either the estimate after $n-1$ channel uses is constant regardless
-of the value of~$S$ or some form of coding is used to combat the unreliability
-of the channel. Since the former is not very useful, the focus hereafter is on
-the latter.
-
-Suppose a perfect source code combined with a perfect channel code is
-used to transmit~$S$ across the first $n-1$~channel uses. This implies a
-decomposition of~$S$ as $S = Q + E$, where $Q$~is transmitted error free and
-the associated distortion $\E[E^2]$ scales as $\snr^{-(n-1)}$
-(cf.~Equation~\vref{eq:gausssepsdr}). If $E$ is transmitted uncoded in the
-$n\th$~channel use and the receiver sets $\Sh = Q + \Eh$, the overall SDR is
-\begin{equation*}
-  \sdr = \frac{\ssq}{\mse} = \frac{\ssq}{\E[E^2]} \cdot \frac{\E[E^2]}{\E[(\Eh -
-  E)^2]},
-\end{equation*}
-which scales as $\snr^{n-1} \cdot \snr = \snr^n$. 
-
-Naturally, the constraint that a single source symbol must be encoded at a
-time prevents the use of a perfect source and channel code, which would require
-large block lenghts. Suppose thus that the receiver decodes not~$Q$ after
-$n-1$~channel uses, but that it has only an estimate~$\Qh$ and that it sets $\Sh
-= \Qh + \Eh$. In that case the overall SDR is
-\begin{equation}
-  \label{eq:sdrqesep}
-  \sdr = \frac{\ssq}{\mseq + \msee} =
-  \frac{\ssq}{\E[E^2]} \cdot \frac{\E[E^2]}{\mseq + \E[(\Eh - E)^2]}.
-\end{equation}
-If now $\mseq \in O(\msee)$ as $\snr \goesto \infty$, \ie,
-if the error in estimating~$Q$ is dominated by that of estimating~$E$ then
-the SDR scales as
-\begin{equation}
-  \label{eq:sdrscalingapprox}
-  \frac{\ssq}{\E[E^2]} \cdot \frac{\E[E^2]}{\msee}.
-\end{equation}
-The second term is again the SDR from uncoded transmission of~$E$ and scales
-as~$\snr$; overall, the SDR behaves thus as
-\begin{equation}
-  \label{eq:sdrscalingapprox2}
-  \sdr \approx \frac{\ssq\snr}{\E[E^2]}.
-\end{equation}
-
-There is a tradeoff in how~$Q$ (and~$E$) are chosen as a function of~$S$. If
-$Q$~is such that $\mseq$ decreases too slowly with increasing SNR (for example
-because $Q$~is obtained by quantizing the source with a too fine resolution),
-the approximation~\eqref{eq:sdrscalingapprox2} is not valid
-and~\eqref{eq:sdrqesep} scales instead as $\ssq / \mseq$, so the SDR gain from
-the uncoded transmission is lost.  If, on the other hand, $\mseq$ decreases too
-fast then $\E[E^2]$ decreases only slowly and the overall SDR, $\snr / \E[E^2]$,
-grows only slowly with~$\snr$. It is clear, then, that the best SDR scaling is
-obtained when $\mseq$ scales the same as~$\msee$.
-
-The conclusion from all this is that to take advantage of uncoded communication
-in the last channel use, error free communication in the first $n-1$~channel
-uses is not necessary. All that is needed is that the error from the first
-$n-1$~channel uses be dominated by that of the last channel use as $\snr \goesto
-\infty$. 
-
-
-\subsection{The Geometric Point of View}\label{sec:geomviewpoint}
-
-If $f(s)$ is an encoding function that maps a single source symbol into
-$n$~channel inputs, one can gain insights about its performance by studying the
-set $\{f(s): s \in \Ss\}$ (where $\Ss$~is the support set of the source). This
-set is called the \emph{signal curve} or \emph{signal locus} corresponding
-to~$f(s)$. A sample signal locus is shown in \figref{nonlinlocus}. Because of
-the power constraint, the signal locus must be roughly contained within a sphere
-of radius~$\sqrt{P}$.
-
-\begin{figure}
-  \begin{center}
-    \input{figures/nonlinlocus.tex_t}
-  \end{center}
-  \caption{The signal locus corresponding to a nonlinear encoder from~$\R$
-  to~$\R^2$. A power constraint~$P$ signifies that the signal must roughly be
-  contained within a sphere of radius~$\sqrt{P}$.}
-  \label{fig:nonlinlocus}
-\end{figure}
-
-The estimate that minimizes the mean squared error is the conditional mean $\E[S
-| Y^n]$. For nonlinear encoders, closed-form evaluation of the corresponding
-estimation error is in general hopelessly complicated. A decoder whose
-performance is easier to evaluate is the \emph{maximum likelihood} (ML) decoder.
-It computes $\sh = \arg\max_{s} f(\y|s)$, where $f(\y|s)$ is the conditional
-\pdf\ of~$\Y = (Y_1, \dots, Y_n)$ given~$S$. For the AWGN channel, $\Y = f(S) +
-\Zv$, where $\Zv$ is circularly symmetric Gaussian noise whose orthogonal
-components have variance~$\szq$. In this case $f(\y|s)$ is a decreasing function
-of $\|\y - f(s)\|$, so the ML decoder can equivalently be described by $\sh =
-\arg\min_{s} \|\y - f(s)\|$. It decides thus for $\sh$ such that $f(\sh)$ is the
-point on the signal curve closest to~$\y$. 
-
-Suppose now that the transmitted point is $f(s_0)$ and suppose further that
-$f(s)$ is differentiable in~$s_0$. Then the signal curve can be linearly
-approximated in a small neighborhood around $s_0$ as
-\begin{equation}
-  \label{eq:linapprox}
-  f(s_0 + \Delta) \approx f(s_0) + \Delta \left. \frac{df(s)}{ds}\right|_{s =
-  s_0}.
-\end{equation}
-If the noise is small, a valid approximation of the ML estimate is therefore
-the projection of the received point onto the tangent through~$f(s_0)$ (see
-\figref{tangentproj}). Writing $\sh = s_0 + \Delta$, the estimation error is
-$\sh - s_0 = \Delta$ and by~\eqref{eq:linapprox} satisfies
-\begin{equation*}
-  \| \Delta \|^2 \approx \frac{\| f(s_0 + \Delta) - f(s_0) \|^2}
-  {\left\| \left. \frac{d f(s)}{ds} \right|_{s = s_0} \right\|^2}.
-\end{equation*}
-The term $\| f(s_0 + \Delta) - f(s_0) \|$ is the length of the noise
-vector~$\Zv$ projected onto the tangent through $f(s_0)$
-(cf.~\figref{tangentproj}). It is Gaussian with variance~$\szq$, so the average
-squared error given $S = s_0$ is approximately
-\begin{equation}
-  \label{eq:errorlinapprox}
-  \E[(\Sh - S)^2 \mid S = s_0] \approx \frac{\szq}{\left\| \left. \frac{df(s)}{ds}
-  \right|_{s=s_0} \right\|^2}.
-\end{equation}
-Expressing $f(s) = \sqrt{P} \ft(s)$, with $\E[\|\ft(S)\|^2] \le 1$, its
-derivative is
-$df(s)/ds = \sqrt{P} d\ft(s)/s$. The quantity $l(s) \deq d\ft(s)/ds$ is called
-the \emph{stretch factor} or simply the \emph{stretch} of the signal locus. If
-the stretch does not depend on~$s$, the overall MSE simplifies to
-\begin{equation}
-  \label{eq:constantstretch}
-  \mse \approx (\snr l^2)^{-1}
-\end{equation}
-or equivalently
-\begin{equation}
-  \label{eq:sdrconstantstretch}
-  \sdr \approx \ssq\snr l^2.
-\end{equation}
-
-\begin{figure}
-  \begin{center}
-    \input{figures/tangentproj.tex_t}
-  \end{center}
-  \caption{If the noise level is small, the ML estimate can be approximated
-  by projecting the noise vector~$\Zv$ onto a tangent through~$f(s_0)$.}
-  \label{fig:tangentproj}
-\end{figure}
-
-As long as the noise level is small with respect to the distance between
-different folds of the signal curve, \eqref{eq:errorlinapprox}~is a valid
-approximation for the achieved MSE, and the latter decreases with growing
-stretch. It is clear, though, that the MSE cannot decrease arbitrarily: a
-larger stretch implies a longer signal curve, so the folds of the curve must be
-placed closer together to satisfy the power constraint. If the stretch becomes
-too large, the small noise assumption will no longer be valid.  On the other
-hand, if the SDR is to scale more than linearly with the SNR, then
-by~\eqref{eq:errorlinapprox} the stretch must increase with the SNR.
-
-The choice of the stretch represents a tradeoff: a bigger stretch results in a
-smaller error, provided that the correct fold of the signal curve is decoded,
-but a bigger stretch also increases the probability that the wrong fold of the
-curve is decoded. Optimally, thus, the stretch is such that the two kinds of
-errors contribute equally to the overall error. 
-
-There are clear parallels to the previous point of view. In the
-feedback-inspired discussion, the error from decoding~$Q$ had to be dominated by
-that from decoding~$E$ in order for the
-approximation~\eqref{eq:sdrscalingapprox2} to work. Here, the error due to
-decoding the wrong fold of the curve must be dominated by that from decoding the
-wrong point on the same fold, in order for the
-approximation~\eqref{eq:errorlinapprox} to be valid. Note in particular the
-striking similarity between \eqref{eq:sdrconstantstretch}
-and~\eqref{eq:sdrscalingapprox2}: both equations express the SDR as the product
-of the SNR and a factor that should grow with the SNR but whose growth rate is
-limited by the conditions of the underlying approximation. 
-
-Translated to the geometric perspective, the principle that uncoded transmission
-be used only in the last channel use means that the signal curve should consist
-of parallel straight line segments, aligned along the axis of~$X_n$. This is
-illustrated on \figref{hybridlocus}. 
-
-\begin{figure}
-  \centerline{%
-  \subfloat[$n = 2$]{\label{fig:hybridlocus2}%
-  \input{figures/hybridlocus2.tex_t}}
-  \hfil
-  \subfloat[$n = 3$]{\label{fig:hybridlocus3}%
-  \input{figures/hybridlocus3.tex_t}}
-  }
-  \caption{If uncoded transmission is used only in the last channel use, the
-  signal locus consists of parallel straight lines, aligned with the axis
-  of~$X_n$. This is shown here for $n = 2$ and $n = 3$, respectively.}
-  \label{fig:hybridlocus}
-\end{figure}
-
-\begin{remark}
-  The geometric perspective provides a simple argument why a linear encoder
-  cannot achieve an MSE scaling better than $\snr^{-1}$, regardless of the
-  number of channel uses. The image of a linear function from $\R$ to $\R^n$ is
-  a straight line (a subspace of dimension~$1$). Applying invertible transforms
-  at the encoder and decoder, this straight line can be rotated to lie on the
-  $X_1$ axis without changing the performance. The resulting constellation is
-  such that all $X_i$ for $i = 2$, \dots, $n$ are zero. Effectively, thus, only
-  a single transmission is made on the channel. The same reasoning implies that
-  a linear encoder from $\R^k$ to $\R^n$, where $k < n$, achieves a MSE scaling
-  of only $\snr^{-k}$, regardless of~$n$. 
-\end{remark}
+\chapter[A Hybrid Communication Strategy for Gaussian Channels]{Analysis of a
+Hybrid Communication Strategy for the Gaussian Channel} \label{ch:mindelbwex}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SECTION: SCALAR QUANTIZER
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{A Simple Hybrid Transmission Scheme}\label{sec:scalarquant}
-
-Based on the ideas outlined in the previous section, this section
+Based on the ideas outlined in the previous chapter, this section
 introduces a simple communication strategy. It splits a single source symbol
 into $n-1$ discrete parts and a continous part (hence the term ``hybrid''), to
 be transmitted, respectively, in the first $n-1$ and in the last channel
-use.\footnote{The main results of \secref{scalarquant} have been published
-in~\cite{KleinerR2009b} and~\cite{KleinerR2010}.}
+use. The main idea behind this strategy goes back to McRae~\cite{McRae1971}; for
+more detailed historical references see \secref{mindelbwexhist} at the end of
+the chapter. \footnote{The main results of this chapter have been
+published in~\cite{KleinerR2009b} and~\cite{KleinerR2010}.}
 
 
-\subsection{Transmission Strategy}\label{sec:commscheme}
+\section{Transmission Strategy}\label{sec:commscheme}
 
 The communication strategy described hereafter is displayed schematically in
 \figref{1nencoding}.
@@ -480,7 +157,7 @@ P$ for all~$i$.
 %\end{remark}
 
 
-\subsection{Lower Bound on the Mean Squared Error}\label{sec:scalarlowerbound}
+\section{Lower Bound on the Mean Squared Error}\label{sec:scalarlowerbound}
 
 When an analog source is transmitted across a Gaussian channel using the scheme
 just presented, two types of decoding errors can occur. Either the decoded point
@@ -704,7 +381,7 @@ choose~$\e(\snr)$ optimally will be the subject of Theorem~\ref{thm:scalinglb}.
 \begin{remark}
   \label{rem:geomlb}
   \figref{sdrubproof} illustrates the connection to the geometric
-  argument given in \secref{twoperspectives}. The MSE is lower bounded by
+  argument given in \secref{geomviewpoint}. The MSE is lower bounded by
   \lemref{lowerbound1} in case the correct fold of the signal curve is decoded
   and by \lemref{lowerbound2} in case the wrong fold is decoded. The
   parameter~$\e$ represents the tradeoff between the two kinds of errors.
@@ -829,14 +506,14 @@ finding the $\e$ for which the two lower bounds scale the same.
 \end{proof}
 
 
-\subsection{Asymptotic Achievability of Lower Bound}
+\section{Asymptotic Achievability of Lower Bound}
 \label{sec:achievable}
 
 The previous section showed that the hybrid transmission strategy 
 achieves an SDR scaling of at best $\snr^n/(\log\snr)^{n-1}$. Using a simple
 decoder this scaling is in fact achievable, as will now be shown.
 
-\subsubsection{A Suboptimal Decoder}
+\subsection{A Suboptimal Decoder}
 
 The $X_i$ are transmitted across the channel, producing at the channel output
 the symbols
@@ -871,7 +548,7 @@ Finally, using~\eqref{eq:unwraprec}, the estimate of~$S$ is computed as
 \end{equation}
 
 
-\subsubsection{Error Analysis}
+\subsection{Error Analysis}
 
 The overall MSE $\mse$ can be broken up into contributions due to the
 errors in decoding $Q_i$ and $E_{n-1}$ as follows. From~\eqref{eq:unwraprec}
@@ -988,7 +665,7 @@ E_{n-1})^2]$.
 \end{proof}
 
 
-\subsubsection{Optimizing the Quantization Resolution}
+\subsection{Optimizing the Quantization Resolution}
 
 Recall the formula for the overall error
 \begin{equation*}
@@ -1026,15 +703,28 @@ SDR scaling upper bound of \thmref{scalinglb}.
 
 \begin{figure}
   \begin{center}
-    \input{figures/matlab/fig_scalar_comparison.tex_t}
+    \input{figures/matlab/fig_epsilon_envelope.tex_t}
   \end{center}
   \caption{Simulation results illustrating the tradeoff represented by the
   choice of~$\e$ for $n = 3$. For larger~$\e$, the error from decoding the
   discrete signal part decays quickly but the final scaling is worse, while
-  for smaller~$\e$ the opposite holds. The delay unconstrained curve
-  corresponds to {\normalfont$\sdr = (1 + \snr)^n$}.}
+  for smaller~$\e$ the opposite holds. If $\e$~is chosen optimally as a function
+  of~{\normalfont$\snr$}, the resulting performance is the convex hull of the
+  collection of all curves.}
   \label{fig:scalarcomparison}
 \end{figure}
+
+%\begin{figure}
+%  \begin{center}
+%    \input{figures/matlab/fig_scalar_comparison.tex_t}
+%  \end{center}
+%  \caption{Simulation results illustrating the tradeoff represented by the
+%  choice of~$\e$ for $n = 3$. For larger~$\e$, the error from decoding the
+%  discrete signal part decays quickly but the final scaling is worse, while
+%  for smaller~$\e$ the opposite holds. The delay unconstrained curve
+%  corresponds to {\normalfont$\sdr = (1 + \snr)^n$}.}
+%  \label{fig:scalarcomparison}
+%\end{figure}
 
 Let
 \begin{equation}
@@ -1072,7 +762,8 @@ is asymptotically optimal.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\section{Encoding Blocks of Source Symbols}\label{sec:latticequant}
+\section{Encoding Blocks of Source Symbols using Lattices}
+\label{sec:latticequant}
 
 The scalar quantizer scheme described in the previous section can be extended
 quite easily to treat blocks of $m$ source symbols using lattices for the
@@ -1091,7 +782,7 @@ values (see \figref{sim_latticeperf} for a preview).
 
 The procedure to encode a vector~$\S$ of $m$~source symbols into $mn$~channel
 input vectors $\X_1$, \ldots, $\X_n$ using an $m$-dimensional lattice for
-quantization is analog to that in \secref{scalarquant}, except that now all
+quantization is analog to that in \secref{commscheme}, except that now all
 involved quantities are $m$-dimensional vectors.
 
 Let $\Lambda$ be some fixed lattice of dimension~$m$ and define $\Evc_0 = \S$.
@@ -1119,12 +810,13 @@ By the above argument, this ensures that $\E[\|\X_i\|^2]/m \le P$ for all~$i$.
 
 \subsection{Error Lower Bound}
 
-Ziv's lower bound on the mean squared error introduced in \secref{scalarquant}
-allows a straightforward extension to vector sources. With this, essentially the
-same argument sequence as in \secref{scalarquant} can be used to lower bound the
-mean squared error, independent of the particular decoder used.  (Again,
-the quantization resolution in terms of~$\snr$ is assumed to be $\beta = \lceil
-\snr^{(1-\e)/2} \rceil$ without loss of generality (cf.~\remref{betaepswlog}).)
+Ziv's lower bound on the mean squared error introduced in
+\secref{scalarlowerbound} allows a straightforward extension to vector sources.
+With this, essentially the same argument sequence as in
+\secref{scalarlowerbound} can be used to lower bound the mean squared error,
+independent of the particular decoder used.  (Again, the quantization resolution
+in terms of~$\snr$ is assumed to be $\beta = \lceil \snr^{(1-\e)/2} \rceil$
+without loss of generality (cf.~\remref{betaepswlog}).)
 
 \begin{lemma}[Extension of \lemref{zivbound} to vector sources]
   \label{lem:zivboundvec}
@@ -1217,7 +909,7 @@ It is restated here for completeness.
 The MSE scaling lower bound of \thmref{scalinglbvec} is trivially achievable
 with the integer lattice~$\Z$: quantization with this lattice can be performed
 independently in each dimension and is equivalent to repeated application of the
-scalar scheme of \secref{scalarquant}. Hence \thmref{scalarachievability}
+scalar scheme of \secref{commscheme}. Hence \thmref{scalarachievability}
 applies to lattice quantizers as well. 
 
 \figref{sim_latticeperf} compares SDR curves achieved with a scalar quantizer
@@ -1232,12 +924,12 @@ calculations can be used to quantify the performance.
     \input{figures/scalarvsleech.tex_t}
   \end{center}
   \caption{If the 24-dimensional Leech lattice is used for quantization, the
-  scaling at large SNR remains the same but the MSE decreases quicker. (Here $n
-  = 3$.)}
+  scaling at large SNR remains the same but the MSE decreases quicker. This is
+  useful for applications at low SNR. (Here $n = 3$.)}
   \label{fig:sim_latticeperf}
 \end{figure}
 
-Like in \secref{scalarquant}, a combination of ML decoder (for the lattice
+Like in \secref{achievable}, a combination of ML decoder (for the lattice
 points) and LMMSE decoder (for the quantization error) may be used to
 estimate~$\S$.  Consider first the ML decoder. Since $\Q_i \in \Lambda/\beta$
 and $\X_i = \sqrt{P/\gamma^2} \Q_i$, the ML decoder divides $\Y_i$ by
@@ -1272,14 +964,23 @@ where $\phi(r)$ is the pdf of a real Gaussian random variable of variance
 $(\gamma^2/P) \szq = \gamma^2/\snr$. To get explicit bounds for finite~SNR that
 depend on $R$ and $\rho$ (and thus on the particular lattice used), this
 integral can be evaluated using the formula
-\begin{equation*}
+\begin{equation}
+  \label{eq:integralgamma}
   \int_\mu^\infty r^n e^{-c r^2} dr = \frac12 c^{-(n+1)/2} \Gamma\left(
   \frac{1+n}{2}, c \mu^2 \right),
-\end{equation*}
+\end{equation}
 where $\Gamma(s, x) = \int_x^\infty t^{s-1} e^{-t} dt$ is the upper incomplete
-gamma function.
+gamma function.\footnote{This can be shown using the formula $\alpha_n(z)  =
+z^{-(n+1)} \Gamma(n+1, z)$, where $\alpha_n(z) = \int_1^\infty t^n e^{-zt} dt$
+\cite[\Spg5.1.5, \Spg5.1.56]{AbramowitzS1964} and using variable substitution
+to find that $\int_\mu^\infty r^m e^{-cr^2} dr = \frac12 \mu^{m+1}
+\alpha_{(m-1)/2} (c\mu^2)$.}
 
-As $\snr \goesto \infty$, the bound~\eqref{eq:mseqivbound} behaves as
+As $\snr \goesto \infty$, the bound~\eqref{eq:mseqivbound} behaves
+as\footnote{An exact derivation of this statement fell victim to the delay
+constraints of thesis writing. For now, the author puts his trust in
+Mathematica; a rigorous proof is left to the investigative reader (Chapter~5
+of~\cite{AbramowitzS1964} may be of help).}
 \begin{align*}
   \mseqiv &\in O\left( \frac{1}{\beta^2} \int_{\rho/\beta}^\infty \phi(r) dr 
   \right) \\
@@ -1309,7 +1010,7 @@ confirm that \thmref{scalinglb} applies to lattices as well.
 \section{General Bandwidth Expansion}\label{sec:genbwexp}
 
 If the source~$S$ has bounded support, the transmission strategy of
-\secref{scalarquant} can easily be adapted to encode not one but $k$~source
+\secref{commscheme} can easily be adapted to encode not one but $k$~source
 symbols into $n$~channel inputs (where $k < n$). For simplicity it is first
 assumed that the source support is contained in the interval $[-1/2, 1/2]$; a
 generalization follows at the end of this section.
@@ -1329,7 +1030,7 @@ channel inputs $X_1$, \dots, $X_n$ is displayed schematically on
   quantizers with resolution~$\beta$ as described in~(\ref{eq:QEdefkn}). The
   boxes marked ``combine'' implement the operation~(\ref{eq:Qtot}). The
   part marked in thick lines corresponds exactly to the encoding scheme
-  described in \secref{scalarquant} to encode one source symbol into three
+  described in \secref{commscheme} to encode one source symbol into three
   channel uses; compare this with \figref{1nencoding}.}
   \label{fig:knencoding}
 \end{figure}
@@ -1363,7 +1064,7 @@ inverse can be recursively computed as
 \end{align}
 where $x \bmod 1 \deq x - \Int(x)$.
 
-Point~2 of \propref{qeproperties} from \secref{scalarquant} applies here as
+Point~2 of \propref{qeproperties} from \secref{commscheme} applies here as
 well, so there exists a constant~$\gamma^2$ that upper bounds the variances of
 all $Q_{i,j}$ and~$E_{i,j}$ for all~$\beta$. The channel inputs are thus
 \begin{align*}
@@ -1510,7 +1211,7 @@ At first sight this may just be due to the particular nature of the
 constellations used here. Because a significant fraction of channel inputs is
 from discrete alphabets, a certain decrease from the theoretically optimal
 performance is likely to result. On the other hand, the arguments brought
-forward in \secref{twoperspectives} make the use of discrete channel inputs
+forward in \chapref{delaygauss} make the use of discrete channel inputs
 plausible for a good minimal-delay code. What is more, there seems to be no
 known minimal-delay code that has been shown to achieve a better scaling than
 the one found here. The obvious question to ask, then, is whether the upper
@@ -1637,21 +1338,20 @@ Gaussian channel was suggested by Shannon~\cite{Shannon1949}. In fact, such
 joint source-channel mappings are sometimes called Shannon mappings  or
 Shannon-Kotel'nikov mappings after Shannon and V.~E.~Kotel'nikov, who studied
 the problem independently of Shannon in his 1947 doctoral
-dissertation~\cite{Kotelnikov1960}.  Notice the resemblance of the
-constellation resulting from the communication scheme of \secref{scalarquant} to
-Shannon's original suggestion,
-both shown in Figure~\ref{fig:shannoncomparison}. The contribution of this
-thesis is to specify exactly how the distance between the segments must behave
-as the SNR increases in order to optimize the SDR scaling.
+dissertation~\cite{Kotelnikov1960}.  Notice the resemblance of the constellation
+resulting from the communication scheme of \secref{commscheme} to Shannon's
+original suggestion, both shown in Figure~\ref{fig:shannoncomparison}. The
+contribution of this thesis is to specify exactly how the distance between the
+segments must behave as the SNR increases in order to optimize the SDR scaling.
 
 \begin{figure}
   \centerline{\subfloat[Shannon's original proposition.]{\input{figures/shannonline.tex_t}}
   \hfil
-  \subfloat[Mapping proposed in \secref{scalarquant}
+  \subfloat[Mapping proposed in \secref{commscheme}
   (for~$n=2$).]{\input{figures/ourconstellation.tex_t}} }% end centerline
   \caption{A minimum-delay source-channel code for $n=2$ can be visualized as a
   curve in $\R^2$ parametrized by the source. Here the mapping
-  presented in \secref{scalarquant} is compared to Shannon's original
+  presented in \secref{commscheme} is compared to Shannon's original
   suggestion (left).} \label{fig:shannoncomparison}
 \end{figure}
 
@@ -1661,22 +1361,18 @@ space~\cite[Section~8.2]{WozencraftJ1965}. Sakrison's
 monograph~\cite{Sakrison1970} derived the optimal compander for sources with
 unbounded support (such as Gaussian sources) under the low noise assumption. 
 
-The bound used to lower bound the MSE scaling in \secref{scalarlowerbound} first
-occurred in a simpler form in a paper by Ziv and Zakai~\cite{ZivZ1969}. The
-version used here is based on the version that Ziv developped for his 1970
-paper~\cite{Ziv1970}. In that paper, Ziv found important
-theoretical limitations of source-channel mappings if the encoder can depend
-on the SNR only through a scaling factor.
-
-Much of the more recent work on minimal-delay joint source-channel codes is due
-to Ramstad and his coauthors (see~\cite{Ramstad2002}, \cite{FloorR2006},
-\cite{CowardR2000,CowardR2000a}, \cite{WernerssonSR2007}, \cite{HeklandFR2009}).
-For $n=2$, the scheme of \secref{scalarquant} is almost identical to the HSQLC
-scheme by Coward~\cite{Coward2001}, which uses a numerically optimized
-quantizer, transmitter and receiver to minimize the mean-squared error (MSE) for
-finite values of the SNR. Coward conjectured that the right strategy for $n > 2$
-would be to repeatedly quantize the quantization error from the previous step,
-which is exactly what we do here.
+The particular communication strategy introduced in \secref{commscheme} was
+first explicitly mentioned by McRae in 1971~\cite{McRae1971} as a modulation
+technique for bandspreading communication.  Much of the more recent work on
+minimal-delay joint source-channel codes is due to Ramstad and his coauthors
+(see~\cite{Ramstad2002}, \cite{FloorR2006}, \cite{CowardR2000,CowardR2000a},
+\cite{WernerssonSR2007}, \cite{HeklandFR2009}).  For $n=2$, the scheme of
+\secref{commscheme} is almost identical to the HSQLC scheme by
+Coward~\cite{Coward2001}, which uses a numerically optimized quantizer,
+transmitter and receiver to minimize the mean-squared error (MSE) for finite
+values of the SNR. Coward conjectured that the right strategy for $n > 2$ would
+be to repeatedly quantize the quantization error from the previous step, which
+is exactly what we do here.
 
 Another closely related communication scheme is the \emph{shift-map} scheme due
 to Chen and Wornell~\cite{ChenW1998}.  Vaishampayan and
@@ -1703,6 +1399,13 @@ All three schemes, however, use long block codes for the digital phase and incur
 correspondingly large delays, so they are not directly comparable with minimum
 delay schemes.
 
+The bound used to lower bound the MSE scaling in \secref{scalarlowerbound} first
+occurred in a simpler form in a paper by Ziv and Zakai~\cite{ZivZ1969}. The
+version used here is based on the version that Ziv developped for his 1970
+paper~\cite{Ziv1970}. In that paper, Ziv found important
+theoretical limitations of source-channel mappings if the encoder can depend
+on the SNR only through a scaling factor.
+
 
 
 
@@ -1716,25 +1419,6 @@ delay schemes.
 
 \begin{subappendices}
 
-
-  \section{Asymptotic Notation}\label{app:asymptotic}
-
-  \begin{definition}
-    \label{def:bigo}
-    Let $f(x) \ge 0$ and $g(x) \ge 0$ be two functions defined on~$\R$. The set
-    $O(g(x))$ is defined as
-    \begin{equation*}
-      f(x) \in O(g(x))
-    \end{equation*}
-    if and only if there exists an $x_0$ and a constant~$c$ such that
-    \begin{equation*}
-      f(x) \le c g(x)
-    \end{equation*}
-    for all $x > x_0$. 
-    Similarly, $f(x) \in \Omega(g(x))$ if $\le$ is replaced by $\ge$ in
-    the above definition. Finally, $\Theta(g(x)) \deq O(g(x)) \cap
-    \Omega(g(x))$.
-  \end{definition}
 
 
 \section{Proof of \lemref{Qvarbound}}\label{app:qvarboundproof}
@@ -1926,7 +1610,7 @@ delay schemes.
   \begin{example}
     Let $\Lambda = \Z / \beta$ for some $\beta >0$. The associated
     quantizer~$\QL$ maps each real number to the closest multiple of $1/\beta$.
-    This is exactly the quantizer used in \secref{scalarquant}.
+    This is exactly the quantizer used in \secref{commscheme}.
   \end{example}
 
   %The following simple property will be useful later.

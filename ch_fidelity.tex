@@ -1,20 +1,28 @@
 \chapter{On Fidelity per Unit Cost}\label{ch:fidelity}
 
-While the previous chapter was about concrete communication schemes for the
-Gaussian channel, we return in this chapter to more general sources and
-channels.  We consider three standard communication problems, namely source
+The previous chapter mentioned the principle of \emph{measure matching} to
+characterize an optimal communication system: in an optimal communication system
+(in the sense of \defref{optimality}) the cost measure and the distortion
+measure are matched in a specific way to the statistics of the system. The
+present chapter refines the concept of an optimal communication system and looks
+at the conditions necessary to maximize the \emph{ratio of fidelity per cost},
+where fidelity is a quantity playing the role of the distortion but which should
+be maximized rather than minimized. 
+
+Three standard communication problems are considered, namely source
 coding with a fidelity criterion, channel coding  with a channel input
 constraint, and the combined problem of reproducing a source across a noisy
-channel. Our focus here is on discrete memoryless sources and channels, but the
-essence of our results extends to continous alphabets.\footnote{Up to editorial
+channel. The focus here is on discrete memoryless sources and channels, but the
+essence of the results extends to continous alphabets.\footnote{Up to editorial
 changes, this chapter is identical to~\cite{KleinerR2009a}.}
 
-We begin by addressing the channel coding problem in Section~\ref{sec:cuc}. We
-consider the capacity per unit cost, a concept that is traceable in various
-forms as far back as Reza~\cite{Reza1961} (see also references
-in~\cite{Verdu1990}) and was more recently studied by Gallager
-(\cite{Gallager1988}, \cite[Ch.~14]{BlahutK2002}) and developed by Verd\'u in
-his influential paper~\cite{Verdu1990} (see also~\cite{Verdu2002}).
+The chapter begins by addressing the channel coding problem in
+Section~\ref{sec:cuc}. It first considers the capacity per unit cost, a concept
+that is traceable in various forms as far back as Shannon~\cite{Shannon1948}
+Reza~\cite{Reza1961} (see also references in~\cite{Verdu1990}) and was more
+recently studied by Gallager (\cite{Gallager1988}, \cite[Ch.~14]{BlahutK2002})
+and developed by Verd\'u in his influential paper~\cite{Verdu1990} (see
+also~\cite{Verdu2002}).
 
 The capacity per unit cost for a channel with transition probabilities~$\pyx$
 and input cost measure~$\rho(x)$ is defined as \[ \Ch = \sup_{\px}
@@ -27,10 +35,9 @@ simpler maximization over the channel input alphabet.
 
 We look at the problem from a different angle. We show that for fixed $\px$ and
 $\pyx$ there is a simple expression for the cost measure~$\rho(x)$ for which
-$\px$ achieves the capacity per unit cost. This criterion is applicable whether
-or not a zero-cost symbol exists; it follows from refining a similar criterion
-that Gastpar et al.~\cite{GastparRV2003} developed for the purpose of achieving
-capacity rather than capacity per unit cost.
+$\px$ achieves the capacity per unit cost, obtained by refining
+\lemref{gastparcost}. This criterion is applicable whether
+or not a zero-cost symbol exists.
 
 We illustrate our result with a detailed example of a Gaussian channel with
 Gaussian input.  First we find that the cost measure for which the system
@@ -42,23 +49,23 @@ be traded against bandwidth.  Furthermore, the tradeoff that maximizes the rate
 operating point at which the discrete-time channel achieves the capacity per
 unit cost.
 
-For the rate-distortion problem a similar result exists, which we explore in
+For the rate-distortion problem a similar result exists, which is explored in
 Section~\ref{sec:rddual}. For reasons that will become apparent, it is more
 convenient to study this result in terms of a fidelity measure, defined as the
 negative of the distortion measure. Following this line of
 thought we define the \emph{fidelity per unit rate} of a source:
 it is to source coding what the capacity per unit cost is to channel coding.
-Again refining a result by Gaspar et al., we give a condition for a test
+Refining \lemref{gastparrd}, we give a condition for a test
 channel\footnote{In rate-distortion theory, a test channel is a conditional
 distribution of the reconstruction given a source symbol.}
 to achieve the fidelity per unit rate of the source. 
 
-In Section~\ref{sec:fidcostbound} we consider the end-to-end problem of
+Section~\ref{sec:fidcostbound} considers the end-to-end problem of
 reproducing a source across a noisy channel. Drawing on the results of
-Sections~\ref{sec:cuc} and~\ref{sec:rddual}, we show that the capacity per unit
-cost and the fidelity per unit rate can be combined to give the \emph{fidelity
-per unit cost}, \ie, the maximum ratio of fidelity per cost at which a
-source-channel coding system can operate.
+Sections~\ref{sec:cuc} and~\ref{sec:rddual}, it is shown that the capacity per
+unit cost and the fidelity per unit rate can be combined to give the
+\emph{fidelity per unit cost}, \ie, the maximum ratio of fidelity per cost at
+which a source-channel coding system can operate.
 
 The set of communication systems that operate at fidelity per unit cost is a
 subset of the set of communication systems that are optimal in the sense of
@@ -274,7 +281,7 @@ unique (up to a scaling factor).
   cost function~$\rho(x)$. This implies that $\px$ also achieves the ``regular''
   capacity of the channel at average cost $P^* = \Ep[\rho(X)]$, \ie, 
   \[ \Ip(X;Y) = C(P^*). \]
-  As Gastpar showed in~\cite{GastparRV2003}, a necessary condition for this is
+  By \lemref{gastparcost}, a necessary condition for this is
   that $\rho(x) = c\ro(x) + \beta$ for some~$\beta$. We therefore only have to
   show that if $\beta \ne 0$ then $\px$ does not achieve the capacity per unit
   cost. 
@@ -408,18 +415,9 @@ in the following theorem.
   For continuous alphabets, the condition is sufficient but not necessary.
 \end{theorem}
 
-\begin{remark}
-  \label{rem:tcontc1}
-  This result is very much related to the following result~\cite[Section~2.3,
-  Problem~2]{CsiszarK1981},~\cite{GastparRV2003}. The channel input
-  distribution $\px$ achieves the capacity of the channel $\pyx$ at expected
-  cost $\E[\rho(X)]$ if and only if
-  \[ \rho(x) = c(\DD + \beta) \]
-  for some constants $c > 0$ and $\beta \in \R$. Our result shows that the extra
-  requirement that capacity per unit cost be achieved restricts the possible
-  cost functions to those with $\beta = 0$.
-\end{remark}
-
+This result shows that the extra requirement that the capacity per unit cost
+be achieved restricts the cost measures allowed by \lemref{gastparcost} to
+those with $\beta = 0$.
 
 \section{A Dual Result for the Source Coding Problem}
 \label{sec:rddual}
@@ -654,18 +652,9 @@ the following theorem.
   but not necessary.
 \end{theorem}
 
-\begin{remark}
-  \label{rem:tcontc2}
-  This result is very much related to the following result~\cite[Section~2.3,
-  Problem~3]{CsiszarK1981},~\cite{GastparRV2003} (restated here in terms of
-  fidelity). The test channel $V(\sh|s)$
-  achieves the rate-fidelity function of the source $\ps$ at expected
-  fidelity $\E[\phi(S,\Sh)]$ if and only if
-  \[ \phi(s,\sh) = c \log_2 \frac{V(\sh|s)}{\psh} + \gamma(s) \]
-  for $c > 0$ and an arbitrary function $\gamma(s)$. Our result shows that the
-  extra requirement that the maximum fidelity per rate be achieved restricts the
-  allowed fidelity functions to those with $\E[\gamma(S)] = 0$.
-\end{remark}
+This result shows that the extra requirement that the maximum fidelity per rate
+be achieved restricts the fidelity measures allowed by \lemref{gastparrd} to
+those with $\E[\gamma(S)] = 0$.
 
 
 %In this context, we can interpret bits as a kind of currency that we pay to
@@ -896,7 +885,7 @@ cost also satisfies $k R(D) = n C(P)$, so it is also optimal in the sense of
 \defref{optimality}.
 
 
-\section{Conclusion}
+\section{Conclusions}
 
 This chapter provides a tight upper bound to the ratio of average fidelity per
 average cost of an arbitrary memoryless point-to-point communication system.
