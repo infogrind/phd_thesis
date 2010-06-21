@@ -8,17 +8,29 @@
 % etex extensions to use more registers.
 \usepackage{etex}
 
+% Note: There are problems combining the hyperref and varioref packages. More
+% information can be found in the readme file here:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/hyperref/
+% Here we use the package loading order suggested in the link.
+
+\usepackage{nameref}
+% The varioref package allows references of the form ``on page ...'' etc.
+\usepackage{varioref}
 % To enable links in PDF
 %\usepackage[colorlinks=true]{hyperref}
 \usepackage{hyperref}
+\hypersetup{%
+  pdftitle = {Strategies for Delay-Limited Source-Channel Coding},
+  pdfkeywords = {phd thesis, communication theory, information theory, gaussian
+  channel},
+  pdfauthor = {Marius Kleiner}
+}
 \usepackage{bookmark}
 
 % Create a new float type for code listings. Due to some bug, this needs to be
 % put after the hyperref package is loaded.
 \newfloat[chapter]{listing}{lst}{Listing}
 
-% The varioref package allows references of the form ``on page ...'' etc.
-\usepackage{varioref}
 
 % Display label names as a small text in the margin.
 %\usepackage[notref,notcite]{showkeys}
