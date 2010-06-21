@@ -281,15 +281,16 @@ distortion lie on the boundary of the achievable region characterized
 by~\eqref{eq:separation} and are thus optimal. 
 
 
-\subsection{Optimality through Measure-Matching}
+\subsection{Optimality through Measure Matching}
+\label{sec:measurematching}
 
 In a bandwidth-matched system, where the number~$n$ of channel inputs per second
 equals the number~$k$ of source symbols per second, a communication system is
 optimal according to \defref{optimality} if $R(D) = C(P)$. Consider now a
 \emph{single-letter code} $(f, g)$ that maps each source symbol~$S$ into a
-single channel input~$X$ and each channel output~$Y$ into an estimate~$\Sh$;
-\ie, both $f(\cdot)$ and $g(\cdot)$ are functions from~$\R$ to~$\R$. For this
-case, \thmref{optimalityconditions} simplifies to the following statement.
+single channel input symbol~$X$ and each channel output symbol~$Y$ into an
+estimate~$\Sh$. For this case, \thmref{optimalityconditions} simplifies to the
+following statement.
 
 \begin{theorem}[Single-letter optimality~\cite{GastparRV2003}]
   \label{thm:sloptimality}
@@ -374,14 +375,14 @@ rate-distortion problem.
 sufficient but not necessary.)
 
 As a consequence of these two lemmas, one can find for any source, channel, and
-single-letter code a suitable cost measure and a suitable distortion measure
-such that the resulting system satisfies $R(D) = C(P)$. There is therefore an
-infinity of optimal single-letter communication systems. Two well known examples
-of such optimal single-letter systems are the transmission of a binary symmetric
-source across a binary symmetric channel under Hamming distortion, and the
-transmission of a Gaussian source across an AWGN channel under an average power
-constraint and squared error distortion measure (the latter will be described in
-detail in \chapref{delaygauss}).
+(information lossless) single-letter code a suitable cost measure and a suitable
+distortion measure such that the resulting system satisfies $R(D) = C(P)$. There
+is therefore an infinity of optimal single-letter communication systems. Two
+well known examples of such optimal single-letter systems are the transmission
+of a binary symmetric source across a binary symmetric channel under Hamming
+distortion, and the transmission of a Gaussian source across an AWGN channel
+under an average power constraint and squared error distortion measure (the
+latter will be described in detail in \chapref{delaygauss}).
 
 
 \subsection{Systems with Bandwidth Mismatch}
@@ -424,8 +425,8 @@ between coded and uncoded communication, mirroring a well studied tradeoff
 between the length of the signal curve and the distance between the curve's
 folds that results from a geometric analysis of the problem.
 
-The results of \chapref{delaygauss} give a new \emph{raison d'\^etre} to a well
-known hybrid communication strategy combining quantization and uncoded
+The results of \chapref{delaygauss} give an alternative \emph{raison d'\^etre}
+to a well known hybrid communication strategy combining quantization and uncoded
 transmission.  \chapref{mindelbwex} analyzes this strategy in detail and
 provides an exact characterization of its performance in the large SNR regime,
 as well as several extensions to the transmission strategy. 

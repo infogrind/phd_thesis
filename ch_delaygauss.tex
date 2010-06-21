@@ -36,7 +36,7 @@ that the encoding process takes place instantaneously, it takes an additional
 $n\tc$ seconds to transmit the encoded source sequence across the channel.
 Neglecting the transmission time of the channel, the receiver can thus decode
 the first source symbol after $k\ts + n \tc$ seconds, or $2k\ts$
-seconds\footnote{because $k/n = \tc/\ts$}.  Accordingly, the smallest delay is
+seconds\footnote{because $k/n = \tc/\ts$}. Consequently, the smallest delay is
 caused by a code that encodes a \emph{single} source symbol at a time. We call
 such a code a \emph{minimal-delay code}.
 
@@ -51,9 +51,9 @@ code.
 In situations where external circumstances (such as real-time communication) put
 a constraint on the tolerable delay, the flexibility of separate source and
 channel coding must be sacrificed in favor of codes that are designed jointly
-for a particular source and a particular channel. As we will see shortly, there
-exist such joint source-channel codes that perform as good as any
-separation-based code, yet only cause minimal delay.
+for a particular source and a particular channel. As pointed out in
+\chapref{fundamentals}, there exist such joint source-channel codes that perform
+as good as any separation-based code, yet only cause minimal delay.
 
 % [Marius] Commented this out, because it is not relevant for the rest of the
 % thesis.
@@ -149,9 +149,8 @@ or equivalently
   \sdr \le (1 + \snr)^{n/k},
 \end{equation}
 where we have defined the \emph{signal-to-distortion ratio} $\sdr = \ssq/D$ and
-the \emph{signal-to-noise ratio} $\snr = P/\szq$. 
-
-For arbitrary continuous-valued sources, the $\sdr$ can be bounded as
+the \emph{signal-to-noise ratio} $\snr = P/\szq$.  For arbitrary
+continuous-valued sources, the $\sdr$ can be bounded as
 \begin{equation}
   \label{eq:gensrcsdrlb}
   \sdr \le 2^{2 D(\ps \| \phi_{\ssq})} (1 + \snr)^{n/k},
@@ -208,18 +207,16 @@ need for coding to achieve capacity. Similarly, the resulting joint distribution
 of $(S, \Sh)$ is the one that achieves the rate-distortion function of the
 source.
 
-Is this another particularity of the Gaussian distribution? The answer is no: in
-fact, \emph{any} input distribution achieves the capacity of a given channel for
-\emph{some} way of measuring the channel input cost. For example, the Gaussian
-distribution achieves the capacity of a Gaussian channel when the cost
-measure has the form $\rho(x) = ax + b$ (for arbitrary constants $a > 0$
-and~$b$), which applies to the input power measure used here. The uniform
-distribution also achieves the capacity of a Gaussian channel, just for a
-different cost measure. In the same way, \emph{any} joint distribution of $(S,
-\Sh)$ achieves the rate-distortion function of the source for \emph{some} way of
-measuring distortion. This paradigm, called \emph{measure matching}, is made
-precise and extensively discussed in~\cite{GastparRV2003}.
-
+Is this another particularity of the Gaussian distribution? The answer is no: as
+explained in \secref{measurematching}, \emph{any} input distribution achieves
+the capacity of a given channel for \emph{some} way of measuring the channel
+input cost. For example, the Gaussian distribution achieves the capacity of a
+Gaussian channel when the cost measure has the form $\rho(x) = ax + b$ (for
+arbitrary constants $a > 0$ and~$b$), which applies to the input power measure
+used here. The uniform distribution also achieves the capacity of a Gaussian
+channel, just for a different cost measure. In the same way, \emph{any} joint
+distribution of $(S, \Sh)$ achieves the rate-distortion function of the source
+for \emph{some} way of measuring the distortion. 
 
 \section{Bandwidth Expansion}\label{sec:gaussbwex}
 
@@ -606,9 +603,9 @@ factor~$\snr$.
 
 In \exref{gausssingle} the transmitter trivially knows the state of the receiver
 before transmitting anything (one can assume the receiver's initial estimate is
-$\Sh' = \E[S] = 0$, with a corresponding $\sdr'$ of~$\ssq$). In example
-\exref{gaussfb}, the transmitter knows the receiver's estimate at each step
-via the feedback link. 
+$\Sh' = \E[S] = 0$, with a corresponding $\sdr'$ of~$\ssq$). In \exref{gaussfb},
+the transmitter knows the receiver's estimate at each step via the feedback
+link. 
 
 Feedback is not the only option for the transmitter to know the receiver's state
 after $n-1$ transmissions, however. Using coding, one can transform an
@@ -798,7 +795,7 @@ limited by the conditions of the underlying approximation.
 Translated to the geometric perspective, the principle that uncoded transmission
 be used only in the last channel use means that the signal curve should consist
 of parallel straight line segments, aligned along the axis of~$X_n$. This is
-illustrated on \figref{hybridlocus}.
+illustrated in \figref{hybridlocus}.
 
 \begin{figure}
   \centerline{%

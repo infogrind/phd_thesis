@@ -130,6 +130,6 @@ coordinates{
   (100.00,300.00)
 };
 
-\addlegendentry{$(1 + \textsc{sdr})^n$}
+\addlegendentry{$(1 + \textsc{snr})^n$}
 \end{axis}
 \end{tikzpicture}

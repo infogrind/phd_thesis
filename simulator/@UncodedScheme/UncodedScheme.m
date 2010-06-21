@@ -1,8 +1,9 @@
 classdef UncodedScheme < PracticalScheme
     % UNCODEDSCHEME Implementation of uncoded transmission.
-    %   This scheme implements uncoded transmission for the 1:1 case (no
-    %   bandwidth expansion). The encoder scales the source symbol to satisfy
-    %   the power constraint and the decoder is the LMMSE decoder. 
+    %   This scheme implements uncoded transmission for the 1:1 case
+    %   (no bandwidth expansion). The encoder scales the source
+    %   symbol to satisfy the power constraint and the decoder is the
+    %   LMMSE decoder. 
     
     % $Id$
     

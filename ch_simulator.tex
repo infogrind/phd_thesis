@@ -171,8 +171,8 @@ The two versions of the simulation can then be run as follows.
   mse2 = as.run_simulation();    % Call class method
 \end{Code}
 Because the new class |AlternativeSimulation| inherits everything from
-|Simulation| except the overridden method |decode()|, it can be used just like
-the original simulation.
+|Sim|\-|u|\-|la|\-|tion| except the overridden method |decode()|, it can be used
+just like the original simulation.
 
 \begin{listing}
 \begin{Code}
@@ -438,7 +438,7 @@ plot, we can use the |Performance|\-|Processor| as before:
 The only difference to the previous example is that the |schemes| array now has
 two elements and that we need to specify the parameter $n=1$ for
 |ShannonScheme|.  This parameter will be passed to the constructor of
-|ShannonScheme| as its third argument.
+|Shannon|\-|Scheme| as its third argument.
 
 The resulting plot is shown on \figvref{shannonscheme} and confirms that uncoded
 transmission is indeed optimal. Note that a legend has automatically been added
@@ -493,7 +493,7 @@ in the above example by |PGFPlotsOutputModule| and set \eg
   pp.output_module.fn = 'myplot.tex';
 \end{Code}
 The resulting file can then be included in a \LaTeX\ file, provided that the
-|pgfplots| package has been loaded.  The result is shown on \figref{uncodedpgf}.
+|pgfplots| package has been loaded.  The result is shown in \figref{uncodedpgf}.
 Plots created by \pgfplots\ fit in nicer with the \LaTeX\ layout, and their
 labels are more readable than those of Figures~\ref{fig:uncoded}
 and~\ref{fig:shannonscheme}.
@@ -602,7 +602,7 @@ methods.}
 A question of interest is the behavior of the average error $\E[(Q - \Qh)^2]$ as
 a function of the SNR. The scheme processor |Hybrid2DProcessor| in
 \lstref{hybridprocessor} solves this task in a few small steps. It is very
-similar to the |PerformanceProcessor| of \lstref{perfproc}, except that
+similar to the |Per|\-|for|\-|mance|\-|Proc|\-|es|\-|sor| of \lstref{perfproc}, except that
 different variables are accessed in \lineref{13}. Since the corresponding
 communication scheme class, |Hybrid2DScheme|, saves |q| and~|qh| as class
 properties and implements public |compute_*| methods for these properties,
@@ -738,7 +738,7 @@ track the MSE achieved by a particular scheme thus alternatingly calls
 precisely what the class |PerformanceProcessor| does. 
 
 Other scheme processors collect different data. For instance, the
-|Hybrid2DProcessor| in \lstvref{hybridprocessor} separately computes and stores
+|Hy|\-|brid|\-|2D|\-|Proc|\-|es|\-|sor| in \lstvref{hybridprocessor} separately computes and stores
 the errors from the discrete and the continuous transmission rounds for the
 hybrid scheme in \lstref{hybridscheme}.
 
@@ -871,9 +871,9 @@ base class |Scheme|).
 
 The methods |encode()| and |decode()| are the defining feature of a
 communication scheme. There is no ``default'' encoder and decoder, hence
-|PracticalScheme| does not provide an implementation of them but declares them
-as abstract. They must be implemented by derived classes (such as
-|UncodedScheme| in \lstvref{uncoded}).
+|Practical|\-|Scheme| does not provide an implementation of them but declares
+them as abstract. They must be implemented by derived classes (such as
+|UncodedScheme| in \lstref{uncoded}).
 
 
 \subsubsection{Scheme Processors}
@@ -1031,7 +1031,7 @@ following methods.
 \end{method}
 
 In addition, derived classes may want to override
-|update_variable_parameters()|.
+|update_|\-|variable_|\-|pa|\-|ram|\-|e|\-|ters()|.
 \begin{method}{update_variable_parameters(\obj) (protected)}
   In this method, which is called whenever the SNR changes, derived classes can
   update any of their own properties that depend on the SNR. It
@@ -1075,7 +1075,8 @@ a \emph{scheme processor}. Scheme processors evaluate a set of communication
 schemes for a range of SNR values and store and process the data gathered during
 the simulations.
 
-All scheme processors are implemented as classes derived from |SchemeProcessor|.
+All scheme processors are implemented as classes derived from
+|Scheme|\-|Proc|\-|es|\-|sor|.
 To process a communication scheme (or a set of schemes) you never directly use a
 |SchemeProcessor| object. Instead, you either use an existing derived class such
 as |PerformanceProcessor|, or you implement a custom scheme processor. 
