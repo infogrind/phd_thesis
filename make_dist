@@ -22,12 +22,15 @@ TARGETDIR="$TMPDIR/$BASEDIR"
 LATEXARC=thesis_latexdeps.tar.gz
 LATEXDEPS=thesis.deplist
 
+# Very conservative: Never overwrite an existing archive.
+# This could be changed, e.g. by adding a timestamp to the filename.
 if [ -e $TARGET ]; then
     echo "Target $TARGET already exists, stopping."
     exit 1
 fi
 
-# Prepare everything
+# Prepare everything.
+# Run make, this will also create a file "thesis.deplist" that is required.
 echo "Building thesis..."
 if make; then
     echo "Successfully built thesis."
@@ -36,27 +39,21 @@ else
     exit 1
 fi
 
+# Create a temporary file. The script will gather all required files in this
+# directory and then zip it up to create the archive.
 echo Creating directory $TARGETDIR
 mkdir $TARGETDIR
 
-# Create archive
-pushd . > /dev/null
-cd ..
-echo "Creating thesis archive, excluding svn files."
-tar cvf thesis.tar thesis --exclude '.svn' > /dev/null || \
-    (echo "Error creating thesis archive."; exit 1)
-echo "Unpacking thesis archive to temporary directory $TARGETDIR."
-tar xvf thesis.tar --directory $TARGETDIR > /dev/null || \
-    (echo "Error unpacking thesis archive."; exit 1)
-rm thesis.tar
-popd > /dev/null
+# Copy all files from the thesis directory and subdirectories to the temporary
+# directory, excluding .svn stuff and other temporary file.
+rsync -av ../thesis $TARGETDIR --exclude .svn --exclude '*~'
 
-# Create latex dependencies
+# Create archive containing latex dependencies using the helper script scandeps.
 echo Creating latex dependency file
 #./scandeps -e extradeps -o $LATEXARC $LATEXDEPS
 ./scandeps -o $LATEXARC $LATEXDEPS
 
-# Unpack dependencies to target directory
+# Unpack dependencies to temporary directory.
 if [ ! -e $LATEXARC ]; then
     echo "Error: $LATEXARC not found!"
     exit 1
@@ -65,13 +62,14 @@ echo "Unpacking latex dependency file to temporary directory $TARGETDIR."
 tar xvfz $LATEXARC --directory $TARGETDIR > /dev/null  || \
     (echo "Error unpacking latex dependencies."; exit 1)
 
-# Create final archive
+# Now everything we need is in the temporary directory $TARGETDIR, and all we
+# have to do is pack it up.
 cd $TARGETDIR
 echo "Creating final archive $TARGET from temporary directory $TARGETDIR."
 tar cvfz $TARGET thesis > /dev/null || \
     (echo "Error creating final archive $TARGET."; exit 1)
 
-# Clean up
+# Remove the temporary directory.
 echo Cleaning up
 rm -Rf $TARGETDIR
 
