@@ -1,3 +1,11 @@
+% THEORETICALSCHEME Abstract base class for all theoretical schemes
+%   Theoretical schemes are "virtual" communication schemes. Their performance
+%   is obtained as a result of a mathematical formula, rather than by simulating
+%   Gaussian noise and computing the empirical distortion.
+%
+%   Derived classes must implement update_mse(), which is called whenever the
+%   SNR is changed. 
+
 %%% MK:STARTSHOW
 classdef TheoreticalScheme < Scheme
     

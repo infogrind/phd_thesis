@@ -1,6 +1,8 @@
 classdef Hybrid2DProcessor < SchemeProcessor
-    %HYBRID2DPROCESSOR Summary of this class goes here
-    %   Detailed explanation goes here
+    %HYBRID2DPROCESSOR Separate analysis of discrete/continuous errors for n=2.
+    %   For the particular case n = 2, this scheme processor separately analyzes
+    %   the error from decoding Q and E and plots them. It should be used with
+    %   Hybrid2DScheme or derived classes thereof.
     
     properties
         om1

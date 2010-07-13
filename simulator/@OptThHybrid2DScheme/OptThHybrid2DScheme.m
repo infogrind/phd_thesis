@@ -1,6 +1,7 @@
 classdef OptThHybrid2DScheme < TheoreticalHybrid2DScheme
-    %OPTTHHYBRID2DSCHEME Summary of this class goes here
-    %   Detailed explanation goes here
+    %OPTTHHYBRID2DSCHEME Optimized version of base class using e = e(SNR).
+    %   As opposed to its base class, the parameter epsilon is computed directly
+    %   as a function of the SNR in an order-optimal way (still only for n = 2).
     
     properties
     end

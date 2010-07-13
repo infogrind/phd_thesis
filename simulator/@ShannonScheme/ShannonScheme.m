@@ -2,7 +2,8 @@ classdef ShannonScheme < TheoreticalScheme
     %SHANNONSCHEME Theoretical limit using separation.
     %   This class doesn't implement a practical communication scheme. All it
     %   does is compute and return the best possible MSE corresponding to
-    %   separation and perfect source/channel codes. 
+    %   separation and perfect source/channel codes, i.e., using the formula
+    %   MSE = <source variance> / (1 + SNR)^(n/k)
     
     % $Id$
     

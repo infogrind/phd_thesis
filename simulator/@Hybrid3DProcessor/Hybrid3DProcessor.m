@@ -1,6 +1,7 @@
 classdef Hybrid3DProcessor < PracticalPerformanceProcessor
     %HYBRID3DPROCESSOR Computes Eq and Ee for 3 ch. uses / source symbol
-    %   This processor is for hybrid schemes with m = 1 and n = p = 3.
+    %   This processor is for hybrid schemes with m = 1 and n = p = 3. It was
+    %   used to test some peculiar behavior; at this point it may be obsolete.
     
     properties (Access = 'public')
         q1e

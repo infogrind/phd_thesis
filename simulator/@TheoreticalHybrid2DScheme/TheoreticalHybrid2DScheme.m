@@ -1,6 +1,11 @@
 classdef TheoreticalHybrid2DScheme < TheoreticalScheme
-    %THEORETICALHYBRID2DSCHEME Summary of this class goes here
-    %   Detailed explanation goes here
+    %THEORETICALHYBRID2DSCHEME More precise computation of performance for n=2.
+    %   This scheme computes an error that contains both the errors due to
+    %   decoding Q (discrete part) and E (continuous part) and thus gives a more
+    %   accurate result than the purely asymptotic scheme TheoreticalEpsilon-
+    %   HybridScheme. However, it works only for n = 2. 
+    %
+    %   This scheme still assumes a fixed epsilon.
     
     properties
         epsilon

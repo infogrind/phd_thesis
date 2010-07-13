@@ -1,7 +1,7 @@
 classdef TheoreticalEpsilonHybridScheme < TheoreticalScheme
     %THEORETICALEPSILONHYBRIDSCHEME Theoretical hybrid performance with fixed e
-    %   Detailed explanation goes here
-    
+    %   This theoretical scheme returns the theoretical asymptotic performance
+    %   for beta = SNR^(1-epsilon) for a fixed epsilon [Kleiner/Rimoldi 2009].    
     properties
         epsilon
         n

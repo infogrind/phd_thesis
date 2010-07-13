@@ -1,6 +1,6 @@
 classdef TheoreticalLambertScalarHybridScheme < TheoreticalEpsilonScalarHybridScheme
     %THEORETICAL...SCHEME Here epsilon is computed like in AltLambert...Scheme.
-    %   Detailed explanation goes here
+    %   See the documentation of AltLambertScalarHybridScheme for details.
     
     properties
         c1    % Constant used to compute optimal SNR^\epsilon.
