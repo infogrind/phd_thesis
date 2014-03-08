@@ -59,6 +59,10 @@ def warning(msg)
     $stderr.puts("Warning: #{msg}")
 end
 
+def error(msg)
+    $stderr.puts("Error: #{msg}")
+end
+
 # Remove extension from filename (last dot plus everything that follows)
 def remove_ext(fn)
     fn.sub(/\.[^.]*$/, '')
