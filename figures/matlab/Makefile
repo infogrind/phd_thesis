@@ -46,8 +46,6 @@ SUBDIRS +=
 # If you want specific files to be deleted upon 'make clean', add them to the
 # variable CLEAN.
 CLEAN += $(MINC)
-CLEAN += $(MPDF)
-CLEAN += $(MTEXT)
 
 ################################################################################
 # Default rule section
@@ -58,7 +56,7 @@ CLEAN += $(MTEXT)
 # - All .ps, .pdf, and _t files for which a .fig files exists
 # - All auxiliary latex files (.aux, .log, .bbl, .dvi, ...)
 clean :
-	rm -Rf $(TEXPS) $(TEXPDF) $(FIGPDF) $(EPSPDF) $(FIGPS) $(FIG_T) 		$(MPDF) $(MPS) $(LATEXAUX) $(CLEAN); 	for d in $(SUBDIRS); do $(MAKE) --directory=$$d clean; done
+	rm -Rf $(TEXPS) $(TEXPDF) $(FIGPDF) $(EPSPDF) $(FIGPS) $(FIG_T) 		$(MPS) $(LATEXAUX) $(CLEAN); 	for d in $(SUBDIRS); do $(MAKE) --directory=$$d clean; done
 
 subdirs : $(SUBDIRS)
   
