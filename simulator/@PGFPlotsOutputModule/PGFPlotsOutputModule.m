@@ -106,7 +106,7 @@ classdef PGFPlotsOutputModule < OutputModule
             % Create the list of axis options.
             o = {
                 sprintf('%s', clstr),
-                'width=\textwidth',
+                'width=.95\textwidth',
                 sprintf('xlabel={%s}', obj.xlabel),
                 sprintf('ylabel={%s}', obj.ylabel),
                 sprintf('grid=%s', gridstr)

@@ -1,7 +1,7 @@
 % vim:ft=tex
 % THIS FILE WAS AUTOMATICALLY GENERATED.
 \begin{tikzpicture}
-\begin{axis}[width=\textwidth,xlabel={SNR [dB]},
+\begin{axis}[width=.95\textwidth,xlabel={SNR [dB]},
   ylabel={SDR [dB]},grid=major,legend pos=north west,
   legend style={cells={anchor=west}}]
 

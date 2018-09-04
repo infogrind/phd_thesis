@@ -34,7 +34,7 @@
 
       % Add the quantizers and the adder nodes and scalers below them.
       \path (b\i\j)
-      +(1,0)
+      +(1.1,0)
       node[sq] (quant\i\j) {Quantizer}
       +(3,0)
       node[trir] (scc\i\j) {}
@@ -55,7 +55,7 @@
       \draw[l] (b\i\j) -- (quant\i\j);
       \draw[l] (b\i\j) -- (plus1\i\j);
       \draw[l] (plus1\i\j) -- (sc\i\j);
-      \draw[l] ($ (quant\i\j) + (.8,0) $) |- node[above,pos=0.95] {$-$} (plus1\i\j);
+      \draw[l] ($ (quant\i\j) + (1,0) $) |- node[above,pos=0.95] {$-$} (plus1\i\j);
       \draw[l] (scc\i\j) -- (X\j);
 %
 %      % Horizontal connections from the quantizers to the scaler.

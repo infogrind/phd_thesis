@@ -4,7 +4,6 @@ classdef SchemeProcessor < handle
         schemes     % Cell array of schemes to process.
         parameters  % Parameters for each scheme (if any).
     end
-    
     properties (Access = 'public')
         sv = 1;               % Source variance.
         snr = 10.^(0:.1:4);   % SNR range.
@@ -23,7 +22,6 @@ classdef SchemeProcessor < handle
             post_process(obj);   
         end
     end
-    
     methods (Access = 'protected')
         function do_processing(obj)
             for j = 1:length(obj.schemes)

@@ -66,7 +66,7 @@
         \draw[l] (b\i\j) -- (quant\i\j);
         \draw[l] (b\i\j) -- (plus1\i\j);
         \draw[l] (plus1\i\j) -- (sc\i\j);
-        \draw[l] ($ (quant\i\j) + (.8,0) $) |- node[above,pos=0.95] {$-$}
+        \draw[l] ($ (quant\i\j) + (1,0) $) |- node[above,pos=0.95] {$-$}
         (plus1\i\j);
 
       % Horizontal connections from the quantizers to the combiner.
@@ -94,7 +94,7 @@
     +(0,-.8)
     node[coordinate] (p\j) {};
 
-    \coordinate (p2\j) at ($ (p0) + \j*(dv) + (1,0) $);
+    \coordinate (p2\j) at ($ (p0) + \j*(dv) + (2,0) $);
 
     \node[trir] (scc\j) at (p2\j) {};
 

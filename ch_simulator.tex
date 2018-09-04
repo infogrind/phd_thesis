@@ -150,18 +150,18 @@ restructuring effort.
 \subsubsection{The Power of Inheritance}
 
 Suppose now that your programming language supports object-oriented programming
-(as \matlab\ does\footnote{at least the more recent releases})
-and that you have implemented |run_simulation()|, along with the functions it
-calls, as \emph{methods} of the class |Simulation|, as shown in
-\lstref{objectsim}. Creating a new simulation with an alternative |decode()|
-function now couldn't be easier: just create a \emph{derived class}\footnote{In
-many object oriented programming languages, most notably Java, derived classes
-are called \emph{subclasses} and base classes are called \emph{superclasses}. As
-pointed out by Stroustrup~\cite[\Spg12.2]{Stroustrup1997}, this is somewhat
-confusing because the capabilities of a \emph{sub}class form a \emph{super}set
-of those of its superclass (and vice versa). Hence in this text we shall stick
-to the terms \emph{base class} and \emph{derived class}.} of |Simulation| and
-override the |decode()| method, as shown in \lstref{derivedclass}. 
+(as \matlab\ does\footnote{at least the more recent releases}) and that you have
+implemented |run_sim|\-|u|\-|la|\-|tion()|, along with the functions it calls,
+as \emph{methods} of the class |Simulation|, as shown in \lstref{objectsim}.
+Creating a new simulation with an alternative |decode()| function now couldn't
+be easier: just create a \emph{derived class}\footnote{In many object oriented
+programming languages, most notably Java, derived classes are called
+\emph{subclasses} and base classes are called \emph{superclasses}. As pointed
+out by Stroustrup~\cite[\Spg12.2]{Stroustrup1997}, this is somewhat confusing
+because the capabilities of a \emph{sub}class form a \emph{super}set of those of
+its superclass (and vice versa). Hence in this text we shall stick to the terms
+\emph{base class} and \emph{derived class}.} of |Simulation| and override the
+|decode()| method, as shown in \lstref{derivedclass}. 
 
 The two versions of the simulation can then be run as follows.
 \begin{Code}
@@ -362,7 +362,7 @@ on:
     |Performance|\-|Processor|.
 \end{enumerate}
 All this work was done by |Performance|\-|Processor| and the base class
-|Practical|\-|Scheme|, leaving us free to focus on the essential stuff.
+|Prac|\-|ti|\-|cal|\-|Scheme|, leaving us free to focus on the essential stuff.
 (\secref{impoverview} explains in detail how the above steps are performed.)
 
 
@@ -482,7 +482,7 @@ created and attached to the performance processor. Since this output module
 writes its output to a file, we have to specify a file name in \lineref{4}.
 Afterwards, we can call |process()| just as before.\footnote{Unsurprisingly,
 Figures~\ref{fig:uncoded} and~\ref{fig:shannonscheme} have in fact been created
-using \Verb+Matlab+\-\Verb+FilePlotModule+.}
+using \Verb+Matlab+\-\Verb+File+\-\Verb+Plot+\-\Verb+Module+.}
 
 \urldef{\pgfplotsurl}\url{http://pgfplots.sourceforge.net/}
 There is another output module, called |PGFPlotsOutputModule|. It produces a
@@ -1208,9 +1208,10 @@ Custom scheme processors are implemented by creating a new class derived from
   This method is called before the actual processing starts. It can be used \eg\
   to allocate data structures to save simulation data.
 
-  |SchemeProcessor| provides the useful helper function |nb_schemes()|, which
-  returns the number of schemes that have been passed to |process()|. In
-  addition, |length(obj.snr)| gives you the number of values in the SNR range.
+  |SchemeProcessor| provides useful helper function, |nb_schemes()|, which
+  returns the number of schemes that have been passed to |process()|.
+  In addition, |length(obj.snr)| gives you the number of values in the SNR
+  range.
 \end{method}
 
 \begin{method}{save_scheme_data(\obj, \oarg{scheme}, \oarg{j}, \oarg{k})

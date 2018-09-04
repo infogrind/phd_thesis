@@ -1,5 +1,5 @@
-\chapter[A Hybrid Communication Strategy for Gaussian Channels]{Analysis of a
-Hybrid Communication Strategy for the Gaussian Channel} \label{ch:mindelbwex}
+\chapter[A Hybrid Communication Strategy for Gaussian Channels]{A Hybrid
+Communication Strategy for Gaussian Channels\looseness=-1}\label{ch:mindelbwex}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -413,9 +413,9 @@ result of this section.
 
 \begin{proof}
   Let $\snr>1$. Since $\snr^{a+b\e}$ is strictly increasing and
-  $\exp\{-c \snr^\e\}$ is strictly decreasing in~$\snr^\e$, there is at most one
-  solution to~\eqref{eq:epsequation} in~$\snr^\e$.  Assume now $\snr^\e$ is as
-  in~\eqref{eq:epssolution}. Then
+  $\exp\{-c \snr^\e\}$ is strictly decreasing in~$\snr^\e$, there is at
+  most one solution to~\eqref{eq:epsequation} in~$\snr^\e$.  Assume now
+  $\snr^\e$ is as in~\eqref{eq:epssolution}. Then
   \begin{equation*}
     \exp\{-c \snr^\e\} = \exp\{-b W(c \snr^{-a/b}/b)\}.
   \end{equation*}
@@ -963,7 +963,7 @@ in~$\R^m$.  With this,
   \label{eq:mseqivbound}
   \mseqiv \le \Sm \int_{\rho/\beta}^\infty (r + R/\beta)^2 r^{m-1} \phi(r) dr,
 \end{equation}
-where $\phi(r)$ is the pdf of a real Gaussian random variable of variance
+where $\phi(r)$ is the pdf of a real Gaussian random variable with variance
 $(\gamma^2/P) \szq = \gamma^2/\snr$. To get explicit bounds for finite~SNR that
 depend on $R$ and $\rho$ (and thus on the particular lattice used), this
 integral can be evaluated using the formula
@@ -992,8 +992,9 @@ of~\cite{AbramowitzS1964} may be of help).}
   &= O\left( \frac{1}{\beta\sqrt{\snr}} \exp\left\{-\frac{\snr \rho^2}{2 \beta^2
   \gamma^2} \right\} \right),
 \end{align*}
-where the last equality is because of the approximation $Q(x) \approx
-\exp\{-x^2/2\}/2\pi x$ (see~\cite[\Spg 26.2.12]{AbramowitzS1964}). Letting
+where the last equality is because of the approximation
+\[Q(x) \approx \exp\{-x^2/2\}/2\pi x\]
+(see~\cite[\Spg 26.2.12]{AbramowitzS1964}). Letting
 $\beta = \lceil \snr^{(1-\e)/2} \rceil$ yields
 \begin{equation*}
   \mseqiv \in O(\snr^{-1 + \e/2} \exp\{-c \snr^\e\}),
@@ -1221,7 +1222,7 @@ the one found here. The obvious question to ask, then, is whether the upper
 bounds found in this chapter do not only apply to the type of schemes studied,
 but may be of a more general nature. 
 
-
+\vfill
 \subsubsection{Lower Bounding the Mean Squared Error for More General
 Constellations}
 
@@ -1316,7 +1317,6 @@ satisfying the power constraint. The maps presented in this chapter are one such
 way; they arrange the line as parallel segments. Another possibility is \eg\ the
 Archimedes spiral~\cite{Ramstad2002}.
 
-
 \subsubsection{Summary}
 
 Summarizing the above considerations, the problem of upper bounding the
@@ -1409,7 +1409,7 @@ paper~\cite{Ziv1970}. In that paper, Ziv found important
 theoretical limitations of source-channel mappings if the encoder can depend
 on the SNR only through a scaling factor.
 
-
+\vfill
 
 
 
@@ -1452,7 +1452,6 @@ on the SNR only through a scaling factor.
   \end{equation*}
 \end{proof}
   
-
   \section{Proof of Ziv's Lower Bound (Lemma~\ref{lem:zivbound})}
   \label{app:zivboundproof}
 
@@ -1691,8 +1690,6 @@ on the SNR only through a scaling factor.
       & \le R^2 \int_{V(\vz)} \fXv(\x) d\x = R^2.
     \end{align*}
   \end{proof}
-
-
 
 
   \section{Proof of Lemmas~\ref{lem:lowerbound1vec}
