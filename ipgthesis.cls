@@ -10,58 +10,76 @@
 \newif\if@epfl\@epflfalse
 \newif\if@review\@reviewfalse
 \newif\ifbooklet\bookletfalse
+\newif\if@ebook\@ebookfalse
 % note that \ifbooklet is available to the latex document, so, e.g.,
 % figures could be scaled appropriately.
-\DeclareOption{epfl}{\@epfltrue\@reviewfalse\bookletfalse
-	\PassOptionsToClass{12pt}{memoir}}
-\DeclareOption{review}{\@reviewtrue\@epflfalse\bookletfalse
-	\PassOptionsToClass{12pt}{memoir}}
-\DeclareOption{booklet}{\booklettrue\@epflfalse\@reviewfalse}
+\DeclareOption{epfl}{\@epfltrue\@reviewfalse\bookletfalse\@ebookfalse
+	\PassOptionsToClass{twoside,12pt}{memoir}}
+\DeclareOption{review}{\@reviewtrue\@epflfalse\bookletfalse\@ebookfalse
+	\PassOptionsToClass{twoside,12pt}{memoir}}
+\DeclareOption{booklet}{\booklettrue\@epflfalse\@reviewfalse\@ebookfalse
+	\PassOptionsToClass{twoside}{memoir}}
+\DeclareOption{ebook}{\bookletfalse\@epflfalse\@reviewfalse\@ebooktrue
+	\PassOptionsToClass{oneside}{memoir}}
 % ignore size options.
 \DeclareOption{9pt}{}\DeclareOption{10pt}{}
 \DeclareOption{11pt}{}\DeclareOption{12pt}{}
 \DeclareOption{13pt}{}\DeclareOption{14pt}{}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{memoir}}
-\PassOptionsToClass{twoside}{memoir}
 \ExecuteOptions{booklet}
 \ProcessOptions
-\if@epfl\else\if@review\else\ifbooklet\else%
+\if@epfl\else\if@review\else\ifbooklet\else\if@ebook\else%
 \ClassError{ipgthesis}{no booklet, epfl, or review option.}%
 	{Use this package with \documentclass[opt]{ipgclass} with\MessageBreak
 	opt being one of epfl, booklet or review.}
-\fi\fi\fi
+\fi\fi\fi\fi
 \LoadClass{memoir}
-\setstocksize{297mm}{210mm} % printing on a4 paper
-\ifbooklet %
-	\settrimmedsize{247mm}{170mm}{*}
-	\settrims{50mm}{40mm}
+\if@ebook
+  % Ebook version is for screen viewing, so no need for even/odd distinction or
+  % empty pages before chapters. 
+  \setstocksize{240mm}{170mm} % printing on ebook-formatted ``paper''
+	\settrimmedsize{240mm}{170mm}{*}
+	\settrims{0mm}{0mm}         % no trimming
 	\settypeblocksize{194mm}{120mm}{*}
-	\setulmargins{28mm}{*}{*}
-	\setlrmargins{17mm}{*}{*}
+	\setulmargins{22mm}{*}{*}
+	\setlrmargins{22mm}{*}{*}
 	\setheadfoot{12pt}{25pt}
 	\setheaderspaces{*}{5mm}{*}
 	\checkandfixthelayout
-\else%
-	\settrimmedsize{297mm}{210mm}{*} % no trimming
-	\settrims{0mm}{0mm}
-	% the typeblock in the booklet and non-booklet versions
-	% should be coordinated so that the pages contain more or less
-	% the same amount of text.  Note that Computer Modern Roman
-	% fonts are optically scaled, 12pt fonts are not magnified 10pt
-	% fonts.
-	\settypeblocksize{227mm}{140mm}{*}
-	\setulmargins{28mm}{*}{*}
-	\if@epfl%
-		\setlrmargins{25mm}{*}{*}
-	\else%
-		% for the review version make outside margin very large.
-		\setlrmargins{15mm}{*}{*}
-	\fi
-	\setheadfoot{15pt}{30pt}
-	\setheaderspaces{*}{6mm}{*}
-	\checkandfixthelayout
+\else
+  \setstocksize{297mm}{210mm} % printing on a4 paper
+  \ifbooklet %
+    \settrimmedsize{240mm}{170mm}{*}
+    \settrims{28mm}{20mm}
+    \settypeblocksize{194mm}{120mm}{*}
+    %\setulmargins{28mm}{*}{*}
+    %\setlrmargins{17mm}{*}{*}
+    \setulmargins{22mm}{*}{*}
+    \setlrmargins{22mm}{*}{*}
+    \setheadfoot{12pt}{25pt}
+    \setheaderspaces{*}{5mm}{*}
+    \checkandfixthelayout
+  \else%
+    \settrimmedsize{297mm}{210mm}{*} % no trimming
+    \settrims{0mm}{0mm}
+    % the typeblock in the booklet and non-booklet versions
+    % should be coordinated so that the pages contain more or less
+    % the same amount of text.  Note that Computer Modern Roman
+    % fonts are optically scaled, 12pt fonts are not magnified 10pt
+    % fonts.
+    \settypeblocksize{227mm}{140mm}{*}
+    \setulmargins{28mm}{*}{*}
+    \if@epfl%
+      \setlrmargins{25mm}{*}{*}
+    \else%
+      % for the review version make outside margin very large.
+      \setlrmargins{15mm}{*}{*}
+    \fi
+    \setheadfoot{15pt}{30pt}
+    \setheaderspaces{*}{6mm}{*}
+    \checkandfixthelayout
+  \fi
 \fi
-
 
 % Chapter style
 % Dropped chapter number with lines above and below
@@ -93,19 +111,16 @@
  \renewcommand{\printchaptertitle}[1]{%
    %\interlinepenalty\@M
    \if@chapprintnum
-	\vspace{-\baselineskip}
-  	\noindent\rule{\textwidth}{1.2pt}\vskip 1.2\baselineskip
-
-	 \chaptitlefont
-     \parbox[b][2.6\baselineskip]{.75\textwidth}
-     {\raggedright##1}
+	\vspace{-\baselineskip}%
+  	\noindent\rule{\textwidth}{1.2pt}\vskip 1.2\baselineskip%
+	\chaptitlefont\hbox to\textwidth{%
+           \parbox[b][2.6\baselineskip]{.75\textwidth}{\raggedright##1}
 	 % Q - What to set these sizes to?
-     \hfill \chapnumfont\scaletoheight{2.55\baselineskip}{\thechapter}
-     \par
+           \hss\chapnumfont\scaletoheight{2.55\baselineskip}{\thechapter}}
    \else
      \chaptitlefont ##1
    \fi
-	 }
+  }
 }
 
 % Make this chapter style the default
@@ -188,10 +203,11 @@
 \pretitle{\begin{center}\LARGE\bfseries}
 \posttitle{\par\end{center}\vskip 3.5em} 
 \renewcommand{\predate}{\vskip 10cm}
-\renewcommand{\maketitlehookc}{% 
-\vskip 10cm
-\begin{center}
-Submitted for the degree of docteur \`es sciences \\Ecole Polytechnique F\'ed\'erale de Lausanne
-\end{center}
-}
+%\renewcommand{\maketitlehookc}
+%{% 
+%\vskip 10cm
+%\begin{center}
+%Submitted for the degree of docteur \`es sciences \\Ecole Polytechnique F\'ed\'erale de Lausanne
+%\end{center}
+%}
 

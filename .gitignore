@@ -1,6 +1,9 @@
 # The main generated file
 thesis.pdf
 
+# The created ebook file
+thesis_ebook.pdf
+
 # An included file containing my personal publications
 mk_publications.pdf
 

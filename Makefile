@@ -7,6 +7,7 @@ BUNDLEDOC = bundledoc_mk
 BIBFILE = $(shell kpsewhich -progname bibtex mkbiblio.bib)
 
 JOBNAME = thesis
+EBOOKNAME = thesis_ebook
 
 # Extensions of temporary files used by latex; these will be removed when
 # 'make clean' is called
@@ -18,6 +19,7 @@ TEXPDF=$(patsubst %.tex,%.pdf,$(TEXFILES))
 TEXPS=$(patsubst %.tex,%.ps,$(TEXFILES))
 
 JOBPDF=$(JOBNAME).pdf
+EBOOKPDF=$(EBOOKNAME).pdf
 
 # Create variables used for xfig targets
 FIGFILES=$(wildcard *.fig)
@@ -58,7 +60,10 @@ PSTARGETS += $(TEXPS)
 #
 # PS files for all .tex files in the directory
 #   all : $(PSTARGETS)
-all : $(JOBPDF)
+all : $(EBOOKPDF)	
+
+$(EBOOKPDF) : $(JOBPDF)
+	cp $< $@
 	
 # The following line allows you to type 'make force'; forcing a rebuild of
 # anything regardless of existing files/timestamps
