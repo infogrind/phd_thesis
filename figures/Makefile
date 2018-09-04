@@ -88,7 +88,7 @@ SUBDIRS += matlab
 
 # If you want specific files to be deleted upon 'make clean', add them to the
 # variable CLEAN.
-CLEAN += 
+CLEAN += $(TABLEFILES)
 
 ################################################################################
 # Default rule section
