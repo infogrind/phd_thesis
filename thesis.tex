@@ -3,7 +3,7 @@
 %     Created: Tue Jan 12 11:00 AM 2010 C
 % Last Change: Tue Jan 12 11:00 AM 2010 C
 %
-\documentclass[booklet]{ipgthesis}
+\documentclass[showtrims,booklet]{ipgthesis}
 %\documentclass[a4paper]{lcavthesis}
 
 % All external packages
@@ -28,12 +28,65 @@
 \frenchspacing
 
 \title{Strategies for Delay-Limited Source-Channel Coding}
-\author{Marius Kleiner}
-\date{28 April, 2010}
+\author{}
+\date{}
 
 \begin{document}
+\trimLmarks
 \frontmatter
-\input{title}
+\begin{titlingpage}
+\calccentering{\unitlength}
+\begin{adjustwidth*}{\unitlength}{-\unitlength}
+\maketitle
+\end{adjustwidth*}
+\end{titlingpage}
+
+\author{Marius Kleiner}
+\renewcommand{\maketitlehookc}
+{% 
+\vskip 11cm
+\begin{center}
+%Submitted for the degree of Docteur \`es Sciences \\
+Ecole Polytechnique F\'ed\'erale de Lausanne (EPFL)
+\end{center}
+\newpage
+}
+\begin{titlingpage}
+\calccentering{\unitlength}
+\begin{adjustwidth*}{\unitlength}{-\unitlength}
+\maketitle
+\end{adjustwidth*}
+{
+\noindent Thesis No. 4747 (July 2010)
+\vskip 5cm
+\noindent
+Thesis presented to the school of computer and communication sciences for
+obtaining the degree of Docteur \` es Sciences
+\vskip 1cm
+\noindent Accepted by the jury:
+\vskip 0.4cm
+\noindent \textbf{Prof.~Bixio~Rimoldi}
+\\
+\noindent {Thesis director}
+\vskip 0.4cm
+\noindent\textbf{Prof.~Tor~Ramstad}
+\\
+\noindent {Jury member}
+\vskip 0.4cm
+\noindent\textbf{Prof.~Michael~Gastpar}
+\\
+\noindent {Jury member}
+\vskip 0.4cm
+\noindent \textbf{Prof.~Emre~Telatar}
+\\
+\noindent {Jury member}
+\vskip 0.4cm
+\noindent \textbf{Prof.~R\"udiger~Urbanke}
+\\
+\noindent {President of the jury}
+\vskip 3cm
+\noindent Ecole Polytechnique F\'ed\'erale de Lausanne (EPFL), 2010
+}\end{titlingpage}
 
 \input{ack}
 \input{abstract}

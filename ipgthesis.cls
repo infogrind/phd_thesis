@@ -33,11 +33,13 @@
 \LoadClass{memoir}
 \setstocksize{297mm}{210mm} % printing on a4 paper
 \ifbooklet %
-	\settrimmedsize{247mm}{170mm}{*}
-	\settrims{50mm}{40mm}
+	\settrimmedsize{240mm}{170mm}{*}
+	\settrims{28mm}{20mm}
 	\settypeblocksize{194mm}{120mm}{*}
-	\setulmargins{28mm}{*}{*}
-	\setlrmargins{17mm}{*}{*}
+	%\setulmargins{28mm}{*}{*}
+	%\setlrmargins{17mm}{*}{*}
+	\setulmargins{22mm}{*}{*}
+	\setlrmargins{22mm}{*}{*}
 	\setheadfoot{12pt}{25pt}
 	\setheaderspaces{*}{5mm}{*}
 	\checkandfixthelayout
@@ -93,19 +95,16 @@
  \renewcommand{\printchaptertitle}[1]{%
    %\interlinepenalty\@M
    \if@chapprintnum
-	\vspace{-\baselineskip}
-  	\noindent\rule{\textwidth}{1.2pt}\vskip 1.2\baselineskip
-
-	 \chaptitlefont
-     \parbox[b][2.6\baselineskip]{.75\textwidth}
-     {\raggedright##1}
+	\vspace{-\baselineskip}%
+  	\noindent\rule{\textwidth}{1.2pt}\vskip 1.2\baselineskip%
+	\chaptitlefont\hbox to\textwidth{%
+           \parbox[b][2.6\baselineskip]{.75\textwidth}{\raggedright##1}
 	 % Q - What to set these sizes to?
-     \hfill \chapnumfont\scaletoheight{2.55\baselineskip}{\thechapter}
-     \par
+           \hss\chapnumfont\scaletoheight{2.55\baselineskip}{\thechapter}}
    \else
      \chaptitlefont ##1
    \fi
-	 }
+  }
 }
 
 % Make this chapter style the default
@@ -188,10 +187,11 @@
 \pretitle{\begin{center}\LARGE\bfseries}
 \posttitle{\par\end{center}\vskip 3.5em} 
 \renewcommand{\predate}{\vskip 10cm}
-\renewcommand{\maketitlehookc}{% 
-\vskip 10cm
-\begin{center}
-Submitted for the degree of docteur \`es sciences \\Ecole Polytechnique F\'ed\'erale de Lausanne
-\end{center}
-}
+%\renewcommand{\maketitlehookc}
+%{% 
+%\vskip 10cm
+%\begin{center}
+%Submitted for the degree of docteur \`es sciences \\Ecole Polytechnique F\'ed\'erale de Lausanne
+%\end{center}
+%}
 
