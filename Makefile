@@ -1,5 +1,5 @@
 # Program names
-LATEXMK = ./latexmk
+LATEXMK = latexmk
 EPSTOPDF = epstopdf
 FIG2DEV = fig2dev
 MATLAB = matlab
