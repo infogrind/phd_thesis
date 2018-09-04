@@ -20,8 +20,6 @@ TRIM = ./trimignore.pl
 # Create list of MINC, PDF and TEX_T file to be generated from MATLAB.
 MFILES = $(MTOPDF) $(MTOTEXT) $(MINCONLY)
 MINC = $(patsubst %.m,%.minc,$(MFILES))
-MPDF = $(patsubst %.m,%.pdf,$(MTOPDF))
-MTEXT = $(patsubst %.m,%.tex_t,$(MTOTEXT))
 
 # Targets to make.
 all : subdirs $(MINC) $(MPDF) $(MTEXT)
