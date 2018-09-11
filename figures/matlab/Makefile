@@ -1,3 +1,6 @@
+# Externally configurable flag
+USEMATLAB?=1
+
 # List of .m files that create PDFs.
 MTOPDF += ex_shannonscheme.m
 MTOPDF += ex_uncoded.m
@@ -20,6 +23,8 @@ TRIM = ./trimignore.pl
 # Create list of MINC, PDF and TEX_T file to be generated from MATLAB.
 MFILES = $(MTOPDF) $(MTOTEXT) $(MINCONLY)
 MINC = $(patsubst %.m,%.minc,$(MFILES))
+MPDF = $(patsubst %.m,%.pdf,$(MTOPDF))
+MTEXT = $(patsubst %.m,%.tex_t,$(MTOTEXT))
 
 # Targets to make.
 all : subdirs $(MINC) $(MPDF) $(MTEXT)
@@ -44,6 +49,8 @@ SUBDIRS +=
 # If you want specific files to be deleted upon 'make clean', add them to the
 # variable CLEAN.
 CLEAN += $(MINC)
+CLEAN += $(MPDF)
+CLEAN += $(MTEXT)
 
 ################################################################################
 # Default rule section
@@ -54,7 +61,7 @@ CLEAN += $(MINC)
 # - All .ps, .pdf, and _t files for which a .fig files exists
 # - All auxiliary latex files (.aux, .log, .bbl, .dvi, ...)
 clean :
-	rm -Rf $(TEXPS) $(TEXPDF) $(FIGPDF) $(EPSPDF) $(FIGPS) $(FIG_T) 		$(MPS) $(LATEXAUX) $(CLEAN); 	for d in $(SUBDIRS); do $(MAKE) --directory=$$d clean; done
+	rm -Rf $(TEXPS) $(TEXPDF) $(FIGPDF) $(EPSPDF) $(FIGPS) $(FIG_T) 		$(MPDF) $(MPS) $(LATEXAUX) $(CLEAN); 	for d in $(SUBDIRS); do $(MAKE) --directory=$$d clean; done
 
 subdirs : $(SUBDIRS)
   
@@ -89,15 +96,27 @@ $(SUBDIRS) :
 
 # Convert MATLAB to EPS
 %.eps : %.m
+ifeq ($(USEMATLAB), 1)
 	$(MATLAB) -nodisplay -nodesktop < $<
+else
+	cp matlab_gen/$@ $@
+endif
 
 # Convert MATLAB to PDF
 %.pdf : %.m
+ifeq ($(USEMATLAB), 1)
 	$(MATLAB) -nodisplay -nodesktop < $<
+else
+	cp matlab_gen/$@ $@
+endif
 
 # Convert MATLAB to TEX_T
 %.tex_t : %.m
+ifeq ($(USEMATLAB), 1)
 	$(MATLAB) -nodisplay -nodesktop < $<
+else
+	cp matlab_gen/$@ $@
+endif
 
 # Convert MATLAB to MINC
 %.minc : %.m
