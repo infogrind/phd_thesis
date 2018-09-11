@@ -3,7 +3,6 @@ LATEXMK = latexmk
 EPSTOPDF = epstopdf
 FIG2DEV = fig2dev
 MATLAB = matlab
-BUNDLEDOC = bundledoc_mk
 BIBFILE = $(shell kpsewhich -progname bibtex mkbiblio.bib)
 
 JOBNAME = thesis
@@ -68,14 +67,6 @@ $(EBOOKPDF) : $(JOBPDF)
 # The following line allows you to type 'make force'; forcing a rebuild of
 # anything regardless of existing files/timestamps
 force : clean all
-
-# Create a .tar.gz file containing all required files, i.e., a standalone
-# archive of the thesis.
-# [Marius] Disabled for now. Bundledoc does not reliably work, since the
-# snapshot package does not detect files that are input by the primitive \input
-# command (such as certain files belonging to tikz/pgf).
-###bundle : all
-###	$(BUNDLEDOC) --config=tetex.cfg $(JOBNAME).dep
 
 # If you have particular dependencies, e.g., tex files that employ figures,
 # include these here. 
@@ -153,5 +144,5 @@ $(SUBDIRS) :
 	$(MATLAB) -nodisplay -nojvm < $< > /dev/null
 
 # Phony targets
-.PHONY : all bundle clean subdirs $(SUBDIRS)
+.PHONY : all clean subdirs $(SUBDIRS)
 	
